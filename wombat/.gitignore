@@ -1,0 +1,12 @@
+<<<<<<< HEAD
+/.vscode
+/target
+/.gradle
+
+*.exe
+*.out
+=======
+.vscode
+.gradle
+
+>>>>>>> 9ff0ac96304b7f5b455567075d3051507b82bf30

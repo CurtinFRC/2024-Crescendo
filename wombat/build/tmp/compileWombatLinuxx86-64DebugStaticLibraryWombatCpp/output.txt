@@ -1,0 +1,69 @@
+See file:///home/spacey_sooty/frc/2024-Crescendo/wombat/build/tmp/compileWombatLinuxx86-64DebugStaticLibraryWombatCpp/output.txt for all output for compileWombatLinuxx86-64DebugStaticLibraryWombatCpp.
+compiling Elevator.cpp failed.
+In file included from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/utils/Gearbox.h:3,
+                 from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/subsystems/Elevator.h:3,
+                 from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/cpp/subsystems/Elevator.cpp:1:
+/home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/utils/Encoder.h:8:10: fatal error: ctre/phoenix/motorcontrol/can/TalonSRX: No such file or directory
+    8 | #include <ctre/phoenix/motorcontrol/can/TalonSRX>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+
+compiling Shooter.cpp failed.
+In file included from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/utils/Gearbox.h:3,
+                 from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/subsystems/Shooter.h:3,
+                 from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/cpp/subsystems/Shooter.cpp:1:
+/home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/utils/Encoder.h:8:10: fatal error: ctre/phoenix/motorcontrol/can/TalonSRX: No such file or directory
+    8 | #include <ctre/phoenix/motorcontrol/can/TalonSRX>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+
+compiling Encoder.cpp failed.
+In file included from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/cpp/utils/Encoder.cpp:1:
+/home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/utils/Encoder.h:8:10: fatal error: ctre/phoenix/motorcontrol/can/TalonSRX: No such file or directory
+    8 | #include <ctre/phoenix/motorcontrol/can/TalonSRX>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+
+compiling VoltageController.cpp failed.
+In file included from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/utils/VoltageController.h:7,
+                 from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/cpp/utils/VoltageController.cpp:1:
+/home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/utils/Util.h:7:10: fatal error: frc/geometry/Pose3d.h: No such file or directory
+    7 | #include <frc/geometry/Pose3d.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+
+compiling Util.cpp failed.
+In file included from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/cpp/utils/Util.cpp:1:
+/home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/utils/Util.h:7:10: fatal error: frc/geometry/Pose3d.h: No such file or directory
+    7 | #include <frc/geometry/Pose3d.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+
+compiling Drivetrain.cpp failed.
+In file included from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/utils/Gearbox.h:3,
+                 from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/drivetrain/Drivetrain.h:7,
+                 from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/cpp/drivetrain/Drivetrain.cpp:1:
+/home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/utils/Encoder.h:8:10: fatal error: ctre/phoenix/motorcontrol/can/TalonSRX: No such file or directory
+    8 | #include <ctre/phoenix/motorcontrol/can/TalonSRX>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+
+compiling Arm.cpp failed.
+In file included from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/subsystems/Arm.h:4,
+                 from /home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/cpp/subsystems/Arm.cpp:1:
+/home/spacey_sooty/frc/2024-Crescendo/wombat/src/main/include/utils/Encoder.h:8:10: fatal error: ctre/phoenix/motorcontrol/can/TalonSRX: No such file or directory
+    8 | #include <ctre/phoenix/motorcontrol/can/TalonSRX>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+
+compiling RobotStartup.cpp successful.
+
+compiling Subsystem.cpp successful.
+
+compiling HasBehaviour.cpp successful.
+
+compiling BehaviourScheduler.cpp successful.
+
+compiling Behaviour.cpp successful.
+
+Finished compileWombatLinuxx86-64DebugStaticLibraryWombatCpp, see full log file:///home/spacey_sooty/frc/2024-Crescendo/wombat/build/tmp/compileWombatLinuxx86-64DebugStaticLibraryWombatCpp/output.txt.

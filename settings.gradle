@@ -4,12 +4,12 @@ pluginManagement {
     repositories {
         mavenLocal()
         gradlePluginPortal()
-        String frcYear = '2022'
+        String frcYear = '2023'
         File frcHome
         if (OperatingSystem.current().isWindows()) {
             String publicFolder = System.getenv('PUBLIC')
             if (publicFolder == null) {
-                publicFolder = "C:\\Users\\Public"
+		publicFolder = "C:\\Users\\Public"
             }
             def homeRoot = new File(publicFolder, "wpilib")
             frcHome = new File(homeRoot, frcYear)
@@ -25,3 +25,7 @@ pluginManagement {
         }
     }
 }
+
+include 'wombat'
+rootProject.name = '2024-Crescendo'
+
