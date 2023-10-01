@@ -1,0 +1,8 @@
+#!/usr/bin
+git clone https://github.com/CurtinFRC/Wombat.git
+mv Wombat wombat
+rm Wombat/.git -rf
+chmod +x gradlew
+./gradlew installRoborioToolchain
+./gradlew build
+

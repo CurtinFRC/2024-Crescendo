@@ -3,17 +3,14 @@ CurtinFRC 2024 Codebase
 
 # Setup
 ## Linux
-Run
+Fork this repository then open up a terminal and run :
 ```bash
 git clone https://github.com/yourusernamehere/2024-Crescendo.git
 cd 2024-Crescendo
-git clone https://github.com/CurtinFRC/Wombat.git
-mv Wombat wombat
-rm Wombat/.git -rf
-chmod +x gradlew
-./gradlew installRoborioToolchain
-./gradlew build
+chmod +x init
+./init
 ```
+Now look in [CONTRIBUTING.md](./CONTRIBUTING.md) before continuing!
 
 ## Windows
 TODO!
