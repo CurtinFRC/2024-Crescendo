@@ -1,4 +1,5 @@
 # Credit to Team 1678 for most of this
+on:
   push:
     branches: "*"
   pull_request:
