@@ -7,7 +7,7 @@ plugins {
 
 editorconfig {
 
-   includes = ['src/**', 'build.gradle']
+   includes = ['src/**', 'build.gradle', 'settings.gradle']
 
    excludes = ['gradlew', 'LICENSE']
 

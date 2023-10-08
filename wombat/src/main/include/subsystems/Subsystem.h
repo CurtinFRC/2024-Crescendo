@@ -1,7 +1,5 @@
 #pragma once
 
-#include "behaviour/HasBehaviour.h"
-
 #include <units/time.h>
 
 namespace wom {
@@ -24,6 +22,7 @@ namespace wom {
     StateType _state;
 
    private:
+
   };
 };
 
