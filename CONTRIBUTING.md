@@ -1,6 +1,9 @@
 # Contributing to our 2024 Codebase. 
 Our 2024 Codebase is split up into two main projects, our robot code and our library Wombat. This will only focus on our robot code but if you our on programming team it is recomended that you also read the contributing guide for Wombat. This guide assumes you have already read the README.md.   
 
+## Git History
+Try and keep git history clean, it's ok to use something like a manual squah in order to clean things up. Commit messages should be *descriptive*.
+
 ## Creating Issues
 Issues should be created to report bugs or request features. Use the appropriate template for your issue and make sure to apply the appropriate labels. If you are working on an issue assign yourself to the issue or request to be assigned to it if you do not have write access. 
 

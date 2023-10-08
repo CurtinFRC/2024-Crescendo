@@ -3,13 +3,7 @@
 using namespace wom;
 
 template<typename ConfigType, typename StateType>
-Subsystem<ConfigType, StateType>::Subsystem(ConfigType *config): _config(config) {}
-
-template<typename ConfigType, typename StateType>
-Subsystem<ConfigType, StateType>::~Subsystem() {}
-
-template<typename ConfigType, typename StateType>
-ConfigType *Subsystem<ConfigType, StateType>::getConfig() { return _config; }
+ConfigType Subsystem<ConfigType, StateType>::getConfig() { return _config; }
 
 template<typename ConfigType, typename StateType>
 StateType Subsystem<ConfigType, StateType>::getState() { return _state; }
