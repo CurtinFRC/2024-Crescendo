@@ -6,10 +6,7 @@ namespace wom {
   template<typename ConfigType, typename StateType>
   class Subsystem {
    public:
-    Subsystem(ConfigType *config);
-    ~Subsystem();
-
-    ConfigType *getConfig();
+    ConfigType getConfig();
     StateType getState();
 
     void setState(StateType state);
@@ -18,7 +15,7 @@ namespace wom {
     virtual void OnUpdate(units::second_t dt);
 
    protected:
-    ConfigType *_config;
+    ConfigType _config;
     StateType _state;
 
    private:
