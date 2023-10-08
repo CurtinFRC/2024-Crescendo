@@ -1,6 +1,6 @@
 #pragma once
 
-#include "behaviour/behaviour.h"
+#include "behaviour/Behaviour.h"
 #include "subsystems/Subsystem.h"
 #include "utils/PID.h"
 
