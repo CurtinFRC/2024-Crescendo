@@ -28,13 +28,13 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # Execute check for editor config
-    - name: Editor Config Check
-      run: ./gradlew editorconfigCheck
-
     # Install toolchain in order for C++ to cross compile
     - name: Install Roborio Toolchain
       run: ./gradlew installRoborioToolchain
+
+    # Execute check for editor config
+    - name: Editor Config Check
+      run: ./gradlew editorconfigCheck
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
