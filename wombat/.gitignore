@@ -1,0 +1,6 @@
+.vscode
+.idea
+.gradle
+*.exe
+*.out
+

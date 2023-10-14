@@ -1,7 +1,16 @@
 plugins {
     id "cpp"
     id "google-test-test-suite"
-    id "edu.wpi.first.GradleRIO" version "2022.2.1"
+    id "edu.wpi.first.GradleRIO" version "2023.4.3"
+        id 'org.ec4j.editorconfig' version '0.0.3'
+}
+
+editorconfig {
+
+   includes = ['src/**', 'build.gradle', 'settings.gradle']
+
+   excludes = ['gradlew', 'LICENSE']
+
 }
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -64,6 +73,10 @@ model {
                 }
             }
 
+	    binaries.all {
+	    	lib project: ':wombat', library: 'Wombat', linkage: 'static'
+	    }
+
             // Set deploy task to deploy this component
             deployArtifact.component = it
 
@@ -88,6 +101,10 @@ model {
                 }
             }
 
+	binaries.all {
+	    lib project: ':wombat', library: 'Wombat', linkage: 'static'
+	}
+
             // Enable run tasks for this component
             wpi.cpp.enableExternalTasks(it)
 
@@ -97,3 +114,8 @@ model {
         }
     }
 }
+
+subprojects {
+  project.buildDir = rootProject.buildDir
+}
+
