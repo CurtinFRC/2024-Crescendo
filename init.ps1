@@ -1,0 +1,3 @@
+./gradlew installRoborioToolchain
+./gradlew build
+
