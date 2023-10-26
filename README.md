@@ -5,7 +5,7 @@ CurtinFRC 2024 Codebase
 ## Linux
 Fork this repository then open up a terminal and run :
 ```bash
-git clone https://github.com/_yourusernamehere_/2024-Crescendo.git
+git clone https://github.com/*yourusernamehere*/2024-Crescendo.git
 cd 2024-Crescendo
 chmod +x init
 ./init
@@ -15,9 +15,9 @@ Now look in [CONTRIBUTING.md](./CONTRIBUTING.md) before continuing!
 ## Windows
 Fork this repository then open up a terminal and run :
 ```powershell
-git clone https://github.com/_yourusernamehere_/2024-Crescendo.git
+git clone https:\\github.com\*yourusernamehere*\2024-Crescendo.git
 cd 2024-Crescendo
-./init
+.\init
 ```
 Now look in [CONTRIBUTING.md](./CONTRIBUTING.md) before continuing!
 
