@@ -13,7 +13,7 @@
 namespace wom {
   class Encoder {
    public:
-    Encoder(double encoderTicksPerRotation, double reduction, int type) : _encoderTicksPerRotation(encoderTicksPerRotation), _reduction(reduction), _type(type) {};
+    Encoder(double encoderTicksPerRotation, double reduction, int type);
     virtual double    GetEncoderRawTicks() const = 0;
     virtual double    GetEncoderTickVelocity() const = 0;  // ticks/s
     virtual void      ZeroEncoder();
