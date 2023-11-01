@@ -3,4 +3,8 @@ version: 2
   directory: "/"
   schedule: 
     interval: "daily"
+- package-ecosystem: "gradle"
+  directory: "/wombat"
+  schedule:
+    interval: "daily"
 
