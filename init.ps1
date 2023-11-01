@@ -1,3 +1,3 @@
-./gradlew installRoborioToolchain
-./gradlew build
+.\gradlew installRoborioToolchain
+.\gradlew build
 
