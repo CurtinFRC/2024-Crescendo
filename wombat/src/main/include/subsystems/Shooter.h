@@ -19,8 +19,8 @@ namespace wom {
   };
 
   struct ShooterParams {
-    Gearbox gearbox;
-    PIDConfig<units::radians_per_second, units::volt> pid;
+    wom::utils::Gearbox gearbox;
+    wom::utils::PIDConfig<units::radians_per_second, units::volt> pid;
     units::ampere_t currentLimit;
   };
 
@@ -42,7 +42,7 @@ namespace wom {
 
     units::volt_t _setpointManual{0};
 
-    PIDController<units::radians_per_second, units::volt> _pid;
+    wom::utils::PIDController<units::radians_per_second, units::volt> _pid;
 
     std::shared_ptr<nt::NetworkTable> _table;
   };

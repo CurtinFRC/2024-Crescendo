@@ -36,7 +36,7 @@
 struct ExampleConfig {
   // all variables should be named using lower camel case
 
-  wom::Gearbox leftGearbox;
+  wom::utils::Gearbox leftGearbox;
 };
 
 // enums should use upper camel case naming

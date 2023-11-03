@@ -16,12 +16,12 @@ namespace wom {
   struct DrivetrainConfig {
     std::string path;
 
-    wom::Gearbox left1;
-    wom::Gearbox left2;
-    wom::Gearbox left3;
-    wom::Gearbox right1;
-    wom::Gearbox right2;
-    wom::Gearbox right3;
+    wom::utils::Gearbox left1;
+    wom::utils::Gearbox left2;
+    wom::utils::Gearbox left3;
+    wom::utils::Gearbox right1;
+    wom::utils::Gearbox right2;
+    wom::utils::Gearbox right3;
   };
 
   enum DrivetrainState {
