@@ -11,6 +11,7 @@
 #include "utils/Util.h"
 
 namespace wom {
+namespace utils {
   class Encoder {
    public:
     Encoder(double encoderTicksPerRotation, double reduction, int type);
@@ -109,4 +110,5 @@ namespace wom {
     private: 
       CANCoder *_canEncoder;
   };
+} // namespace utils
 }  // namespace wom

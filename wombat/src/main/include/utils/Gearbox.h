@@ -5,6 +5,7 @@
 #include <frc/system/plant/DCMotor.h>
 
 namespace wom {
+namespace utils {
   using DCMotor = frc::DCMotor;
 /**
  * Struct for motor and encoder pairs.
@@ -29,4 +30,5 @@ struct Gearbox {
    */
   frc::DCMotor motor = frc::DCMotor::CIM(2);
 };
+} // ns utils
 } //ns wom 

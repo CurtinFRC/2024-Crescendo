@@ -4,6 +4,7 @@
 #include <iostream>
 #include <functional>
 namespace wom {
+namespace utils {
 
 class RobotStartup {
  public: 
@@ -17,9 +18,10 @@ int StartRobot() {
 }
 
 #ifndef RUNNING_FRC_TESTS
-#define WOMBAT_ROBOT_MAIN(RobotClz) int main() { wom::StartRobot<RobotClz>(); }
+#define WOMBAT_ROBOT_MAIN(RobotClz) int main() { wom::utils::StartRobot<RobotClz>(); }
 #else 
 #define WOMBAT_ROBOT_MAIN(RobotClz)
 #endif
 
+} // ns utils
 } // ns wom

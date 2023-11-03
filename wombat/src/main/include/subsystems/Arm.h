@@ -15,11 +15,11 @@ namespace wom {
   struct ArmConfig {
     std::string path;
 
-    wom::Gearbox leftGearbox;
-    wom::Gearbox rightGearbox;
+    wom::utils::Gearbox leftGearbox;
+    wom::utils::Gearbox rightGearbox;
     rev::SparkMaxRelativeEncoder armEncoder;
-    wom::PIDConfig<units::radian, units::volt> pidConfig;
-    wom::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
+    wom::utils::PIDConfig<units::radian, units::volt> pidConfig;
+    wom::utils::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
 
     units::kilogram_t armMass;
     units::kilogram_t loadMass;
@@ -62,8 +62,8 @@ namespace wom {
   private:
     ArmConfig _config;
     ArmState _state = ArmState::kIdle;
-    wom::PIDController<units::radian, units::volt> _pid;
-    wom::PIDController<units::radians_per_second, units::volt> _velocityPID;
+    wom::utils::PIDController<units::radian, units::volt> _pid;
+    wom::utils::PIDController<units::radians_per_second, units::volt> _velocityPID;
     
     std::shared_ptr<nt::NetworkTable> _table;
 

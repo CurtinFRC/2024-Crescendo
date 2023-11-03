@@ -19,5 +19,6 @@
 #include "behaviour/BehaviourScheduler.h"
 
 using namespace wom;
+using namespace wom::utils;
 using namespace behaviour;
 

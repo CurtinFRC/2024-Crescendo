@@ -24,8 +24,8 @@ namespace wom {
 
   struct ElevatorConfig {
     std::string path;
-    wom::Gearbox leftGearbox;
-    wom::Gearbox rightGearbox;
+    wom::utils::Gearbox leftGearbox;
+    wom::utils::Gearbox rightGearbox;
     rev::SparkMaxRelativeEncoder elevatorEncoder;
     frc::DigitalInput *topSensor;
     frc::DigitalInput *bottomSensor;
@@ -34,8 +34,8 @@ namespace wom {
     units::meter_t maxHeight;
     units::meter_t minHeight;
     units::meter_t initialHeight;
-    PIDConfig<units::meter, units::volt> pid;
-    PIDConfig<units::meters_per_second, units::volt> velocityPID;
+    wom::utils::PIDConfig<units::meter, units::volt> pid;
+    wom::utils::PIDConfig<units::meters_per_second, units::volt> velocityPID;
 
     void WriteNT(std::shared_ptr<nt::NetworkTable> table);
   };
@@ -76,8 +76,8 @@ namespace wom {
 
     units::meters_per_second_t _velocity;
 
-    PIDController<units::meter, units::volt> _pid;
-    PIDController<units::meters_per_second, units::volt> _velocityPID;
+    wom::utils::PIDController<units::meter, units::volt> _pid;
+    wom::utils::PIDController<units::meters_per_second, units::volt> _velocityPID;
 
     std::shared_ptr<nt::NetworkTable> _table;
   };
