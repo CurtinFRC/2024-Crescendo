@@ -10,8 +10,10 @@
 #include "subsystems/Arm.h"
 #include "subsystems/Shooter.h"
 #include "subsystems/Elevator.h"
+#include "subsystems/behaviours/ShooterBehaviours.h"
 
 #include "drivetrain/Drivetrain.h"
+#include "drivetrain/behaviours/DrivetrainBehaviours.h"
 #include "drivetrain/SwerveDrive.h"
 
 #include "behaviour/Behaviour.h"
@@ -19,6 +21,14 @@
 #include "behaviour/BehaviourScheduler.h"
 
 using namespace wom;
+
 using namespace wom::utils;
+
+using namespace wom::subsystems;
+using namespace wom::subsystems::behaviours;
+
+using namespace wom::drivetrain;
+using namespace wom::drivetrain::behaviours;
+
 using namespace behaviour;
 

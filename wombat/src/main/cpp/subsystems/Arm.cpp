@@ -3,10 +3,9 @@
 #include <units/math.h>
 
 using namespace frc;
-using namespace wom;
 
 //creates network table instatnce on shuffleboard
-void ArmConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
+void wom::subsystems::ArmConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
   table->GetEntry("armMass").SetDouble(armMass.value());
   table->GetEntry("loadMass").SetDouble(loadMass.value());
   table->GetEntry("armLength").SetDouble(armLength.value());
@@ -17,7 +16,7 @@ void ArmConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
 }
 
 //arm config is used
-Arm::Arm(ArmConfig config)
+wom::subsystems::Arm::Arm(wom::subsystems::ArmConfig config)
   : _config(config),
     _pid(config.path + "/pid", config.pidConfig),
     _velocityPID(config.path + "/velocityPID", config.velocityConfig),
@@ -26,16 +25,16 @@ Arm::Arm(ArmConfig config)
 }
 
 //the loop that allows the information to be used
-void Arm::OnUpdate(units::second_t dt) {
+void wom::subsystems::Arm::OnUpdate(units::second_t dt) {
   //sets the voltage and gets the current angle
   units::volt_t voltage = 0_V;
   auto angle = GetAngle();
 
   //sets usable infromation for each state
   switch (_state) {
-    case ArmState::kIdle:
+    case wom::subsystems::ArmState::kIdle:
       break;
-    case ArmState::kVelocity:
+    case wom::subsystems::ArmState::kVelocity:
       {
         units::newton_meter_t torque = 9.81_m / 1_s / 1_s * _config.armLength * units::math::cos(angle + _config.angleOffset) * (0.5 * _config.armMass + _config.loadMass);
         // units::volt_t feedforward = _config.leftGearbox.motor.Voltage(torque, 0_rad/1_s);
@@ -47,7 +46,7 @@ void Arm::OnUpdate(units::second_t dt) {
         // voltage = 0_V;
       }
       break;
-    case ArmState::kAngle:
+    case wom::subsystems::ArmState::kAngle:
       {
         units::newton_meter_t torque = 9.81_m / 1_s / 1_s * _config.armLength * units::math::cos(angle + _config.angleOffset) * (0.5 * _config.armMass + _config.loadMass);
         units::volt_t feedforward = _config.leftGearbox.motor.Voltage(torque, 0_rad/ 1_s);
@@ -55,7 +54,7 @@ void Arm::OnUpdate(units::second_t dt) {
         voltage = _pid.Calculate(angle, dt, feedforward);
       }
       break;
-    case ArmState::kRaw:
+    case wom::subsystems::ArmState::kRaw:
       voltage = _voltage;
       break;
   }
@@ -89,48 +88,48 @@ void Arm::OnUpdate(units::second_t dt) {
   _config.WriteNT(_table->GetSubTable("config"));
 }
 
-void Arm::SetArmSpeedLimit(double limit) {
+void wom::subsystems::Arm::SetArmSpeedLimit(double limit) {
   armLimit = limit;
 }
 
 //defines information needed for the functions and connects the states to their respective function
 
-void Arm::SetIdle() {
+void wom::subsystems::Arm::SetIdle() {
   _state = ArmState::kIdle;
 }
 
-void Arm::SetRaw(units::volt_t voltage) {
-  _state = ArmState::kRaw;
+void wom::subsystems::Arm::SetRaw(units::volt_t voltage) {
+  _state = wom::subsystems::ArmState::kRaw;
   _voltage = voltage;
 }
 
-void Arm::SetAngle(units::radian_t angle) {
-  _state = ArmState::kAngle;
+void wom::subsystems::Arm::SetAngle(units::radian_t angle) {
+  _state = wom::subsystems::ArmState::kAngle;
   _pid.SetSetpoint(angle);
 }
 
-void Arm::SetVelocity(units::radians_per_second_t velocity) {
-  _state = ArmState::kVelocity;
+void wom::subsystems::Arm::SetVelocity(units::radians_per_second_t velocity) {
+  _state = wom::subsystems::ArmState::kVelocity;
   _velocityPID.SetSetpoint(velocity);
 }
 
-ArmConfig &Arm::GetConfig() {
+wom::subsystems::ArmConfig &wom::subsystems::Arm::GetConfig() {
   return _config;
 }
 
-units::radian_t Arm::GetAngle() const {
+units::radian_t wom::subsystems::Arm::GetAngle() const {
   return _config.armEncoder.GetPosition() / 100 * 360 * 1_deg;
 }
 
-units::radians_per_second_t Arm::MaxSpeed() const {
+units::radians_per_second_t wom::subsystems::Arm::MaxSpeed() const {
   return _config.leftGearbox.motor.Speed(0_Nm, 12_V);
 }
 
-units::radians_per_second_t Arm::GetArmVelocity() const {
+units::radians_per_second_t wom::subsystems::Arm::GetArmVelocity() const {
   return _config.armEncoder.GetVelocity() / 100 * 360 * 1_deg / 60_s;
 }
 
-bool Arm::IsStable() const {
+bool wom::subsystems::Arm::IsStable() const {
   return _pid.IsStable(5_deg);
 }
 

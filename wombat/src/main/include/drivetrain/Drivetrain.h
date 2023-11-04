@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "behaviour/HasBehaviour.h"
+#include "behaviour/Behaviour.h"
 #include "utils/Gearbox.h"
 
 #include <units/time.h>
@@ -27,7 +28,6 @@ namespace wom {
   enum DrivetrainState {
     kIdle,
     kTank,
-    kAuto,
   };
 
   class Drivetrain : public behaviour::HasBehaviour {
@@ -38,6 +38,8 @@ namespace wom {
     DrivetrainConfig *GetConfig(); DrivetrainState GetState(); 
 
     void SetState(DrivetrainState state);
+
+    void TankControl();
 
     void OnStart();
     void OnUpdate(units::second_t dt);
