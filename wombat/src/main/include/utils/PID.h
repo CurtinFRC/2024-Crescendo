@@ -12,6 +12,7 @@
 #include <vector>
 
 namespace wom {
+namespace utils {
   template<typename IN, typename OUT>
   struct PIDConfig {
     using in_t = units::unit_t<IN>;
@@ -40,17 +41,17 @@ namespace wom {
     in_t izone{-1};
 
    private:
-    std::vector<std::shared_ptr<NTBound>> _nt_bindings;
+    std::vector<std::shared_ptr<utils::NTBound>> _nt_bindings;
 
    public:
     void RegisterNT() {
       auto table = nt::NetworkTableInstance::GetDefault().GetTable(path);
-      _nt_bindings.emplace_back(std::make_shared<NTBoundUnit<typename kp_t::unit_type>>(table, "kP", kp));
-      _nt_bindings.emplace_back(std::make_shared<NTBoundUnit<typename ki_t::unit_type>>(table, "kI", ki));
-      _nt_bindings.emplace_back(std::make_shared<NTBoundUnit<typename kd_t::unit_type>>(table, "kD", kd));
-      _nt_bindings.emplace_back(std::make_shared<NTBoundUnit<typename error_t::unit_type>>(table, "stableThresh", stableThresh));
-      _nt_bindings.emplace_back(std::make_shared<NTBoundUnit<typename deriv_t::unit_type>>(table, "stableThreshVelocity", stableDerivThresh));
-      _nt_bindings.emplace_back(std::make_shared<NTBoundUnit<IN>>(table, "izone", izone));
+      _nt_bindings.emplace_back(std::make_shared<utils::NTBoundUnit<typename kp_t::unit_type>>(table, "kP", kp));
+      _nt_bindings.emplace_back(std::make_shared<utils::NTBoundUnit<typename ki_t::unit_type>>(table, "kI", ki));
+      _nt_bindings.emplace_back(std::make_shared<utils::NTBoundUnit<typename kd_t::unit_type>>(table, "kD", kd));
+      _nt_bindings.emplace_back(std::make_shared<utils::NTBoundUnit<typename error_t::unit_type>>(table, "stableThresh", stableThresh));
+      _nt_bindings.emplace_back(std::make_shared<utils::NTBoundUnit<typename deriv_t::unit_type>>(table, "stableThreshVelocity", stableDerivThresh));
+      _nt_bindings.emplace_back(std::make_shared<utils::NTBoundUnit<IN>>(table, "izone", izone));
     }
   };
 
@@ -168,4 +169,5 @@ namespace wom {
 
     std::shared_ptr<nt::NetworkTable> _table;
   };
+}
 }

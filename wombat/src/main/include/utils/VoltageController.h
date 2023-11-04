@@ -7,6 +7,7 @@
 #include "utils/Util.h"
 
 namespace wom {
+namespace utils {
   /**
    * A VoltageController is analagous to a MotorController, but in terms of voltage instead
    * of speed.
@@ -71,4 +72,5 @@ namespace wom {
    private:
     frc::MotorController *_MotorController;
   };
+} // namespace utils
 }  // namespace wom

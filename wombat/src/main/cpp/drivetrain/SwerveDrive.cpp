@@ -1,24 +1,24 @@
 #include "drivetrain/SwerveDrive.h"
 
-wom::SwerveModule::SwerveModule(wom::SwerveModuleName name, wom::SwerveModuleConfig config, wom::SwerveModuleState state) :
+wom::drivetrain::SwerveModule::SwerveModule(wom::drivetrain::SwerveModuleName name, wom::drivetrain::SwerveModuleConfig config, wom::drivetrain::SwerveModuleState state) :
   _name(name),
   _config(config),
   _state(state)
   {}
 
-wom::SwerveModuleName wom::SwerveModule::GetName() {
+wom::drivetrain::SwerveModuleName wom::drivetrain::SwerveModule::GetName() {
   return _name;
 }
 
-wom::SwerveModuleConfig wom::SwerveModule::GetConfig() {
+wom::drivetrain::SwerveModuleConfig wom::drivetrain::SwerveModule::GetConfig() {
   return _config;
 }
 
-wom::SwerveModuleState wom::SwerveModule::GetState() {
+wom::drivetrain::SwerveModuleState wom::drivetrain::SwerveModule::GetState() {
   return _state;
 }
 
-void wom::SwerveModule::SetState(wom::SwerveModuleState state) {
+void wom::drivetrain::SwerveModule::SetState(wom::drivetrain::SwerveModuleState state) {
   _state = state;
 }
 
