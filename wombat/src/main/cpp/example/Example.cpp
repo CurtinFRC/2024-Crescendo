@@ -38,7 +38,7 @@ void Example::OnUpdate(units::second_t dt) {
     case ExampleState::kIdle:
       break;
     case ExampleState::kRunning:
-      double speed = (fabs(_driver.GetLeftY()) > 0.15) ? speed : 0;
+      double speed = (fabs(_driver.GetLeftY()) > 0.15) ? _driver.GetLeftY() : 0;
       _config->leftGearbox.transmission->SetVoltage(speed * 1_V);
       break;
   }
