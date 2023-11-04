@@ -15,12 +15,7 @@ void wom::Drivetrain::OnStart() {
   std::cout << "Starting Tank" << std::endl;
 }
 
-void wom::Drivetrain::OnUpdate(second_t dt) {
-  switch(_state) {
-    case wom::DrivetrainState::kIdle:
-      break;
-    case wom::DrivetrainState::kTank:
-      {
+void wom::Drivetrain::TankControl() {
       double rightSpeed = wom::utils::deadzone(_driver.GetRightY());
       double leftSpeed = wom::utils::deadzone(_driver.GetLeftY());
       _config->left1.transmission->SetVoltage(leftSpeed * maxVolts);
@@ -29,9 +24,16 @@ void wom::Drivetrain::OnUpdate(second_t dt) {
       _config->right1.transmission->SetVoltage(rightSpeed * maxVolts);
       _config->right2.transmission->SetVoltage(rightSpeed * maxVolts);
       _config->right3.transmission->SetVoltage(rightSpeed * maxVolts);
+}
+
+void wom::Drivetrain::OnUpdate(second_t dt) {
+  switch(_state) {
+    case wom::DrivetrainState::kIdle:
+      break;
+    case wom::DrivetrainState::kTank:
+      {
+      TankControl();
       break;
       }
-    case wom::DrivetrainState::kAuto:
-      break;
   }
 }

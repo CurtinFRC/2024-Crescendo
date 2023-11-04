@@ -3,7 +3,6 @@
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
 #include "behaviour/HasBehaviour.h"
-#include "behaviour/Behaviour.h"
 #include <units/length.h>
 #include <units/mass.h>
 
@@ -15,6 +14,7 @@
 #include <memory>
 
 namespace wom {
+namespace subsystems {
   enum class ElevatorState {
     kIdle, 
     kPID,
@@ -81,4 +81,5 @@ namespace wom {
 
     std::shared_ptr<nt::NetworkTable> _table;
   };
+}
 };

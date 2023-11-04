@@ -12,6 +12,7 @@
 #include <units/current.h>
 
 namespace wom {
+namespace subsystems {
   struct ArmConfig {
     std::string path;
 
@@ -72,4 +73,5 @@ namespace wom {
 
     units::volt_t _voltage{0};
   };
+}
 };
