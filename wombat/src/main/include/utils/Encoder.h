@@ -35,8 +35,8 @@ namespace utils {
     double _reduction = 1.0;
    private:
     double _encoderTicksPerRotation;
-    units::radian_t _offset = 0_rad;
     int _type = 0;
+    units::radian_t _offset = 0_rad;
   };
 
   class DigitalEncoder : public Encoder {
