@@ -8,14 +8,14 @@ namespace drivetrain {
 namespace behaviours {
   class TankDrive : public behaviour::Behaviour {
    public:
-    TankDrive(wom::Drivetrain *drivebase);
+    TankDrive(wom::drivetrain::Drivetrain *drivebase);
 
     void OnTick(units::second_t dt);
 
    protected:
 
    private:
-    wom::Drivetrain *_drivebase;
+    wom::drivetrain::Drivetrain *_drivebase;
 
   };
 }
