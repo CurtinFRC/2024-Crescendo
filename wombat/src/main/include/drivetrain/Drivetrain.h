@@ -13,6 +13,7 @@
 #include <frc/XboxController.h>
 
 namespace wom {
+namespace drivetrain {
   // TODO PID
   struct DrivetrainConfig {
     std::string path;
@@ -51,5 +52,6 @@ namespace wom {
     frc::XboxController &_driver;
     units::volt_t maxVolts = 9_V;
   };
+}
 }
 

@@ -3,6 +3,7 @@
 #include "behaviour/HasBehaviour.h"
 
 namespace wom {
+namespace drivetrain {
     enum SwerveModuleName {
         FrontLeft,
         FrontRight,
@@ -36,4 +37,5 @@ namespace wom {
       SwerveModuleState _state;
 
     };
+}
 };
