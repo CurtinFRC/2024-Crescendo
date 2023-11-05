@@ -1,11 +1,10 @@
 #pragma once
 
+#include "behaviour/Behaviour.h"
 #include "example/Example.h"
 
-#include "behaviour/Behaviour.h"
-
 class ExampleBehaviour : public behaviour::Behaviour {
- public:
+public:
   ExampleBehaviour(Example *_example);
   ~ExampleBehaviour();
 
@@ -14,6 +13,6 @@ class ExampleBehaviour : public behaviour::Behaviour {
   // See Example.h for more information about OnTick functions (use OnUpdate)
   void OnTick(units::second_t dt);
 
- private:
+private:
   Example *_example;
 };

@@ -1,15 +1,15 @@
 #pragma once
 
+#include <frc/DigitalInput.h>
+#include <frc/simulation/DIOSim.h>
+#include <units/current.h>
+#include <units/mass.h>
+#include <units/voltage.h>
+
 #include "behaviour/HasBehaviour.h"
 #include "utils/Encoder.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
-
-#include <frc/DigitalInput.h>
-#include <frc/simulation/DIOSim.h>
-#include <units/mass.h>
-#include <units/voltage.h>
-#include <units/current.h>
 
 namespace wom {
 namespace subsystems {
@@ -20,7 +20,8 @@ namespace subsystems {
     wom::utils::Gearbox rightGearbox;
     rev::SparkMaxRelativeEncoder armEncoder;
     wom::utils::PIDConfig<units::radian, units::volt> pidConfig;
-    wom::utils::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
+    wom::utils::PIDConfig<units::radians_per_second, units::volt>
+        velocityConfig;
 
     units::kilogram_t armMass;
     units::kilogram_t loadMass;
@@ -33,12 +34,7 @@ namespace subsystems {
     void WriteNT(std::shared_ptr<nt::NetworkTable> table);
   };
 
-  enum class ArmState {
-    kIdle,
-    kAngle,
-    kRaw,
-    kVelocity
-  };
+  enum class ArmState { kIdle, kAngle, kRaw, kVelocity };
 
   class Arm : public behaviour::HasBehaviour {
   public:
@@ -51,21 +47,23 @@ namespace subsystems {
     void SetRaw(units::volt_t voltage);
     void SetVelocity(units::radians_per_second_t velocity);
 
-    void SetArmSpeedLimit(double limit); //units, what are they?? 
+    void SetArmSpeedLimit(double limit); // units, what are they??
 
     ArmConfig &GetConfig();
 
     units::radian_t GetAngle() const;
     units::radians_per_second_t MaxSpeed() const;
     units::radians_per_second_t GetArmVelocity() const;
-    
+
     bool IsStable() const;
+
   private:
     ArmConfig _config;
     ArmState _state = ArmState::kIdle;
     wom::utils::PIDController<units::radian, units::volt> _pid;
-    wom::utils::PIDController<units::radians_per_second, units::volt> _velocityPID;
-    
+    wom::utils::PIDController<units::radians_per_second, units::volt>
+        _velocityPID;
+
     std::shared_ptr<nt::NetworkTable> _table;
 
     double armLimit = 0.4;
@@ -73,5 +71,5 @@ namespace subsystems {
 
     units::volt_t _voltage{0};
   };
-}
-};
+} // namespace subsystems
+}; // namespace wom

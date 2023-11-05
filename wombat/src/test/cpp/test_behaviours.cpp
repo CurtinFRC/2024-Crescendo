@@ -10,7 +10,7 @@ using namespace behaviour;
 
 class MockSystem : public HasBehaviour {};
 class MockBehaviour : public Behaviour {
- public:
+public:
   MOCK_METHOD0(OnStart, void());
   MOCK_METHOD0_T(OnStop, void());
   MOCK_METHOD1(OnTick, void(units::time::second_t));
@@ -72,7 +72,7 @@ TEST(Behaviour, Timeout) {
 
 TEST(SequentialBehaviour, InheritsControls) {
   HasBehaviour a, b;
-  auto         b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>();
+  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>();
   b1->Controls(&a);
   b2->Controls(&a);
   b2->Controls(&b);
@@ -83,8 +83,8 @@ TEST(SequentialBehaviour, InheritsControls) {
 }
 
 TEST(SequentialBehaviour, Sequence) {
-  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>(),
-       b4    = make<MockBehaviour>();
+  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
+       b3 = make<MockBehaviour>(), b4 = make<MockBehaviour>();
   auto chain = b1 << b2 << b3 << b4;
 
   {
@@ -116,7 +116,8 @@ TEST(SequentialBehaviour, Sequence) {
 
 TEST(ConcurrentBehaviour, InheritsControls) {
   HasBehaviour a, b;
-  auto         b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>();
+  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
+       b3 = make<MockBehaviour>();
   b1->Controls(&a);
   b2->Controls(&b);
   b3->Controls(&a);
@@ -134,7 +135,7 @@ TEST(ConcurrentBehaviour, Race) {
   b2->SetPeriod(10_ms);
 
   auto chain = b1 | b2;
-  chain->SetPeriod(1_s);  // Silence Period warning
+  chain->SetPeriod(1_s); // Silence Period warning
 
   EXPECT_CALL(*b1, OnStart).Times(1);
   EXPECT_CALL(*b2, OnStart).Times(1);
@@ -158,7 +159,7 @@ TEST(ConcurrentBehaviour, All) {
   b2->SetPeriod(10_ms);
 
   auto chain = b1 & b2;
-  chain->SetPeriod(1_s);  // Silence Period warning
+  chain->SetPeriod(1_s); // Silence Period warning
 
   EXPECT_CALL(*b1, OnStart).Times(1);
   EXPECT_CALL(*b2, OnStart).Times(1);
@@ -194,7 +195,7 @@ TEST(ConcurrentBehaviour, Until) {
   ASSERT_TRUE(b1->IsRunning());
   ASSERT_TRUE(b2->IsRunning());
 
-  // TODO: Need to add a way to have SetDone interrupt the wait on 
+  // TODO: Need to add a way to have SetDone interrupt the wait on
   // the thread. E.g. SleepOrUntilDone
   b2->SetDone();
   std::this_thread::sleep_for(std::chrono::milliseconds(30));
@@ -250,7 +251,8 @@ TEST(If, Else) {
 }
 
 TEST(Switch, Int) {
-  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>();
+  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
+       b3 = make<MockBehaviour>();
 
   auto chain = make<Switch<int>>(1)->When(0, b1)->When(1, b2)->When(2, b3);
 
@@ -262,7 +264,8 @@ TEST(Switch, Int) {
 }
 
 TEST(Switch, Decide) {
-  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>();
+  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
+       b3 = make<MockBehaviour>();
 
   auto chain = make<Decide>()
                    ->When([]() { return true; }, b1)
@@ -278,9 +281,9 @@ TEST(Switch, Decide) {
 
 TEST(Behaviour, FullChain) {
   BehaviourScheduler s;
-  MockSystem         a, b;
-  auto               b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>(),
-       b4 = make<MockBehaviour>();
+  MockSystem a, b;
+  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
+       b3 = make<MockBehaviour>(), b4 = make<MockBehaviour>();
 
   b1->Controls(&a);
   b2->Controls(&b);
@@ -301,10 +304,10 @@ TEST(Behaviour, FullChain) {
   EXPECT_CALL(*b3, OnStop).Times(1);
   EXPECT_CALL(*b4, OnStop).Times(1);
 
-  EXPECT_CALL(*b1, OnTick).Times(::testing::Between(9, 11));   // 100ms @ 100Hz
-  EXPECT_CALL(*b2, OnTick).Times(::testing::Between(5, 7));    // 300ms @ 20Hz
-  EXPECT_CALL(*b3, OnTick).Times(::testing::Between(4, 6));    // 100ms @ 50Hz
-  EXPECT_CALL(*b4, OnTick).Times(::testing::Between(22, 23));  // 300ms @ 75Hz
+  EXPECT_CALL(*b1, OnTick).Times(::testing::Between(9, 11));  // 100ms @ 100Hz
+  EXPECT_CALL(*b2, OnTick).Times(::testing::Between(5, 7));   // 300ms @ 20Hz
+  EXPECT_CALL(*b3, OnTick).Times(::testing::Between(4, 6));   // 100ms @ 50Hz
+  EXPECT_CALL(*b4, OnTick).Times(::testing::Between(22, 23)); // 300ms @ 75Hz
 
   auto chain = ((b1 << b3) & b2) | b4;
 
@@ -364,4 +367,3 @@ TEST(Behaviour, FullChain) {
   ASSERT_EQ(a.GetActiveBehaviour(), nullptr);
   ASSERT_EQ(b.GetActiveBehaviour(), nullptr);
 }
-

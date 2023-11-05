@@ -20,10 +20,7 @@ void wom::utils::WritePose3NT(std::shared_ptr<nt::NetworkTable> table, frc::Pose
 }
 
 double wom::utils::deadzone(double val, double deadzone) {
-    return std::fabs(val) > deadzone ? val : 0;
+  return std::fabs(val) > deadzone ? val : 0;
 }
 
-double wom::utils::spow2(double val) {
-    return val*val*(val > 0 ? 1 : -1);
-}
-
+double wom::utils::spow2(double val) { return val * val * (val > 0 ? 1 : -1); }

@@ -16,7 +16,7 @@ namespace behaviour {
  * RobotPeriodic
  */
 class BehaviourScheduler {
- public:
+public:
   BehaviourScheduler();
   ~BehaviourScheduler();
 
@@ -48,9 +48,9 @@ class BehaviourScheduler {
    */
   void InterruptAll();
 
- private:
+private:
   std::vector<HasBehaviour *> _systems;
-  std::recursive_mutex        _active_mtx;
-  std::vector<std::thread>    _threads;
+  std::recursive_mutex _active_mtx;
+  std::vector<std::thread> _threads;
 };
-}  // namespace behaviour
+} // namespace behaviour

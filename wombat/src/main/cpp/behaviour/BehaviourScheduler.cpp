@@ -6,7 +6,8 @@ BehaviourScheduler::BehaviourScheduler() {}
 
 BehaviourScheduler::~BehaviourScheduler() {
   for (HasBehaviour *sys : _systems) {
-    if (sys->_active_behaviour) sys->_active_behaviour->Interrupt();
+    if (sys->_active_behaviour)
+      sys->_active_behaviour->Interrupt();
   }
 
   for (auto &t : _threads) {

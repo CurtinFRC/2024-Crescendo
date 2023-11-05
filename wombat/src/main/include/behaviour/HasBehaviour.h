@@ -12,7 +12,7 @@ class BehaviourScheduler;
  * This is commonly implemented on shooters, drivetrains, elevators, etc.
  */
 class HasBehaviour {
- public:
+public:
   /**
    * Set the default behaviour to run if no behaviours are currently running.
    * This is commonly used to default to Teleoperated control.
@@ -24,11 +24,12 @@ class HasBehaviour {
    */
   std::shared_ptr<Behaviour> GetActiveBehaviour();
 
- protected:
-  std::shared_ptr<Behaviour>                      _active_behaviour{nullptr};
-  std::function<std::shared_ptr<Behaviour>(void)> _default_behaviour_producer{nullptr};
+protected:
+  std::shared_ptr<Behaviour> _active_behaviour{nullptr};
+  std::function<std::shared_ptr<Behaviour>(void)> _default_behaviour_producer{
+      nullptr};
 
- private:
+private:
   friend class BehaviourScheduler;
 };
-}  // namespace behaviour
+} // namespace behaviour
