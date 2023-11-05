@@ -2,6 +2,9 @@ CurtinFRC 2024 Codebase
 ===
 
 # Setup
+
+**This assumes that you have the WPILib tools installed. If you do not, follow the instructions [here](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html).**
+
 ## Linux
 Fork this repository then open up a terminal and run :
 ```bash
