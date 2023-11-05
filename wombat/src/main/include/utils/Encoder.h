@@ -8,12 +8,15 @@
 #include <ctre/Phoenix.h>
 #include <frc/DutyCycleEncoder.h>
 
+#include <iostream>
+
 #include "utils/Util.h"
 
 namespace wom {
+namespace utils {
   class Encoder {
    public:
-    Encoder(double encoderTicksPerRotation, double reduction, int type) : _encoderTicksPerRotation(encoderTicksPerRotation), _reduction(reduction), _type(type) {};
+    Encoder(double encoderTicksPerRotation, double reduction, int type);
     virtual double    GetEncoderRawTicks() const = 0;
     virtual double    GetEncoderTickVelocity() const = 0;  // ticks/s
     virtual void      ZeroEncoder();
@@ -34,8 +37,8 @@ namespace wom {
     double _reduction = 1.0;
    private:
     double _encoderTicksPerRotation;
-    units::radian_t _offset = 0_rad;
     int _type = 0;
+    units::radian_t _offset = 0_rad;
   };
 
   class DigitalEncoder : public Encoder {
@@ -109,4 +112,5 @@ namespace wom {
     private: 
       CANCoder *_canEncoder;
   };
+} // namespace utils
 }  // namespace wom

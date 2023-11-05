@@ -12,6 +12,7 @@
 #include <memory>
 
 namespace wom {
+namespace subsystems {
   enum class ShooterState {
     kPID,
     kManual,
@@ -19,8 +20,8 @@ namespace wom {
   };
 
   struct ShooterParams {
-    Gearbox gearbox;
-    PIDConfig<units::radians_per_second, units::volt> pid;
+    wom::utils::Gearbox gearbox;
+    wom::utils::PIDConfig<units::radians_per_second, units::volt> pid;
     units::ampere_t currentLimit;
   };
 
@@ -42,29 +43,9 @@ namespace wom {
 
     units::volt_t _setpointManual{0};
 
-    PIDController<units::radians_per_second, units::volt> _pid;
+    wom::utils::PIDController<units::radians_per_second, units::volt> _pid;
 
     std::shared_ptr<nt::NetworkTable> _table;
   };
-
-  class ShooterConstant : public behaviour::Behaviour {
-   public:
-    ShooterConstant(Shooter *s, units::volt_t setpoint);
-
-    void OnTick(units::second_t dt) override;
-   private:
-    Shooter *_shooter;
-    units::volt_t _setpoint;
-  };
-
-  class ShooterSpinup : public behaviour::Behaviour {
-   public:
-    ShooterSpinup(Shooter *s, units::radians_per_second_t speed, bool hold = false);
-
-    void OnTick(units::second_t dt) override;
-   private:
-    Shooter *_shooter;
-    units::radians_per_second_t _speed;
-    bool _hold;
-  };
+}
 }

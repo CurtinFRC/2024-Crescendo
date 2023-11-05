@@ -3,8 +3,6 @@
 #include <frc/RobotController.h>
 #include <networktables/NetworkTable.h>
 
-// #include <frc/geometry/Pose2d.h>
-// #include <frc/geometry/Pose3d.h>
 #include <frc/geometry/Pose3d.h>
 
 #include <functional>
@@ -14,6 +12,7 @@
 #include <units/time.h>
 
 namespace wom {
+namespace utils {
   template<typename T>
   T&& invert(T &&system) {
     system.SetInverted(true);
@@ -74,4 +73,5 @@ namespace wom {
 
   double deadzone(double val, double deadzone = 0.05);
   double spow2(double val);
+}
 }

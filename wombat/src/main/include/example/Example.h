@@ -8,7 +8,7 @@
 // Wombat includes
 
 #include "behaviour/HasBehaviour.h"
-#include "Gearbox.h"
+#include "utils/Gearbox.h"
 
 // WPILIB includes
 
@@ -36,7 +36,7 @@
 struct ExampleConfig {
   // all variables should be named using lower camel case
 
-  wom::Gearbox leftGearbox;
+  wom::utils::Gearbox leftGearbox;
 };
 
 // enums should use upper camel case naming
@@ -111,5 +111,4 @@ class Example: public behaviour::HasBehaviour {
   ExampleConfig *_config;
   ExampleState _state;
   frc::XboxController &_driver;
-
 };
