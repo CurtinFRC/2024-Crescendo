@@ -3,12 +3,11 @@ CurtinFRC 2024 Codebase
 ![Build Status of Upstream Master](https://github.com/CurtinFRC/2024-Crescendo/actions/workflows/ci.yml/badge.svg)
 
 Our codebase for the 2024 Crescendo game using Gradle, our library Wombat and other things.
+# Setup
 
-Setup
-====
+**This assumes that you have the WPILib tools installed. If you do not, follow the instructions [here](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html).**
 
-Linux
------
+## Linux
 Fork this repository then open up a terminal and run :
 ```bash
 git clone https://github.com/*yourusernamehere*/2024-Crescendo.git
