@@ -16,6 +16,8 @@
 #include "drivetrain/behaviours/DrivetrainBehaviours.h"
 #include "drivetrain/SwerveDrive.h"
 
+#include "vision/Limelight.h"
+
 #include "behaviour/Behaviour.h"
 #include "behaviour/HasBehaviour.h"
 #include "behaviour/BehaviourScheduler.h"
@@ -29,6 +31,8 @@ using namespace wom::subsystems::behaviours;
 
 using namespace wom::drivetrain;
 using namespace wom::drivetrain::behaviours;
+
+using namespace wom::vision;
 
 using namespace behaviour;
 

@@ -8,6 +8,8 @@
 #include <ctre/Phoenix.h>
 #include <frc/DutyCycleEncoder.h>
 
+#include <iostream>
+
 #include "utils/Util.h"
 
 namespace wom {
