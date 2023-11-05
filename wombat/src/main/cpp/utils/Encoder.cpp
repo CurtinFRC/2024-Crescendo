@@ -1,5 +1,4 @@
 #include "utils/Encoder.h"
-#include <iostream>
 
 using namespace wom;
 
