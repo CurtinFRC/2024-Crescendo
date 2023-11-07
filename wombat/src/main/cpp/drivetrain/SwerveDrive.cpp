@@ -6,7 +6,9 @@ wom::drivetrain::SwerveModule::SwerveModule(wom::drivetrain::SwerveModuleConfig 
       _rotationalPID(config.path + "/pid/rotationGearbox", config.rotationPID),
       _movementPID(config.path + "/pid/movementGearbox", config.movementPID),
       _config(config), _state(state)
-{}
+{
+  table = nt::NetworkTableInstance::GetDefault().GetTable("Vision");
+}
 
 wom::drivetrain::SwerveModuleConfig wom::drivetrain::SwerveModule::GetConfig() {
   return _config;
@@ -37,13 +39,14 @@ void wom::drivetrain::SwerveModule::OnStart() {
   default:
     name = "Invalid Name";
     std::cout << "Invalid Name" << std::endl;
-    ;
     break;
   }
 
   std::cout << "Starting Swerve Module" << std::endl;
   std::cout << "Module name: " << name << std::endl;
-  table = nt::NetworkTableInstance::GetDefault().GetTable("Vision");
+  _config.rotationGearbox.encoder->SetEncoderPosition(0_deg);
+  _config.movementGearbox.encoder->SetEncoderPosition(0_deg);
+
 }
 
 void wom::drivetrain::SwerveModule::PIDControl(units::second_t dt, units::radian_t rotation, units::meter_t movement) {
@@ -114,9 +117,9 @@ void wom::drivetrain::Swerve::PoseControl(frc::Pose3d desiredPose, units::second
   units::radian_t rotation = units::math::acos(movement / desiredPose.X());
 
   if (rotation > 0_rad) {
-    rotation = rotation + 45_rad;
+    rotation += 45_rad;
   } else {
-    rotation = rotation - 45_rad;
+    rotation -= 45_rad;
   }
   _config.frontLeft.SetState(wom::drivetrain::SwerveModuleState::kPID);
   _config.frontLeft.OnUpdate(dt, rotation, movement);
@@ -124,9 +127,9 @@ void wom::drivetrain::Swerve::PoseControl(frc::Pose3d desiredPose, units::second
   _config.frontRight.OnUpdate(dt, rotation, movement);
 
   if (rotation > 0_rad) {
-    rotation = rotation - 90_rad;
+    rotation -= 90_rad;
   } else {
-    rotation = rotation + 90_rad;
+    rotation += 90_rad;
   }
   _config.backLeft.SetState(wom::drivetrain::SwerveModuleState::kPID);
   _config.backLeft.OnUpdate(dt, rotation, movement);

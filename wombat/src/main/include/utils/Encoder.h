@@ -55,7 +55,6 @@ namespace utils {
     frc::Encoder _nativeEncoder;
   };
 
-  class SimCANSparkMaxEncoder;
   class CANSparkMaxEncoder : public Encoder {
   public:
     CANSparkMaxEncoder(rev::CANSparkMax *controller, double reduction = 1);
@@ -65,7 +64,6 @@ namespace utils {
 
   protected:
     rev::SparkMaxRelativeEncoder _encoder;
-    friend class SimCANSparkMaxEncoder;
   };
 
   class TalonFXEncoder : public Encoder {
