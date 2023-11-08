@@ -7,7 +7,7 @@ wom::drivetrain::SwerveModule::SwerveModule(wom::drivetrain::SwerveModuleConfig 
       _movementPID(config.path + "/pid/movementGearbox", config.movementPID),
       _config(config), _state(state)
 {
-  table = nt::NetworkTableInstance::GetDefault().GetTable("Vision");
+  table = nt::NetworkTableInstance::GetDefault().GetTable("Swerve Module");
 }
 
 wom::drivetrain::SwerveModuleConfig wom::drivetrain::SwerveModule::GetConfig() {
