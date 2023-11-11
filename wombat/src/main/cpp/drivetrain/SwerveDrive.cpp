@@ -46,7 +46,6 @@ void wom::drivetrain::SwerveModule::OnStart() {
   std::cout << "Module name: " << name << std::endl;
   _config.rotationGearbox.encoder->SetEncoderPosition(0_deg);
   _config.movementGearbox.encoder->SetEncoderPosition(0_deg);
-
 }
 
 void wom::drivetrain::SwerveModule::PIDControl(units::second_t dt, units::radian_t rotation, units::meter_t movement) {
@@ -138,6 +137,10 @@ void wom::drivetrain::Swerve::PoseControl(frc::Pose3d desiredPose, units::second
 }
 
 void wom::drivetrain::Swerve::OnStart() {
+  _config.backLeft.OnStart();
+  _config.backRight.OnStart();
+  _config.frontLeft.OnStart();
+  _config.frontRight.OnStart();
   std::cout << "Starting Swerve" << std::endl;
 }
 
