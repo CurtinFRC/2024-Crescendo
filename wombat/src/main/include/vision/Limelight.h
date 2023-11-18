@@ -26,7 +26,7 @@
 namespace wom {
 namespace vision {
   class Limelight : public behaviour::HasBehaviour {
-  public:
+   public:
     Limelight(std::string *limelightName);
 
     std::string *GetName();
@@ -48,8 +48,8 @@ namespace vision {
 
     frc::Pose3d GetPose();
 
-  private:
+   private:
     std::string *_limelightName;
   };
-} // namespace vision
-} // namespace wom
+}  // namespace vision
+}  // namespace wom

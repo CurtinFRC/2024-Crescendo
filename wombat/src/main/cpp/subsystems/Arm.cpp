@@ -22,7 +22,8 @@ void wom::subsystems::ArmConfig::WriteNT(
 
 // arm config is used
 wom::subsystems::Arm::Arm(wom::subsystems::ArmConfig config)
-    : _config(config), _pid(config.path + "/pid", config.pidConfig),
+    : _config(config),
+      _pid(config.path + "/pid", config.pidConfig),
       _velocityPID(config.path + "/velocityPID", config.velocityConfig),
       _table(nt::NetworkTableInstance::GetDefault().GetTable(config.path)) {}
 
@@ -30,40 +31,40 @@ wom::subsystems::Arm::Arm(wom::subsystems::ArmConfig config)
 void wom::subsystems::Arm::OnUpdate(units::second_t dt) {
   // sets the voltage and gets the current angle
   units::volt_t voltage = 0_V;
-  auto angle = GetAngle();
+  auto          angle   = GetAngle();
 
   // sets usable infromation for each state
   switch (_state) {
-  case wom::subsystems::ArmState::kIdle:
-    break;
-  case wom::subsystems::ArmState::kVelocity: {
-    units::newton_meter_t torque =
-        9.81_m / 1_s / 1_s * _config.armLength *
-        units::math::cos(angle + _config.angleOffset) *
-        (0.5 * _config.armMass + _config.loadMass);
-    // units::volt_t feedforward = _config.leftGearbox.motor.Voltage(torque,
-    // 0_rad/1_s);
-    units::volt_t feedforward =
-        _config.leftGearbox.motor.Voltage(torque, _velocityPID.GetSetpoint());
-    // feedforward = 3.5_V;
-    // std::cout << "feedforward" << feedforward.value() << std::endl;
-    voltage = _velocityPID.Calculate(GetArmVelocity(), dt, feedforward);
-    // std::cout << "arm velocity voltage is: " << voltage.value() <<
-    // std::endl; voltage = 0_V;
-  } break;
-  case wom::subsystems::ArmState::kAngle: {
-    units::newton_meter_t torque =
-        9.81_m / 1_s / 1_s * _config.armLength *
-        units::math::cos(angle + _config.angleOffset) *
-        (0.5 * _config.armMass + _config.loadMass);
-    units::volt_t feedforward =
-        _config.leftGearbox.motor.Voltage(torque, 0_rad / 1_s);
-    // std::cout << "feedforward" << feedforward.value() << std::endl;
-    voltage = _pid.Calculate(angle, dt, feedforward);
-  } break;
-  case wom::subsystems::ArmState::kRaw:
-    voltage = _voltage;
-    break;
+    case wom::subsystems::ArmState::kIdle:
+      break;
+    case wom::subsystems::ArmState::kVelocity: {
+      units::newton_meter_t torque =
+          9.81_m / 1_s / 1_s * _config.armLength *
+          units::math::cos(angle + _config.angleOffset) *
+          (0.5 * _config.armMass + _config.loadMass);
+      // units::volt_t feedforward = _config.leftGearbox.motor.Voltage(torque,
+      // 0_rad/1_s);
+      units::volt_t feedforward =
+          _config.leftGearbox.motor.Voltage(torque, _velocityPID.GetSetpoint());
+      // feedforward = 3.5_V;
+      // std::cout << "feedforward" << feedforward.value() << std::endl;
+      voltage = _velocityPID.Calculate(GetArmVelocity(), dt, feedforward);
+      // std::cout << "arm velocity voltage is: " << voltage.value() <<
+      // std::endl; voltage = 0_V;
+    } break;
+    case wom::subsystems::ArmState::kAngle: {
+      units::newton_meter_t torque =
+          9.81_m / 1_s / 1_s * _config.armLength *
+          units::math::cos(angle + _config.angleOffset) *
+          (0.5 * _config.armMass + _config.loadMass);
+      units::volt_t feedforward =
+          _config.leftGearbox.motor.Voltage(torque, 0_rad / 1_s);
+      // std::cout << "feedforward" << feedforward.value() << std::endl;
+      voltage = _pid.Calculate(angle, dt, feedforward);
+    } break;
+    case wom::subsystems::ArmState::kRaw:
+      voltage = _voltage;
+      break;
   }
 
   // if (
@@ -86,8 +87,8 @@ void wom::subsystems::Arm::OnUpdate(units::second_t dt) {
 
   // voltage = units::math::max(units::math::min(voltage, voltageMax),
   // voltageMin);
-  units::volt_t voltageMin = -5.5_V;
-  units::volt_t voltageMax = 5.5_V;
+  units::volt_t voltageMin = 0_V;
+  units::volt_t voltageMax = 12_V;
   voltage = units::math::max(units::math::min(voltage, voltageMax), voltageMin);
 
   // std::cout << "voltage: " << voltage.value() << std::endl;
@@ -100,15 +101,19 @@ void wom::subsystems::Arm::OnUpdate(units::second_t dt) {
   _config.WriteNT(_table->GetSubTable("config"));
 }
 
-void wom::subsystems::Arm::SetArmSpeedLimit(double limit) { armLimit = limit; }
+void wom::subsystems::Arm::SetArmSpeedLimit(double limit) {
+  armLimit = limit;
+}
 
 // defines information needed for the functions and connects the states to their
 // respective function
 
-void wom::subsystems::Arm::SetIdle() { _state = ArmState::kIdle; }
+void wom::subsystems::Arm::SetIdle() {
+  _state = ArmState::kIdle;
+}
 
 void wom::subsystems::Arm::SetRaw(units::volt_t voltage) {
-  _state = wom::subsystems::ArmState::kRaw;
+  _state   = wom::subsystems::ArmState::kRaw;
   _voltage = voltage;
 }
 
@@ -138,7 +143,9 @@ units::radians_per_second_t wom::subsystems::Arm::GetArmVelocity() const {
   return _config.armEncoder.GetVelocity() / 100 * 360 * 1_deg / 60_s;
 }
 
-bool wom::subsystems::Arm::IsStable() const { return _pid.IsStable(5_deg); }
+bool wom::subsystems::Arm::IsStable() const {
+  return _pid.IsStable(5_deg);
+}
 
 /* SIMULATION */
 // #include <units/math.h>

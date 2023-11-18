@@ -4,8 +4,8 @@ using namespace frc;
 using namespace units;
 
 wom::drivetrain::Drivetrain::Drivetrain(
-    wom::drivetrain::DrivetrainConfig *config, XboxController &driver)
-    : _config(config), _driver(driver) {}
+    wom::drivetrain::DrivetrainConfig *config)
+    : _config(config) {}
 wom::drivetrain::Drivetrain::~Drivetrain() {}
 
 wom::drivetrain::DrivetrainConfig *wom::drivetrain::Drivetrain::GetConfig() {
@@ -24,9 +24,11 @@ void wom::drivetrain::Drivetrain::OnStart() {
   std::cout << "Starting Tank" << std::endl;
 }
 
-void wom::drivetrain::Drivetrain::TankControl() {
-  double rightSpeed = wom::utils::deadzone(_driver.GetRightY());
-  double leftSpeed = wom::utils::deadzone(_driver.GetLeftY());
+void wom::drivetrain::Drivetrain::SetSpeed(wom::drivetrain::TankSpeed speed) {
+  _speed = speed;
+}
+
+void wom::drivetrain::Drivetrain::TankControl(double rightSpeed, double leftSpeed) {
   _config->left1.transmission->SetVoltage(leftSpeed * maxVolts);
   _config->left2.transmission->SetVoltage(leftSpeed * maxVolts);
   _config->left3.transmission->SetVoltage(leftSpeed * maxVolts);
@@ -37,11 +39,11 @@ void wom::drivetrain::Drivetrain::TankControl() {
 
 void wom::drivetrain::Drivetrain::OnUpdate(second_t dt) {
   switch (_state) {
-  case wom::drivetrain::DrivetrainState::kIdle:
-    break;
-  case wom::drivetrain::DrivetrainState::kTank: {
-    TankControl();
-    break;
-  }
+    case wom::drivetrain::DrivetrainState::kIdle:
+      break;
+    case wom::drivetrain::DrivetrainState::kTank: {
+      TankControl(_speed.right, _speed.left);
+      break;
+    }
   }
 }

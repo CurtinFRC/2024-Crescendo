@@ -4,21 +4,26 @@ using namespace wom;
 
 utils::Encoder::Encoder(double encoderTicksPerRotation, double reduction,
                         int type)
-    : _reduction(reduction), _encoderTicksPerRotation(encoderTicksPerRotation),
+    : _reduction(reduction),
+      _encoderTicksPerRotation(encoderTicksPerRotation),
       _type(type){};
 
-double utils::Encoder::GetEncoderTicks() const { return GetEncoderRawTicks(); }
+double utils::Encoder::GetEncoderTicks() const {
+  return GetEncoderRawTicks();
+}
 
 double utils::Encoder::GetEncoderTicksPerRotation() const {
   return _encoderTicksPerRotation * _reduction;
 }
 
-void utils::Encoder::ZeroEncoder() { _offset = GetEncoderRawTicks() * 1_rad; }
+void utils::Encoder::ZeroEncoder() {
+  _offset = GetEncoderRawTicks() * 1_rad;
+}
 
 void utils::Encoder::SetEncoderPosition(units::degree_t position) {
   // units::radian_t offset_turns = position - Getutils::EncoderPosition();
   units::degree_t offset = position - (GetEncoderRawTicks() * 360 * 1_deg);
-  _offset = offset;
+  _offset                = offset;
   // _offset = -offset_turns;
 }
 
@@ -28,7 +33,9 @@ void utils::Encoder::SetEncoderOffset(units::radian_t offset) {
   // _offset = offset_turns.value() * Getutils::EncoderTicksPerRotation();
 }
 
-void utils::Encoder::SetReduction(double reduction) { _reduction = reduction; }
+void utils::Encoder::SetReduction(double reduction) {
+  _reduction = reduction;
+}
 
 units::radian_t utils::Encoder::GetEncoderPosition() {
   if (_type == 0) {
@@ -67,7 +74,7 @@ double utils::DigitalEncoder::GetEncoderTickVelocity() const {
 }
 
 utils::CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax *controller,
-                                              double reduction)
+                                              double            reduction)
     : utils::Encoder(42, reduction, 2), _encoder(controller->GetEncoder()) {}
 
 double utils::CANSparkMaxEncoder::GetEncoderRawTicks() const {
@@ -118,7 +125,9 @@ double utils::DutyCycleEncoder::GetEncoderRawTicks() const {
   return _dutyCycleEncoder.Get().value();
 }
 
-double utils::DutyCycleEncoder::GetEncoderTickVelocity() const { return 0; }
+double utils::DutyCycleEncoder::GetEncoderTickVelocity() const {
+  return 0;
+}
 
 utils::CanEncoder::CanEncoder(int deviceNumber, double ticksPerRotation,
                               double reduction)

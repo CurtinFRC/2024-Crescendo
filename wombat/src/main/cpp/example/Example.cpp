@@ -18,18 +18,24 @@ Example::Example(ExampleConfig *_config, frc::XboxController &_driver)
 // for a setter is take the variable we want and assign it the parameters value
 // so they are usually one line functions
 
-void Example::SetState(ExampleState state) { _state = state; }
+void Example::SetState(ExampleState state) {
+  _state = state;
+}
 
 // here we have our get config. inside of the logic all we need to do is return
 // our config variable making getters also quite simple and usually one liners
 
-ExampleConfig *Example::GetConfig() { return _config; }
+ExampleConfig *Example::GetConfig() {
+  return _config;
+}
 
 // here we have our on start function. all this on start function does is print
 // starting to the console when the robot starts but you will often also have to
 // add zeroing and other features
 
-void Example::OnStart() { std::cout << "starting" << std::endl; }
+void Example::OnStart() {
+  std::cout << "starting" << std::endl;
+}
 
 // here we have our on update function. this function is relatively simple in
 // this example but in most subsystems will be much more complicated. all we are
@@ -40,11 +46,11 @@ void Example::OnStart() { std::cout << "starting" << std::endl; }
 
 void Example::OnUpdate(units::second_t dt) {
   switch (_state) {
-  case ExampleState::kIdle:
-    break;
-  case ExampleState::kRunning:
-    double speed = (fabs(_driver.GetLeftY()) > 0.15) ? _driver.GetLeftY() : 0;
-    _config->leftGearbox.transmission->SetVoltage(speed * 1_V);
-    break;
+    case ExampleState::kIdle:
+      break;
+    case ExampleState::kRunning:
+      double speed = (fabs(_driver.GetLeftY()) > 0.05) ? _driver.GetLeftY() : 0;
+      _config->leftGearbox.transmission->SetVoltage(speed * 1_V);
+      break;
   }
 }

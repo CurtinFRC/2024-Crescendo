@@ -4,7 +4,7 @@
 #include "example/Example.h"
 
 class ExampleBehaviour : public behaviour::Behaviour {
-public:
+ public:
   ExampleBehaviour(Example *_example);
   ~ExampleBehaviour();
 
@@ -13,6 +13,6 @@ public:
   // See Example.h for more information about OnTick functions (use OnUpdate)
   void OnTick(units::second_t dt);
 
-private:
+ private:
   Example *_example;
 };

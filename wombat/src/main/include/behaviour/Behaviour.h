@@ -39,10 +39,10 @@ class SequentialBehaviour;
  * For examples, see the BEHAVIOURS.md document.
  */
 class Behaviour : public std::enable_shared_from_this<Behaviour> {
-public:
+ public:
   using ptr = std::shared_ptr<Behaviour>;
 
-  Behaviour(std::string name = "<unnamed behaviour>",
+  Behaviour(std::string           name   = "<unnamed behaviour>",
             units::time::second_t period = 20_ms);
   ~Behaviour();
 
@@ -149,24 +149,25 @@ public:
    */
   Behaviour::ptr Until(Behaviour::ptr other);
 
-private:
+ private:
   void Stop(BehaviourState new_state);
 
-  std::string _bhvr_name;
-  units::time::second_t _bhvr_period = 20_ms;
+  std::string                 _bhvr_name;
+  units::time::second_t       _bhvr_period = 20_ms;
   std::atomic<BehaviourState> _bhvr_state;
 
   wpi::SmallSet<HasBehaviour *, 8> _bhvr_controls;
 
-  double _bhvr_time = 0;
-  units::time::second_t _bhvr_timer = 0_s;
+  double                _bhvr_time    = 0;
+  units::time::second_t _bhvr_timer   = 0_s;
   units::time::second_t _bhvr_timeout = -1_s;
 };
 
 /**
  * Shorthand function to create a shared_ptr for a Behaviour.
  */
-template <class T, class... Args> std::shared_ptr<T> make(Args &&...args) {
+template <class T, class... Args>
+std::shared_ptr<T> make(Args &&...args) {
   return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
@@ -176,7 +177,7 @@ template <class T, class... Args> std::shared_ptr<T> make(Args &&...args) {
  * want to invoke this class directly, but instead use b1 << b2.
  */
 class SequentialBehaviour : public Behaviour {
-public:
+ public:
   void Add(ptr next);
 
   std::string GetName() const override;
@@ -184,7 +185,7 @@ public:
   void OnTick(units::time::second_t dt) override;
   void OnStop() override;
 
-protected:
+ protected:
   std::deque<ptr> _queue;
 };
 
@@ -196,18 +197,18 @@ inline std::shared_ptr<SequentialBehaviour> operator<<(Behaviour::ptr a,
   return seq;
 }
 
-inline std::shared_ptr<SequentialBehaviour>
-operator<<(std::shared_ptr<SequentialBehaviour> a, Behaviour::ptr b) {
+inline std::shared_ptr<SequentialBehaviour> operator<<(
+    std::shared_ptr<SequentialBehaviour> a, Behaviour::ptr b) {
   a->Add(b);
   return a;
 }
 
 class DuplicateControlException : public std::exception {
-public:
+ public:
   DuplicateControlException(const std::string &msg) : _msg(msg) {}
   const char *what() const noexcept override { return _msg.c_str(); }
 
-private:
+ private:
   std::string _msg;
 };
 
@@ -219,7 +220,7 @@ enum class ConcurrentBehaviourReducer { ALL, ANY, FIRST };
  * | b2 to create a concurrent group.
  */
 class ConcurrentBehaviour : public Behaviour {
-public:
+ public:
   ConcurrentBehaviour(ConcurrentBehaviourReducer reducer);
 
   void Add(Behaviour::ptr behaviour);
@@ -230,12 +231,12 @@ public:
   void OnTick(units::time::second_t dt) override;
   void OnStop() override;
 
-private:
-  ConcurrentBehaviourReducer _reducer;
+ private:
+  ConcurrentBehaviourReducer              _reducer;
   std::vector<std::shared_ptr<Behaviour>> _children;
-  std::mutex _children_finished_mtx;
-  std::vector<bool> _children_finished;
-  std::vector<std::thread> _threads;
+  std::mutex                              _children_finished_mtx;
+  std::vector<bool>                       _children_finished;
+  std::vector<std::thread>                _threads;
 };
 
 /**
@@ -269,7 +270,7 @@ inline std::shared_ptr<ConcurrentBehaviour> operator|(Behaviour::ptr a,
  * If allows decisions to be made in a behaviour chain.
  */
 struct If : public Behaviour {
-public:
+ public:
   /**
    * Create a new If decision behaviour.
    * @param condition The condition to check, called when the behaviour is
@@ -295,10 +296,10 @@ public:
   void OnStart() override;
   void OnTick(units::time::second_t dt) override;
 
-private:
+ private:
   std::function<bool()> _condition;
-  bool _value;
-  Behaviour::ptr _then, _else;
+  bool                  _value;
+  Behaviour::ptr        _then, _else;
 };
 
 /**
@@ -307,8 +308,9 @@ private:
  *
  * @tparam T The type of parameter.
  */
-template <typename T = std::monostate> struct Switch : public Behaviour {
-public:
+template <typename T = std::monostate>
+struct Switch : public Behaviour {
+ public:
   /**
    * Create a new Switch behaviour, with a given parameter
    * @param fn The function yielding the parameter, called in OnTick
@@ -327,7 +329,7 @@ public:
    * @param b The behaviour to call if this option is provided.
    */
   std::shared_ptr<Switch> When(std::function<bool(T &)> condition,
-                               Behaviour::ptr b) {
+                               Behaviour::ptr           b) {
     _options.push_back(std::pair(condition, b));
     Inherit(*b);
     return std::reinterpret_pointer_cast<Switch<T>>(shared_from_this());
@@ -359,8 +361,7 @@ public:
         if (opt.first(val)) {
           _locked = opt.second;
 
-          if (_locked == nullptr)
-            SetDone();
+          if (_locked == nullptr) SetDone();
         }
       }
     }
@@ -381,10 +382,10 @@ public:
     }
   }
 
-private:
+ private:
   std::function<T()> _fn;
   wpi::SmallVector<std::pair<std::function<bool(T &)>, Behaviour::ptr>, 4>
-      _options;
+                 _options;
   Behaviour::ptr _locked = nullptr;
 };
 
@@ -402,7 +403,7 @@ struct Decide : public Switch<std::monostate> {
    * @param b The behaviour to call if this option is provided.
    */
   std::shared_ptr<Decide> When(std::function<bool()> condition,
-                               Behaviour::ptr b) {
+                               Behaviour::ptr        b) {
     return std::reinterpret_pointer_cast<Decide>(
         Switch::When([condition](auto) { return condition(); }, b));
   }
@@ -412,7 +413,7 @@ struct Decide : public Switch<std::monostate> {
  * The WaitFor behaviour will do nothing until a condition is true.
  */
 struct WaitFor : public Behaviour {
-public:
+ public:
   /**
    * Create a new WaitFor behaviour
    * @param predicate The condition predicate
@@ -421,7 +422,7 @@ public:
 
   void OnTick(units::time::second_t dt) override;
 
-private:
+ private:
   std::function<bool()> _predicate;
 };
 
@@ -429,7 +430,7 @@ private:
  * The WaitTime behaviour will do nothing until a time period has elapsed.
  */
 struct WaitTime : public Behaviour {
-public:
+ public:
   /**
    * Create a new WaitTime behaviour
    * @param time The time period to wait
@@ -445,18 +446,18 @@ public:
   void OnStart() override;
   void OnTick(units::time::second_t dt) override;
 
-private:
+ private:
   std::function<units::time::second_t()> _time_fn;
-  units::time::second_t _time;
+  units::time::second_t                  _time;
 };
 
 struct Print : public Behaviour {
-public:
+ public:
   Print(std::string message);
 
   void OnTick(units::time::second_t dt) override;
 
-private:
+ private:
   std::string _message;
 };
-} // namespace behaviour
+}  // namespace behaviour

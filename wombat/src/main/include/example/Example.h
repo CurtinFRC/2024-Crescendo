@@ -62,7 +62,7 @@ class Example : public behaviour::HasBehaviour {
   // the public field has data which can be accessed from any instance of the
   // class
 
-public:
+ public:
   // all classes require a constructor which tells you what you need to provide
   // to create an instance of the class constructors are declared as functions
   // with no return type with the class name as the function name constructors
@@ -115,16 +115,16 @@ public:
   // within classes which inherit from it it is usually not used but
   // occasionally used for things like PID configs
 
-protected:
+ protected:
   // the private field has data which can be accessed only from within the class
 
-private:
+ private:
   // all variables in the private field should start with an underscore
   // most subsystem private variables are config and state
   // these variables will store the configuration and state of the subsystem and
   // are vital to its functioning
 
-  ExampleConfig *_config;
-  ExampleState _state;
+  ExampleConfig       *_config;
+  ExampleState         _state;
   frc::XboxController &_driver;
 };

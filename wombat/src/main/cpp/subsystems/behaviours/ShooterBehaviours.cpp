@@ -23,6 +23,5 @@ wom::subsystems::behaviours::ShooterSpinup::ShooterSpinup(
 void wom::subsystems::behaviours::ShooterSpinup::OnTick(units::second_t dt) {
   _shooter->SetPID(_speed);
 
-  if (!_hold && _shooter->IsStable())
-    SetDone();
+  if (!_hold && _shooter->IsStable()) SetDone();
 }

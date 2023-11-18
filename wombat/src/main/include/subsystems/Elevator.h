@@ -18,17 +18,17 @@ namespace subsystems {
   enum class ElevatorState { kIdle, kPID, kManual, kVelocity };
 
   struct ElevatorConfig {
-    std::string path;
-    wom::utils::Gearbox leftGearbox;
-    wom::utils::Gearbox rightGearbox;
-    rev::SparkMaxRelativeEncoder elevatorEncoder;
-    frc::DigitalInput *topSensor;
-    frc::DigitalInput *bottomSensor;
-    units::meter_t radius;
-    units::kilogram_t mass;
-    units::meter_t maxHeight;
-    units::meter_t minHeight;
-    units::meter_t initialHeight;
+    std::string                                      path;
+    wom::utils::Gearbox                              leftGearbox;
+    wom::utils::Gearbox                              rightGearbox;
+    rev::SparkMaxRelativeEncoder                     elevatorEncoder;
+    frc::DigitalInput                               *topSensor;
+    frc::DigitalInput                               *bottomSensor;
+    units::meter_t                                   radius;
+    units::kilogram_t                                mass;
+    units::meter_t                                   maxHeight;
+    units::meter_t                                   minHeight;
+    units::meter_t                                   initialHeight;
     wom::utils::PIDConfig<units::meter, units::volt> pid;
     wom::utils::PIDConfig<units::meters_per_second, units::volt> velocityPID;
 
@@ -36,7 +36,7 @@ namespace subsystems {
   };
 
   class Elevator : public behaviour::HasBehaviour {
-  public:
+   public:
     Elevator(ElevatorConfig params);
 
     void OnUpdate(units::second_t dt);
@@ -51,23 +51,23 @@ namespace subsystems {
     units::volt_t GetRaw();
 
     double GetElevatorEncoderPos();
-    void SetElevatorSpeedLimit(double limit);
+    void   SetElevatorSpeedLimit(double limit);
 
     ElevatorConfig &GetConfig();
 
-    bool IsStable() const;
+    bool          IsStable() const;
     ElevatorState GetState() const;
 
-    units::meter_t GetHeight() const;
+    units::meter_t             GetHeight() const;
     units::meters_per_second_t MaxSpeed() const;
     units::meters_per_second_t GetElevatorVelocity() const;
 
-  private:
+   private:
     units::volt_t _setpointManual{0};
 
     ElevatorConfig _config;
-    ElevatorState _state;
-    double speedLimit = 0.5;
+    ElevatorState  _state;
+    double         speedLimit = 0.5;
 
     units::meters_per_second_t _velocity;
 
@@ -77,5 +77,5 @@ namespace subsystems {
 
     std::shared_ptr<nt::NetworkTable> _table;
   };
-} // namespace subsystems
-}; // namespace wom
+}  // namespace subsystems
+};  // namespace wom

@@ -13,7 +13,7 @@ namespace utils {
    * voltage instead of speed.
    */
   class VoltageController {
-  public:
+   public:
     /**
      * Set the voltage of the output.
      */
@@ -44,10 +44,10 @@ namespace utils {
    * a VoltageController.
    */
   class MotorVoltageController : public VoltageController {
-  public:
+   public:
     MotorVoltageController(frc::MotorController *MotorController);
 
-    void SetVoltage(units::volt_t voltage) override;
+    void          SetVoltage(units::volt_t voltage) override;
     units::volt_t GetVoltage() const override;
 
     void SetInverted(bool invert) override;
@@ -62,7 +62,7 @@ namespace utils {
      */
     template <typename T, typename... Args>
     static MotorVoltageController Of(Args &...args) {
-      T *t = new T(args...); // Be warned, does not deallocate!
+      T *t = new T(args...);  // Be warned, does not deallocate!
       return MotorVoltageController{t};
     }
 
@@ -71,8 +71,8 @@ namespace utils {
       return Of<frc::MotorControllerGroup>(args...);
     }
 
-  private:
+   private:
     frc::MotorController *_MotorController;
   };
-} // namespace utils
-} // namespace wom
+}  // namespace utils
+}  // namespace wom

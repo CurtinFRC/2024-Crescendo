@@ -16,13 +16,13 @@ namespace subsystems {
   enum class ShooterState { kPID, kManual, kIdle };
 
   struct ShooterParams {
-    wom::utils::Gearbox gearbox;
+    wom::utils::Gearbox                                           gearbox;
     wom::utils::PIDConfig<units::radians_per_second, units::volt> pid;
-    units::ampere_t currentLimit;
+    units::ampere_t                                               currentLimit;
   };
 
   class Shooter : public behaviour::HasBehaviour {
-  public:
+   public:
     Shooter(std::string path, ShooterParams params);
 
     void SetManual(units::volt_t voltage);
@@ -33,9 +33,9 @@ namespace subsystems {
 
     bool IsStable() const;
 
-  private:
+   private:
     ShooterParams _params;
-    ShooterState _state;
+    ShooterState  _state;
 
     units::volt_t _setpointManual{0};
 
@@ -43,5 +43,5 @@ namespace subsystems {
 
     std::shared_ptr<nt::NetworkTable> _table;
   };
-} // namespace subsystems
-} // namespace wom
+}  // namespace subsystems
+}  // namespace wom

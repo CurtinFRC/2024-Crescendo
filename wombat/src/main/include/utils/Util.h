@@ -11,7 +11,8 @@
 
 namespace wom {
 namespace utils {
-  template <typename T> T &&invert(T &&system) {
+  template <typename T>
+  T &&invert(T &&system) {
     system.SetInverted(true);
     return system;
   }
@@ -19,11 +20,13 @@ namespace utils {
   units::second_t now();
 
   class NTBound {
-  public:
+   public:
     NTBound(std::shared_ptr<nt::NetworkTable> table, std::string name,
-            const nt::Value &value,
+            const nt::Value                       &value,
             std::function<void(const nt::Value &)> onUpdateFn)
-        : _table(table), _entry(table->GetEntry(name)), _onUpdate(onUpdateFn),
+        : _table(table),
+          _entry(table->GetEntry(name)),
+          _onUpdate(onUpdateFn),
           _name(name) {
       _entry.SetValue(value);
       // _listener = table->AddListener(name, , ([=](const nt::EntryNotification
@@ -40,8 +43,10 @@ namespace utils {
     }
 
     NTBound(const NTBound &other)
-        : _table(other._table), _entry(other._entry),
-          _onUpdate(other._onUpdate), _name(other._name) {
+        : _table(other._table),
+          _entry(other._entry),
+          _onUpdate(other._onUpdate),
+          _name(other._name) {
       _listener = _table->AddListener(
           _name, nt::EventFlags::kValueAll,
           ([this](nt::NetworkTable *table, std::string_view key,
@@ -53,24 +58,25 @@ namespace utils {
 
     ~NTBound() { _table->RemoveListener(_listener); }
 
-  protected:
-    NT_Listener _listener;
-    std::shared_ptr<nt::NetworkTable> _table;
-    nt::NetworkTableEntry _entry;
+   protected:
+    NT_Listener                            _listener;
+    std::shared_ptr<nt::NetworkTable>      _table;
+    nt::NetworkTableEntry                  _entry;
     std::function<void(const nt::Value &)> _onUpdate;
-    std::string _name;
+    std::string                            _name;
   };
 
   class NTBoundDouble : public NTBound {
-  public:
+   public:
     NTBoundDouble(std::shared_ptr<nt::NetworkTable> table, std::string name,
                   double &val)
         : NTBound(table, name, nt::Value::MakeDouble(val),
                   [&val](const nt::Value &v) { val = v.GetDouble(); }) {}
   };
 
-  template <typename T> class NTBoundUnit : public NTBound {
-  public:
+  template <typename T>
+  class NTBoundUnit : public NTBound {
+   public:
     NTBoundUnit(std::shared_ptr<nt::NetworkTable> table, std::string name,
                 units::unit_t<T> &val)
         : NTBound(table, name, nt::Value::MakeDouble(val.value()),
@@ -84,5 +90,5 @@ namespace utils {
 
   double deadzone(double val, double deadzone = 0.05);
   double spow2(double val);
-} // namespace utils
-} // namespace wom
+}  // namespace utils
+}  // namespace wom

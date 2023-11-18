@@ -1,6 +1,5 @@
 #pragma once
 
-#include <frc/XboxController.h>
 #include <units/time.h>
 #include <units/voltage.h>
 
@@ -13,6 +12,11 @@
 
 namespace wom {
 namespace drivetrain {
+  struct TankSpeed {
+    double right;
+    double left;
+  };
+
   // TODO PID
   struct DrivetrainConfig {
     std::string path;
@@ -31,26 +35,27 @@ namespace drivetrain {
   };
 
   class Drivetrain : public behaviour::HasBehaviour {
-  public:
-    Drivetrain(DrivetrainConfig *config, frc::XboxController &driver);
+   public:
+    Drivetrain(DrivetrainConfig *config);
     ~Drivetrain();
 
     DrivetrainConfig *GetConfig();
-    DrivetrainState GetState();
+    DrivetrainState   GetState();
 
     void SetState(DrivetrainState state);
+    void SetSpeed(TankSpeed speed);
 
-    void TankControl();
+    void TankControl(double rightSpeed, double leftSpeed);
 
     void OnStart();
     void OnUpdate(units::second_t dt);
 
-  protected:
-  private:
-    DrivetrainConfig *_config;
-    DrivetrainState _state;
-    frc::XboxController &_driver;
-    units::volt_t maxVolts = 9_V;
+   protected:
+   private:
+    DrivetrainConfig    *_config;
+    DrivetrainState      _state;
+    units::volt_t        maxVolts = 9_V;
+    TankSpeed _speed;
   };
-} // namespace drivetrain
-} // namespace wom
+}  // namespace drivetrain
+}  // namespace wom

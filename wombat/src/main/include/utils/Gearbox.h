@@ -26,9 +26,9 @@ namespace utils {
     Encoder *encoder = nullptr;
 
     /**
-     * The motor being used. By default, this is a dual CIM.
+     * The motor being used. By default, this is a single NEO.
      */
-    frc::DCMotor motor = frc::DCMotor::CIM(2);
+    frc::DCMotor motor = frc::DCMotor::NEO(1);
   };
-} // namespace utils
-} // namespace wom
+}  // namespace utils
+}  // namespace wom

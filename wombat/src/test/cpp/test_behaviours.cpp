@@ -10,7 +10,7 @@ using namespace behaviour;
 
 class MockSystem : public HasBehaviour {};
 class MockBehaviour : public Behaviour {
-public:
+ public:
   MOCK_METHOD0(OnStart, void());
   MOCK_METHOD0_T(OnStop, void());
   MOCK_METHOD1(OnTick, void(units::time::second_t));
@@ -72,7 +72,7 @@ TEST(Behaviour, Timeout) {
 
 TEST(SequentialBehaviour, InheritsControls) {
   HasBehaviour a, b;
-  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>();
+  auto         b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>();
   b1->Controls(&a);
   b2->Controls(&a);
   b2->Controls(&b);
@@ -116,7 +116,7 @@ TEST(SequentialBehaviour, Sequence) {
 
 TEST(ConcurrentBehaviour, InheritsControls) {
   HasBehaviour a, b;
-  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
+  auto         b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
        b3 = make<MockBehaviour>();
   b1->Controls(&a);
   b2->Controls(&b);
@@ -135,7 +135,7 @@ TEST(ConcurrentBehaviour, Race) {
   b2->SetPeriod(10_ms);
 
   auto chain = b1 | b2;
-  chain->SetPeriod(1_s); // Silence Period warning
+  chain->SetPeriod(1_s);  // Silence Period warning
 
   EXPECT_CALL(*b1, OnStart).Times(1);
   EXPECT_CALL(*b2, OnStart).Times(1);
@@ -159,7 +159,7 @@ TEST(ConcurrentBehaviour, All) {
   b2->SetPeriod(10_ms);
 
   auto chain = b1 & b2;
-  chain->SetPeriod(1_s); // Silence Period warning
+  chain->SetPeriod(1_s);  // Silence Period warning
 
   EXPECT_CALL(*b1, OnStart).Times(1);
   EXPECT_CALL(*b2, OnStart).Times(1);
@@ -281,8 +281,8 @@ TEST(Switch, Decide) {
 
 TEST(Behaviour, FullChain) {
   BehaviourScheduler s;
-  MockSystem a, b;
-  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
+  MockSystem         a, b;
+  auto               b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
        b3 = make<MockBehaviour>(), b4 = make<MockBehaviour>();
 
   b1->Controls(&a);
@@ -304,10 +304,10 @@ TEST(Behaviour, FullChain) {
   EXPECT_CALL(*b3, OnStop).Times(1);
   EXPECT_CALL(*b4, OnStop).Times(1);
 
-  EXPECT_CALL(*b1, OnTick).Times(::testing::Between(9, 11));  // 100ms @ 100Hz
-  EXPECT_CALL(*b2, OnTick).Times(::testing::Between(5, 7));   // 300ms @ 20Hz
-  EXPECT_CALL(*b3, OnTick).Times(::testing::Between(4, 6));   // 100ms @ 50Hz
-  EXPECT_CALL(*b4, OnTick).Times(::testing::Between(22, 23)); // 300ms @ 75Hz
+  EXPECT_CALL(*b1, OnTick).Times(::testing::Between(9, 11));   // 100ms @ 100Hz
+  EXPECT_CALL(*b2, OnTick).Times(::testing::Between(5, 7));    // 300ms @ 20Hz
+  EXPECT_CALL(*b3, OnTick).Times(::testing::Between(4, 6));    // 100ms @ 50Hz
+  EXPECT_CALL(*b4, OnTick).Times(::testing::Between(22, 23));  // 300ms @ 75Hz
 
   auto chain = ((b1 << b3) & b2) | b4;
 

@@ -12,7 +12,8 @@
 
 namespace wom {
 namespace utils {
-  template <typename IN, typename OUT> struct PIDConfig {
+  template <typename IN, typename OUT>
+  struct PIDConfig {
     using in_t = units::unit_t<IN>;
 
     using kp_t = units::unit_t<units::compound_unit<OUT, units::inverse<IN>>>;
@@ -29,8 +30,13 @@ namespace utils {
     PIDConfig(std::string path, kp_t kp = kp_t{0}, ki_t ki = ki_t{0},
               kd_t kd = kd_t{0}, error_t stableThresh = error_t{-1},
               deriv_t stableDerivThresh = deriv_t{-1}, in_t izone = in_t{-1})
-        : path(path), kp(kp), ki(ki), kd(kd), stableThresh(stableThresh),
-          stableDerivThresh(stableDerivThresh), izone(izone) {
+        : path(path),
+          kp(kp),
+          ki(ki),
+          kd(kd),
+          stableThresh(stableThresh),
+          stableDerivThresh(stableDerivThresh),
+          izone(izone) {
       RegisterNT();
     }
 
@@ -45,10 +51,10 @@ namespace utils {
 
     in_t izone{-1};
 
-  private:
+   private:
     std::vector<std::shared_ptr<utils::NTBound>> _nt_bindings;
 
-  public:
+   public:
     void RegisterNT() {
       auto table = nt::NetworkTableInstance::GetDefault().GetTable(path);
       _nt_bindings.emplace_back(
@@ -71,18 +77,20 @@ namespace utils {
     }
   };
 
-  template <typename IN, typename OUT> class PIDController {
-  public:
+  template <typename IN, typename OUT>
+  class PIDController {
+   public:
     using config_t = PIDConfig<IN, OUT>;
-    using in_t = units::unit_t<IN>;
-    using out_t = units::unit_t<OUT>;
-    using sum_t = units::unit_t<units::compound_unit<IN, units::second>>;
+    using in_t     = units::unit_t<IN>;
+    using out_t    = units::unit_t<OUT>;
+    using sum_t    = units::unit_t<units::compound_unit<IN, units::second>>;
 
     config_t config;
 
     PIDController(std::string path, config_t initialGains,
                   in_t setpoint = in_t{0})
-        : config(initialGains), _setpoint(setpoint),
+        : config(initialGains),
+          _setpoint(setpoint),
           _posFilter(
               frc::LinearFilter<typename config_t::error_t>::MovingAverage(20)),
           _velFilter(
@@ -114,8 +122,7 @@ namespace utils {
 
       typename config_t::deriv_t deriv{0};
 
-      if (_iterations > 0)
-        deriv = (pv - _last_pv) / dt;
+      if (_iterations > 0) deriv = (pv - _last_pv) / dt;
 
       _stablePos = _posFilter.Calculate(error);
       _stableVel = _velFilter.Calculate(deriv);
@@ -132,17 +139,17 @@ namespace utils {
       _table->GetEntry("stable").SetBoolean(IsStable());
       _table->GetEntry("demand").SetDouble(out.value());
 
-      _last_pv = pv;
+      _last_pv    = pv;
       _last_error = error;
       _iterations++;
       return out;
     }
 
     bool IsStable(
-        std::optional<typename config_t::error_t> stableThreshOverride = {},
+        std::optional<typename config_t::error_t> stableThreshOverride   = {},
         std::optional<typename config_t::deriv_t> velocityThreshOverride = {})
         const {
-      auto stableThresh = config.stableThresh;
+      auto stableThresh      = config.stableThresh;
       auto stableDerivThresh = config.stableDerivThresh;
 
       if (stableThreshOverride.has_value())
@@ -156,11 +163,11 @@ namespace utils {
               std::abs(_stableVel.value()) <= stableDerivThresh.value());
     }
 
-  private:
+   private:
     in_t do_wrap(in_t val) {
       if (_wrap_range.has_value()) {
         double wr = _wrap_range.value().value();
-        double v = val.value();
+        double v  = val.value();
 
         v = std::fmod(v, wr);
         if (std::abs(v) > (wr / 2.0)) {
@@ -172,9 +179,9 @@ namespace utils {
       return val;
     }
 
-    in_t _setpoint;
+    in_t  _setpoint;
     sum_t _integralSum{0};
-    in_t _last_pv{0}, _last_error{0};
+    in_t  _last_pv{0}, _last_error{0};
 
     std::optional<in_t> _wrap_range;
 
@@ -188,5 +195,5 @@ namespace utils {
 
     std::shared_ptr<nt::NetworkTable> _table;
   };
-} // namespace utils
-} // namespace wom
+}  // namespace utils
+}  // namespace wom
