@@ -10,14 +10,15 @@ namespace drivetrain {
   namespace behaviours {
     class TankDrive : public behaviour::Behaviour {
      public:
-      TankDrive(wom::drivetrain::Drivetrain *drivebase, frc::XboxController &driver);
+      TankDrive(wom::drivetrain::Drivetrain *drivebase,
+                frc::XboxController         &driver);
 
       void OnTick(units::second_t dt);
 
      protected:
      private:
       wom::drivetrain::Drivetrain *_drivebase;
-      frc::XboxController &_driver;
+      frc::XboxController         &_driver;
     };
   }  // namespace behaviours
 }  // namespace drivetrain

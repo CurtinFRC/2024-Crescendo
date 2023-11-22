@@ -52,10 +52,10 @@ namespace drivetrain {
 
    protected:
    private:
-    DrivetrainConfig    *_config;
-    DrivetrainState      _state;
-    units::volt_t        maxVolts = 9_V;
-    TankSpeed _speed;
+    DrivetrainConfig *_config;
+    DrivetrainState   _state;
+    units::volt_t     maxVolts = 9_V;
+    TankSpeed         _speed;
   };
 }  // namespace drivetrain
 }  // namespace wom

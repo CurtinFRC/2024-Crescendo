@@ -180,3 +180,7 @@ void wom::drivetrain::Swerve::OnUpdate(units::second_t        dt,
       break;
   }
 }
+
+wom::vision::Limelight wom::drivetrain::Swerve::GetLimelight() {
+  return _vision;
+}

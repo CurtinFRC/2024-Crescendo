@@ -82,7 +82,6 @@ namespace drivetrain {
     wom::utils::PIDController<units::meters, units::meters_per_second>
         _movementPID;
 
-
     units::volt_t voltageRotation;
     units::volt_t voltageMovement;
 
@@ -114,8 +113,9 @@ namespace drivetrain {
     explicit Swerve(SwerveConfig config, SwerveState state,
                     wom::vision::Limelight vision);
 
-    SwerveConfig GetConfig();
-    SwerveState  GetState();
+    SwerveConfig           GetConfig();
+    SwerveState            GetState();
+    wom::vision::Limelight GetLimelight();
 
     void SetState(SwerveState state);
     void FieldRelativeControl(frc::Pose3d desiredPose, units::second_t dt);

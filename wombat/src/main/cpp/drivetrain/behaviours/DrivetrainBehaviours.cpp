@@ -9,7 +9,7 @@ wom::drivetrain::behaviours::TankDrive::TankDrive(
 void wom::drivetrain::behaviours::TankDrive::OnTick(units::second_t dt) {
   wom::drivetrain::TankSpeed speed;
   speed.right = wom::utils::deadzone(_driver.GetRightY());
-  speed.left = wom::utils::deadzone(_driver.GetLeftY());
+  speed.left  = wom::utils::deadzone(_driver.GetLeftY());
   _drivebase->SetSpeed(speed);
   _drivebase->SetState(wom::drivetrain::DrivetrainState::kTank);
 }

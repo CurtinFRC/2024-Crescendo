@@ -28,7 +28,8 @@ void wom::drivetrain::Drivetrain::SetSpeed(wom::drivetrain::TankSpeed speed) {
   _speed = speed;
 }
 
-void wom::drivetrain::Drivetrain::TankControl(double rightSpeed, double leftSpeed) {
+void wom::drivetrain::Drivetrain::TankControl(double rightSpeed,
+                                              double leftSpeed) {
   _config->left1.transmission->SetVoltage(leftSpeed * maxVolts);
   _config->left2.transmission->SetVoltage(leftSpeed * maxVolts);
   _config->left3.transmission->SetVoltage(leftSpeed * maxVolts);
