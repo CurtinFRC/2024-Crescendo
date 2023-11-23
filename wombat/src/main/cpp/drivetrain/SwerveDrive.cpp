@@ -27,7 +27,7 @@ void wom::drivetrain::SwerveModule::SetState(
   _state = state;
 }
 
-void wom::drivetrain::SwerveModule::OnStart() {
+void wom::drivetrain::SwerveModule::OnStart(units::radian_t offset) {
   switch (_config.name) {
     case wom::drivetrain::SwerveModuleName::FrontLeft:
       name = "Front Left";
@@ -49,8 +49,8 @@ void wom::drivetrain::SwerveModule::OnStart() {
 
   std::cout << "Starting Swerve Module" << std::endl;
   std::cout << "Module name: " << name << std::endl;
-  _config.rotationGearbox.encoder->SetEncoderPosition(0_deg);
-  _config.movementGearbox.encoder->SetEncoderPosition(0_deg);
+  _config.rotationGearbox.encoder->SetEncoderPosition(offset);
+  _config.movementGearbox.encoder->SetEncoderPosition(offset);
 }
 
 void wom::drivetrain::SwerveModule::PIDControl(units::second_t dt,
@@ -92,7 +92,8 @@ void wom::drivetrain::SwerveModule::Log() {
 
 void wom::drivetrain::SwerveModule::OnUpdate(units::second_t dt,
                                              units::radian_t rotation,
-                                             units::meter_t  movement) {
+                                             units::meter_t  movement,
+                                             units::volt_t rotationVoltage) {
   Log();
 
   switch (_state) {
@@ -103,6 +104,9 @@ void wom::drivetrain::SwerveModule::OnUpdate(units::second_t dt,
       break;
     case wom::drivetrain::SwerveModuleState::kCalibration:
       PIDControl(dt, units::radian_t{180}, units::meter_t{0});
+      break;
+    case wom::drivetrain::SwerveModuleState::kManualTurn:
+      _config.rotationGearbox.transmission->SetVoltage(rotationVoltage);
       break;
     default:
       std::cout << "Invalid State" << std::endl;
@@ -139,9 +143,9 @@ void wom::drivetrain::Swerve::FieldRelativeControl(frc::Pose3d     desiredPose,
     rotation -= 45_rad;
   }
   _config.frontLeft.SetState(wom::drivetrain::SwerveModuleState::kPID);
-  _config.frontLeft.OnUpdate(dt, rotation, movement);
+  _config.frontLeft.OnUpdate(dt, rotation, movement, 0_V);
   _config.frontRight.SetState(wom::drivetrain::SwerveModuleState::kPID);
-  _config.frontRight.OnUpdate(dt, rotation, movement);
+  _config.frontRight.OnUpdate(dt, rotation, movement, 0_V);
 
   if (rotation > 0_rad) {
     rotation -= 90_rad;
@@ -149,16 +153,16 @@ void wom::drivetrain::Swerve::FieldRelativeControl(frc::Pose3d     desiredPose,
     rotation += 90_rad;
   }
   _config.backLeft.SetState(wom::drivetrain::SwerveModuleState::kPID);
-  _config.backLeft.OnUpdate(dt, rotation, movement);
+  _config.backLeft.OnUpdate(dt, rotation, movement, 0_V);
   _config.backRight.SetState(wom::drivetrain::SwerveModuleState::kPID);
-  _config.backRight.OnUpdate(dt, rotation, movement);
+  _config.backRight.OnUpdate(dt, rotation, movement, 0_V);
 }
 
 void wom::drivetrain::Swerve::OnStart() {
-  _config.backLeft.OnStart();
-  _config.backRight.OnStart();
-  _config.frontLeft.OnStart();
-  _config.frontRight.OnStart();
+  _config.backLeft.OnStart(0_rad);
+  _config.backRight.OnStart(0_rad);
+  _config.frontLeft.OnStart(0_rad);
+  _config.frontRight.OnStart(0_rad);
   std::cout << "Starting Swerve" << std::endl;
 }
 

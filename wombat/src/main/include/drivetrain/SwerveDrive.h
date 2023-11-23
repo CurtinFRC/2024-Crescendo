@@ -50,6 +50,7 @@ namespace drivetrain {
     kIdle,
     kCalibration,
     kPID,
+    kManualTurn,
   };
 
   class SwerveModule : public behaviour::HasBehaviour {
@@ -66,9 +67,9 @@ namespace drivetrain {
     void PIDControl(units::second_t dt, units::radian_t rotation,
                     units::meter_t movement);
 
-    void OnStart();
+    void OnStart(units::radian_t offset);
     void OnUpdate(units::second_t dt, units::radian_t rotation,
-                  units::meter_t movement);
+                  units::meter_t movement, units::volt_t rotationVoltage);
 
    protected:
    private:
