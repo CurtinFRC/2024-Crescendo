@@ -55,7 +55,7 @@ namespace subsystems {
     units::radians_per_second_t MaxSpeed() const;
     units::radians_per_second_t GetArmVelocity() const;
 
-    bool IsStable() const;
+    bool IsStable(units::radian_t stable) const;
 
    private:
     ArmConfig _config;

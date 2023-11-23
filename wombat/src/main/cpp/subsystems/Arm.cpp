@@ -42,15 +42,14 @@ void wom::subsystems::Arm::OnUpdate(units::second_t dt) {
           9.81_m / 1_s / 1_s * _config.armLength *
           units::math::cos(angle + _config.angleOffset) *
           (0.5 * _config.armMass + _config.loadMass);
-      // units::volt_t feedforward = _config.leftGearbox.motor.Voltage(torque,
-      // 0_rad/1_s);
+      /* units::volt_t feedforward = _config.leftGearbox.motor.Voltage(torque, */
+      /*  0_rad/1_s); */
       units::volt_t feedforward =
           _config.leftGearbox.motor.Voltage(torque, _velocityPID.GetSetpoint());
-      // feedforward = 3.5_V;
       // std::cout << "feedforward" << feedforward.value() << std::endl;
       voltage = _velocityPID.Calculate(GetArmVelocity(), dt, feedforward);
       // std::cout << "arm velocity voltage is: " << voltage.value() <<
-      // std::endl; voltage = 0_V;
+      // std::endl;
     } break;
     case wom::subsystems::ArmState::kAngle: {
       units::newton_meter_t torque =
@@ -143,8 +142,8 @@ units::radians_per_second_t wom::subsystems::Arm::GetArmVelocity() const {
   return _config.armEncoder.GetVelocity() / 100 * 360 * 1_deg / 60_s;
 }
 
-bool wom::subsystems::Arm::IsStable() const {
-  return _pid.IsStable(5_deg);
+bool wom::subsystems::Arm::IsStable(units::radian_t stable) const {
+  return _pid.IsStable(stable);
 }
 
 /* SIMULATION */
