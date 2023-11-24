@@ -1,6 +1,7 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+#include "RobotMap.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -14,6 +15,9 @@ class Robot : public frc::TimedRobot {
   void DisabledPeriodic() override;
   void TestInit() override;
   void TestPeriodic() override;
+  void SimulationInit() override;
+  void SimulationPeriodic() override;
 
+ protected:
  private:
 };
