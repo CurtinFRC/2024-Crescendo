@@ -5,7 +5,6 @@
 
 // your includes should be structured as shown below in your .h and .hpp files
 // to increase readability Local includes, this means includes from the project
-// you are working on eg 2023-ChargedUp
 
 // Wombat includes
 
