@@ -93,7 +93,7 @@ void wom::drivetrain::SwerveModule::Log() {
 void wom::drivetrain::SwerveModule::OnUpdate(units::second_t dt,
                                              units::radian_t rotation,
                                              units::meter_t  movement,
-                                             units::volt_t rotationVoltage) {
+                                             units::volt_t   rotationVoltage) {
   Log();
 
   switch (_state) {

@@ -7,7 +7,6 @@
 
 namespace wom {
 namespace utils {
-  using DCMotor = frc::DCMotor;
   /**
    * Struct for motor and encoder pairs.
    *
