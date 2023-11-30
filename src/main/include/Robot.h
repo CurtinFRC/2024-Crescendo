@@ -10,6 +10,8 @@
 
 #include <frc/simulation/DifferentialDrivetrainSim.h>
 
+#include "Wombat.h"
+
 
 class Robot : public frc::TimedRobot {
  public:
@@ -45,4 +47,8 @@ class Robot : public frc::TimedRobot {
             // l and r velocity: 0.1   m/s
             // l and r position: 0.005 m
             {0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005}};
+
+    Pathplanner m_pathplanner;
+
+
 };

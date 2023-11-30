@@ -1,4 +1,11 @@
 #include "Robot.h"
+// include units
+#include <units/velocity.h>
+#include <units/acceleration.h>
+#include <units/length.h>
+#include <units/angle.h>
+#include <units/time.h>
+#include <units/voltage.h>
 
 void Robot::RobotInit() {
     m_chooser.SetDefaultOption("Default Auto", "Default Auto");
@@ -9,13 +16,42 @@ void Robot::RobotInit() {
 
 }
 void Robot::RobotPeriodic() {
-    //m_field.SetRobotPose(m_odometry.GetPose());
 
-    
 }
 
-void Robot::AutonomousInit() {}
-void Robot::AutonomousPeriodic() {}
+void Robot::AutonomousInit() {
+    nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
+    std::shared_ptr<nt::NetworkTable> table = inst.GetTable("FMSInfo");
+
+    // put table->GetEntry("StationNumber").GetInteger(-1) into smart dashboard
+
+    switch (table->GetEntry("StationNumber").GetInteger(1)) {
+        case 1:
+            frc::SmartDashboard::PutNumber("StationNumber", table->GetEntry("StationNumber").GetInteger(-1));
+
+            m_driveSim.SetPose(frc::Pose2d(1_m, 1_m, frc::Rotation2d(0_deg)));
+            break;
+        case 2:
+            frc::SmartDashboard::PutNumber("StationNumber", table->GetEntry("StationNumber").GetInteger(-1));
+
+            m_driveSim.SetPose(frc::Pose2d(1_m, 2_m, frc::Rotation2d(0_deg)));
+            break;
+        case 3:
+            frc::SmartDashboard::PutNumber("StationNumber", table->GetEntry("StationNumber").GetInteger(-1));
+
+            m_driveSim.SetPose(frc::Pose2d(1_m, 3_m, frc::Rotation2d(0_deg)));
+            break;
+
+    }
+}
+
+void Robot::AutonomousPeriodic() {
+    m_field.SetRobotPose(m_driveSim.GetPose());
+
+
+
+    m_driveSim.Update(20_ms);
+}
 
 void Robot::TeleopInit() {}
 void Robot::TeleopPeriodic() {}
