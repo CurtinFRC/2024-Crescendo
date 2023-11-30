@@ -27,6 +27,9 @@
     }
   },
   "NetworkTables": {
+    "SmartDashboard": {
+      "open": true
+    },
     "combined": true,
     "transitory": {
       "LiveWindow": {

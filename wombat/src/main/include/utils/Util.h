@@ -2,6 +2,8 @@
 
 #include <frc/RobotController.h>
 #include <frc/geometry/Pose3d.h>
+// include trajectory
+#include <frc/trajectory/Trajectory.h>
 #include <networktables/NetworkTable.h>
 #include <units/time.h>
 
@@ -87,6 +89,7 @@ namespace utils {
 
   void WritePose2NT(std::shared_ptr<nt::NetworkTable> table, frc::Pose2d pose);
   void WritePose3NT(std::shared_ptr<nt::NetworkTable> table, frc::Pose3d pose);
+  void WriteTrajectory(std::shared_ptr<nt::NetworkTable> table, frc::Trajectory trajectory);
 
   double deadzone(double val, double deadzone = 0.05);
   double spow2(double val);

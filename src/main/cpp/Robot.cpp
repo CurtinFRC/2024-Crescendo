@@ -48,7 +48,13 @@ void Robot::AutonomousInit() {
 void Robot::AutonomousPeriodic() {
     m_field.SetRobotPose(m_driveSim.GetPose());
 
+    frc::Trajectory trajectory = m_pathplanner.getTrajectory("output/Path1.wpilib.json");
 
+    // create a netowrk table for the trajectory
+    std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("trajectory");
+
+    // write the trajectory to the network table
+    wom::utils::WriteTrajectory(table, trajectory);
 
     m_driveSim.Update(20_ms);
 }

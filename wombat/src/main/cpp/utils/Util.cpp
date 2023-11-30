@@ -22,6 +22,12 @@ void wom::utils::WritePose3NT(std::shared_ptr<nt::NetworkTable> table,
       pose.Rotation().Z().convert<units::degree>().value());
 }
 
+void wom::utils::WriteTrajectory(std::shared_ptr<nt::NetworkTable> table,
+                                 frc::Trajectory                   trajectory) {
+  table->GetEntry("length").SetDouble(trajectory.TotalTime().value());
+
+}
+
 double wom::utils::deadzone(double val, double deadzone) {
   return std::fabs(val) > deadzone ? val : 0;
 }

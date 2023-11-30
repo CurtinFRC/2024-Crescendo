@@ -16,6 +16,7 @@
 #include "utils/RobotStartup.h"
 #include "utils/Util.h"
 #include "utils/VoltageController.h"
+#include "utils/Pathplanner.h"
 #include "vision/Limelight.h"
 
 using namespace wom;
