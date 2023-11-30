@@ -5,19 +5,14 @@
 using namespace frc;
 
 // creates network table instatnce on shuffleboard
-void wom::subsystems::ArmConfig::WriteNT(
-    std::shared_ptr<nt::NetworkTable> table) {
+void wom::subsystems::ArmConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
   table->GetEntry("armMass").SetDouble(armMass.value());
   table->GetEntry("loadMass").SetDouble(loadMass.value());
   table->GetEntry("armLength").SetDouble(armLength.value());
-  table->GetEntry("minAngle")
-      .SetDouble(minAngle.convert<units::degree>().value());
-  table->GetEntry("maxAngle")
-      .SetDouble(maxAngle.convert<units::degree>().value());
-  table->GetEntry("initialAngle")
-      .SetDouble(initialAngle.convert<units::degree>().value());
-  table->GetEntry("angleOffset")
-      .SetDouble(initialAngle.convert<units::degree>().value());
+  table->GetEntry("minAngle").SetDouble(minAngle.convert<units::degree>().value());
+  table->GetEntry("maxAngle").SetDouble(maxAngle.convert<units::degree>().value());
+  table->GetEntry("initialAngle").SetDouble(initialAngle.convert<units::degree>().value());
+  table->GetEntry("angleOffset").SetDouble(initialAngle.convert<units::degree>().value());
 }
 
 // arm config is used
@@ -38,27 +33,23 @@ void wom::subsystems::Arm::OnUpdate(units::second_t dt) {
     case wom::subsystems::ArmState::kIdle:
       break;
     case wom::subsystems::ArmState::kVelocity: {
-      units::newton_meter_t torque =
-          9.81_m / 1_s / 1_s * _config.armLength *
-          units::math::cos(angle + _config.angleOffset) *
-          (0.5 * _config.armMass + _config.loadMass);
+      units::newton_meter_t torque = 9.81_m / 1_s / 1_s * _config.armLength *
+                                     units::math::cos(angle + _config.angleOffset) *
+                                     (0.5 * _config.armMass + _config.loadMass);
       /* units::volt_t feedforward = _config.leftGearbox.motor.Voltage(torque,
        */
       /*  0_rad/1_s); */
-      units::volt_t feedforward =
-          _config.leftGearbox.motor.Voltage(torque, _velocityPID.GetSetpoint());
+      units::volt_t feedforward = _config.leftGearbox.motor.Voltage(torque, _velocityPID.GetSetpoint());
       // std::cout << "feedforward" << feedforward.value() << std::endl;
       voltage = _velocityPID.Calculate(GetArmVelocity(), dt, feedforward);
       // std::cout << "arm velocity voltage is: " << voltage.value() <<
       // std::endl;
     } break;
     case wom::subsystems::ArmState::kAngle: {
-      units::newton_meter_t torque =
-          9.81_m / 1_s / 1_s * _config.armLength *
-          units::math::cos(angle + _config.angleOffset) *
-          (0.5 * _config.armMass + _config.loadMass);
-      units::volt_t feedforward =
-          _config.leftGearbox.motor.Voltage(torque, 0_rad / 1_s);
+      units::newton_meter_t torque = 9.81_m / 1_s / 1_s * _config.armLength *
+                                     units::math::cos(angle + _config.angleOffset) *
+                                     (0.5 * _config.armMass + _config.loadMass);
+      units::volt_t feedforward = _config.leftGearbox.motor.Voltage(torque, 0_rad / 1_s);
       // std::cout << "feedforward" << feedforward.value() << std::endl;
       voltage = _pid.Calculate(angle, dt, feedforward);
     } break;
@@ -89,7 +80,7 @@ void wom::subsystems::Arm::OnUpdate(units::second_t dt) {
   // voltageMin);
   units::volt_t voltageMin = 0_V;
   units::volt_t voltageMax = 12_V;
-  voltage = units::math::max(units::math::min(voltage, voltageMax), voltageMin);
+  voltage                  = units::math::max(units::math::min(voltage, voltageMax), voltageMin);
 
   // std::cout << "voltage: " << voltage.value() << std::endl;
 

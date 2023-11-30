@@ -10,8 +10,7 @@ namespace drivetrain {
   namespace behaviours {
     class TankDrive : public behaviour::Behaviour {
      public:
-      TankDrive(wom::drivetrain::Drivetrain *drivebase,
-                frc::XboxController         &driver);
+      TankDrive(wom::drivetrain::Drivetrain *drivebase, frc::XboxController &driver);
 
       void OnTick(units::second_t dt);
 

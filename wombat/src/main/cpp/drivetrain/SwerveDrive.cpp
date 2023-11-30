@@ -1,12 +1,9 @@
 #include "drivetrain/SwerveDrive.h"
 
-wom::drivetrain::SwerveModule::SwerveModule(
-    wom::drivetrain::SwerveModuleConfig config,
-    wom::drivetrain::SwerveModuleState  state)
-    : _rotationalVelocityPID(config.path + "/pid/rotationalVelocity",
-                             config.rotationalVelocityPID),
-      _movementVelocityPID(config.path + "/pid/movementVelocity",
-                           config.movementVelocityPID),
+wom::drivetrain::SwerveModule::SwerveModule(wom::drivetrain::SwerveModuleConfig config,
+                                            wom::drivetrain::SwerveModuleState  state)
+    : _rotationalVelocityPID(config.path + "/pid/rotationalVelocity", config.rotationalVelocityPID),
+      _movementVelocityPID(config.path + "/pid/movementVelocity", config.movementVelocityPID),
       _rotationalPID(config.path + "/pid/rotationGearbox", config.rotationPID),
       _movementPID(config.path + "/pid/movementGearbox", config.movementPID),
       _config(config),
@@ -22,8 +19,7 @@ wom::drivetrain::SwerveModuleState wom::drivetrain::SwerveModule::GetState() {
   return _state;
 }
 
-void wom::drivetrain::SwerveModule::SetState(
-    wom::drivetrain::SwerveModuleState state) {
+void wom::drivetrain::SwerveModule::SetState(wom::drivetrain::SwerveModuleState state) {
   _state = state;
 }
 
@@ -53,24 +49,19 @@ void wom::drivetrain::SwerveModule::OnStart(units::radian_t offset) {
   _config.movementGearbox.encoder->SetEncoderPosition(offset);
 }
 
-void wom::drivetrain::SwerveModule::PIDControl(units::second_t dt,
-                                               units::radian_t rotation,
-                                               units::meter_t  movement) {
-  units::volt_t feedforwardRotationalVelocity =
-      _config.rotationGearbox.motor.Voltage(
-          0_Nm, _config.rotationGearbox.encoder->GetEncoderAngularVelocity());
-  voltageRotation = _rotationalVelocityPID.Calculate(
-      angularVelocity, dt, feedforwardRotationalVelocity);
+void wom::drivetrain::SwerveModule::PIDControl(units::second_t dt, units::radian_t rotation,
+                                               units::meter_t movement) {
+  units::volt_t feedforwardRotationalVelocity = _config.rotationGearbox.motor.Voltage(
+      0_Nm, _config.rotationGearbox.encoder->GetEncoderAngularVelocity());
+  voltageRotation = _rotationalVelocityPID.Calculate(angularVelocity, dt, feedforwardRotationalVelocity);
   if (voltageRotation > 12_V) {
     voltageRotation = 12_V;
   }
   _config.rotationGearbox.transmission->SetVoltage(voltageRotation);
 
-  units::volt_t feedforwardMovementVelocity =
-      _config.movementGearbox.motor.Voltage(
-          0_Nm, _config.movementGearbox.encoder->GetEncoderAngularVelocity());
-  voltageMovement =
-      _movementVelocityPID.Calculate(velocity, dt, feedforwardMovementVelocity);
+  units::volt_t feedforwardMovementVelocity = _config.movementGearbox.motor.Voltage(
+      0_Nm, _config.movementGearbox.encoder->GetEncoderAngularVelocity());
+  voltageMovement = _movementVelocityPID.Calculate(velocity, dt, feedforwardMovementVelocity);
   if (voltageMovement > 12_V) {
     voltageMovement = 12_V;
   }
@@ -78,9 +69,8 @@ void wom::drivetrain::SwerveModule::PIDControl(units::second_t dt,
 }
 
 units::meters_per_second_t wom::drivetrain::SwerveModule::GetSpeed() {
-  return units::meters_per_second_t{
-      _config.movementGearbox.encoder->GetEncoderAngularVelocity().value() *
-      _config.wheelRadius.value()};
+  return units::meters_per_second_t{_config.movementGearbox.encoder->GetEncoderAngularVelocity().value() *
+                                    _config.wheelRadius.value()};
 }
 
 void wom::drivetrain::SwerveModule::Log() {
@@ -90,10 +80,8 @@ void wom::drivetrain::SwerveModule::Log() {
   table->GetEntry("Angular Voltage").SetDouble(voltageRotation.value());
 }
 
-void wom::drivetrain::SwerveModule::OnUpdate(units::second_t dt,
-                                             units::radian_t rotation,
-                                             units::meter_t  movement,
-                                             units::volt_t   rotationVoltage) {
+void wom::drivetrain::SwerveModule::OnUpdate(units::second_t dt, units::radian_t rotation,
+                                             units::meter_t movement, units::volt_t rotationVoltage) {
   Log();
 
   switch (_state) {
@@ -114,9 +102,8 @@ void wom::drivetrain::SwerveModule::OnUpdate(units::second_t dt,
   }
 }
 
-wom::drivetrain::Swerve::Swerve(wom::drivetrain::SwerveConfig config,
-                                wom::drivetrain::SwerveState  state,
-                                wom::vision::Limelight        vision)
+wom::drivetrain::Swerve::Swerve(wom::drivetrain::SwerveConfig config, wom::drivetrain::SwerveState state,
+                                wom::vision::Limelight vision)
     : _config(config), _state(state), _vision(vision) {}
 
 wom::drivetrain::SwerveConfig wom::drivetrain::Swerve::GetConfig() {
@@ -131,10 +118,8 @@ void wom::drivetrain::Swerve::SetState(wom::drivetrain::SwerveState state) {
   _state = state;
 }
 
-void wom::drivetrain::Swerve::FieldRelativeControl(frc::Pose3d     desiredPose,
-                                                   units::second_t dt) {
-  units::meter_t movement =
-      units::math::hypot(desiredPose.X(), desiredPose.Y());
+void wom::drivetrain::Swerve::FieldRelativeControl(frc::Pose3d desiredPose, units::second_t dt) {
+  units::meter_t  movement = units::math::hypot(desiredPose.X(), desiredPose.Y());
   units::radian_t rotation = units::math::acos(movement / desiredPose.X());
 
   if (rotation > 0_rad) {
@@ -166,9 +151,8 @@ void wom::drivetrain::Swerve::OnStart() {
   std::cout << "Starting Swerve" << std::endl;
 }
 
-void wom::drivetrain::Swerve::OnUpdate(units::second_t        dt,
-                                       wom::vision::Limelight vision,
-                                       frc::Pose3d            desiredPose) {
+void wom::drivetrain::Swerve::OnUpdate(units::second_t dt, wom::vision::Limelight vision,
+                                       frc::Pose3d desiredPose) {
   vision.OnUpdate(dt);
 
   switch (_state) {

@@ -1,7 +1,7 @@
 #include "drivetrain/behaviours/DrivetrainBehaviours.h"
 
-wom::drivetrain::behaviours::TankDrive::TankDrive(
-    wom::drivetrain::Drivetrain *drivebase, frc::XboxController &driver)
+wom::drivetrain::behaviours::TankDrive::TankDrive(wom::drivetrain::Drivetrain *drivebase,
+                                                  frc::XboxController         &driver)
     : _drivebase(drivebase), _driver(driver) {
   Controls(drivebase);
 }

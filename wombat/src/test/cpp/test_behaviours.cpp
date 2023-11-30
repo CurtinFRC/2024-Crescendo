@@ -83,8 +83,8 @@ TEST(SequentialBehaviour, InheritsControls) {
 }
 
 TEST(SequentialBehaviour, Sequence) {
-  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
-       b3 = make<MockBehaviour>(), b4 = make<MockBehaviour>();
+  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>(),
+       b4    = make<MockBehaviour>();
   auto chain = b1 << b2 << b3 << b4;
 
   {
@@ -116,8 +116,7 @@ TEST(SequentialBehaviour, Sequence) {
 
 TEST(ConcurrentBehaviour, InheritsControls) {
   HasBehaviour a, b;
-  auto         b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
-       b3 = make<MockBehaviour>();
+  auto         b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>();
   b1->Controls(&a);
   b2->Controls(&b);
   b3->Controls(&a);
@@ -251,8 +250,7 @@ TEST(If, Else) {
 }
 
 TEST(Switch, Int) {
-  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
-       b3 = make<MockBehaviour>();
+  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>();
 
   auto chain = make<Switch<int>>(1)->When(0, b1)->When(1, b2)->When(2, b3);
 
@@ -264,8 +262,7 @@ TEST(Switch, Int) {
 }
 
 TEST(Switch, Decide) {
-  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
-       b3 = make<MockBehaviour>();
+  auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>();
 
   auto chain = make<Decide>()
                    ->When([]() { return true; }, b1)
@@ -282,8 +279,8 @@ TEST(Switch, Decide) {
 TEST(Behaviour, FullChain) {
   BehaviourScheduler s;
   MockSystem         a, b;
-  auto               b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(),
-       b3 = make<MockBehaviour>(), b4 = make<MockBehaviour>();
+  auto               b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>(),
+       b4 = make<MockBehaviour>();
 
   b1->Controls(&a);
   b2->Controls(&b);

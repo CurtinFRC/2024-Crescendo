@@ -17,8 +17,7 @@ BehaviourScheduler::~BehaviourScheduler() {
 BehaviourScheduler *_scheduler_instance;
 
 BehaviourScheduler *BehaviourScheduler::GetInstance() {
-  if (_scheduler_instance == nullptr)
-    _scheduler_instance = new BehaviourScheduler();
+  if (_scheduler_instance == nullptr) _scheduler_instance = new BehaviourScheduler();
   return _scheduler_instance;
 }
 
@@ -46,8 +45,8 @@ void BehaviourScheduler::Schedule(Behaviour::ptr behaviour) {
         std::lock_guard<std::recursive_mutex> lk(_active_mtx);
         behaviour->Tick();
       }
-      std::this_thread::sleep_for(std::chrono::milliseconds(
-          (int64_t)(behaviour->GetPeriod().value() * 1000)));
+      std::this_thread::sleep_for(
+          std::chrono::milliseconds((int64_t)(behaviour->GetPeriod().value() * 1000)));
     }
   });
 }

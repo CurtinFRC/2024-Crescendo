@@ -18,18 +18,18 @@ namespace subsystems {
   enum class ElevatorState { kIdle, kPID, kManual, kVelocity };
 
   struct ElevatorConfig {
-    std::string                                      path;
-    wom::utils::Gearbox                              leftGearbox;
-    wom::utils::Gearbox                              rightGearbox;
-    rev::SparkMaxRelativeEncoder                     elevatorEncoder;
-    frc::DigitalInput                               *topSensor;
-    frc::DigitalInput                               *bottomSensor;
-    units::meter_t                                   radius;
-    units::kilogram_t                                mass;
-    units::meter_t                                   maxHeight;
-    units::meter_t                                   minHeight;
-    units::meter_t                                   initialHeight;
-    wom::utils::PIDConfig<units::meter, units::volt> pid;
+    std::string                                                  path;
+    wom::utils::Gearbox                                          leftGearbox;
+    wom::utils::Gearbox                                          rightGearbox;
+    rev::SparkMaxRelativeEncoder                                 elevatorEncoder;
+    frc::DigitalInput                                           *topSensor;
+    frc::DigitalInput                                           *bottomSensor;
+    units::meter_t                                               radius;
+    units::kilogram_t                                            mass;
+    units::meter_t                                               maxHeight;
+    units::meter_t                                               minHeight;
+    units::meter_t                                               initialHeight;
+    wom::utils::PIDConfig<units::meter, units::volt>             pid;
     wom::utils::PIDConfig<units::meters_per_second, units::volt> velocityPID;
 
     void WriteNT(std::shared_ptr<nt::NetworkTable> table);
@@ -71,9 +71,8 @@ namespace subsystems {
 
     units::meters_per_second_t _velocity;
 
-    wom::utils::PIDController<units::meter, units::volt> _pid;
-    wom::utils::PIDController<units::meters_per_second, units::volt>
-        _velocityPID;
+    wom::utils::PIDController<units::meter, units::volt>             _pid;
+    wom::utils::PIDController<units::meters_per_second, units::volt> _velocityPID;
 
     std::shared_ptr<nt::NetworkTable> _table;
   };

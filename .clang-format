@@ -1,7 +1,7 @@
 ---
 BasedOnStyle: Google
 AlignOperands: 'true'
-ColumnLimit: '80'
+ColumnLimit: '110'
 NamespaceIndentation: Inner
 TabWidth: '2'
 UseTab: Never

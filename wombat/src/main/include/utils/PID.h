@@ -17,19 +17,15 @@ namespace utils {
     using in_t = units::unit_t<IN>;
 
     using kp_t = units::unit_t<units::compound_unit<OUT, units::inverse<IN>>>;
-    using ki_t =
-        units::unit_t<units::compound_unit<OUT, units::inverse<IN>,
-                                           units::inverse<units::second>>>;
-    using kd_t = units::unit_t<
-        units::compound_unit<OUT, units::inverse<IN>, units::second>>;
+    using ki_t = units::unit_t<units::compound_unit<OUT, units::inverse<IN>, units::inverse<units::second>>>;
+    using kd_t = units::unit_t<units::compound_unit<OUT, units::inverse<IN>, units::second>>;
 
     using error_t = units::unit_t<IN>;
-    using deriv_t =
-        units::unit_t<units::compound_unit<IN, units::inverse<units::second>>>;
+    using deriv_t = units::unit_t<units::compound_unit<IN, units::inverse<units::second>>>;
 
-    PIDConfig(std::string path, kp_t kp = kp_t{0}, ki_t ki = ki_t{0},
-              kd_t kd = kd_t{0}, error_t stableThresh = error_t{-1},
-              deriv_t stableDerivThresh = deriv_t{-1}, in_t izone = in_t{-1})
+    PIDConfig(std::string path, kp_t kp = kp_t{0}, ki_t ki = ki_t{0}, kd_t kd = kd_t{0},
+              error_t stableThresh = error_t{-1}, deriv_t stableDerivThresh = deriv_t{-1},
+              in_t izone = in_t{-1})
         : path(path),
           kp(kp),
           ki(ki),
@@ -58,22 +54,16 @@ namespace utils {
     void RegisterNT() {
       auto table = nt::NetworkTableInstance::GetDefault().GetTable(path);
       _nt_bindings.emplace_back(
-          std::make_shared<utils::NTBoundUnit<typename kp_t::unit_type>>(
-              table, "kP", kp));
+          std::make_shared<utils::NTBoundUnit<typename kp_t::unit_type>>(table, "kP", kp));
       _nt_bindings.emplace_back(
-          std::make_shared<utils::NTBoundUnit<typename ki_t::unit_type>>(
-              table, "kI", ki));
+          std::make_shared<utils::NTBoundUnit<typename ki_t::unit_type>>(table, "kI", ki));
       _nt_bindings.emplace_back(
-          std::make_shared<utils::NTBoundUnit<typename kd_t::unit_type>>(
-              table, "kD", kd));
-      _nt_bindings.emplace_back(
-          std::make_shared<utils::NTBoundUnit<typename error_t::unit_type>>(
-              table, "stableThresh", stableThresh));
-      _nt_bindings.emplace_back(
-          std::make_shared<utils::NTBoundUnit<typename deriv_t::unit_type>>(
-              table, "stableThreshVelocity", stableDerivThresh));
-      _nt_bindings.emplace_back(
-          std::make_shared<utils::NTBoundUnit<IN>>(table, "izone", izone));
+          std::make_shared<utils::NTBoundUnit<typename kd_t::unit_type>>(table, "kD", kd));
+      _nt_bindings.emplace_back(std::make_shared<utils::NTBoundUnit<typename error_t::unit_type>>(
+          table, "stableThresh", stableThresh));
+      _nt_bindings.emplace_back(std::make_shared<utils::NTBoundUnit<typename deriv_t::unit_type>>(
+          table, "stableThreshVelocity", stableDerivThresh));
+      _nt_bindings.emplace_back(std::make_shared<utils::NTBoundUnit<IN>>(table, "izone", izone));
     }
   };
 
@@ -87,19 +77,15 @@ namespace utils {
 
     config_t config;
 
-    PIDController(std::string path, config_t initialGains,
-                  in_t setpoint = in_t{0})
+    PIDController(std::string path, config_t initialGains, in_t setpoint = in_t{0})
         : config(initialGains),
           _setpoint(setpoint),
-          _posFilter(
-              frc::LinearFilter<typename config_t::error_t>::MovingAverage(20)),
-          _velFilter(
-              frc::LinearFilter<typename config_t::deriv_t>::MovingAverage(20)),
+          _posFilter(frc::LinearFilter<typename config_t::error_t>::MovingAverage(20)),
+          _velFilter(frc::LinearFilter<typename config_t::deriv_t>::MovingAverage(20)),
           _table(nt::NetworkTableInstance::GetDefault().GetTable(path)) {}
 
     void SetSetpoint(in_t setpoint) {
-      if (std::abs(setpoint.value() - _setpoint.value()) >
-          std::abs(0.1 * _setpoint.value())) {
+      if (std::abs(setpoint.value() - _setpoint.value()) > std::abs(0.1 * _setpoint.value())) {
         _iterations = 0;
       }
       _setpoint = setpoint;
@@ -116,8 +102,7 @@ namespace utils {
     out_t Calculate(in_t pv, units::second_t dt, out_t feedforward = out_t{0}) {
       auto error = do_wrap(_setpoint - pv);
       _integralSum += error * dt;
-      if (config.izone.value() > 0 &&
-          (error > config.izone || error < -config.izone))
+      if (config.izone.value() > 0 && (error > config.izone || error < -config.izone))
         _integralSum = sum_t{0};
 
       typename config_t::deriv_t deriv{0};
@@ -127,8 +112,7 @@ namespace utils {
       _stablePos = _posFilter.Calculate(error);
       _stableVel = _velFilter.Calculate(deriv);
 
-      auto out = config.kp * error + config.ki * _integralSum +
-                 config.kd * deriv + feedforward;
+      auto out = config.kp * error + config.ki * _integralSum + config.kd * deriv + feedforward;
       // std::cout << "Out value" << out.value() << std::endl;
 
       _table->GetEntry("pv").SetDouble(pv.value());
@@ -145,22 +129,16 @@ namespace utils {
       return out;
     }
 
-    bool IsStable(
-        std::optional<typename config_t::error_t> stableThreshOverride   = {},
-        std::optional<typename config_t::deriv_t> velocityThreshOverride = {})
-        const {
+    bool IsStable(std::optional<typename config_t::error_t> stableThreshOverride   = {},
+                  std::optional<typename config_t::deriv_t> velocityThreshOverride = {}) const {
       auto stableThresh      = config.stableThresh;
       auto stableDerivThresh = config.stableDerivThresh;
 
-      if (stableThreshOverride.has_value())
-        stableThresh = stableThreshOverride.value();
-      if (velocityThreshOverride.has_value())
-        stableDerivThresh = velocityThreshOverride.value();
+      if (stableThreshOverride.has_value()) stableThresh = stableThreshOverride.value();
+      if (velocityThreshOverride.has_value()) stableDerivThresh = velocityThreshOverride.value();
 
-      return _iterations > 20 &&
-             std::abs(_stablePos.value()) <= std::abs(stableThresh.value()) &&
-             (stableDerivThresh.value() < 0 ||
-              std::abs(_stableVel.value()) <= stableDerivThresh.value());
+      return _iterations > 20 && std::abs(_stablePos.value()) <= std::abs(stableThresh.value()) &&
+             (stableDerivThresh.value() < 0 || std::abs(_stableVel.value()) <= stableDerivThresh.value());
     }
 
    private:

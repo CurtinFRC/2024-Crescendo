@@ -16,12 +16,11 @@ namespace subsystems {
   struct ArmConfig {
     std::string path;
 
-    wom::utils::Gearbox                               leftGearbox;
-    wom::utils::Gearbox                               rightGearbox;
-    rev::SparkMaxRelativeEncoder                      armEncoder;
-    wom::utils::PIDConfig<units::radian, units::volt> pidConfig;
-    wom::utils::PIDConfig<units::radians_per_second, units::volt>
-        velocityConfig;
+    wom::utils::Gearbox                                           leftGearbox;
+    wom::utils::Gearbox                                           rightGearbox;
+    rev::SparkMaxRelativeEncoder                                  armEncoder;
+    wom::utils::PIDConfig<units::radian, units::volt>             pidConfig;
+    wom::utils::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
 
     units::kilogram_t armMass;
     units::kilogram_t loadMass;
@@ -58,11 +57,10 @@ namespace subsystems {
     bool IsStable(units::radian_t stable) const;
 
    private:
-    ArmConfig _config;
-    ArmState  _state = ArmState::kIdle;
-    wom::utils::PIDController<units::radian, units::volt> _pid;
-    wom::utils::PIDController<units::radians_per_second, units::volt>
-        _velocityPID;
+    ArmConfig                                                         _config;
+    ArmState                                                          _state = ArmState::kIdle;
+    wom::utils::PIDController<units::radian, units::volt>             _pid;
+    wom::utils::PIDController<units::radians_per_second, units::volt> _velocityPID;
 
     std::shared_ptr<nt::NetworkTable> _table;
 
