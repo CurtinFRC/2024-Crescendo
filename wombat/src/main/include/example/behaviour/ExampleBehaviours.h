@@ -1,8 +1,7 @@
 #pragma once
 
-#include "example/Example.h"
-
 #include "behaviour/Behaviour.h"
+#include "example/Example.h"
 
 class ExampleBehaviour : public behaviour::Behaviour {
  public:

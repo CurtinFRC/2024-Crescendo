@@ -149,7 +149,6 @@ class Behaviour : public std::enable_shared_from_this<Behaviour> {
    */
   Behaviour::ptr Until(Behaviour::ptr other);
 
-
  private:
   void Stop(BehaviourState new_state);
 
@@ -362,8 +361,7 @@ struct Switch : public Behaviour {
         if (opt.first(val)) {
           _locked = opt.second;
 
-          if (_locked == nullptr)
-            SetDone();
+          if (_locked == nullptr) SetDone();
         }
       }
     }
@@ -458,6 +456,7 @@ struct Print : public Behaviour {
   Print(std::string message);
 
   void OnTick(units::time::second_t dt) override;
+
  private:
   std::string _message;
 };

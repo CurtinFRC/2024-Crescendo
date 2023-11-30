@@ -1,28 +1,24 @@
 #pragma once
 
-#include "utils/Gearbox.h"
-#include "utils/PID.h"
-#include "behaviour/HasBehaviour.h"
-#include "behaviour/Behaviour.h"
-
 #include <networktables/NetworkTable.h>
 #include <units/angular_velocity.h>
 #include <units/charge.h>
 
 #include <memory>
 
+#include "behaviour/Behaviour.h"
+#include "behaviour/HasBehaviour.h"
+#include "utils/Gearbox.h"
+#include "utils/PID.h"
+
 namespace wom {
 namespace subsystems {
-  enum class ShooterState {
-    kPID,
-    kManual,
-    kIdle
-  };
+  enum class ShooterState { kPID, kManual, kIdle };
 
   struct ShooterParams {
-    wom::utils::Gearbox gearbox;
+    wom::utils::Gearbox                                           gearbox;
     wom::utils::PIDConfig<units::radians_per_second, units::volt> pid;
-    units::ampere_t currentLimit;
+    units::ampere_t                                               currentLimit;
   };
 
   class Shooter : public behaviour::HasBehaviour {
@@ -39,7 +35,7 @@ namespace subsystems {
 
    private:
     ShooterParams _params;
-    ShooterState _state;
+    ShooterState  _state;
 
     units::volt_t _setpointManual{0};
 
@@ -47,5 +43,5 @@ namespace subsystems {
 
     std::shared_ptr<nt::NetworkTable> _table;
   };
-}
-}
+}  // namespace subsystems
+}  // namespace wom

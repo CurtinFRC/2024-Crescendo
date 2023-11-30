@@ -9,8 +9,8 @@
 namespace wom {
 namespace utils {
   /**
-   * A VoltageController is analagous to a MotorController, but in terms of voltage instead
-   * of speed.
+   * A VoltageController is analagous to a MotorController, but in terms of
+   * voltage instead of speed.
    */
   class VoltageController {
    public:
@@ -33,7 +33,8 @@ namespace utils {
     virtual bool GetInverted() const = 0;
 
     /**
-     * Get the estimated real voltage of the output, based on the controller voltage. 
+     * Get the estimated real voltage of the output, based on the controller
+     * voltage.
      */
     units::volt_t GetEstimatedRealVoltage() const;
   };
@@ -46,7 +47,7 @@ namespace utils {
    public:
     MotorVoltageController(frc::MotorController *MotorController);
 
-    void SetVoltage(units::volt_t voltage) override;
+    void          SetVoltage(units::volt_t voltage) override;
     units::volt_t GetVoltage() const override;
 
     void SetInverted(bool invert) override;
@@ -56,21 +57,22 @@ namespace utils {
 
     /**
      * Create a MotorVoltageController with a given frc::MotorController
-     * subclass. Please note that this creates an unsafe pointer (will never dealloc)
+     * subclass. Please note that this creates an unsafe pointer (will never
+     * dealloc)
      */
-    template<typename T, typename ...Args>
-    static MotorVoltageController Of(Args& ...args) {
+    template <typename T, typename... Args>
+    static MotorVoltageController Of(Args &...args) {
       T *t = new T(args...);  // Be warned, does not deallocate!
       return MotorVoltageController{t};
     }
 
-    template<typename ...Args>
-    static MotorVoltageController Group(Args& ...args) {
+    template <typename... Args>
+    static MotorVoltageController Group(Args &...args) {
       return Of<frc::MotorControllerGroup>(args...);
     }
 
    private:
     frc::MotorController *_MotorController;
   };
-} // namespace utils
+}  // namespace utils
 }  // namespace wom

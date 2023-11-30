@@ -1,19 +1,22 @@
 #pragma once
 
-#include <string>
-#include <iostream>
-
-#include "behaviour/HasBehaviour.h"
-#include "behaviour/Behaviour.h"
-#include "utils/Gearbox.h"
-
 #include <units/time.h>
 #include <units/voltage.h>
 
-#include <frc/XboxController.h>
+#include <iostream>
+#include <string>
+
+#include "behaviour/Behaviour.h"
+#include "behaviour/HasBehaviour.h"
+#include "utils/Gearbox.h"
 
 namespace wom {
 namespace drivetrain {
+  struct TankSpeed {
+    double right;
+    double left;
+  };
+
   // TODO PID
   struct DrivetrainConfig {
     std::string path;
@@ -33,25 +36,28 @@ namespace drivetrain {
 
   class Drivetrain : public behaviour::HasBehaviour {
    public:
-    Drivetrain(DrivetrainConfig *config, frc::XboxController &driver);
+    Drivetrain(DrivetrainConfig *config);
     ~Drivetrain();
 
-    DrivetrainConfig *GetConfig(); DrivetrainState GetState(); 
+    DrivetrainConfig *GetConfig();
+    DrivetrainState   GetState();
 
     void SetState(DrivetrainState state);
+    void SetSpeed(TankSpeed speed);
+
+    void TankControl(double rightSpeed, double leftSpeed);
 
     void TankControl();
 
     void OnStart();
     void OnUpdate(units::second_t dt);
-   protected:
 
+   protected:
    private:
     DrivetrainConfig *_config;
-    DrivetrainState _state;
-    frc::XboxController &_driver;
-    units::volt_t maxVolts = 9_V;
+    DrivetrainState   _state;
+    units::volt_t     maxVolts = 9_V;
+    TankSpeed         _speed;
   };
-}
-}
-
+}  // namespace drivetrain
+}  // namespace wom

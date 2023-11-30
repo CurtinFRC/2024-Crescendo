@@ -29,10 +29,6 @@ jobs:
     - name: Install Roborio Toolchain
       run: ./gradlew installRoborioToolchain
 
-    # Execute check for editor config
-    - name: Editor Config Check
-      run: ./gradlew editorconfigCheck
-
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build

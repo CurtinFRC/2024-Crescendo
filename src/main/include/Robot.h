@@ -13,6 +13,8 @@
 #include "Wombat.h"
 
 
+#include "RobotMap.h"
+
 class Robot : public frc::TimedRobot {
  public:
   void RobotInit() override;
@@ -28,6 +30,7 @@ class Robot : public frc::TimedRobot {
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
+ protected:
  private:
     frc::SendableChooser<std::string> m_chooser;
 

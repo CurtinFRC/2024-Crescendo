@@ -1,7 +1,7 @@
 // this should be your only include in your behaviour cpp files
 #include "example/behaviour/ExampleBehaviours.h"
 
-ExampleBehaviour::ExampleBehaviour(Example *_example): _example(_example) {
+ExampleBehaviour::ExampleBehaviour(Example *_example) : _example(_example) {
   Controls(_example);
 }
 

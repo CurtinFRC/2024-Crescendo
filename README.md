@@ -2,12 +2,13 @@ CurtinFRC 2024 Codebase
 ===
 ![Build Status of Upstream Master](https://github.com/CurtinFRC/2024-Crescendo/actions/workflows/ci.yml/badge.svg)
 
-Our codebase for the 2024 Crescendo game using Gradle, our library Wombat and other things.
-# Setup
+Setup
+=====
 
 **This assumes that you have the WPILib tools installed. If you do not, follow the instructions [here](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html).**
 
-## Linux
+Linux
+-----
 Fork this repository then open up a terminal and run :
 ```bash
 git clone https://github.com/*yourusernamehere*/2024-Crescendo.git
@@ -29,6 +30,7 @@ Now look in [CONTRIBUTING.md](./CONTRIBUTING.md) before continuing!
 
 Quick Commands
 =======
+=============
 These commands can be used in a variety of combinations, feel free to experiment!
 
 Build
@@ -55,8 +57,20 @@ Cleaning removes caches of your compiled code.
 If you do not understand an error it can often help to clean before getting help.
 Clean building is slower so you should not generally use it.
 
-Documentation
-=======
 Our documentation for Wombat and each years codebase can be found [here](TODO!).
+=======
+Simulation
+----------
+**Release**
+`./gradlew :nativeSimulation`
+Runs a simulation of your code.
+
+**Debug**
+`./gradlew :nativeSimulationDebug`
+Runs a debug simulation of your code, including a variety of debugging tools similar to glass.
+
+Documentation
+=============
+Our documentation for Wombat and each years codebase can be found [here](https://4788-docs.vercel.app/).
 It is a powerful reference for writing code using Wombat going over how to use and the implementation for everything within Wombat.
 It also has a variety of guides to teach you how to use a variety of things in a more fully scoped way.

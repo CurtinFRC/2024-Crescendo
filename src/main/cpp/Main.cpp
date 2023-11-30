@@ -7,4 +7,3 @@
 #include "utils/RobotStartup.h"
 
 WOMBAT_ROBOT_MAIN(Robot);
-

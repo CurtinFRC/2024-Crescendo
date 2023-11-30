@@ -26,7 +26,8 @@ class HasBehaviour {
 
  protected:
   std::shared_ptr<Behaviour>                      _active_behaviour{nullptr};
-  std::function<std::shared_ptr<Behaviour>(void)> _default_behaviour_producer{nullptr};
+  std::function<std::shared_ptr<Behaviour>(void)> _default_behaviour_producer{
+      nullptr};
 
  private:
   friend class BehaviourScheduler;
