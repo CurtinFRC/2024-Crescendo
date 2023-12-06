@@ -53,6 +53,8 @@ class Arm : public behaviour::HasBehaviour {
   void SetRaw(units::volt_t voltage);
   void SetVelocity(units::radians_per_second_t velocity);
 
+  void SetState(wom::subsystems::ArmState state);
+
   void SetArmSpeedLimit(double limit);  // units, what are they??
 
   ArmConfig& GetConfig();

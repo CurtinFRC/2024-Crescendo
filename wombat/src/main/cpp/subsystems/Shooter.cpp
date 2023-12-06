@@ -49,7 +49,6 @@ void wom::subsystems::Shooter::OnUpdate(units::second_t dt) {
 }
 
 void wom::subsystems::Shooter::SetManual(units::volt_t voltage) {
-  _state = ShooterState::kManual;
   _setpointManual = voltage;
 }
 
@@ -58,8 +57,8 @@ void wom::subsystems::Shooter::SetPID(units::radians_per_second_t goal) {
   _pid.SetSetpoint(goal);
 }
 
-void wom::subsystems::Shooter::SetIdle() {
-  _state = ShooterState::kIdle;
+void wom::subsystems::Shooter::SetState(ShooterState state) {
+  _state = state;
 }
 
 bool wom::subsystems::Shooter::IsStable() const {
