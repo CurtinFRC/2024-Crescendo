@@ -90,26 +90,23 @@ void wom::subsystems::Elevator::OnUpdate(units::second_t dt) {
 }
 
 void wom::subsystems::Elevator::SetManual(units::volt_t voltage) {
-  _state          = wom::subsystems::ElevatorState::kManual;
   _setpointManual = voltage;
 }
 
 void wom::subsystems::Elevator::SetPID(units::meter_t height) {
-  _state = wom::subsystems::ElevatorState::kPID;
   _pid.SetSetpoint(height);
-}
-
-void wom::subsystems::Elevator::SetElevatorSpeedLimit(double limit) {
-  speedLimit = limit;
 }
 
 void wom::subsystems::Elevator::SetVelocity(units::meters_per_second_t velocity) {
   _velocityPID.SetSetpoint(velocity);
-  _state = wom::subsystems::ElevatorState::kVelocity;
 }
 
-void wom::subsystems::Elevator::SetIdle() {
-  _state = wom::subsystems::ElevatorState::kIdle;
+void wom::subsystems::Elevator::SetState(wom::subsystems::ElevatorState state) {
+  _state = state;
+}
+
+void wom::subsystems::Elevator::SetElevatorSpeedLimit(double limit) {
+  speedLimit = limit;
 }
 
 wom::subsystems::ElevatorConfig &wom::subsystems::Elevator::GetConfig() {

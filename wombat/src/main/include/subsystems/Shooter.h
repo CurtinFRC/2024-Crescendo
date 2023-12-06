@@ -27,7 +27,7 @@ namespace subsystems {
 
     void SetManual(units::volt_t voltage);
     void SetPID(units::radians_per_second_t goal);
-    void SetIdle();
+    void SetState(ShooterState state);
 
     void OnUpdate(units::second_t dt);
 

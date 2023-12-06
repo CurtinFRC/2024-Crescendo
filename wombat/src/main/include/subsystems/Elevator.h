@@ -43,8 +43,8 @@ namespace subsystems {
 
     void SetManual(units::volt_t voltage);
     void SetPID(units::meter_t height);
-    void SetIdle();
-    void SetRaw();
+
+    void SetState(ElevatorState state);
 
     void SetVelocity(units::meters_per_second_t velocity);
 

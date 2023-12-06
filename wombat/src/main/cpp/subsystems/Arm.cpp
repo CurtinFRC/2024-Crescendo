@@ -99,23 +99,20 @@ void wom::subsystems::Arm::SetArmSpeedLimit(double limit) {
 // defines information needed for the functions and connects the states to their
 // respective function
 
-void wom::subsystems::Arm::SetIdle() {
-  _state = ArmState::kIdle;
-}
-
 void wom::subsystems::Arm::SetRaw(units::volt_t voltage) {
-  _state   = wom::subsystems::ArmState::kRaw;
   _voltage = voltage;
 }
 
+void wom::subsystems::Arm::SetVelocity(units::radians_per_second_t velocity) {
+  _velocityPID.SetSetpoint(velocity);
+}
+
 void wom::subsystems::Arm::SetAngle(units::radian_t angle) {
-  _state = wom::subsystems::ArmState::kAngle;
   _pid.SetSetpoint(angle);
 }
 
-void wom::subsystems::Arm::SetVelocity(units::radians_per_second_t velocity) {
-  _state = wom::subsystems::ArmState::kVelocity;
-  _velocityPID.SetSetpoint(velocity);
+void wom::subsystems::Arm::SetState(wom::subsystems::ArmState state) {
+  _state = state;
 }
 
 wom::subsystems::ArmConfig &wom::subsystems::Arm::GetConfig() {
