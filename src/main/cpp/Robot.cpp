@@ -27,11 +27,22 @@ void Robot::RobotInit() {
 
     simulation_timer = frc::Timer();
 }
-void Robot::RobotPeriodic() {
 
-}
+void Robot::RobotPeriodic() {}
 
-void Robot::AutonomousInit() {
+void Robot::AutonomousInit() {}
+void Robot::AutonomousPeriodic() {}
+
+void Robot::TeleopInit() {}
+void Robot::TeleopPeriodic() {}
+
+void Robot::DisabledInit() {}
+void Robot::DisabledPeriodic() {}
+
+void Robot::TestInit() {}
+void Robot::TestPeriodic() {}
+
+void Robot::SimulationInit() {
     nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
     std::shared_ptr<nt::NetworkTable> table = inst.GetTable("FMSInfo");
 
@@ -54,8 +65,7 @@ void Robot::AutonomousInit() {
     simulation_timer.Reset();
     simulation_timer.Start();
 }
-
-void Robot::AutonomousPeriodic() {
+void Robot::SimulationPeriodic() {
     m_field.SetRobotPose(m_driveSim.GetPose());
 
     // get the current trajectory state
@@ -73,15 +83,3 @@ void Robot::AutonomousPeriodic() {
     // update the drivebase
     m_driveSim.Update(20_ms);
 }
-
-void Robot::TeleopInit() {}
-void Robot::TeleopPeriodic() {}
-
-void Robot::DisabledInit() {}
-void Robot::DisabledPeriodic() {}
-
-void Robot::TestInit() {}
-void Robot::TestPeriodic() {}
-
-void Robot::SimulationInit() {}
-void Robot::SimulationPeriodic() {}
