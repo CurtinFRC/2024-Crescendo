@@ -19,9 +19,18 @@
 
 
 void Robot::RobotInit() {
+
+    
     m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
     frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
+
+    m_path_chooser.SetDefaultOption("Path1", "paths/output/Path1.wpilib.json");
+
+    m_path_chooser.AddOption("Path1", "paths/output/Path1.wpilib.json");
+    m_path_chooser.AddOption("Path2", "paths/output/Path2.wpilib.json");
+
+    frc::SmartDashboard::PutData("Path Selector", &m_path_chooser);
 
     frc::SmartDashboard::PutData("Field", &m_field);
 
@@ -30,23 +39,11 @@ void Robot::RobotInit() {
 
 void Robot::RobotPeriodic() {}
 
-void Robot::AutonomousInit() {}
-void Robot::AutonomousPeriodic() {}
-
-void Robot::TeleopInit() {}
-void Robot::TeleopPeriodic() {}
-
-void Robot::DisabledInit() {}
-void Robot::DisabledPeriodic() {}
-
-void Robot::TestInit() {}
-void Robot::TestPeriodic() {}
-
-void Robot::SimulationInit() {
+void Robot::AutonomousInit() {
     nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
     std::shared_ptr<nt::NetworkTable> table = inst.GetTable("FMSInfo");
 
-    current_trajectory = m_pathplanner.getTrajectory("paths/output/Path1.wpilib.json");
+    current_trajectory = m_pathplanner.getTrajectory(m_path_chooser.GetSelected());
 
      // create a netowrk table for the trajectory
     std::shared_ptr<nt::NetworkTable> trajectory_table = nt::NetworkTableInstance::GetDefault().GetTable("trajectory_path");
@@ -65,7 +62,7 @@ void Robot::SimulationInit() {
     simulation_timer.Reset();
     simulation_timer.Start();
 }
-void Robot::SimulationPeriodic() {
+void Robot::AutonomousPeriodic() {
     m_field.SetRobotPose(m_driveSim.GetPose());
 
     // get the current trajectory state
@@ -82,4 +79,20 @@ void Robot::SimulationPeriodic() {
     
     // update the drivebase
     m_driveSim.Update(20_ms);
+}
+
+void Robot::TeleopInit() {}
+void Robot::TeleopPeriodic() {}
+
+void Robot::DisabledInit() {}
+void Robot::DisabledPeriodic() {}
+
+void Robot::TestInit() {}
+void Robot::TestPeriodic() {}
+
+void Robot::SimulationInit() {
+    
+}
+
+void Robot::SimulationPeriodic() {
 }

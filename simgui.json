@@ -3,7 +3,8 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Auto Selector": "String Chooser",
-      "/SmartDashboard/Field": "Field2d"
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Path Selector": "String Chooser"
     },
     "windows": {
       "/SmartDashboard/Auto Selector": {
@@ -20,6 +21,11 @@
         "top": 36,
         "units": "meters",
         "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Path Selector": {
         "window": {
           "visible": true
         }
