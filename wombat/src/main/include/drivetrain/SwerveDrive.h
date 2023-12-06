@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ctre/Phoenix.h>
 #include <networktables/DoubleTopic.h>
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableInstance.h>
@@ -102,27 +103,32 @@ namespace drivetrain {
     kIdle,
     kPose,
     kFieldRelative,
+    kRobotRelative,
   };
 
   class Swerve : public behaviour::HasBehaviour {
    public:
-    explicit Swerve(SwerveConfig config, SwerveState state, wom::vision::Limelight vision);
+    explicit Swerve(SwerveConfig config, SwerveState state, wom::vision::Limelight *vision);
+    explicit Swerve(SwerveConfig config, SwerveState state, Pigeon2 *gyro);
+    // explicit Swerve(SwerveConfig config, SwerveState state, wom::vision::Limelight vision, Pigeon2 gyro);
 
     SwerveConfig           GetConfig();
     SwerveState            GetState();
-    wom::vision::Limelight GetLimelight();
+    wom::vision::Limelight *GetLimelight();
+    Pigeon2                *GetGyro();
 
     void SetState(SwerveState state);
     void FieldRelativeControl(frc::Pose3d desiredPose, units::second_t dt);
 
     void OnStart();
-    void OnUpdate(units::second_t dt, wom::vision::Limelight vision, frc::Pose3d desiredPose);
+    void OnUpdate(units::second_t dt, wom::vision::Limelight *vision, frc::Pose3d desiredPose);
 
    protected:
    private:
     SwerveConfig           _config;
     SwerveState            _state;
-    wom::vision::Limelight _vision;
+    wom::vision::Limelight *_vision = NULL;
+    Pigeon2                *_gyro = NULL;
   };
 };  // namespace drivetrain
 };  // namespace wom

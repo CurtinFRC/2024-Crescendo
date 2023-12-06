@@ -25,18 +25,16 @@ struct RobotMap {
   Gearbox                frontLeftRotation{&frontLeftMovementVoltageController, &frontLeftMovementEncoder,
                             frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
-  SwerveModuleConfig frontLeftConfig{
-    frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
-    frontLeftMovement,
-    frontLeftRotation,
-    PIDConfig<units::radians_per_second, units::volt>(""),
-    PIDConfig<units::meters_per_second, units::volt>(""),
-    PIDConfig<units::radian, units::radians_per_second>(""),
-    PIDConfig<units::meter, units::meters_per_second>(""),
-    units::meter_t{0.05},
-    SwerveModuleName::FrontLeft,
-    ""
-  };
+  SwerveModuleConfig frontLeftConfig{frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
+                                     frontLeftMovement,
+                                     frontLeftRotation,
+                                     PIDConfig<units::radians_per_second, units::volt>(""),
+                                     PIDConfig<units::meters_per_second, units::volt>(""),
+                                     PIDConfig<units::radian, units::radians_per_second>(""),
+                                     PIDConfig<units::meter, units::meters_per_second>(""),
+                                     units::meter_t{0.05},
+                                     SwerveModuleName::FrontLeft,
+                                     ""};
 
   SwerveModule frontLeft = SwerveModule(frontLeftConfig, SwerveModuleState::kIdle);
 
@@ -44,26 +42,24 @@ struct RobotMap {
   MotorVoltageController frontRightMovementVoltageController{&frontRightMovementMotor};
   TalonFXEncoder         frontRightMovementEncoder{&frontRightMovementMotor, 100};
   Gearbox                frontRightMovement{&frontRightMovementVoltageController, &frontRightMovementEncoder,
-                            frc::DCMotor::Falcon500(1).WithReduction(6.75)};
+                             frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
   WPI_TalonFX            frontRightRotationMotor{99};
   MotorVoltageController frontRightRotationVoltageController{&frontRightMovementMotor};
   TalonFXEncoder         frontRightRotationEncoder{&frontRightMovementMotor, 100};
   Gearbox                frontRightRotation{&frontRightMovementVoltageController, &frontRightMovementEncoder,
-                            frc::DCMotor::Falcon500(1).WithReduction(6.75)};
+                             frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
-  SwerveModuleConfig frontRightConfig{
-    frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
-    frontLeftMovement,
-    frontLeftRotation,
-    PIDConfig<units::radians_per_second, units::volt>(""),
-    PIDConfig<units::meters_per_second, units::volt>(""),
-    PIDConfig<units::radian, units::radians_per_second>(""),
-    PIDConfig<units::meter, units::meters_per_second>(""),
-    units::meter_t{0.05},
-    SwerveModuleName::FrontRight,
-    ""
-  };
+  SwerveModuleConfig frontRightConfig{frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
+                                      frontLeftMovement,
+                                      frontLeftRotation,
+                                      PIDConfig<units::radians_per_second, units::volt>(""),
+                                      PIDConfig<units::meters_per_second, units::volt>(""),
+                                      PIDConfig<units::radian, units::radians_per_second>(""),
+                                      PIDConfig<units::meter, units::meters_per_second>(""),
+                                      units::meter_t{0.05},
+                                      SwerveModuleName::FrontRight,
+                                      ""};
 
   SwerveModule frontRight = SwerveModule(frontRightConfig, SwerveModuleState::kIdle);
 
@@ -71,26 +67,24 @@ struct RobotMap {
   MotorVoltageController backLeftMovementVoltageController{&backLeftMovementMotor};
   TalonFXEncoder         backLeftMovementEncoder{&backLeftMovementMotor, 100};
   Gearbox                backLeftMovement{&backLeftMovementVoltageController, &backLeftMovementEncoder,
-                            frc::DCMotor::Falcon500(1).WithReduction(6.75)};
+                           frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
   WPI_TalonFX            backLeftRotationMotor{99};
   MotorVoltageController backLeftRotationVoltageController{&backLeftMovementMotor};
   TalonFXEncoder         backLeftRotationEncoder{&backLeftMovementMotor, 100};
   Gearbox                backLeftRotation{&backLeftMovementVoltageController, &backLeftMovementEncoder,
-                            frc::DCMotor::Falcon500(1).WithReduction(6.75)};
+                           frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
-  SwerveModuleConfig backLeftConfig{
-    frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
-    frontLeftMovement,
-    frontLeftRotation,
-    PIDConfig<units::radians_per_second, units::volt>(""),
-    PIDConfig<units::meters_per_second, units::volt>(""),
-    PIDConfig<units::radian, units::radians_per_second>(""),
-    PIDConfig<units::meter, units::meters_per_second>(""),
-    units::meter_t{0.05},
-    SwerveModuleName::BackLeft,
-    ""
-  };
+  SwerveModuleConfig backLeftConfig{frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
+                                    frontLeftMovement,
+                                    frontLeftRotation,
+                                    PIDConfig<units::radians_per_second, units::volt>(""),
+                                    PIDConfig<units::meters_per_second, units::volt>(""),
+                                    PIDConfig<units::radian, units::radians_per_second>(""),
+                                    PIDConfig<units::meter, units::meters_per_second>(""),
+                                    units::meter_t{0.05},
+                                    SwerveModuleName::BackLeft,
+                                    ""};
 
   SwerveModule backLeft = SwerveModule(backLeftConfig, SwerveModuleState::kIdle);
 
@@ -106,28 +100,21 @@ struct RobotMap {
   Gearbox                backRightRotation{&backRightMovementVoltageController, &backRightMovementEncoder,
                             frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
-  SwerveModuleConfig backRightConfig{
-    frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
-    frontLeftMovement,
-    frontLeftRotation,
-    PIDConfig<units::radians_per_second, units::volt>(""),
-    PIDConfig<units::meters_per_second, units::volt>(""),
-    PIDConfig<units::radian, units::radians_per_second>(""),
-    PIDConfig<units::meter, units::meters_per_second>(""),
-    units::meter_t{0.05},
-    SwerveModuleName::BackRight,
-    ""
-  };
+  SwerveModuleConfig backRightConfig{frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
+                                     frontLeftMovement,
+                                     frontLeftRotation,
+                                     PIDConfig<units::radians_per_second, units::volt>(""),
+                                     PIDConfig<units::meters_per_second, units::volt>(""),
+                                     PIDConfig<units::radian, units::radians_per_second>(""),
+                                     PIDConfig<units::meter, units::meters_per_second>(""),
+                                     units::meter_t{0.05},
+                                     SwerveModuleName::BackRight,
+                                     ""};
 
   SwerveModule backRight = SwerveModule(backRightConfig, SwerveModuleState::kIdle);
 
-  SwerveConfig swerveConfig {
-    frontLeft,
-    frontRight,
-    backLeft,
-    backRight
-  };
+  SwerveConfig swerveConfig{frontLeft, frontRight, backLeft, backRight};
 
   Limelight limelight = Limelight("Limelight");
-  Swerve swerve = Swerve(swerveConfig, SwerveState::kIdle, limelight);
+  Swerve    swerve    = Swerve(swerveConfig, SwerveState::kIdle, &limelight);
 };

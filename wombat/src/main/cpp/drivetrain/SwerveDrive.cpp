@@ -8,6 +8,7 @@ wom::drivetrain::SwerveModule::SwerveModule(wom::drivetrain::SwerveModuleConfig 
       _movementPID(config.path + "/pid/movementGearbox", config.movementPID),
       _config(config),
       _state(state) {
+  // TODO! Get name the table based off module name
   table = nt::NetworkTableInstance::GetDefault().GetTable("Swerve Module");
 }
 
@@ -54,8 +55,8 @@ void wom::drivetrain::SwerveModule::PIDControl(units::second_t dt, units::radian
   units::volt_t feedforwardRotationalVelocity = _config.rotationGearbox.motor.Voltage(
       0_Nm, _config.rotationGearbox.encoder->GetEncoderAngularVelocity());
   voltageRotation = _rotationalVelocityPID.Calculate(angularVelocity, dt, feedforwardRotationalVelocity);
-  if (voltageRotation > 12_V) {
-    voltageRotation = 12_V;
+  if (voltageRotation > 11_V) {
+    voltageRotation = 11_V;
   }
   _config.rotationGearbox.transmission->SetVoltage(voltageRotation);
 
@@ -103,8 +104,10 @@ void wom::drivetrain::SwerveModule::OnUpdate(units::second_t dt, units::radian_t
 }
 
 wom::drivetrain::Swerve::Swerve(wom::drivetrain::SwerveConfig config, wom::drivetrain::SwerveState state,
-                                wom::vision::Limelight vision)
+                                wom::vision::Limelight *vision)
     : _config(config), _state(state), _vision(vision) {}
+
+wom::drivetrain::Swerve::Swerve(wom::drivetrain::SwerveConfig config, wom::drivetrain::SwerveState state, Pigeon2 *gyro) : _config(config), _state(state), _gyro(gyro) {}
 
 wom::drivetrain::SwerveConfig wom::drivetrain::Swerve::GetConfig() {
   return _config;
@@ -112,6 +115,10 @@ wom::drivetrain::SwerveConfig wom::drivetrain::Swerve::GetConfig() {
 
 wom::drivetrain::SwerveState wom::drivetrain::Swerve::GetState() {
   return _state;
+}
+
+Pigeon2 *wom::drivetrain::Swerve::GetGyro() {
+  return _gyro;
 }
 
 void wom::drivetrain::Swerve::SetState(wom::drivetrain::SwerveState state) {
@@ -148,12 +155,12 @@ void wom::drivetrain::Swerve::OnStart() {
   _config.backRight.OnStart(0_rad);
   _config.frontLeft.OnStart(0_rad);
   _config.frontRight.OnStart(0_rad);
-  std::cout << "Starting Swerve" << std::endl;
+  std::cout << "Starting Serve" << std::endl;
 }
 
-void wom::drivetrain::Swerve::OnUpdate(units::second_t dt, wom::vision::Limelight vision,
+void wom::drivetrain::Swerve::OnUpdate(units::second_t dt, wom::vision::Limelight *vision,
                                        frc::Pose3d desiredPose) {
-  vision.OnUpdate(dt);
+  vision->OnUpdate(dt);
 
   switch (_state) {
     case wom::drivetrain::SwerveState::kIdle:
@@ -163,12 +170,14 @@ void wom::drivetrain::Swerve::OnUpdate(units::second_t dt, wom::vision::Limeligh
     case wom::drivetrain::SwerveState::kFieldRelative:
       FieldRelativeControl(desiredPose, dt);
       break;
+    case wom::drivetrain::SwerveState::kRobotRelative:
+      break;
     default:
       std::cout << "Invalid State" << std::endl;
       break;
   }
 }
 
-wom::vision::Limelight wom::drivetrain::Swerve::GetLimelight() {
+wom::vision::Limelight *wom::drivetrain::Swerve::GetLimelight() {
   return _vision;
 }

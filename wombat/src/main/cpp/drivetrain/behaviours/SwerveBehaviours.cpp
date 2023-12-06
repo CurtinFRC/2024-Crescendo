@@ -6,7 +6,7 @@ wom::drivetrain::behaviours::FieldRelativeSwerveDrive::FieldRelativeSwerveDrive(
 
 void wom::drivetrain::behaviours::FieldRelativeSwerveDrive::OnTick(units::second_t dt) {
   _swerve->SetState(wom::drivetrain::SwerveState::kFieldRelative);
-  frc::Pose3d currentPose = _swerve->GetLimelight().GetPose();
+  frc::Pose3d currentPose = _swerve->GetLimelight()->GetPose();
   frc::Pose3d desiredPose =
       frc::Pose3d(currentPose.X() + units::meter_t{_driver.GetRightX()},
                   currentPose.Y() + units::meter_t{_driver.GetRightY()}, currentPose.Z(),
