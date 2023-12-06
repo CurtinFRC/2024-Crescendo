@@ -11,8 +11,7 @@ namespace drivetrain {
 
     class FieldRelativeSwerveDrive : public behaviour::Behaviour {
      public:
-      explicit FieldRelativeSwerveDrive(wom::drivetrain::Swerve *swerve,
-                                        frc::XboxController     &driver);
+      explicit FieldRelativeSwerveDrive(wom::drivetrain::Swerve *swerve, frc::XboxController &driver);
 
       void OnTick(units::second_t dt) override;
 

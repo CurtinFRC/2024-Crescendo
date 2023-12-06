@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ctre/Phoenix.h>
 #include <networktables/DoubleTopic.h>
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableInstance.h>
@@ -29,21 +30,21 @@ namespace drivetrain {
   };
 
   struct SwerveModuleConfig {
-    wom::utils::Gearbox rotationGearbox;
-    wom::utils::Gearbox movementGearbox;
+    frc::Translation2d offset;
 
-    wom::utils::PIDConfig<units::radians_per_second, units::volt>
-        rotationalVelocityPID;
-    wom::utils::PIDConfig<units::meters_per_second, units::volt>
-        movementVelocityPID;
+    wom::utils::Gearbox movementGearbox;
+    wom::utils::Gearbox rotationGearbox;
+
+    wom::utils::PIDConfig<units::radians_per_second, units::volt> rotationalVelocityPID;
+    wom::utils::PIDConfig<units::meters_per_second, units::volt>  movementVelocityPID;
 
     wom::utils::PIDConfig<units::radian, units::radians_per_second> rotationPID;
     wom::utils::PIDConfig<units::meter, units::meters_per_second>   movementPID;
 
     units::meter_t wheelRadius;
 
-    std::string      path;
     SwerveModuleName name;
+    std::string      path;
   };
 
   enum class SwerveModuleState {
@@ -64,24 +65,19 @@ namespace drivetrain {
 
     void                       Log();
     units::meters_per_second_t GetSpeed();
-    void PIDControl(units::second_t dt, units::radian_t rotation,
-                    units::meter_t movement);
+    void PIDControl(units::second_t dt, units::radian_t rotation, units::meter_t movement);
 
     void OnStart(units::radian_t offset);
-    void OnUpdate(units::second_t dt, units::radian_t rotation,
-                  units::meter_t movement, units::volt_t rotationVoltage);
+    void OnUpdate(units::second_t dt, units::radian_t rotation, units::meter_t movement,
+                  units::volt_t rotationVoltage);
 
    protected:
    private:
-    wom::utils::PIDController<units::radians_per_second, units::volt>
-        _rotationalVelocityPID;
-    wom::utils::PIDController<units::meters_per_second, units::volt>
-        _movementVelocityPID;
+    wom::utils::PIDController<units::radians_per_second, units::volt> _rotationalVelocityPID;
+    wom::utils::PIDController<units::meters_per_second, units::volt>  _movementVelocityPID;
 
-    wom::utils::PIDController<units::radian, units::radians_per_second>
-        _rotationalPID;
-    wom::utils::PIDController<units::meters, units::meters_per_second>
-        _movementPID;
+    wom::utils::PIDController<units::radian, units::radians_per_second> _rotationalPID;
+    wom::utils::PIDController<units::meters, units::meters_per_second>  _movementPID;
 
     units::volt_t voltageRotation;
     units::volt_t voltageMovement;
@@ -107,29 +103,32 @@ namespace drivetrain {
     kIdle,
     kPose,
     kFieldRelative,
+    kRobotRelative,
   };
 
   class Swerve : public behaviour::HasBehaviour {
    public:
-    explicit Swerve(SwerveConfig config, SwerveState state,
-                    wom::vision::Limelight vision);
+    explicit Swerve(SwerveConfig config, SwerveState state, wom::vision::Limelight *vision);
+    explicit Swerve(SwerveConfig config, SwerveState state, Pigeon2 *gyro);
+    // explicit Swerve(SwerveConfig config, SwerveState state, wom::vision::Limelight vision, Pigeon2 gyro);
 
     SwerveConfig           GetConfig();
     SwerveState            GetState();
-    wom::vision::Limelight GetLimelight();
+    wom::vision::Limelight *GetLimelight();
+    Pigeon2                *GetGyro();
 
     void SetState(SwerveState state);
     void FieldRelativeControl(frc::Pose3d desiredPose, units::second_t dt);
 
     void OnStart();
-    void OnUpdate(units::second_t dt, wom::vision::Limelight vision,
-                  frc::Pose3d desiredPose);
+    void OnUpdate(units::second_t dt, wom::vision::Limelight *vision, frc::Pose3d desiredPose);
 
    protected:
    private:
     SwerveConfig           _config;
     SwerveState            _state;
-    wom::vision::Limelight _vision;
+    wom::vision::Limelight *_vision = NULL;
+    Pigeon2                *_gyro = NULL;
   };
 };  // namespace drivetrain
 };  // namespace wom

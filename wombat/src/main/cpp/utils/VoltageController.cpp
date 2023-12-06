@@ -7,8 +7,7 @@ units::volt_t wom::utils::VoltageController::GetEstimatedRealVoltage() const {
   return units::math::min(units::math::max(-vb, GetVoltage()), vb);
 }
 
-wom::utils::MotorVoltageController::MotorVoltageController(
-    frc::MotorController *MotorController)
+wom::utils::MotorVoltageController::MotorVoltageController(frc::MotorController *MotorController)
     : _MotorController(MotorController) {}
 
 void wom::utils::MotorVoltageController::SetVoltage(units::volt_t voltage) {

@@ -11,8 +11,7 @@
 // more logic as you would inside a normal function but that is not normally
 // necessary
 
-Example::Example(ExampleConfig *_config, frc::XboxController &_driver)
-    : _config(_config), _driver(_driver) {}
+Example::Example(ExampleConfig *_config, frc::XboxController &_driver) : _config(_config), _driver(_driver) {}
 
 // here we have our set state function. inside of the logic all we need to do
 // for a setter is take the variable we want and assign it the parameters value

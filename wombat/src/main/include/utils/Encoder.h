@@ -46,10 +46,8 @@ namespace utils {
 
   class DigitalEncoder : public Encoder {
    public:
-    DigitalEncoder(int channelA, int channelB, double ticksPerRotation,
-                   double reduction = 1)
-        : Encoder(ticksPerRotation, reduction, 0),
-          _nativeEncoder(channelA, channelB){};
+    DigitalEncoder(int channelA, int channelB, double ticksPerRotation, double reduction = 1)
+        : Encoder(ticksPerRotation, reduction, 0), _nativeEncoder(channelA, channelB){};
 
     double GetEncoderRawTicks() const override;
     double GetEncoderTickVelocity() const override;
@@ -71,8 +69,7 @@ namespace utils {
 
   class TalonFXEncoder : public Encoder {
    public:
-    TalonFXEncoder(ctre::phoenix::motorcontrol::can::TalonFX *controller,
-                   double                                     reduction = 1);
+    TalonFXEncoder(ctre::phoenix::motorcontrol::can::TalonFX *controller, double reduction = 1);
 
     double GetEncoderRawTicks() const override;
     double GetEncoderTickVelocity() const override;
@@ -83,8 +80,8 @@ namespace utils {
 
   class TalonSRXEncoder : public Encoder {
    public:
-    TalonSRXEncoder(ctre::phoenix::motorcontrol::can::TalonSRX *controller,
-                    double ticksPerRotation, double reduction = 1);
+    TalonSRXEncoder(ctre::phoenix::motorcontrol::can::TalonSRX *controller, double ticksPerRotation,
+                    double reduction = 1);
 
     double GetEncoderRawTicks() const override;
     double GetEncoderTickVelocity() const override;
@@ -95,8 +92,7 @@ namespace utils {
 
   class DutyCycleEncoder : public Encoder {
    public:
-    DutyCycleEncoder(int channel, double ticksPerRotation = 1,
-                     double reduction = 1);
+    DutyCycleEncoder(int channel, double ticksPerRotation = 1, double reduction = 1);
 
     double GetEncoderRawTicks() const override;
     double GetEncoderTickVelocity() const override;
@@ -107,8 +103,8 @@ namespace utils {
 
   class CanEncoder : public Encoder {
    public:
-    CanEncoder(int deviceNumber, double ticksPerRotation = 4095,
-               double reduction = 1, std::string name = "Drivebase");
+    CanEncoder(int deviceNumber, double ticksPerRotation = 4095, double reduction = 1,
+               std::string name = "Drivebase");
 
     double GetEncoderRawTicks() const override;
     double GetEncoderTickVelocity() const override;

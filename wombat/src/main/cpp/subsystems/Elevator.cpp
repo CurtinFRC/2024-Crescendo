@@ -7,8 +7,7 @@
 
 using namespace wom;
 
-void wom::subsystems::ElevatorConfig::WriteNT(
-    std::shared_ptr<nt::NetworkTable> table) {
+void wom::subsystems::ElevatorConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
   table->GetEntry("radius").SetDouble(radius.value());
   table->GetEntry("mass").SetDouble(mass.value());
   table->GetEntry("maxHeight").SetDouble(maxHeight.value());
@@ -39,13 +38,12 @@ void wom::subsystems::Elevator::OnUpdate(units::second_t dt) {
     case wom::subsystems::ElevatorState::kVelocity: {
       units::volt_t feedforward = _config.rightGearbox.motor.Voltage(
           (_config.mass * 9.81_mps_sq) * _config.radius,
-          _velocityPID.GetSetpoint() /
-              (14.0 / 60.0 * 2.0 * 3.1415 * 0.02225 * 1_m) * 1_rad);
+          _velocityPID.GetSetpoint() / (14.0 / 60.0 * 2.0 * 3.1415 * 0.02225 * 1_m) * 1_rad);
       // units::volt_t feedforward = _config.rightGearbox.motor.Voltage(0_Nm,
       // _velocityPID.GetSetpoint() / (14.0/60.0 * 2.0 * 3.1415 * 0.02225 * 1_m)
       // * 1_rad);
       feedforward = 1.2_V;
-      voltage = _velocityPID.Calculate(GetElevatorVelocity(), dt, feedforward);
+      voltage     = _velocityPID.Calculate(GetElevatorVelocity(), dt, feedforward);
       if (voltage > 6_V) {
         voltage = 6_V;
       }
@@ -53,8 +51,8 @@ void wom::subsystems::Elevator::OnUpdate(units::second_t dt) {
       // voltage = 0_V;
     } break;
     case wom::subsystems::ElevatorState::kPID: {
-      units::volt_t feedforward = _config.rightGearbox.motor.Voltage(
-          (_config.mass * 9.81_mps_sq) * _config.radius, 0_rad_per_s);
+      units::volt_t feedforward =
+          _config.rightGearbox.motor.Voltage((_config.mass * 9.81_mps_sq) * _config.radius, 0_rad_per_s);
       // std::cout << "feed forward" << feedforward.value() << std::endl;
       feedforward = 1.2_V;
       // voltage = _pid.Calculate(height, dt, feedforward);
@@ -105,8 +103,7 @@ void wom::subsystems::Elevator::SetElevatorSpeedLimit(double limit) {
   speedLimit = limit;
 }
 
-void wom::subsystems::Elevator::SetVelocity(
-    units::meters_per_second_t velocity) {
+void wom::subsystems::Elevator::SetVelocity(units::meters_per_second_t velocity) {
   _velocityPID.SetSetpoint(velocity);
   _state = wom::subsystems::ElevatorState::kVelocity;
 }
@@ -135,18 +132,14 @@ units::meter_t wom::subsystems::Elevator::GetHeight() const {
   // std::cout << "elevator position"<<
   // _config.rightGearbox.encoder->GetEncoderTicks() << std::endl; return
   // _config.rightGearbox.encoder->GetEncoderDistance() * 1_m;
-  return _config.elevatorEncoder.GetPosition() * 14 / 60 * 2 * 3.1415 *
-         0.02225 * 1_m;
+  return _config.elevatorEncoder.GetPosition() * 14 / 60 * 2 * 3.1415 * 0.02225 * 1_m;
 }
 
-units::meters_per_second_t wom::subsystems::Elevator::GetElevatorVelocity()
-    const {
-  return _config.elevatorEncoder.GetVelocity() / 60_s * 14 / 60 * 2 * 3.1415 *
-         0.02225 * 1_m;
+units::meters_per_second_t wom::subsystems::Elevator::GetElevatorVelocity() const {
+  return _config.elevatorEncoder.GetVelocity() / 60_s * 14 / 60 * 2 * 3.1415 * 0.02225 * 1_m;
 }
 
 units::meters_per_second_t wom::subsystems::Elevator::MaxSpeed() const {
-  return _config.leftGearbox.motor.Speed(
-             (_config.mass * 9.81_mps_sq) * _config.radius, 12_V) /
-         1_rad * _config.radius;
+  return _config.leftGearbox.motor.Speed((_config.mass * 9.81_mps_sq) * _config.radius, 12_V) / 1_rad *
+         _config.radius;
 }

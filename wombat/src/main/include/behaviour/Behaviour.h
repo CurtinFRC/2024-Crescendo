@@ -18,13 +18,7 @@
 #include "HasBehaviour.h"
 
 namespace behaviour {
-enum class BehaviourState {
-  INITIALISED,
-  RUNNING,
-  DONE,
-  TIMED_OUT,
-  INTERRUPTED
-};
+enum class BehaviourState { INITIALISED, RUNNING, DONE, TIMED_OUT, INTERRUPTED };
 
 class SequentialBehaviour;
 
@@ -42,8 +36,7 @@ class Behaviour : public std::enable_shared_from_this<Behaviour> {
  public:
   using ptr = std::shared_ptr<Behaviour>;
 
-  Behaviour(std::string           name   = "<unnamed behaviour>",
-            units::time::second_t period = 20_ms);
+  Behaviour(std::string name = "<unnamed behaviour>", units::time::second_t period = 20_ms);
   ~Behaviour();
 
   /**
@@ -189,16 +182,15 @@ class SequentialBehaviour : public Behaviour {
   std::deque<ptr> _queue;
 };
 
-inline std::shared_ptr<SequentialBehaviour> operator<<(Behaviour::ptr a,
-                                                       Behaviour::ptr b) {
+inline std::shared_ptr<SequentialBehaviour> operator<<(Behaviour::ptr a, Behaviour::ptr b) {
   auto seq = std::make_shared<SequentialBehaviour>();
   seq->Add(a);
   seq->Add(b);
   return seq;
 }
 
-inline std::shared_ptr<SequentialBehaviour> operator<<(
-    std::shared_ptr<SequentialBehaviour> a, Behaviour::ptr b) {
+inline std::shared_ptr<SequentialBehaviour> operator<<(std::shared_ptr<SequentialBehaviour> a,
+                                                       Behaviour::ptr                       b) {
   a->Add(b);
   return a;
 }
@@ -243,10 +235,8 @@ class ConcurrentBehaviour : public Behaviour {
  * Create a concurrent behaviour group, waiting for all behaviours
  * to finish before moving on.
  */
-inline std::shared_ptr<ConcurrentBehaviour> operator&(Behaviour::ptr a,
-                                                      Behaviour::ptr b) {
-  auto conc =
-      std::make_shared<ConcurrentBehaviour>(ConcurrentBehaviourReducer::ALL);
+inline std::shared_ptr<ConcurrentBehaviour> operator&(Behaviour::ptr a, Behaviour::ptr b) {
+  auto conc = std::make_shared<ConcurrentBehaviour>(ConcurrentBehaviourReducer::ALL);
   conc->Add(a);
   conc->Add(b);
   return conc;
@@ -257,10 +247,8 @@ inline std::shared_ptr<ConcurrentBehaviour> operator&(Behaviour::ptr a,
  * be interrupted as soon as any members of the group are finished (the
  * behaviours are 'raced' against each other).
  */
-inline std::shared_ptr<ConcurrentBehaviour> operator|(Behaviour::ptr a,
-                                                      Behaviour::ptr b) {
-  auto conc =
-      std::make_shared<ConcurrentBehaviour>(ConcurrentBehaviourReducer::ANY);
+inline std::shared_ptr<ConcurrentBehaviour> operator|(Behaviour::ptr a, Behaviour::ptr b) {
+  auto conc = std::make_shared<ConcurrentBehaviour>(ConcurrentBehaviourReducer::ANY);
   conc->Add(a);
   conc->Add(b);
   return conc;
@@ -328,8 +316,7 @@ struct Switch : public Behaviour {
    * @param condition The function yielding true if this is the correct option
    * @param b The behaviour to call if this option is provided.
    */
-  std::shared_ptr<Switch> When(std::function<bool(T &)> condition,
-                               Behaviour::ptr           b) {
+  std::shared_ptr<Switch> When(std::function<bool(T &)> condition, Behaviour::ptr b) {
     _options.push_back(std::pair(condition, b));
     Inherit(*b);
     return std::reinterpret_pointer_cast<Switch<T>>(shared_from_this());
@@ -383,10 +370,9 @@ struct Switch : public Behaviour {
   }
 
  private:
-  std::function<T()> _fn;
-  wpi::SmallVector<std::pair<std::function<bool(T &)>, Behaviour::ptr>, 4>
-                 _options;
-  Behaviour::ptr _locked = nullptr;
+  std::function<T()>                                                       _fn;
+  wpi::SmallVector<std::pair<std::function<bool(T &)>, Behaviour::ptr>, 4> _options;
+  Behaviour::ptr                                                           _locked = nullptr;
 };
 
 /**
@@ -402,10 +388,8 @@ struct Decide : public Switch<std::monostate> {
    * @param condition The function yielding true if this is the correct option
    * @param b The behaviour to call if this option is provided.
    */
-  std::shared_ptr<Decide> When(std::function<bool()> condition,
-                               Behaviour::ptr        b) {
-    return std::reinterpret_pointer_cast<Decide>(
-        Switch::When([condition](auto) { return condition(); }, b));
+  std::shared_ptr<Decide> When(std::function<bool()> condition, Behaviour::ptr b) {
+    return std::reinterpret_pointer_cast<Decide>(Switch::When([condition](auto) { return condition(); }, b));
   }
 };
 

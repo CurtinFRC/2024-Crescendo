@@ -27,12 +27,11 @@ namespace wom {
 namespace vision {
   class Limelight : public behaviour::HasBehaviour {
    public:
-    Limelight(std::string *limelightName);
+    Limelight(std::string limelightName);
 
-    std::string *GetName();
+    std::string GetName();
 
-    std::shared_ptr<nt::NetworkTable> table =
-        nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+    std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
 
     std::pair<double, double> GetOffset();
 
@@ -43,13 +42,12 @@ namespace vision {
 
     bool IsAtSetPoseVision(frc::Pose3d pose, units::second_t dt);
 
-    units::meters_per_second_t GetSpeed(frc::Pose3d pose1, frc::Pose3d pose2,
-                                        units::second_t dt);
+    units::meters_per_second_t GetSpeed(frc::Pose3d pose1, frc::Pose3d pose2, units::second_t dt);
 
     frc::Pose3d GetPose();
 
    private:
-    std::string *_limelightName;
+    std::string _limelightName;
   };
 }  // namespace vision
 }  // namespace wom

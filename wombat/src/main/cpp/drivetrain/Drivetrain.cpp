@@ -3,9 +3,7 @@
 using namespace frc;
 using namespace units;
 
-wom::drivetrain::Drivetrain::Drivetrain(
-    wom::drivetrain::DrivetrainConfig *config)
-    : _config(config) {}
+wom::drivetrain::Drivetrain::Drivetrain(wom::drivetrain::DrivetrainConfig *config) : _config(config) {}
 wom::drivetrain::Drivetrain::~Drivetrain() {}
 
 wom::drivetrain::DrivetrainConfig *wom::drivetrain::Drivetrain::GetConfig() {
@@ -15,8 +13,7 @@ wom::drivetrain::DrivetrainState wom::drivetrain::Drivetrain::GetState() {
   return _state;
 }
 
-void wom::drivetrain::Drivetrain::SetState(
-    wom::drivetrain::DrivetrainState state) {
+void wom::drivetrain::Drivetrain::SetState(wom::drivetrain::DrivetrainState state) {
   _state = state;
 }
 
@@ -28,8 +25,7 @@ void wom::drivetrain::Drivetrain::SetSpeed(wom::drivetrain::TankSpeed speed) {
   _speed = speed;
 }
 
-void wom::drivetrain::Drivetrain::TankControl(double rightSpeed,
-                                              double leftSpeed) {
+void wom::drivetrain::Drivetrain::TankControl(double rightSpeed, double leftSpeed) {
   _config->left1.transmission->SetVoltage(leftSpeed * maxVolts);
   _config->left2.transmission->SetVoltage(leftSpeed * maxVolts);
   _config->left3.transmission->SetVoltage(leftSpeed * maxVolts);
