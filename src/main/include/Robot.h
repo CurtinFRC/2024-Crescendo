@@ -12,8 +12,9 @@
 
 #include "Wombat.h"
 
-
 #include "RobotMap.h"
+
+#include <frc/Timer.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -53,5 +54,11 @@ class Robot : public frc::TimedRobot {
 
     Pathplanner m_pathplanner;
 
+    frc::Trajectory current_trajectory;
+    
+    std::shared_ptr<nt::NetworkTable> current_trajectory_table;
+    std::shared_ptr<nt::NetworkTable> current_trajectory_state_table;
+
+    frc::Timer simulation_timer;
 
 };

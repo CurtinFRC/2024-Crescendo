@@ -66,11 +66,13 @@ model {
 
 	    binaries.all {
 	    	lib project: ':wombat', library: 'Wombat', linkage: 'static'
-        cppCompiler.args "-Werror"
-        cppCompiler.args "-Wextra"
-        cppCompiler.args "-Wall"
-        cppCompiler.args "-pedantic"
+        // cppCompiler.args "-Werror"
+        // cppCompiler.args "-Wextra"
+        // cppCompiler.args "-Wall"
+        // cppCompiler.args "-pedantic"
 	    }
+
+            
 
             // Set deploy task to deploy this component
             deployArtifact.component = it

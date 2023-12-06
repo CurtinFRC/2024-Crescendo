@@ -10,6 +10,7 @@
 #include <cmath>
 #include <functional>
 #include <iostream>
+#include <string>
 
 namespace wom {
 namespace utils {
@@ -20,6 +21,7 @@ namespace utils {
   }
 
   units::second_t now();
+  units::second_t simulation_now();
 
   class NTBound {
    public:
@@ -90,6 +92,9 @@ namespace utils {
   void WritePose2NT(std::shared_ptr<nt::NetworkTable> table, frc::Pose2d pose);
   void WritePose3NT(std::shared_ptr<nt::NetworkTable> table, frc::Pose3d pose);
   void WriteTrajectory(std::shared_ptr<nt::NetworkTable> table, frc::Trajectory trajectory);
+  void WriteTrajectoryState(std::shared_ptr<nt::NetworkTable> table, frc::Trajectory::State state);
+
+  frc::Pose2d TrajectoryStateToPose2d(frc::Trajectory::State state);
 
   double deadzone(double val, double deadzone = 0.05);
   double spow2(double val);

@@ -31,6 +31,18 @@
       "open": true
     },
     "combined": true,
+    "current_trajectory_state": {
+      "open": true
+    },
+    "trajectory": {
+      "0": {
+        "open": true
+      },
+      "1": {
+        "open": true
+      },
+      "open": true
+    },
     "transitory": {
       "LiveWindow": {
         ".status": {
