@@ -3,6 +3,7 @@
 #include <frc/TimedRobot.h>
 
 #include "RobotMap.h"
+#include "Wombat.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -21,4 +22,6 @@ class Robot : public frc::TimedRobot {
 
  protected:
  private:
+  behaviour::BehaviourScheduler *sched;
+  RobotMap robotmap;
 };

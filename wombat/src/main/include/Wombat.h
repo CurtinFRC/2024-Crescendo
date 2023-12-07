@@ -6,6 +6,7 @@
 #include "drivetrain/Drivetrain.h"
 #include "drivetrain/SwerveDrive.h"
 #include "drivetrain/behaviours/DrivetrainBehaviours.h"
+#include "drivetrain/behaviours/SwerveBehaviours.h"
 #include "subsystems/Arm.h"
 #include "subsystems/Elevator.h"
 #include "subsystems/Shooter.h"
