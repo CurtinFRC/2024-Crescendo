@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include <chrono>
 #include <thread>
 
@@ -16,7 +20,7 @@ class MockBehaviour : public Behaviour {
   MOCK_METHOD1(OnTick, void(units::time::second_t));
 };
 
-TEST(Behaviour, Tick) {
+TEST(BehaviourTest, Tick) {
   auto b = make<MockBehaviour>();
 
   {
@@ -35,7 +39,7 @@ TEST(Behaviour, Tick) {
   EXPECT_EQ(b->GetBehaviourState(), BehaviourState::DONE);
 }
 
-TEST(Behaviour, Interrupt) {
+TEST(BehaviourTest, Interrupt) {
   auto b = make<MockBehaviour>();
 
   {
@@ -52,7 +56,7 @@ TEST(Behaviour, Interrupt) {
   EXPECT_EQ(b->GetBehaviourState(), BehaviourState::INTERRUPTED);
 }
 
-TEST(Behaviour, Timeout) {
+TEST(BehaviourTest, Timeout) {
   auto b = make<MockBehaviour>();
   b->WithTimeout(10_ms);
 
@@ -70,7 +74,7 @@ TEST(Behaviour, Timeout) {
   EXPECT_TRUE(b->Tick());
 }
 
-TEST(SequentialBehaviour, InheritsControls) {
+TEST(SequentialBehaviourTest, InheritsControls) {
   HasBehaviour a, b;
   auto         b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>();
   b1->Controls(&a);
@@ -82,7 +86,7 @@ TEST(SequentialBehaviour, InheritsControls) {
   ASSERT_EQ(chain->GetControlled().count(&b), 1);
 }
 
-TEST(SequentialBehaviour, Sequence) {
+TEST(SequentialBehaviourTest, Sequence) {
   auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>(),
        b4    = make<MockBehaviour>();
   auto chain = b1 << b2 << b3 << b4;
@@ -114,7 +118,7 @@ TEST(SequentialBehaviour, Sequence) {
   ASSERT_EQ(b4->GetBehaviourState(), BehaviourState::INTERRUPTED);
 }
 
-TEST(ConcurrentBehaviour, InheritsControls) {
+TEST(ConcurrentBehaviourTest, InheritsControls) {
   HasBehaviour a, b;
   auto         b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>();
   b1->Controls(&a);
@@ -128,7 +132,7 @@ TEST(ConcurrentBehaviour, InheritsControls) {
   EXPECT_THROW(b1 | b3, DuplicateControlException);
 }
 
-TEST(ConcurrentBehaviour, Race) {
+TEST(ConcurrentBehaviourTest, Race) {
   auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>();
   b1->SetPeriod(20_ms);
   b2->SetPeriod(10_ms);
@@ -152,7 +156,7 @@ TEST(ConcurrentBehaviour, Race) {
   EXPECT_EQ(b2->GetBehaviourState(), BehaviourState::INTERRUPTED);
 }
 
-TEST(ConcurrentBehaviour, All) {
+TEST(ConcurrentBehaviourTest, All) {
   auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>();
   b1->SetPeriod(20_ms);
   b2->SetPeriod(10_ms);
@@ -178,7 +182,7 @@ TEST(ConcurrentBehaviour, All) {
   EXPECT_EQ(b2->GetBehaviourState(), BehaviourState::DONE);
 }
 
-TEST(ConcurrentBehaviour, Until) {
+TEST(ConcurrentBehaviourTest, Until) {
   auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>();
   auto chain = b1->Until(b2);
 
@@ -203,7 +207,7 @@ TEST(ConcurrentBehaviour, Until) {
   ASSERT_FALSE(b2->IsRunning());
 }
 
-TEST(WaitFor, Waits) {
+TEST(WaitForTest, Waits) {
   bool v = false;
   auto b = make<WaitFor>([&v]() { return v; });
 
@@ -214,7 +218,7 @@ TEST(WaitFor, Waits) {
   ASSERT_EQ(b->GetBehaviourState(), BehaviourState::DONE);
 }
 
-TEST(WaitTime, Waits) {
+TEST(WaitTimeTest, Waits) {
   auto b = make<WaitTime>(20_ms);
 
   ASSERT_FALSE(b->Tick());
@@ -225,7 +229,7 @@ TEST(WaitTime, Waits) {
   ASSERT_EQ(b->GetBehaviourState(), BehaviourState::DONE);
 }
 
-TEST(If, Then) {
+TEST(IfTest, Then) {
   auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>();
 
   auto chain = make<If>(true)->Then(b1)->Else(b2);
@@ -237,7 +241,7 @@ TEST(If, Then) {
   chain->Tick();
 }
 
-TEST(If, Else) {
+TEST(IfTest, Else) {
   auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>();
 
   auto chain = make<If>(false)->Then(b1)->Else(b2);
@@ -249,7 +253,7 @@ TEST(If, Else) {
   chain->Tick();
 }
 
-TEST(Switch, Int) {
+TEST(SwitchTest, Int) {
   auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>();
 
   auto chain = make<Switch<int>>(1)->When(0, b1)->When(1, b2)->When(2, b3);
@@ -261,7 +265,7 @@ TEST(Switch, Int) {
   chain->Tick();
 }
 
-TEST(Switch, Decide) {
+TEST(SwitchTest, Decide) {
   auto b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>();
 
   auto chain = make<Decide>()
@@ -276,7 +280,7 @@ TEST(Switch, Decide) {
   chain->Tick();
 }
 
-TEST(Behaviour, FullChain) {
+TEST(BehaviourTest, FullChain) {
   BehaviourScheduler s;
   MockSystem         a, b;
   auto               b1 = make<MockBehaviour>(), b2 = make<MockBehaviour>(), b3 = make<MockBehaviour>(),

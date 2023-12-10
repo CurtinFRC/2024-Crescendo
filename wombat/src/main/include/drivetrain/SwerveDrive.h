@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <ctre/Phoenix.h>
@@ -112,23 +116,25 @@ namespace drivetrain {
     explicit Swerve(SwerveConfig config, SwerveState state, Pigeon2 *gyro);
     // explicit Swerve(SwerveConfig config, SwerveState state, wom::vision::Limelight vision, Pigeon2 gyro);
 
-    SwerveConfig           GetConfig();
-    SwerveState            GetState();
+    SwerveConfig            GetConfig();
+    SwerveState             GetState();
     wom::vision::Limelight *GetLimelight();
     Pigeon2                *GetGyro();
 
     void SetState(SwerveState state);
     void FieldRelativeControl(frc::Pose3d desiredPose, units::second_t dt);
+    void RobotRelativeControl(units::second_t dt, units::radian_t desiredDirection, units::meter_t magnitude);
 
     void OnStart();
     void OnUpdate(units::second_t dt, wom::vision::Limelight *vision, frc::Pose3d desiredPose);
+    void OnUpdate(units::second_t dt, Pigeon2 *gyro);
 
    protected:
    private:
-    SwerveConfig           _config;
-    SwerveState            _state;
+    SwerveConfig            _config;
+    SwerveState             _state;
     wom::vision::Limelight *_vision = NULL;
-    Pigeon2                *_gyro = NULL;
+    Pigeon2                *_gyro   = NULL;
   };
-};  // namespace drivetrain
-};  // namespace wom
+}  // namespace drivetrain
+}  // namespace wom

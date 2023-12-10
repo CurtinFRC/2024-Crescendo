@@ -36,7 +36,7 @@ Build
 ------
 `./gradlew build`
 Build will compile and get the code ready without deploying it.
-It will also run all automated tests, which is great for testing your code before it ever gets run on a robot (which also means you can build whenever).  
+It will also run all automated tests, which is great for testing your code before it ever gets run on a robot (which also means you can build whenever).
 
 `./gradlew :wombat:build`
 Will compile and build the Wombat library.

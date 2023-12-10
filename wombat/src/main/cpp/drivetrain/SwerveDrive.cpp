@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include "drivetrain/SwerveDrive.h"
 
 wom::drivetrain::SwerveModule::SwerveModule(wom::drivetrain::SwerveModuleConfig config,
@@ -107,7 +111,9 @@ wom::drivetrain::Swerve::Swerve(wom::drivetrain::SwerveConfig config, wom::drive
                                 wom::vision::Limelight *vision)
     : _config(config), _state(state), _vision(vision) {}
 
-wom::drivetrain::Swerve::Swerve(wom::drivetrain::SwerveConfig config, wom::drivetrain::SwerveState state, Pigeon2 *gyro) : _config(config), _state(state), _gyro(gyro) {}
+wom::drivetrain::Swerve::Swerve(wom::drivetrain::SwerveConfig config, wom::drivetrain::SwerveState state,
+                                Pigeon2 *gyro)
+    : _config(config), _state(state), _gyro(gyro) {}
 
 wom::drivetrain::SwerveConfig wom::drivetrain::Swerve::GetConfig() {
   return _config;
@@ -169,6 +175,21 @@ void wom::drivetrain::Swerve::OnUpdate(units::second_t dt, wom::vision::Limeligh
       break;
     case wom::drivetrain::SwerveState::kFieldRelative:
       FieldRelativeControl(desiredPose, dt);
+      break;
+    default:
+      std::cout << "Invalid State" << std::endl;
+      break;
+  }
+}
+
+void wom::drivetrain::Swerve::RobotRelativeControl(units::second_t dt, units::radian_t desiredDirection,
+                                                   units::meter_t magnitude) {}
+
+void wom::drivetrain::Swerve::OnUpdate(units::second_t dt, Pigeon2 *gyro) {
+  switch (_state) {
+    case wom::drivetrain::SwerveState::kIdle:
+      break;
+    case wom::drivetrain::SwerveState::kPose:
       break;
     case wom::drivetrain::SwerveState::kRobotRelative:
       break;

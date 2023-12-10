@@ -2,4 +2,3 @@
 -I wombat/src/main/include/*
 -L/usr/local/lib
 -I/usr/local/include
-

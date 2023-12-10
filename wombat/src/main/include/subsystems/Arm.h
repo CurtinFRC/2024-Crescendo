@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <frc/DigitalInput.h>
@@ -70,4 +74,4 @@ namespace subsystems {
     units::volt_t _voltage{0};
   };
 }  // namespace subsystems
-};  // namespace wom
+}  // namespace wom

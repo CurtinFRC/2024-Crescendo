@@ -1,7 +1,7 @@
 version: 2
 - package-ecosystem: "gradle"
   directory: "/"
-  schedule: 
+  schedule:
     interval: "daily"
 - package-ecosystem: "gradle"
   directory: "/wombat"
@@ -11,4 +11,3 @@ version: 2
     directory: "/"
     schedule:
       interval: "daily"
-

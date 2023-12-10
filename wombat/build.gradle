@@ -8,7 +8,7 @@ model {
   components {
     Wombat(NativeLibrarySpec) {
       targetPlatform NativePlatforms.desktop
-      targetPlatform NativePlatforms.roborio 
+      targetPlatform NativePlatforms.roborio
 
       sources {
         sources.cpp {
@@ -20,7 +20,7 @@ model {
           exportedHeaders {
             srcDir 'src/main/include'
           }
-        } 
+        }
       }
 
       binaries.all {

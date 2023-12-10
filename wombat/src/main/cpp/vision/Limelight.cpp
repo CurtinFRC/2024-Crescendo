@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include "vision/Limelight.h"
 
 wom::vision::Limelight::Limelight(std::string limelightName) : _limelightName(limelightName) {}
