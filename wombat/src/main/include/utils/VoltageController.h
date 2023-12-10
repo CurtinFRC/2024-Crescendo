@@ -49,7 +49,7 @@ namespace utils {
    */
   class MotorVoltageController : public VoltageController {
    public:
-    MotorVoltageController(frc::MotorController *MotorController);
+    explicit MotorVoltageController(frc::MotorController *MotorController);
 
     void          SetVoltage(units::volt_t voltage) override;
     units::volt_t GetVoltage() const override;

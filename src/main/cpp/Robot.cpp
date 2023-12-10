@@ -5,9 +5,9 @@
 #include "Robot.h"
 
 void Robot::RobotInit() {
-  BehaviourScheduler::GetInstance()->Register(&robotmap.swerve);
+  wom::BehaviourScheduler::GetInstance()->Register(&robotmap.swerve);
   robotmap.swerve.SetDefaultBehaviour([this]() {
-    return make<FieldRelativeSwerveDrive>(&robotmap.swerve, robotmap.controllers.driver);
+    return wom::make<wom::FieldRelativeSwerveDrive>(&robotmap.swerve, robotmap.controllers.driver);
   });
 }
 void Robot::RobotPeriodic() {}
@@ -16,9 +16,9 @@ void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  sched = BehaviourScheduler::GetInstance();
+  sched = wom::BehaviourScheduler::GetInstance();
   sched->InterruptAll();
-  sched->Schedule(make<FieldRelativeSwerveDrive>(&robotmap.swerve, robotmap.controllers.driver));
+  sched->Schedule(wom::make<wom::FieldRelativeSwerveDrive>(&robotmap.swerve, robotmap.controllers.driver));
 }
 void Robot::TeleopPeriodic() {}
 

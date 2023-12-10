@@ -9,6 +9,7 @@
 #include <units/charge.h>
 
 #include <memory>
+#include <string>
 
 #include "behaviour/Behaviour.h"
 #include "behaviour/HasBehaviour.h"

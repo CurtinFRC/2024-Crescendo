@@ -75,7 +75,6 @@ namespace drivetrain {
     void OnUpdate(units::second_t dt, units::radian_t rotation, units::meter_t movement,
                   units::volt_t rotationVoltage);
 
-   protected:
    private:
     wom::utils::PIDController<units::radians_per_second, units::volt> _rotationalVelocityPID;
     wom::utils::PIDController<units::meters_per_second, units::volt>  _movementVelocityPID;
@@ -129,7 +128,6 @@ namespace drivetrain {
     void OnUpdate(units::second_t dt, wom::vision::Limelight *vision, frc::Pose3d desiredPose);
     void OnUpdate(units::second_t dt, Pigeon2 *gyro);
 
-   protected:
    private:
     SwerveConfig            _config;
     SwerveState             _state;

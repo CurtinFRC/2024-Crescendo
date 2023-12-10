@@ -9,7 +9,7 @@
 
 class ExampleBehaviour : public behaviour::Behaviour {
  public:
-  ExampleBehaviour(Example *_example);
+  explicit ExampleBehaviour(Example *_example);
   ~ExampleBehaviour();
 
   // See Example.h for more information about OnStart functions

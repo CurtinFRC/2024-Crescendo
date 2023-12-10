@@ -40,7 +40,7 @@ namespace drivetrain {
 
   class Drivetrain : public behaviour::HasBehaviour {
    public:
-    Drivetrain(DrivetrainConfig *config);
+    explicit Drivetrain(DrivetrainConfig *config);
     ~Drivetrain();
 
     DrivetrainConfig *GetConfig();

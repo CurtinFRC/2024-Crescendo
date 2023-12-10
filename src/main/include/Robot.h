@@ -27,5 +27,5 @@ class Robot : public frc::TimedRobot {
  protected:
  private:
   behaviour::BehaviourScheduler *sched;
-  RobotMap robotmap;
+  RobotMap                       robotmap;
 };

@@ -7,7 +7,7 @@
 using namespace wom;
 
 utils::Encoder::Encoder(double encoderTicksPerRotation, double reduction, int type)
-    : _reduction(reduction), _encoderTicksPerRotation(encoderTicksPerRotation), _type(type){};
+    : _reduction(reduction), _encoderTicksPerRotation(encoderTicksPerRotation), _type(type) {}
 
 double utils::Encoder::GetEncoderTicks() const {
   return GetEncoderRawTicks();

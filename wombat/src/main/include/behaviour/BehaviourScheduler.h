@@ -5,6 +5,7 @@
 #pragma once
 
 #include <mutex>
+#include <vector>
 
 #include "Behaviour.h"
 #include "HasBehaviour.h"

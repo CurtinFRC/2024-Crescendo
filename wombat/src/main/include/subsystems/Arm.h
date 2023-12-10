@@ -10,6 +10,9 @@
 #include <units/mass.h>
 #include <units/voltage.h>
 
+#include <memory>
+#include <string>
+
 #include "behaviour/HasBehaviour.h"
 #include "utils/Encoder.h"
 #include "utils/Gearbox.h"
@@ -41,7 +44,7 @@ namespace subsystems {
 
   class Arm : public behaviour::HasBehaviour {
    public:
-    Arm(ArmConfig config);
+    explicit Arm(ArmConfig config);
 
     void OnUpdate(units::second_t dt);
 

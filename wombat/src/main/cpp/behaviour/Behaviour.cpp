@@ -178,7 +178,8 @@ void ConcurrentBehaviour::OnStart() {
         using namespace std::chrono_literals;
 
         b->Tick();
-        std::this_thread::sleep_for(std::chrono::milliseconds((int64_t)(b->GetPeriod().value() * 1000)));
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(static_cast<int64_t>(b->GetPeriod().value() * 1000)));
       }
 
       if (IsFinished() && !b->IsFinished()) b->Interrupt();

@@ -9,7 +9,9 @@
 #include <units/base.h>
 #include <units/time.h>
 
+#include <memory>
 #include <optional>
+#include <string>
 #include <vector>
 
 #include "utils/Util.h"

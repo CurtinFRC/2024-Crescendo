@@ -12,6 +12,7 @@
 #include <units/mass.h>
 
 #include <memory>
+#include <string>
 
 #include "behaviour/HasBehaviour.h"
 #include "utils/Gearbox.h"
@@ -41,7 +42,7 @@ namespace subsystems {
 
   class Elevator : public behaviour::HasBehaviour {
    public:
-    Elevator(ElevatorConfig params);
+    explicit Elevator(ElevatorConfig params);
 
     void OnUpdate(units::second_t dt);
 

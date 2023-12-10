@@ -31,7 +31,7 @@ namespace wom {
 namespace vision {
   class Limelight : public behaviour::HasBehaviour {
    public:
-    Limelight(std::string limelightName);
+    explicit Limelight(std::string limelightName);
 
     std::string GetName();
 

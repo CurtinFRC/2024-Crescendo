@@ -23,6 +23,7 @@
 #include "utils/VoltageController.h"
 #include "vision/Limelight.h"
 
+namespace wom {
 using namespace wom;
 
 using namespace wom::utils;
@@ -36,3 +37,4 @@ using namespace wom::drivetrain::behaviours;
 using namespace wom::vision;
 
 using namespace behaviour;
+}  // namespace wom
