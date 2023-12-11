@@ -11,4 +11,5 @@ cppSrcFileInclude {
 
 modifiableFileExclude {
    gradle/
+   compile_commands.json
 }
