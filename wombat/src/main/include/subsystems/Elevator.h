@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <frc/DigitalInput.h>
@@ -8,6 +12,7 @@
 #include <units/mass.h>
 
 #include <memory>
+#include <string>
 
 #include "behaviour/HasBehaviour.h"
 #include "utils/Gearbox.h"
@@ -37,7 +42,7 @@ namespace subsystems {
 
   class Elevator : public behaviour::HasBehaviour {
    public:
-    Elevator(ElevatorConfig params);
+    explicit Elevator(ElevatorConfig params);
 
     void OnUpdate(units::second_t dt);
 
@@ -77,4 +82,4 @@ namespace subsystems {
     std::shared_ptr<nt::NetworkTable> _table;
   };
 }  // namespace subsystems
-};  // namespace wom
+}  // namespace wom

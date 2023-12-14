@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include "behaviour/BehaviourScheduler.h"
 
 using namespace behaviour;
@@ -46,7 +50,7 @@ void BehaviourScheduler::Schedule(Behaviour::ptr behaviour) {
         behaviour->Tick();
       }
       std::this_thread::sleep_for(
-          std::chrono::milliseconds((int64_t)(behaviour->GetPeriod().value() * 1000)));
+          std::chrono::milliseconds(static_cast<int64_t>(behaviour->GetPeriod().value() * 1000)));
     }
   });
 }

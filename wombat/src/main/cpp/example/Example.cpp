@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 // This should be the only include in your subsystem files
 #include "example/Example.h"
 
@@ -48,7 +52,7 @@ void Example::OnUpdate(units::second_t dt) {
     case ExampleState::kIdle:
       break;
     case ExampleState::kRunning:
-      double speed = (fabs(_driver.GetLeftY()) > 0.05) ? _driver.GetLeftY() : 0;
+      double speed = (std::fabs(_driver.GetLeftY()) > 0.05) ? _driver.GetLeftY() : 0;
       _config->leftGearbox.transmission->SetVoltage(speed * 1_V);
       break;
   }

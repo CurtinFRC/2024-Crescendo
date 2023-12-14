@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <frc/motorcontrol/MotorController.h>
@@ -45,7 +49,7 @@ namespace utils {
    */
   class MotorVoltageController : public VoltageController {
    public:
-    MotorVoltageController(frc::MotorController *MotorController);
+    explicit MotorVoltageController(frc::MotorController *MotorController);
 
     void          SetVoltage(units::volt_t voltage) override;
     units::volt_t GetVoltage() const override;

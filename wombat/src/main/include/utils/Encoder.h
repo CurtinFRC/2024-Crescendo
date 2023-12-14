@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <ctre/Phoenix.h>
@@ -47,7 +51,7 @@ namespace utils {
   class DigitalEncoder : public Encoder {
    public:
     DigitalEncoder(int channelA, int channelB, double ticksPerRotation, double reduction = 1)
-        : Encoder(ticksPerRotation, reduction, 0), _nativeEncoder(channelA, channelB){};
+        : Encoder(ticksPerRotation, reduction, 0), _nativeEncoder(channelA, channelB) {}
 
     double GetEncoderRawTicks() const override;
     double GetEncoderTickVelocity() const override;
@@ -58,7 +62,7 @@ namespace utils {
 
   class CANSparkMaxEncoder : public Encoder {
    public:
-    CANSparkMaxEncoder(rev::CANSparkMax *controller, double reduction = 1);
+    explicit CANSparkMaxEncoder(rev::CANSparkMax *controller, double reduction = 1);
 
     double GetEncoderRawTicks() const override;
     double GetEncoderTickVelocity() const override;
@@ -69,7 +73,7 @@ namespace utils {
 
   class TalonFXEncoder : public Encoder {
    public:
-    TalonFXEncoder(ctre::phoenix::motorcontrol::can::TalonFX *controller, double reduction = 1);
+    explicit TalonFXEncoder(ctre::phoenix::motorcontrol::can::TalonFX *controller, double reduction = 1);
 
     double GetEncoderRawTicks() const override;
     double GetEncoderTickVelocity() const override;
@@ -92,7 +96,7 @@ namespace utils {
 
   class DutyCycleEncoder : public Encoder {
    public:
-    DutyCycleEncoder(int channel, double ticksPerRotation = 1, double reduction = 1);
+    explicit DutyCycleEncoder(int channel, double ticksPerRotation = 1, double reduction = 1);
 
     double GetEncoderRawTicks() const override;
     double GetEncoderTickVelocity() const override;

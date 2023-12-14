@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <networktables/NetworkTable.h>
@@ -5,6 +9,7 @@
 #include <units/charge.h>
 
 #include <memory>
+#include <string>
 
 #include "behaviour/Behaviour.h"
 #include "behaviour/HasBehaviour.h"

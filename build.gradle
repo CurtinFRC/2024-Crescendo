@@ -115,4 +115,3 @@ model {
 subprojects {
   project.buildDir = rootProject.buildDir
 }
-

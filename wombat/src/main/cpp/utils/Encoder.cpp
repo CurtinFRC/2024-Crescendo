@@ -1,9 +1,13 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include "utils/Encoder.h"
 
 using namespace wom;
 
 utils::Encoder::Encoder(double encoderTicksPerRotation, double reduction, int type)
-    : _reduction(reduction), _encoderTicksPerRotation(encoderTicksPerRotation), _type(type){};
+    : _reduction(reduction), _encoderTicksPerRotation(encoderTicksPerRotation), _type(type) {}
 
 double utils::Encoder::GetEncoderTicks() const {
   return GetEncoderRawTicks();

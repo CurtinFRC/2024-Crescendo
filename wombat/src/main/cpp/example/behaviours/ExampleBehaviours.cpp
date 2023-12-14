@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 // this should be your only include in your behaviour cpp files
 #include "example/behaviour/ExampleBehaviours.h"
 

@@ -69,7 +69,7 @@ BehaviourScheduler::GetInstance()->Schedule(behaviour);
 ```
 
 ### Controlling systems
-Let's look at how we might control a system with Behaviours. For this example, we're going to create a Behaviour that tells a flywheel shooter to spin up to a certain speed. 
+Let's look at how we might control a system with Behaviours. For this example, we're going to create a Behaviour that tells a flywheel shooter to spin up to a certain speed.
 
 First, we need to make our shooter system able to have a Behaviour. To do this, we make it implement from `HasBehaviour` - that's it, no methods to override or anything else.
 
@@ -126,8 +126,8 @@ ShooterSpinup::ShooterSpinup(Shooter &s, units::rad_per_s speed, bool hold) : _s
 void ShooterSpinup::OnTick(units::time::second_t dt) {
   // Get the current speed from the shooter's encoder
   units::rad_per_s current_speed = _shooter.gearbox.encoder.GetAngularVelocity();
-  // Calculate the feedforward voltage - the voltage required to spin the 
-  // motor assuming there is no torque (load) applied. This is simple if 
+  // Calculate the feedforward voltage - the voltage required to spin the
+  // motor assuming there is no torque (load) applied. This is simple if
   // we use WPILib's DcMotor class from wpimath (#include <frc/system/plant/DcMotor.h>).
   units::volt_t feed_forward = _shooter.gearbox.motor.Voltage(0, _speed);
 
@@ -137,7 +137,7 @@ void ShooterSpinup::OnTick(units::time::second_t dt) {
 
   // If the PID says we're done, stop this behaviour and move on!
   // Note "hold", which will keep the behaviour running even after we meet our speed
-  // We can use this in conjunction with ->Until(behaviour), which will keep our 
+  // We can use this in conjunction with ->Until(behaviour), which will keep our
   // behaviour running until another behaviour is finished.
   if (_pid.IsDone() && !_hold)
     SetDone();
@@ -158,10 +158,10 @@ spinup->SetPeriod(10_ms);   // 100Hz
 ```
 
 ## Using Behaviours Together
-As we mentioned, Behaviours are small, compartmentalised units of work that we can use together to make complex routines. In order to achieve this, Wombat provides some ways to combine behaviours together into larger sequences. 
+As we mentioned, Behaviours are small, compartmentalised units of work that we can use together to make complex routines. In order to achieve this, Wombat provides some ways to combine behaviours together into larger sequences.
 
 ### Sequential Execution
-Behaviours can be executed in sequence by using the `<<` operator. 
+Behaviours can be executed in sequence by using the `<<` operator.
 
 ```cpp
 auto combined = make<Behaviour1>()
@@ -186,7 +186,7 @@ auto wait_until = make<Behaviour1>()
                   ->Until(make<BehaviourDeadline>());
 ```
 ### Waiting
-Wombat provides `WaitTime` and `WaitFor` to produce simple waits in the behaviour chain. 
+Wombat provides `WaitTime` and `WaitFor` to produce simple waits in the behaviour chain.
 ```cpp
 auto wait_2s = make<WaitTime>(2_s);
 // WaitFor will wait until a function (predicate) returns true before continuing.
@@ -205,7 +205,7 @@ auto if_bhvr = make<If>([&vision]() { return vision.ready(); })
                 ->Then(make<Behaviour1>())
                 ->Else(make<Behaviour2>());
 ```
-Switch is similar to a switch-case statement, allowing you to choose from one of many options. 
+Switch is similar to a switch-case statement, allowing you to choose from one of many options.
 ```cpp
 auto switch_bhvr = make<Switch>(my_int)
                     // Select based on the value directly
@@ -214,7 +214,7 @@ auto switch_bhvr = make<Switch>(my_int)
                     // Or, based on the value using a predicate
                     ->When([](auto my_int) { return my_int > 6; }, make<Behaviour3>())
                     ->Otherwise(make<Behaviour4>());
-// If no When matches, and Otherwise is not provided, the behaviour will 
+// If no When matches, and Otherwise is not provided, the behaviour will
 // keep running until one of the options matches. You can also provide
 // Otherwise without an argument to exit if none match.
 // Like If, you can also provide a function to yield the initial value
@@ -239,19 +239,19 @@ Let's say we come up with a plan to do a really awesome (but really complicated)
 - Wait 2 seconds
 - Move forward 1.5m
 - Intake a ball
-- While driving backwards 3m: 
+- While driving backwards 3m:
   - Spinup the shooter
   - Wait until vision is ready
   - Shoot a ball
 - Intake another ball
 - Spinup & Shoot the last ball
 Complex, right? Let's look at how we break it down. First of all, notice that it's already in a sequence of steps for us - small chunks of work that we can harness to complete our goals. Also notice that there's some common behaviour across this routine - there's multiple times where we move forward, intake a ball, etc. We can use this to our advantage by reducing the amount of code we need to write.
-We can use the steps we've already outlined to build our overall behaviour sequence that describes the autonomous routine. 
+We can use the steps we've already outlined to build our overall behaviour sequence that describes the autonomous routine.
 Let's go ahead and mock up what we think our autonomous routine above will look like in code:
 ```cpp
 Behaviour::ptr MyAutoRoutine() {
   return (
-    make<ShooterSpinup>(shooter, 500_rpm, true) 
+    make<ShooterSpinup>(shooter, 500_rpm, true)
       ->Until(
           make<DriveStraight>(drivetrain, 2_m)
           << make<IntakeOne>(intake)
@@ -262,11 +262,11 @@ Behaviour::ptr MyAutoRoutine() {
     << make<DriveStraight>(drivetrain, 1.5_m)
     << make<IntakeOne>(intake)
     <<  (
-          // Drive Straight backwards, and 
+          // Drive Straight backwards, and
           make<DriveStraight>(drivetrain, -3_m) &
           (
             // Spinup the shooter until vision is ready, then fire.
-            make<ShooterSpinup>(shooter, 500_rpm, true) 
+            make<ShooterSpinup>(shooter, 500_rpm, true)
               ->Until(make<WaitFor>([vision]() { return vision.ready(); }))
             << make<ShooterFire>(shooter)
           )
@@ -283,4 +283,3 @@ See how we can just flow on from the individual steps of our big, complex exampl
 - `DriveStraight`
 - `DriveTurn`
 - `IntakeOne`
-

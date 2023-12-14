@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <frc/TimedRobot.h>
@@ -10,11 +14,10 @@
 
 #include <frc/simulation/DifferentialDrivetrainSim.h>
 
-#include "Wombat.h"
-
 #include "RobotMap.h"
 
 #include <frc/Timer.h>
+#include "Wombat.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -33,6 +36,8 @@ class Robot : public frc::TimedRobot {
 
  protected:
  private:
+  behaviour::BehaviourScheduler *sched;
+  RobotMap                       robotmap;
     frc::SendableChooser<std::string> m_chooser;
 
     frc::Field2d m_field;

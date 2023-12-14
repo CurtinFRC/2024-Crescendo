@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <units/time.h>
@@ -36,7 +40,7 @@ namespace drivetrain {
 
   class Drivetrain : public behaviour::HasBehaviour {
    public:
-    Drivetrain(DrivetrainConfig *config);
+    explicit Drivetrain(DrivetrainConfig *config);
     ~Drivetrain();
 
     DrivetrainConfig *GetConfig();

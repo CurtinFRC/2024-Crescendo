@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include "Robot.h"
 
 // include units
@@ -35,6 +39,11 @@ void Robot::RobotInit() {
     frc::SmartDashboard::PutData("Field", &m_field);
 
     simulation_timer = frc::Timer();
+
+    wom::BehaviourScheduler::GetInstance()->Register(&robotmap.swerve);
+    robotmap.swerve.SetDefaultBehaviour([this]() {
+      return wom::make<wom::FieldRelativeSwerveDrive>(&robotmap.swerve, robotmap.controllers.driver);
+    });
 }
 
 void Robot::RobotPeriodic() {}
@@ -81,7 +90,11 @@ void Robot::AutonomousPeriodic() {
     m_driveSim.Update(20_ms);
 }
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() {
+  sched = wom::BehaviourScheduler::GetInstance();
+  sched->InterruptAll();
+  sched->Schedule(wom::make<wom::FieldRelativeSwerveDrive>(&robotmap.swerve, robotmap.controllers.driver));
+}
 void Robot::TeleopPeriodic() {}
 
 void Robot::DisabledInit() {}

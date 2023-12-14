@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include "behaviour/Behaviour.h"
 
 using namespace behaviour;
@@ -174,7 +178,8 @@ void ConcurrentBehaviour::OnStart() {
         using namespace std::chrono_literals;
 
         b->Tick();
-        std::this_thread::sleep_for(std::chrono::milliseconds((int64_t)(b->GetPeriod().value() * 1000)));
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(static_cast<int64_t>(b->GetPeriod().value() * 1000)));
       }
 
       if (IsFinished() && !b->IsFinished()) b->Interrupt();

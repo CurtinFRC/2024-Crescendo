@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include "behaviour/Behaviour.h"
@@ -6,6 +10,7 @@
 #include "drivetrain/Drivetrain.h"
 #include "drivetrain/SwerveDrive.h"
 #include "drivetrain/behaviours/DrivetrainBehaviours.h"
+#include "drivetrain/behaviours/SwerveBehaviours.h"
 #include "subsystems/Arm.h"
 #include "subsystems/Elevator.h"
 #include "subsystems/Shooter.h"
@@ -19,6 +24,7 @@
 #include "utils/Pathplanner.h"
 #include "vision/Limelight.h"
 
+namespace wom {
 using namespace wom;
 
 using namespace wom::utils;
@@ -32,3 +38,4 @@ using namespace wom::drivetrain::behaviours;
 using namespace wom::vision;
 
 using namespace behaviour;
+}  // namespace wom

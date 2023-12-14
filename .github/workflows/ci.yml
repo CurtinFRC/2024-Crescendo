@@ -1,4 +1,6 @@
 # Credit to Team 1678 for most of this
+name: "Build and Test"
+
 on:
   push:
     branches: "*"
@@ -32,4 +34,3 @@ jobs:
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
-

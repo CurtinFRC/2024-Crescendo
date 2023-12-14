@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 // files should be named in upper camel case
 // all .h or .hpp files should start with this as it causes the file to only
 // compile its contents once at compile time

@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <ctre/Phoenix.h>
@@ -13,108 +17,108 @@ struct RobotMap {
   };
   Controllers controllers;
 
-  WPI_TalonFX            frontLeftMovementMotor{99};
-  MotorVoltageController frontLeftMovementVoltageController{&frontLeftMovementMotor};
-  TalonFXEncoder         frontLeftMovementEncoder{&frontLeftMovementMotor, 100};
-  Gearbox                frontLeftMovement{&frontLeftMovementVoltageController, &frontLeftMovementEncoder,
-                            frc::DCMotor::Falcon500(1).WithReduction(6.75)};
+  WPI_TalonFX                 frontLeftMovementMotor{9};
+  wom::MotorVoltageController frontLeftMovementVoltageController{&frontLeftMovementMotor};
+  wom::CanEncoder             frontLeftMovementEncoder{18};
+  wom::Gearbox frontLeftMovement{&frontLeftMovementVoltageController, &frontLeftMovementEncoder,
+                                 frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
-  WPI_TalonFX            frontLeftRotationMotor{99};
-  MotorVoltageController frontLeftRotationVoltageController{&frontLeftMovementMotor};
-  TalonFXEncoder         frontLeftRotationEncoder{&frontLeftMovementMotor, 100};
-  Gearbox                frontLeftRotation{&frontLeftMovementVoltageController, &frontLeftMovementEncoder,
-                            frc::DCMotor::Falcon500(1).WithReduction(6.75)};
+  WPI_TalonFX                 frontLeftRotationMotor{7};
+  wom::MotorVoltageController frontLeftRotationVoltageController{&frontLeftMovementMotor};
+  wom::CanEncoder             frontLeftRotationEncoder{18};
+  wom::Gearbox frontLeftRotation{&frontLeftMovementVoltageController, &frontLeftMovementEncoder,
+                                 frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
-  SwerveModuleConfig frontLeftConfig{frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
-                                     frontLeftMovement,
-                                     frontLeftRotation,
-                                     PIDConfig<units::radians_per_second, units::volt>(""),
-                                     PIDConfig<units::meters_per_second, units::volt>(""),
-                                     PIDConfig<units::radian, units::radians_per_second>(""),
-                                     PIDConfig<units::meter, units::meters_per_second>(""),
-                                     units::meter_t{0.05},
-                                     SwerveModuleName::FrontLeft,
-                                     ""};
+  wom::SwerveModuleConfig frontLeftConfig{frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
+                                          frontLeftMovement,
+                                          frontLeftRotation,
+                                          wom::PIDConfig<units::radians_per_second, units::volt>(""),
+                                          wom::PIDConfig<units::meters_per_second, units::volt>(""),
+                                          wom::PIDConfig<units::radian, units::radians_per_second>(""),
+                                          wom::PIDConfig<units::meter, units::meters_per_second>(""),
+                                          units::meter_t{0.05},
+                                          wom::SwerveModuleName::FrontLeft,
+                                          ""};
 
-  SwerveModule frontLeft = SwerveModule(frontLeftConfig, SwerveModuleState::kIdle);
+  wom::SwerveModule frontLeft = wom::SwerveModule(frontLeftConfig, wom::SwerveModuleState::kIdle);
 
-  WPI_TalonFX            frontRightMovementMotor{99};
-  MotorVoltageController frontRightMovementVoltageController{&frontRightMovementMotor};
-  TalonFXEncoder         frontRightMovementEncoder{&frontRightMovementMotor, 100};
-  Gearbox                frontRightMovement{&frontRightMovementVoltageController, &frontRightMovementEncoder,
-                             frc::DCMotor::Falcon500(1).WithReduction(6.75)};
+  WPI_TalonFX                 frontRightMovementMotor{6};
+  wom::MotorVoltageController frontRightMovementVoltageController{&frontRightMovementMotor};
+  wom::CanEncoder             frontRightMovementEncoder{16};
+  wom::Gearbox frontRightMovement{&frontRightMovementVoltageController, &frontRightMovementEncoder,
+                                  frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
-  WPI_TalonFX            frontRightRotationMotor{99};
-  MotorVoltageController frontRightRotationVoltageController{&frontRightMovementMotor};
-  TalonFXEncoder         frontRightRotationEncoder{&frontRightMovementMotor, 100};
-  Gearbox                frontRightRotation{&frontRightMovementVoltageController, &frontRightMovementEncoder,
-                             frc::DCMotor::Falcon500(1).WithReduction(6.75)};
+  WPI_TalonFX                 frontRightRotationMotor{5};
+  wom::MotorVoltageController frontRightRotationVoltageController{&frontRightMovementMotor};
+  wom::CanEncoder             frontRightRotationEncoder{16};
+  wom::Gearbox frontRightRotation{&frontRightMovementVoltageController, &frontRightMovementEncoder,
+                                  frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
-  SwerveModuleConfig frontRightConfig{frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
-                                      frontLeftMovement,
-                                      frontLeftRotation,
-                                      PIDConfig<units::radians_per_second, units::volt>(""),
-                                      PIDConfig<units::meters_per_second, units::volt>(""),
-                                      PIDConfig<units::radian, units::radians_per_second>(""),
-                                      PIDConfig<units::meter, units::meters_per_second>(""),
-                                      units::meter_t{0.05},
-                                      SwerveModuleName::FrontRight,
-                                      ""};
+  wom::SwerveModuleConfig frontRightConfig{frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
+                                           frontLeftMovement,
+                                           frontLeftRotation,
+                                           wom::PIDConfig<units::radians_per_second, units::volt>(""),
+                                           wom::PIDConfig<units::meters_per_second, units::volt>(""),
+                                           wom::PIDConfig<units::radian, units::radians_per_second>(""),
+                                           wom::PIDConfig<units::meter, units::meters_per_second>(""),
+                                           units::meter_t{0.05},
+                                           wom::SwerveModuleName::FrontRight,
+                                           ""};
 
-  SwerveModule frontRight = SwerveModule(frontRightConfig, SwerveModuleState::kIdle);
+  wom::SwerveModule frontRight = wom::SwerveModule(frontRightConfig, wom::SwerveModuleState::kIdle);
 
-  WPI_TalonFX            backLeftMovementMotor{99};
-  MotorVoltageController backLeftMovementVoltageController{&backLeftMovementMotor};
-  TalonFXEncoder         backLeftMovementEncoder{&backLeftMovementMotor, 100};
-  Gearbox                backLeftMovement{&backLeftMovementVoltageController, &backLeftMovementEncoder,
-                           frc::DCMotor::Falcon500(1).WithReduction(6.75)};
+  WPI_TalonFX                 backLeftMovementMotor{2};
+  wom::MotorVoltageController backLeftMovementVoltageController{&backLeftMovementMotor};
+  wom::CanEncoder             backLeftMovementEncoder{19};
+  wom::Gearbox                backLeftMovement{&backLeftMovementVoltageController, &backLeftMovementEncoder,
+                                frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
-  WPI_TalonFX            backLeftRotationMotor{99};
-  MotorVoltageController backLeftRotationVoltageController{&backLeftMovementMotor};
-  TalonFXEncoder         backLeftRotationEncoder{&backLeftMovementMotor, 100};
-  Gearbox                backLeftRotation{&backLeftMovementVoltageController, &backLeftMovementEncoder,
-                           frc::DCMotor::Falcon500(1).WithReduction(6.75)};
+  WPI_TalonFX                 backLeftRotationMotor{1};
+  wom::MotorVoltageController backLeftRotationVoltageController{&backLeftMovementMotor};
+  wom::CanEncoder             backLeftRotationEncoder{19};
+  wom::Gearbox                backLeftRotation{&backLeftMovementVoltageController, &backLeftMovementEncoder,
+                                frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
-  SwerveModuleConfig backLeftConfig{frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
-                                    frontLeftMovement,
-                                    frontLeftRotation,
-                                    PIDConfig<units::radians_per_second, units::volt>(""),
-                                    PIDConfig<units::meters_per_second, units::volt>(""),
-                                    PIDConfig<units::radian, units::radians_per_second>(""),
-                                    PIDConfig<units::meter, units::meters_per_second>(""),
-                                    units::meter_t{0.05},
-                                    SwerveModuleName::BackLeft,
-                                    ""};
+  wom::SwerveModuleConfig backLeftConfig{frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
+                                         frontLeftMovement,
+                                         frontLeftRotation,
+                                         wom::PIDConfig<units::radians_per_second, units::volt>(""),
+                                         wom::PIDConfig<units::meters_per_second, units::volt>(""),
+                                         wom::PIDConfig<units::radian, units::radians_per_second>(""),
+                                         wom::PIDConfig<units::meter, units::meters_per_second>(""),
+                                         units::meter_t{0.05},
+                                         wom::SwerveModuleName::BackLeft,
+                                         ""};
 
-  SwerveModule backLeft = SwerveModule(backLeftConfig, SwerveModuleState::kIdle);
+  wom::SwerveModule backLeft = wom::SwerveModule(backLeftConfig, wom::SwerveModuleState::kIdle);
 
-  WPI_TalonFX            backRightMovementMotor{99};
-  MotorVoltageController backRightMovementVoltageController{&backRightMovementMotor};
-  TalonFXEncoder         backRightMovementEncoder{&backRightMovementMotor, 100};
-  Gearbox                backRightMovement{&backRightMovementVoltageController, &backRightMovementEncoder,
-                            frc::DCMotor::Falcon500(1).WithReduction(6.75)};
+  WPI_TalonFX                 backRightMovementMotor{4};
+  wom::MotorVoltageController backRightMovementVoltageController{&backRightMovementMotor};
+  wom::CanEncoder             backRightMovementEncoder{17};
+  wom::Gearbox backRightMovement{&backRightMovementVoltageController, &backRightMovementEncoder,
+                                 frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
-  WPI_TalonFX            backRightRotationMotor{99};
-  MotorVoltageController backRightRotationVoltageController{&backRightMovementMotor};
-  TalonFXEncoder         backRightRotationEncoder{&backRightMovementMotor, 100};
-  Gearbox                backRightRotation{&backRightMovementVoltageController, &backRightMovementEncoder,
-                            frc::DCMotor::Falcon500(1).WithReduction(6.75)};
+  WPI_TalonFX                 backRightRotationMotor{3};
+  wom::MotorVoltageController backRightRotationVoltageController{&backRightMovementMotor};
+  wom::CanEncoder             backRightRotationEncoder{17};
+  wom::Gearbox backRightRotation{&backRightMovementVoltageController, &backRightRotationEncoder,
+                                 frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
-  SwerveModuleConfig backRightConfig{frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
-                                     frontLeftMovement,
-                                     frontLeftRotation,
-                                     PIDConfig<units::radians_per_second, units::volt>(""),
-                                     PIDConfig<units::meters_per_second, units::volt>(""),
-                                     PIDConfig<units::radian, units::radians_per_second>(""),
-                                     PIDConfig<units::meter, units::meters_per_second>(""),
-                                     units::meter_t{0.05},
-                                     SwerveModuleName::BackRight,
-                                     ""};
+  wom::SwerveModuleConfig backRightConfig{frc::Translation2d{units::meter_t{1}, units::meter_t{1}},
+                                          frontLeftMovement,
+                                          frontLeftRotation,
+                                          wom::PIDConfig<units::radians_per_second, units::volt>(""),
+                                          wom::PIDConfig<units::meters_per_second, units::volt>(""),
+                                          wom::PIDConfig<units::radian, units::radians_per_second>(""),
+                                          wom::PIDConfig<units::meter, units::meters_per_second>(""),
+                                          units::meter_t{0.05},
+                                          wom::SwerveModuleName::BackRight,
+                                          ""};
 
-  SwerveModule backRight = SwerveModule(backRightConfig, SwerveModuleState::kIdle);
+  wom::SwerveModule backRight = wom::SwerveModule(backRightConfig, wom::SwerveModuleState::kIdle);
 
-  SwerveConfig swerveConfig{frontLeft, frontRight, backLeft, backRight};
+  wom::SwerveConfig swerveConfig{frontLeft, frontRight, backLeft, backRight};
 
-  Limelight limelight = Limelight("Limelight");
-  Swerve    swerve    = Swerve(swerveConfig, SwerveState::kIdle, &limelight);
+  wom::Limelight limelight = wom::Limelight("Limelight");
+  wom::Swerve    swerve    = wom::Swerve(swerveConfig, wom::SwerveState::kIdle, &limelight);
 };

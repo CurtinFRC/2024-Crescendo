@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <frc/filter/LinearFilter.h>
@@ -5,7 +9,9 @@
 #include <units/base.h>
 #include <units/time.h>
 
+#include <memory>
 #include <optional>
+#include <string>
 #include <vector>
 
 #include "utils/Util.h"

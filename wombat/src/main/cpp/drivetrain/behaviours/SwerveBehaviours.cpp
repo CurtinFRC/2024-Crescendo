@@ -1,4 +1,8 @@
-#include <drivetrain/behaviours/SwerveBehaviours.h>
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
+#include "drivetrain/behaviours/SwerveBehaviours.h"
 
 wom::drivetrain::behaviours::FieldRelativeSwerveDrive::FieldRelativeSwerveDrive(
     wom::drivetrain::Swerve *swerve, frc::XboxController &driver)

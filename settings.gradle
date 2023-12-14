@@ -28,4 +28,3 @@ pluginManagement {
 
 include 'wombat'
 rootProject.name = '2024-Crescendo'
-

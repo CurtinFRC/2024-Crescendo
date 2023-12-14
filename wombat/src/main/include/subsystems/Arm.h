@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <frc/DigitalInput.h>
@@ -5,6 +9,9 @@
 #include <units/current.h>
 #include <units/mass.h>
 #include <units/voltage.h>
+
+#include <memory>
+#include <string>
 
 #include "behaviour/HasBehaviour.h"
 #include "utils/Encoder.h"
@@ -37,7 +44,7 @@ namespace subsystems {
 
   class Arm : public behaviour::HasBehaviour {
    public:
-    Arm(ArmConfig config);
+    explicit Arm(ArmConfig config);
 
     void OnUpdate(units::second_t dt);
 
@@ -72,4 +79,4 @@ namespace subsystems {
     units::volt_t _voltage{0};
   };
 }  // namespace subsystems
-};  // namespace wom
+}  // namespace wom

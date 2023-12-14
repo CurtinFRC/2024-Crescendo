@@ -1,3 +1,7 @@
+// Copyright (c) 2023 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <frc/geometry/Pose2d.h>
@@ -27,7 +31,7 @@ namespace wom {
 namespace vision {
   class Limelight : public behaviour::HasBehaviour {
    public:
-    Limelight(std::string limelightName);
+    explicit Limelight(std::string limelightName);
 
     std::string GetName();
 
