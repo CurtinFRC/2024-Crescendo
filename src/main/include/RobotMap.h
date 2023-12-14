@@ -19,7 +19,7 @@ struct RobotMap {
 
   WPI_TalonFX                 frontLeftMovementMotor{9};
   wom::MotorVoltageController frontLeftMovementVoltageController{&frontLeftMovementMotor};
-  wom::CanEncoder             frontLeftMovementEncoder{18};
+  wom::TalonFXEncoder         frontLeftMovementEncoder{&frontLeftMovementMotor};
   wom::Gearbox frontLeftMovement{&frontLeftMovementVoltageController, &frontLeftMovementEncoder,
                                  frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
@@ -44,7 +44,7 @@ struct RobotMap {
 
   WPI_TalonFX                 frontRightMovementMotor{6};
   wom::MotorVoltageController frontRightMovementVoltageController{&frontRightMovementMotor};
-  wom::CanEncoder             frontRightMovementEncoder{16};
+  wom::TalonFXEncoder         frontRightMovementEncoder{&frontRightMovementMotor};
   wom::Gearbox frontRightMovement{&frontRightMovementVoltageController, &frontRightMovementEncoder,
                                   frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
@@ -69,7 +69,7 @@ struct RobotMap {
 
   WPI_TalonFX                 backLeftMovementMotor{2};
   wom::MotorVoltageController backLeftMovementVoltageController{&backLeftMovementMotor};
-  wom::CanEncoder             backLeftMovementEncoder{19};
+  wom::TalonFXEncoder         backLeftMovementEncoder{&backLeftMovementMotor};
   wom::Gearbox                backLeftMovement{&backLeftMovementVoltageController, &backLeftMovementEncoder,
                                 frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
@@ -94,7 +94,7 @@ struct RobotMap {
 
   WPI_TalonFX                 backRightMovementMotor{4};
   wom::MotorVoltageController backRightMovementVoltageController{&backRightMovementMotor};
-  wom::CanEncoder             backRightMovementEncoder{17};
+  wom::TalonFXEncoder         backRightMovementEncoder{&backRightMovementMotor};
   wom::Gearbox backRightMovement{&backRightMovementVoltageController, &backRightMovementEncoder,
                                  frc::DCMotor::Falcon500(1).WithReduction(6.75)};
 
