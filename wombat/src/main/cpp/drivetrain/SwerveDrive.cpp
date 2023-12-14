@@ -103,8 +103,15 @@ void wom::drivetrain::SwerveModule::Log() {
   table->GetEntry("Angular Voltage").SetDouble(voltageRotation.value());
 }
 
-void wom::drivetrain::SwerveModule::OnUpdate(units::second_t dt, units::radian_t rotation,
-                                             units::meter_t movement, units::volt_t rotationVoltage) {
+void wom::drivetrain::SwerveModule::SetMovement(units::meter_t _distance) {
+  movement = _distance;
+}
+
+void wom::drivetrain::SwerveModule::SetRotation(units::radian_t _rotation) {
+  rotation = _rotation;
+}
+
+void wom::drivetrain::SwerveModule::OnUpdate(units::second_t dt) {
   Log();
 
   switch (_state) {
@@ -117,7 +124,7 @@ void wom::drivetrain::SwerveModule::OnUpdate(units::second_t dt, units::radian_t
       PIDControl(dt, units::radian_t{180}, units::meter_t{0});
       break;
     case wom::drivetrain::SwerveModuleState::kManualTurn:
-      _config.rotationGearbox.transmission->SetVoltage(rotationVoltage);
+      _config.rotationGearbox.transmission->SetVoltage(0_V);
       break;
     default:
       std::cout << "Invalid State" << std::endl;
@@ -159,9 +166,11 @@ void wom::drivetrain::Swerve::FieldRelativeControl(frc::Pose3d desiredPose, unit
     rotation -= 45_rad;
   }
   _config.frontLeft.SetState(wom::drivetrain::SwerveModuleState::kPID);
-  _config.frontLeft.OnUpdate(dt, rotation, movement, 0_V);
+  _config.frontLeft.SetRotation(rotation);
+  _config.frontLeft.SetMovement(movement);
   _config.frontRight.SetState(wom::drivetrain::SwerveModuleState::kPID);
-  _config.frontRight.OnUpdate(dt, rotation, movement, 0_V);
+  _config.frontRight.SetRotation(rotation);
+  _config.frontRight.SetMovement(movement);
 
   if (rotation > 0_rad) {
     rotation -= 90_rad;
@@ -169,9 +178,11 @@ void wom::drivetrain::Swerve::FieldRelativeControl(frc::Pose3d desiredPose, unit
     rotation += 90_rad;
   }
   _config.backLeft.SetState(wom::drivetrain::SwerveModuleState::kPID);
-  _config.backLeft.OnUpdate(dt, rotation, movement, 0_V);
+  _config.backLeft.SetRotation(rotation);
+  _config.backLeft.SetMovement(movement);
   _config.backRight.SetState(wom::drivetrain::SwerveModuleState::kPID);
-  _config.backRight.OnUpdate(dt, rotation, movement, 0_V);
+  _config.backRight.SetRotation(rotation);
+  _config.backRight.SetMovement(movement);
 }
 
 void wom::drivetrain::Swerve::OnStart() {
@@ -183,6 +194,11 @@ void wom::drivetrain::Swerve::OnStart() {
 }
 
 void wom::drivetrain::Swerve::OnUpdate(units::second_t dt) {
+  _config.frontRight.OnUpdate(dt);
+  _config.frontLeft.OnUpdate(dt);
+  _config.backRight.OnUpdate(dt);
+  _config.backLeft.OnUpdate(dt);
+
   switch (_state) {
     case wom::drivetrain::SwerveState::kIdle:
       break;

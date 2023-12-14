@@ -66,14 +66,15 @@ namespace drivetrain {
     SwerveModuleState  GetState();
 
     void SetState(SwerveModuleState state);
+    void SetMovement(units::meter_t distance);
+    void SetRotation(units::radian_t rotation);
 
     void                       Log();
     units::meters_per_second_t GetSpeed();
     void PIDControl(units::second_t dt, units::radian_t rotation, units::meter_t movement);
 
     void OnStart(units::radian_t offset);
-    void OnUpdate(units::second_t dt, units::radian_t rotation, units::meter_t movement,
-                  units::volt_t rotationVoltage);
+    void OnUpdate(units::second_t dt);
 
    private:
     wom::utils::PIDController<units::radians_per_second, units::volt> _rotationalVelocityPID;
@@ -93,6 +94,9 @@ namespace drivetrain {
 
     std::string                       name;
     std::shared_ptr<nt::NetworkTable> table;
+
+    units::radian_t rotation;
+    units::meter_t movement;
   };
 
   struct SwerveConfig {
