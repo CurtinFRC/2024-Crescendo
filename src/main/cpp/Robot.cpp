@@ -4,23 +4,44 @@
 
 #include "Robot.h"
 
+static units::second_t lastPeriodic;
+
 void Robot::RobotInit() {
-   wom::BehaviourScheduler::GetInstance()->Register(&robotmap.swerve);
-   robotmap.swerve.SetDefaultBehaviour([this]() {
-     return wom::make<wom::FieldRelativeSwerveDrive>(&robotmap.swerve, robotmap.controllers.driver);
-   });
+  lastPeriodic = wom::now();
+  limelight = new wom::Limelight("Limelight");
+
+
+  swerve = new wom::Swerve(robotmap.swerveConfig, wom::SwerveState::kIdle, limelight);
+  wom::BehaviourScheduler::GetInstance()->Register(swerve);
+  swerve->SetDefaultBehaviour([this]() {
+    return wom::make<wom::FieldRelativeSwerveDrive>(swerve, robotmap.controllers.driver);
+  });
 }
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic() {
+  units::second_t dt = wom::now() - lastPeriodic;
+  lastPeriodic = wom::now();
+  loop.Poll();
+  wom::BehaviourScheduler::GetInstance()->Tick();
+
+  swerve->OnUpdate(dt);
+  limelight->OnUpdate(dt);
+}
 
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  sched = wom::BehaviourScheduler::GetInstance();
-  sched->InterruptAll();
-  sched->Schedule(wom::make<wom::FieldRelativeSwerveDrive>(&robotmap.swerve, robotmap.controllers.driver));
+  loop.Clear();
+  wom::BehaviourScheduler *sched = wom::BehaviourScheduler::GetInstance();
+  sched->InterruptAll(); // removes all previously scheduled behaviours
+  
+  swerve->OnStart();
 }
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+  // sched = wom::BehaviourScheduler::GetInstance();
+  // sched->InterruptAll();
+  // sched->Schedule(wom::make<wom::FieldRelativeSwerveDrive>(swerve, robotmap.controllers.driver));
+}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}

@@ -8,8 +8,8 @@ wom::drivetrain::SwerveModule::SwerveModule(wom::drivetrain::SwerveModuleConfig 
                                             wom::drivetrain::SwerveModuleState  state)
     : _rotationalVelocityPID(config.path + "/pid/rotationalVelocity", config.rotationalVelocityPID),
       _movementVelocityPID(config.path + "/pid/movementVelocity", config.movementVelocityPID),
-      _rotationalPID(config.path + "/pid/rotationGearbox", config.rotationPID),
-      _movementPID(config.path + "/pid/movementGearbox", config.movementPID),
+      _rotationalPID(config.path + "/pid/rotationGearbox", config.rotationPositionPID),
+      _movementPID(config.path + "/pid/movementGearbox", config.movementPositionPID),
       _config(config),
       _state(state) {
   switch (_config.name) {
@@ -79,14 +79,16 @@ void wom::drivetrain::SwerveModule::PIDControl(units::second_t dt, units::radian
     voltageRotation = 11_V;
   }
   _config.rotationGearbox.transmission->SetVoltage(voltageRotation);
+  std::cout << "Rotation Voltage" << voltageRotation.value() << std::endl;
 
   units::volt_t feedforwardMovementVelocity = _config.movementGearbox.motor.Voltage(
       0_Nm, _config.movementGearbox.encoder->GetEncoderAngularVelocity());
   voltageMovement = _movementVelocityPID.Calculate(velocity, dt, feedforwardMovementVelocity);
-  if (voltageMovement > 12_V) {
-    voltageMovement = 12_V;
+  if (voltageMovement > 11_V) {
+    voltageMovement = 11_V;
   }
   _config.movementGearbox.transmission->SetVoltage(voltageMovement);
+  std::cout << "Movement Voltage" << voltageMovement.value() << std::endl;
 }
 
 units::meters_per_second_t wom::drivetrain::SwerveModule::GetSpeed() {
@@ -180,10 +182,7 @@ void wom::drivetrain::Swerve::OnStart() {
   std::cout << "Starting Serve" << std::endl;
 }
 
-void wom::drivetrain::Swerve::OnUpdate(units::second_t dt, wom::vision::Limelight *vision,
-                                       frc::Pose3d desiredPose) {
-  vision->OnUpdate(dt);
-
+void wom::drivetrain::Swerve::OnUpdate(units::second_t dt) {
   switch (_state) {
     case wom::drivetrain::SwerveState::kIdle:
       break;
@@ -196,6 +195,10 @@ void wom::drivetrain::Swerve::OnUpdate(units::second_t dt, wom::vision::Limeligh
       std::cout << "Invalid State" << std::endl;
       break;
   }
+}
+
+void wom::drivetrain::Swerve::SetDesired(frc::Pose3d _desiredPose) {
+  desiredPose = _desiredPose;
 }
 
 void wom::drivetrain::Swerve::RobotRelativeControl(units::second_t dt, units::radian_t desiredDirection,

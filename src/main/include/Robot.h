@@ -5,6 +5,7 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+#include <frc/event/EventLoop.h>
 
 #include "RobotMap.h"
 #include "Wombat.h"
@@ -26,6 +27,10 @@ class Robot : public frc::TimedRobot {
 
  protected:
  private:
+  frc::EventLoop loop;
   behaviour::BehaviourScheduler *sched;
   RobotMap                       robotmap;
+
+  wom::Limelight *limelight;
+  wom::Swerve    *swerve;
 };
