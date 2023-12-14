@@ -45,6 +45,35 @@ namespace drivetrain {
         
     };
 
+    class GoToPose : public behaviour::Behaviour {
+      public:
+        GoToPose(wom::drivetrain::Swerve *swerve, frc::Pose3d pose);
+
+        void OnTick(units::second_t dt) override;
+
+      private:
+        wom::drivetrain::Swerve *_swerve;
+        frc::Pose3d _pose;
+    };
+
+    class FollowTrajectory : public behaviour::Behaviour {
+      public:
+        FollowTrajectory(wom::drivetrain::Swerve *swerve, wom::utils::Pathplanner *pathplanner, std::string path);
+
+        void OnTick(units::second_t dt) override;
+
+        void OnStart() override;
+
+      private:
+        wom::utils::Pathplanner *_pathplanner;
+        std::string _path;
+        wom::drivetrain::Swerve *_swerve;
+        frc::Trajectory _trajectory;
+        frc::Timer m_timer;
+    };
+
+    
+
     class TempSimSwerveDrive {
      public:
       TempSimSwerveDrive(frc::Timer *timer, frc::Field2d *field);

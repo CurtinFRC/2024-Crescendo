@@ -107,6 +107,7 @@ namespace drivetrain {
     kPose,
     kFieldRelative,
     kRobotRelative,
+    kTrajectory
   };
 
   class Swerve : public behaviour::HasBehaviour {

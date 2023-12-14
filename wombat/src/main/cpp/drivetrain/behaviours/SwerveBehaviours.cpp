@@ -23,10 +23,37 @@ void wom::drivetrain::behaviours::FieldRelativeSwerveDrive::OnTick(units::second
                                   currentPose.Rotation().Z() +
                                       units::radian_t{std::atan((_driver.GetLeftY() / _driver.GetLeftX()))}));
 
-  // _swerve->OnUpdate(dt, _swerve->GetLimelight(), desiredPose);
+  _swerve->OnUpdate(dt, _swerve->GetLimelight(), desiredPose);
 }
 
+wom::drivetrain::behaviours::GoToPose::GoToPose(wom::drivetrain::Swerve *swerve, frc::Pose3d pose)
+    : _swerve(swerve), _pose(pose) {}
 
+void wom::drivetrain::behaviours::GoToPose::OnTick(units::second_t dt) {
+  _swerve->SetState(wom::drivetrain::SwerveState::kPose);
+  frc::Pose3d currentPose = _swerve->GetLimelight()->GetPose();
+  frc::Pose3d desiredPose = _pose;
+
+  _swerve->OnUpdate(dt, _swerve->GetLimelight(), desiredPose);
+}
+
+wom::drivetrain::behaviours::FollowTrajectory::FollowTrajectory(wom::drivetrain::Swerve *swerve, wom::utils::Pathplanner *pathplanner, std::string path)
+    : _swerve(swerve), _pathplanner(pathplanner), _path(path) {}
+
+void wom::drivetrain::behaviours::FollowTrajectory::OnTick(units::second_t dt) {
+  _swerve->SetState(wom::drivetrain::SwerveState::kTrajectory);
+  frc::Pose3d currentPose = _swerve->GetLimelight()->GetPose();
+  frc::Pose3d desiredPose = frc::Pose3d(_trajectory.Sample(m_timer.Get()).pose);
+
+  _swerve->OnUpdate(dt, _swerve->GetLimelight(), desiredPose);
+}
+
+void wom::drivetrain::behaviours::FollowTrajectory::OnStart() {
+  _trajectory = _pathplanner->getTrajectory(_path);
+
+  m_timer.Reset();
+  m_timer.Start();
+}
 
 wom::drivetrain::behaviours::TempSimSwerveDrive::TempSimSwerveDrive(frc::Timer *timer, frc::Field2d *field)
     : m_timer(timer), m_field(field) {}
