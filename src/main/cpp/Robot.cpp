@@ -21,6 +21,8 @@
 // include frc::Timer
 #include <frc/Timer.h>
 
+#include "Wombat.h"
+
 
 void Robot::RobotInit() {
 
@@ -44,50 +46,18 @@ void Robot::RobotInit() {
     robotmap.swerve.SetDefaultBehaviour([this]() {
       return wom::make<wom::FieldRelativeSwerveDrive>(&robotmap.swerve, robotmap.controllers.driver);
     });
+
+    m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
+    //m_driveSim = wom::TempSimSwerveDrive();
 }
 
 void Robot::RobotPeriodic() {}
 
 void Robot::AutonomousInit() {
-    nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
-    std::shared_ptr<nt::NetworkTable> table = inst.GetTable("FMSInfo");
-
-    current_trajectory = m_pathplanner.getTrajectory(m_path_chooser.GetSelected());
-
-     // create a netowrk table for the trajectory
-    std::shared_ptr<nt::NetworkTable> trajectory_table = nt::NetworkTableInstance::GetDefault().GetTable("trajectory_path");
-    current_trajectory_table = nt::NetworkTableInstance::GetDefault().GetTable("current_trajectory");
-    current_trajectory_state_table = nt::NetworkTableInstance::GetDefault().GetTable("current_trajectory_state");
-
-    // write the trajectory to the network table
-    wom::utils::WriteTrajectory(trajectory_table, current_trajectory);
-
-    // sample the first trajectory state
-    frc::Trajectory::State desired_state = current_trajectory.Sample(0_s);
-
-    // move drivebase position to the desired state
-    m_driveSim.SetPose(wom::utils::TrajectoryStateToPose2d(desired_state));
-
-    simulation_timer.Reset();
-    simulation_timer.Start();
+  m_driveSim->SetPath(m_path_chooser.GetSelected());
 }
 void Robot::AutonomousPeriodic() {
-    m_field.SetRobotPose(m_driveSim.GetPose());
-
-    // get the current trajectory state
-    frc::Trajectory::State desired_state = current_trajectory.Sample(simulation_timer.Get());
-
-    // get the current pose of the robot
-    frc::Pose2d current_pose = m_driveSim.GetPose();
-    
-    // get the current wheel speeds
-    wom::utils::WriteTrajectoryState(current_trajectory_state_table, desired_state);
-
-    // move drivebase position to the desired state
-    m_driveSim.SetPose(wom::utils::TrajectoryStateToPose2d(desired_state));
-    
-    // update the drivebase
-    m_driveSim.Update(20_ms);
+    m_driveSim->OnUpdate();
 }
 
 void Robot::TeleopInit() {
