@@ -26,6 +26,7 @@ class Robot : public frc::TimedRobot {
 
  protected:
  private:
+  WPI_TalonFX *motor = new WPI_TalonFX(3, "Drivebase");
   behaviour::BehaviourScheduler *sched;
   RobotMap                       robotmap;
 };

@@ -12,8 +12,24 @@ wom::drivetrain::SwerveModule::SwerveModule(wom::drivetrain::SwerveModuleConfig 
       _movementPID(config.path + "/pid/movementGearbox", config.movementPID),
       _config(config),
       _state(state) {
-  // TODO! Get name the table based off module name
-  table = nt::NetworkTableInstance::GetDefault().GetTable("Swerve Module");
+  switch (_config.name) {
+    case wom::drivetrain::SwerveModuleName::FrontLeft:
+      table = nt::NetworkTableInstance::GetDefault().GetTable("Front Left");
+      break;
+    case wom::drivetrain::SwerveModuleName::FrontRight:
+      table = nt::NetworkTableInstance::GetDefault().GetTable("Front Right");
+      break;
+    case wom::drivetrain::SwerveModuleName::BackLeft:
+      table = nt::NetworkTableInstance::GetDefault().GetTable("Back Left");
+      break;
+    case wom::drivetrain::SwerveModuleName::BackRight:
+      table = nt::NetworkTableInstance::GetDefault().GetTable("Back Right");
+      break;
+    default:
+      table = NULL;
+      std::cout << "Invalid Name" << std::endl;
+      break;
+  }
 }
 
 wom::drivetrain::SwerveModuleConfig wom::drivetrain::SwerveModule::GetConfig() {
