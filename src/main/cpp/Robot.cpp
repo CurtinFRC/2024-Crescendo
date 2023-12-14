@@ -9,9 +9,8 @@ static units::second_t lastPeriodic;
 void Robot::RobotInit() {
   lastPeriodic = wom::now();
   limelight = new wom::Limelight("Limelight");
-
-
   swerve = new wom::Swerve(robotmap.swerveConfig, wom::SwerveState::kIdle, limelight);
+
   wom::BehaviourScheduler::GetInstance()->Register(swerve);
   swerve->SetDefaultBehaviour([this]() {
     return wom::make<wom::FieldRelativeSwerveDrive>(swerve, robotmap.controllers.driver);
@@ -38,9 +37,8 @@ void Robot::TeleopInit() {
   swerve->OnStart();
 }
 void Robot::TeleopPeriodic() {
-  // sched = wom::BehaviourScheduler::GetInstance();
-  // sched->InterruptAll();
-  // sched->Schedule(wom::make<wom::FieldRelativeSwerveDrive>(swerve, robotmap.controllers.driver));
+  sched = wom::BehaviourScheduler::GetInstance();
+  sched->Schedule(wom::make<wom::FieldRelativeSwerveDrive>(swerve, robotmap.controllers.driver));
 }
 
 void Robot::DisabledInit() {}

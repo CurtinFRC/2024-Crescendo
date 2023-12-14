@@ -78,6 +78,10 @@ void wom::drivetrain::SwerveModule::PIDControl(units::second_t dt, units::radian
   if (voltageRotation > 11_V) {
     voltageRotation = 11_V;
   }
+
+  if (voltageRotation < 0_V) {
+    voltageRotation = -voltageRotation;
+  }
   _config.rotationGearbox.transmission->SetVoltage(voltageRotation);
   std::cout << "Rotation Voltage" << voltageRotation.value() << std::endl;
 
@@ -86,6 +90,10 @@ void wom::drivetrain::SwerveModule::PIDControl(units::second_t dt, units::radian
   voltageMovement = _movementVelocityPID.Calculate(velocity, dt, feedforwardMovementVelocity);
   if (voltageMovement > 11_V) {
     voltageMovement = 11_V;
+  }
+
+  if (voltageMovement < 0_V) {
+    voltageMovement = -voltageMovement;
   }
   _config.movementGearbox.transmission->SetVoltage(voltageMovement);
   std::cout << "Movement Voltage" << voltageMovement.value() << std::endl;
@@ -165,24 +173,24 @@ void wom::drivetrain::Swerve::FieldRelativeControl(frc::Pose3d desiredPose, unit
   } else {
     rotation -= 45_rad;
   }
-  _config.frontLeft.SetState(wom::drivetrain::SwerveModuleState::kPID);
   _config.frontLeft.SetRotation(rotation);
   _config.frontLeft.SetMovement(movement);
-  _config.frontRight.SetState(wom::drivetrain::SwerveModuleState::kPID);
+  _config.frontLeft.SetState(wom::drivetrain::SwerveModuleState::kPID);
   _config.frontRight.SetRotation(rotation);
   _config.frontRight.SetMovement(movement);
+  _config.frontRight.SetState(wom::drivetrain::SwerveModuleState::kPID);
 
   if (rotation > 0_rad) {
     rotation -= 90_rad;
   } else {
     rotation += 90_rad;
   }
-  _config.backLeft.SetState(wom::drivetrain::SwerveModuleState::kPID);
   _config.backLeft.SetRotation(rotation);
   _config.backLeft.SetMovement(movement);
-  _config.backRight.SetState(wom::drivetrain::SwerveModuleState::kPID);
+  _config.backLeft.SetState(wom::drivetrain::SwerveModuleState::kPID);
   _config.backRight.SetRotation(rotation);
   _config.backRight.SetMovement(movement);
+  _config.backRight.SetState(wom::drivetrain::SwerveModuleState::kPID);
 }
 
 void wom::drivetrain::Swerve::OnStart() {
@@ -213,7 +221,7 @@ void wom::drivetrain::Swerve::OnUpdate(units::second_t dt) {
   }
 }
 
-void wom::drivetrain::Swerve::SetDesired(frc::Pose3d _desiredPose) {
+void wom::drivetrain::Swerve::SetDesired(frc::Pose3d _desiredPose) { //change this naming (from anna)
   desiredPose = _desiredPose;
 }
 
