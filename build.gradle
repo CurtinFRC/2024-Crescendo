@@ -119,3 +119,7 @@ subprojects {
   project.buildDir = rootProject.buildDir
 }
 
+wrapper {
+    gradleVersion = '8.5'
+    distributionType = Wrapper.DistributionType.BIN
+}
