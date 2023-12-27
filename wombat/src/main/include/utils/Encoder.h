@@ -11,6 +11,7 @@
 #include "utils/Util.h"
 
 namespace wom {
+namespace utils {
   class Encoder {
    public:
     Encoder(double encoderTicksPerRotation, double reduction, int type) : _encoderTicksPerRotation(encoderTicksPerRotation), _reduction(reduction), _type(type) {};
@@ -75,29 +76,29 @@ namespace wom {
   };
 
   class TalonSRXEncoder : public Encoder {
-   public: 
+   public:
     TalonSRXEncoder(ctre::phoenix::motorcontrol::can::TalonSRX *controller, double ticksPerRotation, double reduction = 1);
-   
+
     double GetEncoderRawTicks() const override;
     double GetEncoderTickVelocity() const override;
 
-   private: 
+   private:
     ctre::phoenix::motorcontrol::can::TalonSRX *_controller;
   };
 
   class DutyCycleEncoder : public Encoder {
-   public: 
+   public:
     DutyCycleEncoder(int channel, double ticksPerRotation = 1, double reduction = 1);
 
     double GetEncoderRawTicks() const override;
     double GetEncoderTickVelocity() const override;
 
-   private: 
+   private:
     frc::DutyCycleEncoder _dutyCycleEncoder;
   };
 
   class CanEncoder : public Encoder {
-    public: 
+    public:
       CanEncoder(int deviceNumber, double ticksPerRotation = 4095, double reduction = 1);
 
       double GetEncoderRawTicks() const override;
@@ -106,7 +107,8 @@ namespace wom {
 
       const double constantValue = 0.0;
 
-    private: 
+    private:
       CANCoder *_canEncoder;
   };
+}
 }  // namespace wom

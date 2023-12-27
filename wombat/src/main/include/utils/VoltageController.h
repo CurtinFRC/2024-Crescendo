@@ -7,6 +7,7 @@
 #include "utils/Util.h"
 
 namespace wom {
+namespace utils {
   /**
    * A VoltageController is analagous to a MotorController, but in terms of voltage instead
    * of speed.
@@ -32,7 +33,7 @@ namespace wom {
     virtual bool GetInverted() const = 0;
 
     /**
-     * Get the estimated real voltage of the output, based on the controller voltage. 
+     * Get the estimated real voltage of the output, based on the controller voltage.
      */
     units::volt_t GetEstimatedRealVoltage() const;
   };
@@ -71,4 +72,5 @@ namespace wom {
    private:
     frc::MotorController *_MotorController;
   };
+}
 }  // namespace wom

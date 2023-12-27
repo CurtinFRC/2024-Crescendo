@@ -6,7 +6,7 @@ using namespace frc;
 using namespace wom;
 
 //creates network table instatnce on shuffleboard
-void ArmConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
+void wom::subsystems::ArmConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
   table->GetEntry("armMass").SetDouble(armMass.value());
   table->GetEntry("loadMass").SetDouble(loadMass.value());
   table->GetEntry("armLength").SetDouble(armLength.value());
@@ -17,7 +17,7 @@ void ArmConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
 }
 
 //arm config is used
-Arm::Arm(ArmConfig config)
+wom::subsystems::Arm::Arm(ArmConfig config)
   : _config(config),
     _pid(config.path + "/pid", config.pidConfig),
     _velocityPID(config.path + "/velocityPID", config.velocityConfig),
@@ -26,7 +26,7 @@ Arm::Arm(ArmConfig config)
 }
 
 //the loop that allows the information to be used
-void Arm::OnUpdate(units::second_t dt) {
+void wom::subsystems::Arm::OnUpdate(units::second_t dt) {
   //sets the voltage and gets the current angle
   units::volt_t voltage = 0_V;
   auto angle = GetAngle();
@@ -62,7 +62,7 @@ void Arm::OnUpdate(units::second_t dt) {
 
   // if (
   //   (((_config.minAngle + _config.angleOffset) < 75_deg && units::math::abs(_pid.GetSetpoint() - _config.minAngle) <= 1_deg)
-    //  || ((_config.maxAngle + _config.angleOffset) > 105_deg && units::math::abs(_pid.GetSetpoint() - _config.maxAngle) <= 1_deg)) && 
+    //  || ((_config.maxAngle + _config.angleOffset) > 105_deg && units::math::abs(_pid.GetSetpoint() - _config.maxAngle) <= 1_deg)) &&
   //   units::math::abs(_pid.GetError()) <= 1_deg
   // ) {
   //   voltage = 0_V;
@@ -89,48 +89,48 @@ void Arm::OnUpdate(units::second_t dt) {
   _config.WriteNT(_table->GetSubTable("config"));
 }
 
-void Arm::SetArmSpeedLimit(double limit) {
+void wom::subsystems::Arm::SetArmSpeedLimit(double limit) {
   armLimit = limit;
 }
 
 //defines information needed for the functions and connects the states to their respective function
 
-void Arm::SetIdle() {
+void wom::subsystems::Arm::SetIdle() {
   _state = ArmState::kIdle;
 }
 
-void Arm::SetRaw(units::volt_t voltage) {
+void wom::subsystems::Arm::SetRaw(units::volt_t voltage) {
   _state = ArmState::kRaw;
   _voltage = voltage;
 }
 
-void Arm::SetAngle(units::radian_t angle) {
+void wom::subsystems::Arm::SetAngle(units::radian_t angle) {
   _state = ArmState::kAngle;
   _pid.SetSetpoint(angle);
 }
 
-void Arm::SetVelocity(units::radians_per_second_t velocity) {
+void wom::subsystems::Arm::SetVelocity(units::radians_per_second_t velocity) {
   _state = ArmState::kVelocity;
   _velocityPID.SetSetpoint(velocity);
 }
 
-ArmConfig &Arm::GetConfig() {
+wom::subsystems::ArmConfig &wom::subsystems::Arm::GetConfig() {
   return _config;
 }
 
-units::radian_t Arm::GetAngle() const {
+units::radian_t wom::subsystems::Arm::GetAngle() const {
   return _config.armEncoder.GetPosition() / 100 * 360 * 1_deg;
 }
 
-units::radians_per_second_t Arm::MaxSpeed() const {
+units::radians_per_second_t wom::subsystems::Arm::MaxSpeed() const {
   return _config.leftGearbox.motor.Speed(0_Nm, 12_V);
 }
 
-units::radians_per_second_t Arm::GetArmVelocity() const {
+units::radians_per_second_t wom::subsystems::Arm::GetArmVelocity() const {
   return _config.armEncoder.GetVelocity() / 100 * 360 * 1_deg / 60_s;
 }
 
-bool Arm::IsStable() const {
+bool wom::subsystems::Arm::IsStable() const {
   return _pid.IsStable(5_deg);
 }
 
@@ -138,7 +138,7 @@ bool Arm::IsStable() const {
 /* SIMULATION */
 // #include <units/math.h>
 
-// ::wom::sim::ArmSim::ArmSim(ArmConfig config) 
+// ::wom::sim::ArmSim::ArmSim(ArmConfig config)
 //   : config(config),
 //     angle(config.initialAngle),
 //     encoder(config.gearbox.encoder->MakeSimEncoder()),

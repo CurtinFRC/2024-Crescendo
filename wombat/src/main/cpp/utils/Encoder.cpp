@@ -1,38 +1,35 @@
 #include "utils/Encoder.h"
-#include <iostream>
 
-using namespace wom;
-
-double Encoder::GetEncoderTicks() const {
+double wom::utils::Encoder::GetEncoderTicks() const {
   return GetEncoderRawTicks();
 }
 
-double Encoder::GetEncoderTicksPerRotation() const {
+double wom::utils::Encoder::GetEncoderTicksPerRotation() const {
   return _encoderTicksPerRotation * _reduction;
 }
 
-void Encoder::ZeroEncoder() {
+void wom::utils::Encoder::ZeroEncoder() {
   _offset = GetEncoderRawTicks() * 1_rad;
 }
 
-void Encoder::SetEncoderPosition(units::degree_t position) {
+void wom::utils::Encoder::SetEncoderPosition(units::degree_t position) {
   // units::radian_t offset_turns = position - GetEncoderPosition();
   units::degree_t offset = position - (GetEncoderRawTicks() * 360 * 1_deg);
   _offset = offset;
   // _offset = -offset_turns;
 }
 
-void Encoder::SetEncoderOffset(units::radian_t offset) {
+void wom::utils::Encoder::SetEncoderOffset(units::radian_t offset) {
   _offset = offset;
   // units::turn_t offset_turns = offset;
   // _offset = offset_turns.value() * GetEncoderTicksPerRotation();
 }
 
-void Encoder::SetReduction(double reduction) {
+void wom::utils::Encoder::SetReduction(double reduction) {
   _reduction = reduction;
 }
 
-units::radian_t Encoder::GetEncoderPosition() {
+units::radian_t wom::utils::Encoder::GetEncoderPosition() {
   if (_type == 0) {
     units::turn_t n_turns{GetEncoderTicks() / GetEncoderTicksPerRotation()};
     return n_turns;
@@ -45,88 +42,86 @@ units::radian_t Encoder::GetEncoderPosition() {
   }
 }
 
-double Encoder::GetEncoderDistance() {
+double wom::utils::Encoder::GetEncoderDistance() {
   return (GetEncoderTicks() /*- _offset.value()*/) * 0.02032;
   // return (GetEncoderTicks() - _offset.value()) * 2 * 3.141592 * 0.0444754;
   // return (GetEncoderTicks() - _offset.value());
 }
 
-units::radians_per_second_t Encoder::GetEncoderAngularVelocity() {
+units::radians_per_second_t wom::utils::Encoder::GetEncoderAngularVelocity() {
   // return GetEncoderTickVelocity() / (double)GetEncoderTicksPerRotation() * 2 * 3.1415926;
   units::turns_per_second_t n_turns_per_s{GetEncoderTickVelocity() / GetEncoderTicksPerRotation()};
   return n_turns_per_s;
 }
 
-double DigitalEncoder::GetEncoderRawTicks() const {
+double wom::utils::DigitalEncoder::GetEncoderRawTicks() const {
   // Encoder.encoderType = 0;
   return _nativeEncoder.Get();
 }
 
-double DigitalEncoder::GetEncoderTickVelocity() const {
+double wom::utils::DigitalEncoder::GetEncoderTickVelocity() const {
   return _nativeEncoder.GetRate();
 }
 
-CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax *controller, double reduction)
-  : Encoder(42, reduction, 2), _encoder(controller->GetEncoder()) {}
+wom::utils::CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax *controller, double reduction)
+  : wom::utils::Encoder(42, reduction, 2), _encoder(controller->GetEncoder()) {}
 
-double CANSparkMaxEncoder::GetEncoderRawTicks() const {
+double wom::utils::CANSparkMaxEncoder::GetEncoderRawTicks() const {
   return _encoder.GetPosition() * _reduction;
 }
 
-double CANSparkMaxEncoder::GetEncoderTickVelocity() const {
+double wom::utils::CANSparkMaxEncoder::GetEncoderTickVelocity() const {
   return _encoder.GetVelocity() * GetEncoderTicksPerRotation() / 60;
 }
 
-TalonFXEncoder::TalonFXEncoder(ctre::phoenix::motorcontrol::can::TalonFX *controller, double reduction)
-  : Encoder(2048, reduction, 0), _controller(controller) {
+wom::utils::TalonFXEncoder::TalonFXEncoder(ctre::phoenix::motorcontrol::can::TalonFX *controller, double reduction)
+  : wom::utils::Encoder(2048, reduction, 0), _controller(controller) {
     controller->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::TalonFXFeedbackDevice::IntegratedSensor);
   }
 
-double TalonFXEncoder::GetEncoderRawTicks() const {
+double wom::utils::TalonFXEncoder::GetEncoderRawTicks() const {
   return _controller->GetSelectedSensorPosition();
 }
 
-double TalonFXEncoder::GetEncoderTickVelocity() const {
+double wom::utils::TalonFXEncoder::GetEncoderTickVelocity() const {
   return _controller->GetSelectedSensorVelocity() * 10;
 }
 
 
-TalonSRXEncoder::TalonSRXEncoder(ctre::phoenix::motorcontrol::can::TalonSRX *controller, double ticksPerRotation, double reduction) 
-  : Encoder(ticksPerRotation, reduction, 0), _controller(controller) {
+wom::utils::TalonSRXEncoder::TalonSRXEncoder(ctre::phoenix::motorcontrol::can::TalonSRX *controller, double ticksPerRotation, double reduction)
+  : wom::utils::Encoder(ticksPerRotation, reduction, 0), _controller(controller) {
     controller->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::TalonSRXFeedbackDevice::QuadEncoder);
   }
 
-double TalonSRXEncoder::GetEncoderRawTicks() const {
+double wom::utils::TalonSRXEncoder::GetEncoderRawTicks() const {
   return _controller->GetSelectedSensorPosition();
 }
 
-double TalonSRXEncoder::GetEncoderTickVelocity() const {
+double wom::utils::TalonSRXEncoder::GetEncoderTickVelocity() const {
   return _controller->GetSelectedSensorVelocity() * 10;
 }
 
+wom::utils::DutyCycleEncoder::DutyCycleEncoder(int channel, double ticksPerRotation, double reduction)
+  : wom::utils::Encoder(ticksPerRotation, reduction, 0), _dutyCycleEncoder(channel) {}
 
-
-DutyCycleEncoder::DutyCycleEncoder(int channel, double ticksPerRotation, double reduction) 
-  : Encoder(ticksPerRotation, reduction, 0), _dutyCycleEncoder(channel) {}
-
-double DutyCycleEncoder::GetEncoderRawTicks() const {
+double wom::utils::DutyCycleEncoder::GetEncoderRawTicks() const {
   return _dutyCycleEncoder.Get().value();
 }
 
-double DutyCycleEncoder::GetEncoderTickVelocity() const {
+double wom::utils::DutyCycleEncoder::GetEncoderTickVelocity() const {
   return 0;
 }
 
-CanEncoder::CanEncoder(int deviceNumber, double ticksPerRotation, double reduction)
-  : Encoder(ticksPerRotation, reduction, 1) {
+wom::utils::CanEncoder::CanEncoder(int deviceNumber, double ticksPerRotation, double reduction)
+  : wom::utils::Encoder(ticksPerRotation, reduction, 1) {
     _canEncoder = new CANCoder(deviceNumber, "Drivebase");
   }
 
-double CanEncoder::GetEncoderRawTicks() const {
+double wom::utils::CanEncoder::GetEncoderRawTicks() const {
   return _canEncoder->GetAbsolutePosition();
 }
 
-double CanEncoder::GetEncoderTickVelocity() const {
+double wom::utils::CanEncoder::GetEncoderTickVelocity() const {
   return _canEncoder->GetVelocity();
 }
 

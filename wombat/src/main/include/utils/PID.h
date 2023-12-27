@@ -12,6 +12,7 @@
 #include <vector>
 
 namespace wom {
+namespace utils {
   template<typename IN, typename OUT>
   struct PIDConfig {
     using in_t = units::unit_t<IN>;
@@ -64,7 +65,7 @@ namespace wom {
 
     config_t config;
 
-    PIDController(std::string path, config_t initialGains, in_t setpoint = in_t{0}) 
+    PIDController(std::string path, config_t initialGains, in_t setpoint = in_t{0})
       : config(initialGains), _setpoint(setpoint),
         _posFilter(frc::LinearFilter<typename config_t::error_t>::MovingAverage(20)),
         _velFilter(frc::LinearFilter<typename config_t::deriv_t>::MovingAverage(20)),
@@ -98,7 +99,7 @@ namespace wom {
       _integralSum += error * dt;
       if (config.izone.value() > 0 && (error > config.izone || error < -config.izone))
         _integralSum = sum_t{0};
-      
+
       typename config_t::deriv_t deriv{0};
 
       if (_iterations > 0)
@@ -157,7 +158,7 @@ namespace wom {
     in_t _last_pv{0}, _last_error{0};
 
     std::optional<in_t> _wrap_range;
-    
+
     int _iterations = 0;
 
     frc::LinearFilter<typename config_t::error_t> _posFilter;
@@ -168,4 +169,5 @@ namespace wom {
 
     std::shared_ptr<nt::NetworkTable> _table;
   };
+}
 }
