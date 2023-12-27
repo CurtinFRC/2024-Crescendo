@@ -50,3 +50,16 @@ Clean
 `./gradlew clean`
 Cleaning removes caches of your compiled code. If you do not understand an error it can often help to clean before getting help. Clean building is slower so you should not generally use it.
 
+Simulation
+----------
+**Release**
+`./gradlew :nativeSimulation`
+Runs a simulation of your code at highest optimisation.
+
+**Debug**
+`./gradlew :nativeSimulationDebug`
+Runs a debug simulation of your code, including a variety of debugging tools similar to glass but at lower optimisation.
+
+Documentation
+=============
+Our documentation for Wombat and each years codebase can be found [here](https://4788-docs.vercel.app/). It is a powerful reference for writing code using Wombat going over how to use and the implementation for everything within Wombat. It also has a variety of guides to teach you how to use a variety of things in a more tutorial style way.
