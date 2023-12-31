@@ -14,7 +14,7 @@ namespace wom {
 namespace utils {
   class Encoder {
    public:
-    Encoder(double encoderTicksPerRotation, double reduction, int type) : _encoderTicksPerRotation(encoderTicksPerRotation), _reduction(reduction), _type(type) {};
+    Encoder(double encoderTicksPerRotation, double reduction, int type) : _reduction(reduction), _encoderTicksPerRotation(encoderTicksPerRotation), _type(type) {};
     virtual double    GetEncoderRawTicks() const = 0;
     virtual double    GetEncoderTickVelocity() const = 0;  // ticks/s
     virtual void      ZeroEncoder();
@@ -32,7 +32,7 @@ namespace utils {
     units::radians_per_second_t GetEncoderAngularVelocity();   // rad/s
 
     int encoderType = 0;
-    double _reduction = 1.0;
+    double _reduction;
    private:
     double _encoderTicksPerRotation;
     units::radian_t _offset = 0_rad;
