@@ -2,14 +2,12 @@
 
 #include <networktables/NetworkTableInstance.h>
 
-using namespace wom;
-
-Shooter::Shooter(std::string path, ShooterParams params) 
-  : _params(params), _state(ShooterState::kIdle), 
-    _pid{path + "/pid", params.pid}, 
+wom::subsystems::Shooter::Shooter(std::string path, ShooterParams params)
+  : _params(params), _state(ShooterState::kIdle),
+    _pid{path + "/pid", params.pid},
     _table(nt::NetworkTableInstance::GetDefault().GetTable("shooter")) {}
 
-void Shooter::OnUpdate(units::second_t dt) {
+void wom::subsystems::Shooter::OnUpdate(units::second_t dt) {
   units::volt_t voltage{0};
   units::revolutions_per_minute_t currentSpeed = _params.gearbox.encoder->GetEncoderAngularVelocity();
 
@@ -41,44 +39,44 @@ void Shooter::OnUpdate(units::second_t dt) {
   _table->GetEntry("stable").SetBoolean(_pid.IsStable());
 }
 
-void Shooter::SetManual(units::volt_t voltage) {
+void wom::subsystems::Shooter::SetManual(units::volt_t voltage) {
   _state = ShooterState::kManual;
   _setpointManual = voltage;
 
 }
 
-void Shooter::SetPID(units::radians_per_second_t goal) {
+void wom::subsystems::Shooter::SetPID(units::radians_per_second_t goal) {
   _state = ShooterState::kPID;
   _pid.SetSetpoint(goal);
 }
 
-void Shooter::SetIdle() {
+void wom::subsystems::Shooter::SetIdle() {
   _state = ShooterState::kIdle;
 }
 
-bool Shooter::IsStable() const {
+bool wom::subsystems::Shooter::IsStable() const {
   return _pid.IsStable();
 }
 
-//Shooter Manual Set 
+//Shooter Manual Set
 
-ShooterConstant::ShooterConstant(Shooter *s, units::volt_t setpoint)
+wom::subsystems::ShooterConstant::ShooterConstant(Shooter *s, units::volt_t setpoint)
   : _shooter(s), _setpoint(setpoint) {
     Controls(_shooter);
   }
-  
-void ShooterConstant::OnTick(units::second_t dt) {
+
+void wom::subsystems::ShooterConstant::OnTick(units::second_t dt) {
   _shooter->SetManual(_setpoint);
 }
 
 // ShooterSpinup
 
-ShooterSpinup::ShooterSpinup(Shooter *s, units::radians_per_second_t speed, bool hold)
+wom::subsystems::ShooterSpinup::ShooterSpinup(Shooter *s, units::radians_per_second_t speed, bool hold)
   : _shooter(s), _speed(speed), _hold(hold) {
   Controls(_shooter);
 }
 
-void ShooterSpinup::OnTick(units::second_t dt) {
+void wom::subsystems::ShooterSpinup::OnTick(units::second_t dt) {
   _shooter->SetPID(_speed);
 
   if (!_hold && _shooter->IsStable())

@@ -3,8 +3,8 @@
   Go to Robot.cpp
 */
 
+#include "Wombat.h"
 #include "Robot.h"
-#include "utils/RobotStartup.h"
 
 WOMBAT_ROBOT_MAIN(Robot);
 

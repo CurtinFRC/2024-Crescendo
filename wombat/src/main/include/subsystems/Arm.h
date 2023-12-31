@@ -12,14 +12,15 @@
 #include <units/current.h>
 
 namespace wom {
+namespace subsystems {
   struct ArmConfig {
     std::string path;
 
-    wom::Gearbox leftGearbox;
-    wom::Gearbox rightGearbox;
+    wom::utils::Gearbox leftGearbox;
+    wom::utils::Gearbox rightGearbox;
     rev::SparkMaxRelativeEncoder armEncoder;
-    wom::PIDConfig<units::radian, units::volt> pidConfig;
-    wom::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
+    wom::utils::PIDConfig<units::radian, units::volt> pidConfig;
+    wom::utils::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
 
     units::kilogram_t armMass;
     units::kilogram_t loadMass;
@@ -50,21 +51,21 @@ namespace wom {
     void SetRaw(units::volt_t voltage);
     void SetVelocity(units::radians_per_second_t velocity);
 
-    void SetArmSpeedLimit(double limit); //units, what are they?? 
+    void SetArmSpeedLimit(double limit); //units, what are they??
 
     ArmConfig &GetConfig();
 
     units::radian_t GetAngle() const;
     units::radians_per_second_t MaxSpeed() const;
     units::radians_per_second_t GetArmVelocity() const;
-    
+
     bool IsStable() const;
   private:
     ArmConfig _config;
     ArmState _state = ArmState::kIdle;
-    wom::PIDController<units::radian, units::volt> _pid;
-    wom::PIDController<units::radians_per_second, units::volt> _velocityPID;
-    
+    wom::utils::PIDController<units::radian, units::volt> _pid;
+    wom::utils::PIDController<units::radians_per_second, units::volt> _velocityPID;
+
     std::shared_ptr<nt::NetworkTable> _table;
 
     double armLimit = 0.4;
@@ -72,4 +73,5 @@ namespace wom {
 
     units::volt_t _voltage{0};
   };
+}
 };
