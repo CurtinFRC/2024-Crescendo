@@ -8,9 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Fetch all history and metadata
-        run: |
-          git checkout -b pr
-          git branch -f master origin/master
+        run: git checkout -b pr
       - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
