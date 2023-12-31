@@ -1,8 +1,6 @@
 name: Lint and Format
 
-on:
-  pull_request:
-  push:
+on: [pull_request, push]
 
 jobs:
   name: "wpiformat"
