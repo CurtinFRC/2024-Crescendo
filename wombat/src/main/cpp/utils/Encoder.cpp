@@ -4,6 +4,12 @@
 
 #include "utils/Encoder.h"
 
+wom::utils::Encoder::Encoder(double encoderTicksPerRotation, int type,
+                             double reduction)
+    : _reduction(reduction),
+      _encoderTicksPerRotation(encoderTicksPerRotation),
+      _type(type) {}
+
 double wom::utils::Encoder::GetEncoderTicks() const {
   return GetEncoderRawTicks();
 }
