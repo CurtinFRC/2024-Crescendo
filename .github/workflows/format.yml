@@ -1,9 +1,9 @@
 name: Lint and Format
 
-on: [pull_request, push]
+on: [push, pull_request]
 
 jobs:
-  name: "wpiformat"
+  wpiformat:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
