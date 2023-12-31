@@ -11,6 +11,8 @@
 #include <units/angle.h>
 #include <units/angular_velocity.h>
 
+#include <string>
+
 #include "utils/Util.h"
 
 namespace wom {
@@ -113,7 +115,7 @@ class DutyCycleEncoder : public Encoder {
 class CanEncoder : public Encoder {
  public:
   CanEncoder(int deviceNumber, double ticksPerRotation = 4095,
-             double reduction = 1);
+             double reduction = 1, std::string name = "Drivebase");
 
   double GetEncoderRawTicks() const override;
   double GetEncoderTickVelocity() const override;

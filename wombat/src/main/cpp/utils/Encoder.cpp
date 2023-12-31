@@ -128,9 +128,9 @@ double wom::utils::DutyCycleEncoder::GetEncoderTickVelocity() const {
 }
 
 wom::utils::CanEncoder::CanEncoder(int deviceNumber, double ticksPerRotation,
-                                   double reduction)
+                                   double reduction, std::string name)
     : wom::utils::Encoder(ticksPerRotation, reduction, 1) {
-  _canEncoder = new CANCoder(deviceNumber, "Drivebase");
+  _canEncoder = new CANCoder(deviceNumber, name);
 }
 
 double wom::utils::CanEncoder::GetEncoderRawTicks() const {
