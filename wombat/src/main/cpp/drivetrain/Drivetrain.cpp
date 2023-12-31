@@ -1,26 +1,37 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include "drivetrain/Drivetrain.h"
 
 using namespace frc;
 using namespace units;
 
-wom::drivetrain::Drivetrain::Drivetrain(DrivetrainConfig *config, XboxController &driver): _config(config), _driver(driver) {}
+wom::drivetrain::Drivetrain::Drivetrain(DrivetrainConfig* config,
+                                        XboxController& driver)
+    : _config(config), _driver(driver) {}
 wom::drivetrain::Drivetrain::~Drivetrain() {}
 
-wom::drivetrain::DrivetrainConfig *wom::drivetrain::Drivetrain::GetConfig() { return _config; }
-wom::drivetrain::DrivetrainState wom::drivetrain::Drivetrain::GetState() { return _state; }
+wom::drivetrain::DrivetrainConfig* wom::drivetrain::Drivetrain::GetConfig() {
+  return _config;
+}
+wom::drivetrain::DrivetrainState wom::drivetrain::Drivetrain::GetState() {
+  return _state;
+}
 
-void wom::drivetrain::Drivetrain::SetState(DrivetrainState state) { _state = state; }
+void wom::drivetrain::Drivetrain::SetState(DrivetrainState state) {
+  _state = state;
+}
 
 void wom::drivetrain::Drivetrain::OnStart() {
   std::cout << "Starting Tank" << std::endl;
 }
 
 void wom::drivetrain::Drivetrain::OnUpdate(second_t dt) {
-  switch(_state) {
+  switch (_state) {
     case DrivetrainState::kIdle:
       break;
-    case DrivetrainState::kTank:
-      {
+    case DrivetrainState::kTank: {
       double rightSpeed = wom::utils::deadzone(_driver.GetRightY());
       double leftSpeed = wom::utils::deadzone(_driver.GetLeftY());
       _config->left1.transmission->SetVoltage(leftSpeed * maxVolts);
@@ -30,7 +41,7 @@ void wom::drivetrain::Drivetrain::OnUpdate(second_t dt) {
       _config->right2.transmission->SetVoltage(rightSpeed * maxVolts);
       _config->right3.transmission->SetVoltage(rightSpeed * maxVolts);
       break;
-      }
+    }
     case DrivetrainState::kAuto:
       break;
   }
