@@ -3,31 +3,30 @@
 
 #include <frc/RobotController.h>
 
-using namespace wom;
-
-units::volt_t VoltageController::GetEstimatedRealVoltage() const {
+units::volt_t wom::utils::VoltageController::GetEstimatedRealVoltage() const {
   units::volt_t vb = frc::RobotController::GetBatteryVoltage();
   return units::math::min(units::math::max(-vb, GetVoltage()), vb);
 }
 
-MotorVoltageController::MotorVoltageController(frc::MotorController *MotorController) : _MotorController(MotorController) {}
+wom::utils::VoltageController::VoltageController(frc::MotorController *MotorController) : _MotorController(MotorController)
+{}
 
-void MotorVoltageController::SetVoltage(units::volt_t voltage) {
+void wom::utils::VoltageController::SetVoltage(units::volt_t voltage) {
   _MotorController->Set(voltage / GetBusVoltage());
 }
 
-units::volt_t MotorVoltageController::GetVoltage() const {
+units::volt_t wom::utils::VoltageController::GetVoltage() const {
   return _MotorController->Get() * GetBusVoltage();
 }
 
-units::volt_t MotorVoltageController::GetBusVoltage() const {
+units::volt_t wom::utils::VoltageController::GetBusVoltage() const {
   return frc::RobotController::GetInputVoltage() * 1_V;
 }
 
-void MotorVoltageController::SetInverted(bool invert) {
+void wom::utils::VoltageController::SetInverted(bool invert) {
   _MotorController->SetInverted(invert);
 }
 
-bool MotorVoltageController::GetInverted() const {
+bool wom::utils::VoltageController::GetInverted() const {
   return frc::RobotController::GetInputVoltage();
 }

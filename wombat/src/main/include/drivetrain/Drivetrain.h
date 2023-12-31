@@ -12,16 +12,17 @@
 #include <frc/XboxController.h>
 
 namespace wom {
+namespace drivetrain {
   // TODO PID
   struct DrivetrainConfig {
     std::string path;
 
-    wom::Gearbox left1;
-    wom::Gearbox left2;
-    wom::Gearbox left3;
-    wom::Gearbox right1;
-    wom::Gearbox right2;
-    wom::Gearbox right3;
+    wom::utils::Gearbox left1;
+    wom::utils::Gearbox left2;
+    wom::utils::Gearbox left3;
+    wom::utils::Gearbox right1;
+    wom::utils::Gearbox right2;
+    wom::utils::Gearbox right3;
   };
 
   enum DrivetrainState {
@@ -35,7 +36,7 @@ namespace wom {
     Drivetrain(DrivetrainConfig *config, frc::XboxController &driver);
     ~Drivetrain();
 
-    DrivetrainConfig *GetConfig(); DrivetrainState GetState(); 
+    DrivetrainConfig *GetConfig(); DrivetrainState GetState();
 
     void SetState(DrivetrainState state);
 
@@ -49,5 +50,6 @@ namespace wom {
     frc::XboxController &_driver;
     units::volt_t maxVolts = 9_V;
   };
+}
 }
 
