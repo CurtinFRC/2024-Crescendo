@@ -1,5 +1,8 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include "utils/VoltageController.h"
-#include <frc/RobotController.h>
 
 #include <frc/RobotController.h>
 
@@ -8,8 +11,9 @@ units::volt_t wom::utils::VoltageController::GetEstimatedRealVoltage() const {
   return units::math::min(units::math::max(-vb, GetVoltage()), vb);
 }
 
-wom::utils::VoltageController::VoltageController(frc::MotorController *MotorController) : _MotorController(MotorController)
-{}
+wom::utils::VoltageController::VoltageController(
+    frc::MotorController* MotorController)
+    : _MotorController(MotorController) {}
 
 void wom::utils::VoltageController::SetVoltage(units::volt_t voltage) {
   _MotorController->Set(voltage / GetBusVoltage());

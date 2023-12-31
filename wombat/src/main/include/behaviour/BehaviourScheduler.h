@@ -1,6 +1,11 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <mutex>
+#include <vector>
 
 #include "Behaviour.h"
 #include "HasBehaviour.h"
@@ -23,13 +28,13 @@ class BehaviourScheduler {
   /**
    * @return BehaviourScheduler* The global instance of the BehaviourScheduler
    */
-  static BehaviourScheduler *GetInstance();
+  static BehaviourScheduler* GetInstance();
 
   /**
    * Register a system with the behaviour scheduler. A system must be registered
    * for it to be controlled by behaviours.
    */
-  void Register(HasBehaviour *system);
+  void Register(HasBehaviour* system);
 
   /**
    * Schedule a behaviour, interrupting all behaviours currently running that
@@ -49,8 +54,8 @@ class BehaviourScheduler {
   void InterruptAll();
 
  private:
-  std::vector<HasBehaviour *> _systems;
-  std::recursive_mutex        _active_mtx;
-  std::vector<std::thread>    _threads;
+  std::vector<HasBehaviour*> _systems;
+  std::recursive_mutex _active_mtx;
+  std::vector<std::thread> _threads;
 };
 }  // namespace behaviour

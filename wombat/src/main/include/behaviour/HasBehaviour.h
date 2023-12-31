@@ -1,3 +1,7 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <functional>
@@ -25,8 +29,9 @@ class HasBehaviour {
   std::shared_ptr<Behaviour> GetActiveBehaviour();
 
  protected:
-  std::shared_ptr<Behaviour>                      _active_behaviour{nullptr};
-  std::function<std::shared_ptr<Behaviour>(void)> _default_behaviour_producer{nullptr};
+  std::shared_ptr<Behaviour> _active_behaviour{nullptr};
+  std::function<std::shared_ptr<Behaviour>(void)> _default_behaviour_producer{
+      nullptr};
 
  private:
   friend class BehaviourScheduler;

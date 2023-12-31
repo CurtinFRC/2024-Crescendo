@@ -1,3 +1,7 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include "behaviour/BehaviourScheduler.h"
 
 using namespace behaviour;
@@ -5,24 +9,25 @@ using namespace behaviour;
 BehaviourScheduler::BehaviourScheduler() {}
 
 BehaviourScheduler::~BehaviourScheduler() {
-  for (HasBehaviour *sys : _systems) {
-    if (sys->_active_behaviour) sys->_active_behaviour->Interrupt();
+  for (HasBehaviour* sys : _systems) {
+    if (sys->_active_behaviour)
+      sys->_active_behaviour->Interrupt();
   }
 
-  for (auto &t : _threads) {
+  for (auto& t : _threads) {
     t.join();
   }
 }
 
-BehaviourScheduler *_scheduler_instance;
+BehaviourScheduler* _scheduler_instance;
 
-BehaviourScheduler *BehaviourScheduler::GetInstance() {
+BehaviourScheduler* BehaviourScheduler::GetInstance() {
   if (_scheduler_instance == nullptr)
     _scheduler_instance = new BehaviourScheduler();
   return _scheduler_instance;
 }
 
-void BehaviourScheduler::Register(HasBehaviour *system) {
+void BehaviourScheduler::Register(HasBehaviour* system) {
   _systems.push_back(system);
 }
 
@@ -33,7 +38,7 @@ void BehaviourScheduler::Schedule(Behaviour::ptr behaviour) {
 
   std::lock_guard<std::recursive_mutex> lk(_active_mtx);
 
-  for (HasBehaviour *sys : behaviour->GetControlled()) {
+  for (HasBehaviour* sys : behaviour->GetControlled()) {
     if (sys->_active_behaviour != nullptr)
       sys->_active_behaviour->Interrupt();
     sys->_active_behaviour = behaviour;
@@ -48,14 +53,14 @@ void BehaviourScheduler::Schedule(Behaviour::ptr behaviour) {
         behaviour->Tick();
       }
       std::this_thread::sleep_for(std::chrono::milliseconds(
-          (int64_t)(behaviour->GetPeriod().value() * 1000)));
+          static_cast<int64_t>(behaviour->GetPeriod().value() * 1000)));
     }
   });
 }
 
 void BehaviourScheduler::Tick() {
   std::lock_guard<std::recursive_mutex> lk(_active_mtx);
-  for (HasBehaviour *sys : _systems) {
+  for (HasBehaviour* sys : _systems) {
     if (sys->_active_behaviour != nullptr) {
       if (sys->_active_behaviour->IsFinished()) {
         if (sys->_default_behaviour_producer == nullptr) {
@@ -72,7 +77,7 @@ void BehaviourScheduler::Tick() {
 
 void BehaviourScheduler::InterruptAll() {
   std::lock_guard<std::recursive_mutex> lk(_active_mtx);
-  for (HasBehaviour *sys : _systems) {
+  for (HasBehaviour* sys : _systems) {
     if (sys->_active_behaviour)
       sys->_active_behaviour->Interrupt();
   }

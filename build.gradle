@@ -2,15 +2,6 @@ plugins {
     id "cpp"
     id "google-test-test-suite"
     id "edu.wpi.first.GradleRIO" version "2023.4.3"
-        id 'org.ec4j.editorconfig' version '0.0.3'
-}
-
-editorconfig {
-
-   includes = ['src/**', 'build.gradle', 'settings.gradle']
-
-   excludes = ['gradlew', 'LICENSE']
-
 }
 
 // Define my targets (RoboRIO) and artifacts (deployable files)

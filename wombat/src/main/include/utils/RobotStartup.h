@@ -1,8 +1,13 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <frc/RobotBase.h>
-#include <iostream>
+
 #include <functional>
+#include <iostream>
 
 namespace wom {
 namespace utils {
@@ -18,9 +23,12 @@ int StartRobot() {
 }
 
 #ifndef RUNNING_FRC_TESTS
-#define WOMBAT_ROBOT_MAIN(RobotClz) int main() { wom::StartRobot<RobotClz>(); }
+#define WOMBAT_ROBOT_MAIN(RobotClz) \
+  int main() {                      \
+    wom::StartRobot<RobotClz>();    \
+  }
 #else
 #define WOMBAT_ROBOT_MAIN(RobotClz)
 #endif
-}
-} // ns wom
+}  // namespace utils
+}  // namespace wom
