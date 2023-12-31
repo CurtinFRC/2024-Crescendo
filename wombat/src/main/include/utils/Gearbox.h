@@ -1,12 +1,17 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
-#include "utils/Encoder.h"
-#include "VoltageController.h"
 #include <frc/system/plant/DCMotor.h>
+
+#include "VoltageController.h"
+#include "utils/Encoder.h"
 
 namespace wom {
 namespace utils {
-  using DCMotor = frc::DCMotor;
+using DCMotor = frc::DCMotor;
 /**
  * Struct for motor and encoder pairs.
  *
@@ -14,21 +19,20 @@ namespace utils {
  * so that both Spark + Encoder and Talon SRX are treated the same.
  */
 struct Gearbox {
-
   /**
    * The VoltageController (Motor Controller). May not be null.
    */
-  VoltageController *transmission;
+  VoltageController* transmission;
 
   /**
    * The Encoder. May be null, depending on the consumer of this structure.
    */
-  Encoder *encoder = nullptr;
+  Encoder* encoder = nullptr;
 
   /**
    * The motor being used. By default, this is a dual CIM.
    */
   frc::DCMotor motor = frc::DCMotor::CIM(2);
 };
-}
-} //ns wom
+}  // namespace utils
+}  // namespace wom

@@ -1,3 +1,7 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <frc/RobotController.h>
@@ -13,7 +17,9 @@
 #include <mutex>
 #include <string>
 #include <thread>
+#include <utility>
 #include <variant>
+#include <vector>
 
 #include "HasBehaviour.h"
 
@@ -42,7 +48,7 @@ class Behaviour : public std::enable_shared_from_this<Behaviour> {
  public:
   using ptr = std::shared_ptr<Behaviour>;
 
-  Behaviour(std::string           name   = "<unnamed behaviour>",
+  Behaviour(std::string name = "<unnamed behaviour>",
             units::time::second_t period = 20_ms);
   ~Behaviour();
 
@@ -54,7 +60,7 @@ class Behaviour : public std::enable_shared_from_this<Behaviour> {
   /**
    * Called when the Behaviour first starts
    */
-  virtual void OnStart(){};
+  virtual void OnStart() {}
 
   /**
    * Called periodically as the Behaviour runs
@@ -66,7 +72,7 @@ class Behaviour : public std::enable_shared_from_this<Behaviour> {
   /**
    * Called when the Behaviour stops running
    */
-  virtual void OnStop(){};
+  virtual void OnStop() {}
 
   /**
    * Set the period of the Behaviour. Note this only affects the Behaviour
@@ -91,12 +97,12 @@ class Behaviour : public std::enable_shared_from_this<Behaviour> {
    * output, a demand, or some other controlling method. When Behaviours run,
    * only one Behaviour at a time may have control over a system.
    */
-  void Controls(HasBehaviour *sys);
+  void Controls(HasBehaviour* sys);
 
   /**
    * Inherit controlled systems from another Behaviour.
    */
-  void Inherit(Behaviour &bhvr);
+  void Inherit(Behaviour& bhvr);
 
   /**
    * Set a timeout on this Behaviour. If the Behaviour runs longer than the
@@ -108,7 +114,7 @@ class Behaviour : public std::enable_shared_from_this<Behaviour> {
    * @return wpi::SmallPtrSetImpl<HasBehaviour *>& The systems controlled by
    * this behaviour.
    */
-  wpi::SmallPtrSetImpl<HasBehaviour *> &GetControlled();
+  wpi::SmallPtrSetImpl<HasBehaviour*>& GetControlled();
 
   /**
    * @return BehaviourState The current state of the behaviour
@@ -149,18 +155,17 @@ class Behaviour : public std::enable_shared_from_this<Behaviour> {
    */
   Behaviour::ptr Until(Behaviour::ptr other);
 
-
  private:
   void Stop(BehaviourState new_state);
 
-  std::string                 _bhvr_name;
-  units::time::second_t       _bhvr_period = 20_ms;
+  std::string _bhvr_name;
+  units::time::second_t _bhvr_period = 20_ms;
   std::atomic<BehaviourState> _bhvr_state;
 
-  wpi::SmallSet<HasBehaviour *, 8> _bhvr_controls;
+  wpi::SmallSet<HasBehaviour*, 8> _bhvr_controls;
 
-  double                _bhvr_time    = 0;
-  units::time::second_t _bhvr_timer   = 0_s;
+  double _bhvr_time = 0;
+  units::time::second_t _bhvr_timer = 0_s;
   units::time::second_t _bhvr_timeout = -1_s;
 };
 
@@ -168,7 +173,7 @@ class Behaviour : public std::enable_shared_from_this<Behaviour> {
  * Shorthand function to create a shared_ptr for a Behaviour.
  */
 template <class T, class... Args>
-std::shared_ptr<T> make(Args &&...args) {
+std::shared_ptr<T> make(Args&&... args) {
   return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
@@ -206,8 +211,8 @@ inline std::shared_ptr<SequentialBehaviour> operator<<(
 
 class DuplicateControlException : public std::exception {
  public:
-  DuplicateControlException(const std::string &msg) : _msg(msg) {}
-  const char *what() const noexcept override { return _msg.c_str(); }
+  explicit DuplicateControlException(const std::string& msg) : _msg(msg) {}
+  const char* what() const noexcept override { return _msg.c_str(); }
 
  private:
   std::string _msg;
@@ -222,7 +227,7 @@ enum class ConcurrentBehaviourReducer { ALL, ANY, FIRST };
  */
 class ConcurrentBehaviour : public Behaviour {
  public:
-  ConcurrentBehaviour(ConcurrentBehaviourReducer reducer);
+  explicit ConcurrentBehaviour(ConcurrentBehaviourReducer reducer);
 
   void Add(Behaviour::ptr behaviour);
 
@@ -233,11 +238,11 @@ class ConcurrentBehaviour : public Behaviour {
   void OnStop() override;
 
  private:
-  ConcurrentBehaviourReducer              _reducer;
+  ConcurrentBehaviourReducer _reducer;
   std::vector<std::shared_ptr<Behaviour>> _children;
-  std::mutex                              _children_finished_mtx;
-  std::vector<bool>                       _children_finished;
-  std::vector<std::thread>                _threads;
+  std::mutex _children_finished_mtx;
+  std::vector<bool> _children_finished;
+  std::vector<std::thread> _threads;
 };
 
 /**
@@ -277,12 +282,12 @@ struct If : public Behaviour {
    * @param condition The condition to check, called when the behaviour is
    * scheduled.
    */
-  If(std::function<bool()> condition);
+  explicit If(std::function<bool()> condition);
   /**
    * Create a new If decision behaviour
    * @param v The condition to check
    */
-  If(bool v);
+  explicit If(bool v);
 
   /**
    * Set the behaviour to be called if the condition is true
@@ -299,8 +304,8 @@ struct If : public Behaviour {
 
  private:
   std::function<bool()> _condition;
-  bool                  _value;
-  Behaviour::ptr        _then, _else;
+  bool _value;
+  Behaviour::ptr _then, _else;
 };
 
 /**
@@ -316,12 +321,12 @@ struct Switch : public Behaviour {
    * Create a new Switch behaviour, with a given parameter
    * @param fn The function yielding the parameter, called in OnTick
    */
-  Switch(std::function<T()> fn) : _fn(fn) {}
+  explicit Switch(std::function<T()> fn) : _fn(fn) {}
   /**
    * Create a new Switch behaviour, with a given parameter
    * @param v The parameter on which decisions are made
    */
-  Switch(T v) : Switch([v]() { return v; }) {}
+  explicit Switch(T v) : Switch([v]() { return v; }) {}
 
   /**
    * Add a new option to the Switch chain.
@@ -329,8 +334,8 @@ struct Switch : public Behaviour {
    * @param condition The function yielding true if this is the correct option
    * @param b The behaviour to call if this option is provided.
    */
-  std::shared_ptr<Switch> When(std::function<bool(T &)> condition,
-                               Behaviour::ptr           b) {
+  std::shared_ptr<Switch> When(std::function<bool(T&)> condition,
+                               Behaviour::ptr b) {
     _options.push_back(std::pair(condition, b));
     Inherit(*b);
     return std::reinterpret_pointer_cast<Switch<T>>(shared_from_this());
@@ -343,7 +348,7 @@ struct Switch : public Behaviour {
    * @param b The behaviour to call if this option is provided.
    */
   std::shared_ptr<Switch> When(T value, Behaviour::ptr b) {
-    return When([value](T &v) { return value == v; }, b);
+    return When([value](T& v) { return value == v; }, b);
   }
 
   /**
@@ -351,14 +356,14 @@ struct Switch : public Behaviour {
    * @param b The behaviour to call if no other When's match.
    */
   std::shared_ptr<Switch> Otherwise(Behaviour::ptr b = nullptr) {
-    return When([](T &v) { return true; }, b);
+    return When([](T& v) { return true; }, b);
   }
 
   void OnTick(units::time::second_t dt) override {
     T val = _fn();
 
     if (!_locked) {
-      for (auto &opt : _options) {
+      for (auto& opt : _options) {
         if (opt.first(val)) {
           _locked = opt.second;
 
@@ -378,7 +383,7 @@ struct Switch : public Behaviour {
 
   void OnStop() override {
     if (GetBehaviourState() != BehaviourState::DONE) {
-      for (auto &opt : _options) {
+      for (auto& opt : _options) {
         opt.second->Interrupt();
       }
     }
@@ -386,8 +391,8 @@ struct Switch : public Behaviour {
 
  private:
   std::function<T()> _fn;
-  wpi::SmallVector<std::pair<std::function<bool(T &)>, Behaviour::ptr>, 4>
-                 _options;
+  wpi::SmallVector<std::pair<std::function<bool(T&)>, Behaviour::ptr>, 4>
+      _options;
   Behaviour::ptr _locked = nullptr;
 };
 
@@ -396,7 +401,7 @@ struct Switch : public Behaviour {
  * provided and is instead based purely on predicates.
  */
 struct Decide : public Switch<std::monostate> {
-  Decide() : Switch(std::monostate{}){};
+  Decide() : Switch(std::monostate{}) {}
 
   /**
    * Add a new option to the Switch chain.
@@ -405,7 +410,7 @@ struct Decide : public Switch<std::monostate> {
    * @param b The behaviour to call if this option is provided.
    */
   std::shared_ptr<Decide> When(std::function<bool()> condition,
-                               Behaviour::ptr        b) {
+                               Behaviour::ptr b) {
     return std::reinterpret_pointer_cast<Decide>(
         Switch::When([condition](auto) { return condition(); }, b));
   }
@@ -420,7 +425,7 @@ struct WaitFor : public Behaviour {
    * Create a new WaitFor behaviour
    * @param predicate The condition predicate
    */
-  WaitFor(std::function<bool()> predicate);
+  explicit WaitFor(std::function<bool()> predicate);
 
   void OnTick(units::time::second_t dt) override;
 
@@ -437,27 +442,28 @@ struct WaitTime : public Behaviour {
    * Create a new WaitTime behaviour
    * @param time The time period to wait
    */
-  WaitTime(units::time::second_t time);
+  explicit WaitTime(units::time::second_t time);
 
   /**
    * Create a new WaitTime behaviour
    * @param time_fn The time period to wait, evaluated at OnStart
    */
-  WaitTime(std::function<units::time::second_t()> time_fn);
+  explicit WaitTime(std::function<units::time::second_t()> time_fn);
 
   void OnStart() override;
   void OnTick(units::time::second_t dt) override;
 
  private:
   std::function<units::time::second_t()> _time_fn;
-  units::time::second_t                  _time;
+  units::time::second_t _time;
 };
 
 struct Print : public Behaviour {
  public:
-  Print(std::string message);
+  explicit Print(std::string message);
 
   void OnTick(units::time::second_t dt) override;
+
  private:
   std::string _message;
 };
