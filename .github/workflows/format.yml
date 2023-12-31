@@ -1,12 +1,21 @@
 name: Lint and Format
 
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
 
 jobs:
   wpiformat:
+    name: "wpiformat"
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch all history and metadata
+        run: |
+          git checkout -b pr
+          git branch -f master origin/master;
       - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
