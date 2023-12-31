@@ -14,6 +14,7 @@
 #include <units/time.h>
 
 namespace wom {
+namespace utils {
   template<typename T>
   T&& invert(T &&system) {
     system.SetInverted(true);
@@ -35,16 +36,16 @@ namespace wom {
           this->_onUpdate(event.GetValueEventData()->value);
         }));
       }
-    
-    NTBound(const NTBound &other) 
+
+    NTBound(const NTBound &other)
       : _table(other._table), _entry(other._entry), _onUpdate(other._onUpdate), _name(other._name) {
-      
+
       _listener = _table->AddListener(_name, nt::EventFlags::kValueAll, ([this](nt::NetworkTable *table, std::string_view key, const nt::Event &event) {
         std::cout << "NT UPDATE" << std::endl;
         this->_onUpdate(event.GetValueEventData()->value);
       }));
     }
-    
+
     ~NTBound() {
       _table->RemoveListener(_listener);
     }
@@ -74,4 +75,5 @@ namespace wom {
 
   double deadzone(double val, double deadzone = 0.05);
   double spow2(double val);
+}
 }

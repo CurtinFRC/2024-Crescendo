@@ -1,12 +1,13 @@
-#pragma once 
+#pragma once
 
 #include <frc/RobotBase.h>
 #include <iostream>
 #include <functional>
-namespace wom {
 
+namespace wom {
+namespace utils {
 class RobotStartup {
- public: 
+ public:
   static void Start(std::function<int()> func);
 };
 
@@ -18,8 +19,8 @@ int StartRobot() {
 
 #ifndef RUNNING_FRC_TESTS
 #define WOMBAT_ROBOT_MAIN(RobotClz) int main() { wom::StartRobot<RobotClz>(); }
-#else 
+#else
 #define WOMBAT_ROBOT_MAIN(RobotClz)
 #endif
-
+}
 } // ns wom
