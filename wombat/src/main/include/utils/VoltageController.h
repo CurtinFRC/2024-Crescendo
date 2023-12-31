@@ -14,60 +14,46 @@ namespace utils {
    */
   class VoltageController {
    public:
+    VoltageController(frc::MotorController *MotorController);
     /**
      * Set the voltage of the output.
      */
-    virtual void SetVoltage(units::volt_t voltage) = 0;
+    void SetVoltage(units::volt_t voltage);
     /**
      * Get the voltage of the output.
      */
-    virtual units::volt_t GetVoltage() const = 0;
+    units::volt_t GetVoltage() const;
 
     /**
      * Set the output as inverted.
      */
-    virtual void SetInverted(bool invert) = 0;
+    void SetInverted(bool invert);
     /**
      * Get whether the output is inverted
      */
-    virtual bool GetInverted() const = 0;
+    bool GetInverted() const;
 
     /**
      * Get the estimated real voltage of the output, based on the controller voltage.
      */
     units::volt_t GetEstimatedRealVoltage() const;
-  };
-
-  /**
-   * The MotorVoltageController is an adapter for an frc::MotorController to
-   * a VoltageController.
-   */
-  class MotorVoltageController : public VoltageController {
-   public:
-    MotorVoltageController(frc::MotorController *MotorController);
-
-    void SetVoltage(units::volt_t voltage) override;
-    units::volt_t GetVoltage() const override;
-
-    void SetInverted(bool invert) override;
-    bool GetInverted() const override;
 
     units::volt_t GetBusVoltage() const;
 
-    /**
-     * Create a MotorVoltageController with a given frc::MotorController
-     * subclass. Please note that this creates an unsafe pointer (will never dealloc)
-     */
-    template<typename T, typename ...Args>
-    static MotorVoltageController Of(Args& ...args) {
-      T *t = new T(args...);  // Be warned, does not deallocate!
-      return MotorVoltageController{t};
-    }
+  /**
+  * Create a MotorVoltageController with a given frc::MotorController
+  * subclass. Please note that this creates an unsafe pointer (will never dealloc)
+  */
+  template<typename T, typename ...Args>
+  static VoltageController Of(Args& ...args) {
+    T *t = new T(args...);  // Be warned, does not deallocate!
+    return VoltageController{t};
+  }
 
-    template<typename ...Args>
-    static MotorVoltageController Group(Args& ...args) {
-      return Of<frc::MotorControllerGroup>(args...);
-    }
+  template<typename ...Args>
+  static VoltageController Group(Args& ...args) {
+   return Of<frc::MotorControllerGroup>(args...);
+  }
 
    private:
     frc::MotorController *_MotorController;
