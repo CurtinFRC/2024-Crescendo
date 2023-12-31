@@ -55,7 +55,6 @@ units::radians_per_second_t wom::utils::Encoder::GetEncoderAngularVelocity() {
 }
 
 double wom::utils::DigitalEncoder::GetEncoderRawTicks() const {
-  // Encoder.encoderType = 0;
   return _nativeEncoder.Get();
 }
 

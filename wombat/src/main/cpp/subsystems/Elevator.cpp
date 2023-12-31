@@ -14,7 +14,7 @@ wom::subsystems::Elevator::Elevator(ElevatorConfig config)
   _pid{config.path + "/pid", config.pid},
   _velocityPID{config.path + "/velocityPID", config.velocityPID},
   _table(nt::NetworkTableInstance::GetDefault().GetTable(config.path)) {
-  // _config.leftGearbox.encoder->SetEncoderPosition(_config.initialHeight / _config.radius * 1_rad);
+  _config.leftGearbox.encoder->SetEncoderPosition(_config.initialHeight / _config.radius * 1_rad);
 }
 
 void wom::subsystems::Elevator::OnUpdate(units::second_t dt) {

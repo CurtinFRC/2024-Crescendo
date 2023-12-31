@@ -60,14 +60,6 @@ void wom::subsystems::Arm::OnUpdate(units::second_t dt) {
       break;
   }
 
-  // if (
-  //   (((_config.minAngle + _config.angleOffset) < 75_deg && units::math::abs(_pid.GetSetpoint() - _config.minAngle) <= 1_deg)
-    //  || ((_config.maxAngle + _config.angleOffset) > 105_deg && units::math::abs(_pid.GetSetpoint() - _config.maxAngle) <= 1_deg)) &&
-  //   units::math::abs(_pid.GetError()) <= 1_deg
-  // ) {
-  //   voltage = 0_V;
-  // }
-
   voltage *= armLimit;
 
   // units::newton_meter_t torqueLimit = 10_kg * 1.4_m * 6_mps_sq;
