@@ -19,10 +19,8 @@ namespace wom {
 namespace utils {
 class Encoder {
  public:
-  Encoder(double encoderTicksPerRotation, double reduction, int type)
-      : _reduction(reduction),
-        _encoderTicksPerRotation(encoderTicksPerRotation),
-        _type(type) {}
+  Encoder(double encoderTicksPerRotation, int type, double reduction = 1.0);
+
   virtual double GetEncoderRawTicks() const = 0;
   virtual double GetEncoderTickVelocity() const = 0;  // ticks/s
   virtual void ZeroEncoder();
