@@ -11,8 +11,6 @@
 #include <units/angle.h>
 #include <units/angular_velocity.h>
 
-#include "utils/Util.h"
-
 namespace wom {
 namespace utils {
 class Encoder {
