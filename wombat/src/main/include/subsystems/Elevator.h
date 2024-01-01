@@ -14,7 +14,6 @@
 #include <memory>
 #include <string>
 
-#include "behaviour/Behaviour.h"
 #include "behaviour/HasBehaviour.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"

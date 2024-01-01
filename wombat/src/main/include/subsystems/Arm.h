@@ -14,7 +14,6 @@
 #include <string>
 
 #include "behaviour/HasBehaviour.h"
-#include "utils/Encoder.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
 
