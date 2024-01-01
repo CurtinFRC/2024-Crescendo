@@ -4,8 +4,9 @@
 
 #include "vision/Limelight.h"
 
-#include "utils/Util.h"
 #include <iostream>
+
+#include "utils/Util.h"
 
 wom::vision::Limelight::Limelight(std::string limelightName)
     : _limelightName(limelightName) {}
