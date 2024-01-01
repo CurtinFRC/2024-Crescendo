@@ -9,7 +9,6 @@
 #include <networktables/NetworkTable.h>
 #include <units/time.h>
 
-#include <cmath>
 #include <functional>
 #include <iostream>
 #include <memory>
