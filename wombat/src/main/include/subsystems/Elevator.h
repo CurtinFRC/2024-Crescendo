@@ -14,7 +14,6 @@
 #include <memory>
 #include <string>
 
-#include "behaviour/Behaviour.h"
 #include "behaviour/HasBehaviour.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
@@ -49,8 +48,8 @@ class Elevator : public behaviour::HasBehaviour {
 
   void SetManual(units::volt_t voltage);
   void SetPID(units::meter_t height);
-  void SetIdle();
-  void SetRaw();
+
+  void SetState(ElevatorState state);
 
   void SetVelocity(units::meters_per_second_t velocity);
 
