@@ -4,6 +4,8 @@
 
 #include "behaviour/Behaviour.h"
 
+#include <iostream>
+
 using namespace behaviour;
 
 // Behaviour

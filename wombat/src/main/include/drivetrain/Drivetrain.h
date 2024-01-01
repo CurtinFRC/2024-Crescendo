@@ -8,7 +8,6 @@
 #include <units/time.h>
 #include <units/voltage.h>
 
-#include <iostream>
 #include <string>
 
 #include "behaviour/HasBehaviour.h"
