@@ -99,7 +99,8 @@ void wom::subsystems::Elevator::SetPID(units::meter_t height) {
   _pid.SetSetpoint(height);
 }
 
-void wom::subsystems::Elevator::SetVelocity(units::meters_per_second_t velocity) {
+void wom::subsystems::Elevator::SetVelocity(
+    units::meters_per_second_t velocity) {
   _velocityPID.SetSetpoint(velocity);
 }
 
