@@ -7,7 +7,6 @@
 #include <frc/RobotBase.h>
 
 #include <functional>
-#include <iostream>
 
 namespace wom {
 namespace utils {
