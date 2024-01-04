@@ -173,11 +173,12 @@ TEST(ConcurrentBehaviourTest, All) {
   EXPECT_CALL(*b2, OnStop).Times(1);
 
   ASSERT_FALSE(chain->Tick());
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  std::this_thread::sleep_for(std::chrono::milliseconds(20));
   b1->SetDone();
-  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  ASSERT_FALSE(chain->Tick());
+  std::this_thread::sleep_for(std::chrono::milliseconds(10));
   b2->SetDone();
-  std::this_thread::sleep_for(std::chrono::milliseconds(5));
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   ASSERT_TRUE(chain->Tick());
   EXPECT_EQ(b1->GetBehaviourState(), BehaviourState::DONE);
   EXPECT_EQ(b2->GetBehaviourState(), BehaviourState::DONE);
