@@ -180,7 +180,9 @@ TEST(ConcurrentBehaviourTest, All) {
   b2->SetDone();
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   ASSERT_TRUE(chain->Tick());
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   EXPECT_EQ(b1->GetBehaviourState(), BehaviourState::DONE);
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   EXPECT_EQ(b2->GetBehaviourState(), BehaviourState::DONE);
 }
 
