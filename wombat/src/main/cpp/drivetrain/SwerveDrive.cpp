@@ -165,8 +165,14 @@ void wom::drivetrain::Swerve::SetState(wom::drivetrain::SwerveState state) {
 }
 
 void wom::drivetrain::Swerve::FieldRelativeControl(frc::Pose3d desiredPose, units::second_t dt) {
-  units::meter_t  movement = units::math::hypot(desiredPose.X(), desiredPose.Y());
-  units::radian_t rotation = units::math::acos(movement / desiredPose.X());
+  units::meter_t  movement = units::math::sqrt((desiredPose.X() * desiredPose.X()) +
+                                               (desiredPose.Y() * desiredPose.Y()));
+
+  units::radian_t rotation = units::math::atan(desiredPose.Y() / desiredPose.X());
+
+  std::cout << "Movement: " << movement.value() << std::endl;
+  std::cout << "Rotation: " << rotation.value() << std::endl;
+  std::cout << "Desired Pose: " << desiredPose.X().value() << ", " << desiredPose.Y().value() << std::endl;
 
   if (rotation > 0_rad) {
     rotation += 45_rad;
@@ -199,7 +205,7 @@ void wom::drivetrain::Swerve::OnStart() {
   _config.frontLeft.OnStart(0_rad);
   _config.frontRight.OnStart(0_rad);
   std::cout << "Starting Serve" << std::endl;
-}
+} 
 
 void wom::drivetrain::Swerve::OnUpdate(units::second_t dt) {
   _config.frontRight.OnUpdate(dt);
