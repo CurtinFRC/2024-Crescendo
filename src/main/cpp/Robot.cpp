@@ -4,13 +4,34 @@
 
 #include "Robot.h"
 
-void Robot::RobotInit() {}
-void Robot::RobotPeriodic() {}
+static units::second_t lastPeriodic;
+
+void Robot::RobotInit() {
+ lastPeriodic = wom::now();
+ arm = new Arm(map.armSystem.config);
+ wom::BehaviourScheduler::GetInstance()->Register(arm);
+ arm->SetDefaultBehaviour([this] () {
+    return wom::make<ArmManualControl>(arm, map.codriver);
+ });
+}
+void Robot::RobotPeriodic() {
+ units::second_t dt = wom::now() - lastPeriodic;
+ lastPeriodic = wom::now();
+
+ loop.Poll();
+ wom::BehaviourScheduler::GetInstance()->Tick();
+
+ arm->OnUpdate(dt);
+}
 
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() {
+   loop.Clear();
+   wom::BehaviourScheduler *scheduler = wom::BehaviourScheduler::GetInstance();
+   scheduler->InterruptAll();
+}
 void Robot::TeleopPeriodic() {}
 
 void Robot::DisabledInit() {}

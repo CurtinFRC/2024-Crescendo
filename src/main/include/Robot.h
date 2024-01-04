@@ -5,6 +5,10 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+#include "arm.h"
+#include "robotMap.h"
+#include "armBehaviour.h"
+#include <frc/event/EventLoop.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -20,4 +24,9 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
 
  private:
+  frc::EventLoop loop;
+
+
+  RobotMap map;
+  Arm *arm;
 };
