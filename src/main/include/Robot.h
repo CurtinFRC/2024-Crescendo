@@ -5,9 +5,9 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
-#include "arm.h"
-#include "robotMap.h"
-#include "armBehaviour.h"
+#include "RobotMap.h"
+#include "Shooter.h"
+#include "ShooterBehaviour.h"
 #include <frc/event/EventLoop.h>
 
 class Robot : public frc::TimedRobot {
@@ -28,5 +28,5 @@ class Robot : public frc::TimedRobot {
 
 
   RobotMap map;
-  Arm *arm;
+  Shooter *shooter;
 };

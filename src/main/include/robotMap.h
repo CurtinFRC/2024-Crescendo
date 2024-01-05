@@ -1,30 +1,40 @@
 #pragma once
 
-#include "arm.h"
+#include "Shooter.h"
 #include <rev/CANSparkMax.h>
-
+#include <ctre/Phoenix.h>
+#include <frc/DutyCycleEncoder.h>
 #include <frc/XboxController.h>
 
 struct RobotMap {
     frc::XboxController driver{0};
     frc::XboxController codriver{1};
 
-    struct Arm {
-        rev::CANSparkMax armMotor{99, rev::CANSparkMax::MotorType::kBrushless};
+    struct Shooter {
+        WPI_TalonSRX launcherMotor{7};
+        WPI_TalonSRX loaderMotor{6};
 
-        wom::VoltageController armMotorGroup = wom::VoltageController::Group(armMotor);
+        wom::DutyCycleEncoder launcherEncoder{0, 2048};
 
-        // wom::CANSparkMaxEncoder armEncoder(&armMotor, 100);
+        wom::VoltageController launcherMotorGroup = wom::VoltageController::Group(launcherMotor);
+        wom::VoltageController loaderMotorGroup = wom::VoltageController::Group(loaderMotor);
 
-        wom::Gearbox armGearBox {
-            &armMotorGroup,
-            // &armEncoder,
+        wom::Gearbox LauncherGearBox {
+            &launcherMotorGroup,
+            &launcherEncoder,
+            wom::DCMotor::CIM(1).WithReduction(1)
+        };
+
+        wom::Gearbox LoaderGearBox {
+            &loaderMotorGroup,
             nullptr,
-            wom::DCMotor::NEO(1).WithReduction(1)
+            wom::DCMotor::CIM(1).WithReduction(12)
         };
 
-        ArmConfig config {
-            armGearBox
+        ShooterConfig config {
+            "Shooter",
+            LauncherGearBox,
+            LoaderGearBox
         };
-    }; Arm armSystem;
+    }; Shooter shooterSystem;
 };

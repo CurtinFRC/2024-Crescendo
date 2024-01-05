@@ -8,10 +8,10 @@ static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
  lastPeriodic = wom::now();
- arm = new Arm(map.armSystem.config);
- wom::BehaviourScheduler::GetInstance()->Register(arm);
- arm->SetDefaultBehaviour([this] () {
-    return wom::make<ArmManualControl>(arm, map.codriver);
+ shooter = new Shooter(map.shooterSystem.config);
+ wom::BehaviourScheduler::GetInstance()->Register(shooter);
+ shooter->SetDefaultBehaviour([this] () {
+    return wom::make<ShooterManualControl>(shooter, map.codriver);
  });
 }
 void Robot::RobotPeriodic() {
@@ -21,7 +21,7 @@ void Robot::RobotPeriodic() {
  loop.Poll();
  wom::BehaviourScheduler::GetInstance()->Tick();
 
- arm->OnUpdate(dt);
+ shooter->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {}
