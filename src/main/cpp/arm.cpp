@@ -1,6 +1,7 @@
 #include "arm.h"
 
 
+
 Arm::Arm(ArmConfig config) : _config(config) {}
 
 void Arm::OnUpdate(units::second_t dt){
@@ -26,3 +27,4 @@ void Arm::setRaw(units::volt_t voltage) {
 void Arm::setAngle(units::degree_t angle) {
     _angle = angle;
 };
+

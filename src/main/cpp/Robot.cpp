@@ -8,11 +8,20 @@
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
+
     lastPeriodic = wom::now();
     intake = new Intake(map.intakeSystem.config);
     wom::BehaviourScheduler::GetInstance()->Register(intake);
     intake->SetDefaultBehaviour([this]() {
         return wom::make<IntakeManualControl>(intake, map.codriver);
+      
+     tank = new TankDrive(map.tankSystem.tankConfig);
+     wom::BehaviourScheduler::GetInstance()->Register(tank);
+
+
+   tank->SetDefaultBehaviour([this]() {
+    return wom::make<TankManualControl>(tank, map.driver);
+  });
     });
 }
 void Robot::RobotPeriodic() {
@@ -23,15 +32,18 @@ void Robot::RobotPeriodic() {
     wom::BehaviourScheduler::GetInstance()->Tick();
 
     intake->OnUpdate(dt);
+    tank->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
+
     loop.Clear();
     wom::BehaviourScheduler *Scheduler = wom::BehaviourScheduler::GetInstance();
     Scheduler->InterruptAll();
+
 }
 void Robot::TeleopPeriodic() {}
 
