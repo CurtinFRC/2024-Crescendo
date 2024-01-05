@@ -82,6 +82,8 @@ namespace drivetrain {
 
       void SetPath(std::string path);
 
+      frc::Pose3d GetPose();
+
      private:
 
       frc::sim::DifferentialDrivetrainSim m_driveSim{
@@ -113,6 +115,25 @@ namespace drivetrain {
       std::string m_path;
     };
 
+    class AutoSwerveDrive {
+      public:
+        AutoSwerveDrive(wom::drivetrain::Swerve *swerve, frc::Timer *timer, frc::Field2d *field);
+  
+        void OnUpdate();
+  
+        void SetPath(std::string path);
+  
+      private:
+        wom::drivetrain::Swerve *_swerve;
+
+        TempSimSwerveDrive *_simSwerveDrive;
+  
+        frc::Timer *m_timer;
+  
+        frc::Field2d *m_field;
+  
+        std::string m_path;
+      };
   }  // namespace behaviours
 }  // namespace drivetrain
 }  // namespace wom

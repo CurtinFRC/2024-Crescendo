@@ -77,6 +77,11 @@ void wom::drivetrain::behaviours::TempSimSwerveDrive::OnUpdate() {
   m_driveSim.Update(20_ms);
 }
 
+frc::Pose3d wom::drivetrain::behaviours::TempSimSwerveDrive::GetPose() {
+  frc::Pose3d currentPose{m_driveSim.GetPose()};
+  return currentPose;
+}
+
 void wom::drivetrain::behaviours::TempSimSwerveDrive::SetPath(std::string path) {
   nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
   std::shared_ptr<nt::NetworkTable> table = inst.GetTable("FMSInfo");
@@ -90,4 +95,18 @@ void wom::drivetrain::behaviours::TempSimSwerveDrive::SetPath(std::string path) 
   m_driveSim.SetPose(current_trajectory.Sample(0_s).pose);
   m_timer->Reset();
   m_timer->Start();
+}
+
+wom::drivetrain::behaviours::AutoSwerveDrive::AutoSwerveDrive(wom::drivetrain::Swerve *swerve, frc::Timer *timer, frc::Field2d *field) : _swerve(swerve), m_timer(timer), m_field(field) {
+  _simSwerveDrive = new wom::drivetrain::behaviours::TempSimSwerveDrive(timer, field);
+}
+
+void wom::drivetrain::behaviours::AutoSwerveDrive::OnUpdate() {
+  _simSwerveDrive->OnUpdate();
+  _swerve->SetState(wom::drivetrain::SwerveState::kFieldRelative);
+  //_swerve->SetDesired(_simSwerveDrive->GetPose());
+}
+
+void wom::drivetrain::behaviours::AutoSwerveDrive::SetPath(std::string path) {
+  _simSwerveDrive->SetPath(path);
 }
