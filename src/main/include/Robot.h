@@ -50,6 +50,7 @@ class Robot : public frc::TimedRobot {
     frc::SendableChooser<std::string> m_path_chooser;
 
    wom::TempSimSwerveDrive *m_driveSim;
+   wom::SwerveDrive *_swerveDrive;
 
 
 };

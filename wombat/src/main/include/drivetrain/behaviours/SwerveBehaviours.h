@@ -32,33 +32,103 @@
 namespace wom {
 namespace drivetrain {
   namespace behaviours {
+    
+/**
+ * @brief Behaviour class to handle manual drivebase controlling with the controller
+ */ 
+class ManualDrivebase : public behaviour::Behaviour{
+ public:
+   /**
+   * @param swerveDrivebase
+   * A pointer to the swerve drivebase (the allocated memory address that stores the "swerve drivebase" object)
+   * @param driverController
+   * A pointer to the controller that the driver has been allocated (the allocated memory address that stores the "driver controller" object)
+  */
+  ManualDrivebase(wom::drivetrain::SwerveDrive *swerveDrivebase, frc::XboxController *driverController);
 
-    class FieldRelativeSwerveDrive : public behaviour::Behaviour {
-     public:
-      FieldRelativeSwerveDrive(wom::drivetrain::Swerve *swerve, frc::XboxController &driver);
+  void OnTick(units::second_t deltaTime) override;
+  /**
+   * @brief This function handles all of the logic behind the tangent function, to be able to calculate an angle between 0 andd 360 degrees, inclusively
+  */
+  void CalculateRequestedAngle(double joystickX, double joystickY, units::degree_t defaultAngle);
+  void OnStart(units::second_t dt);
+  void ResetMode();
+  
+ private:
+  std::shared_ptr<nt::NetworkTable> _swerveDriveTable = nt::NetworkTableInstance::GetDefault().GetTable("swerve");
+  wom::drivetrain::SwerveDrive *_swerveDrivebase;
+  frc::XboxController *_driverController;
+  
+  // State-handler Boolean : Is the robot in field orientated control, or robot relative?
+  bool isFieldOrientated = true;
+  // State-handler Boolean : Do we currently want the angles of the wheels to be 0?
+  bool isZero = false;
+  bool resetMode = false;
 
-      void OnTick(units::second_t dt) override;
+  units::degree_t _requestedAngle;
+  bool isRotateMatch = false;
 
-     private:
-      wom::drivetrain::Swerve *_swerve;
-      frc::XboxController     &_driver;
-        
-    };
+  // Deadzones
+  const double driverDeadzone = 0.08;
+  const double turningDeadzone = 0.2;
+
+
+  // Variables for solution to Anti-tip
+  double prevJoystickX, prevJoystickY, prevPrevJoystickX, prevPrevJoystickY, usingJoystickXPos, usingJoystickYPos;
+  // The speed that the joystick must travel to activate averaging over previous 3 joystick positions
+  const double smoothingThreshold = 1;
+
+  typedef units::meters_per_second_t translationSpeed_;
+  typedef units::radians_per_second_t rotationSpeed_;
+
+  // The translation speeds for when "slow speed", "normal speed", "fast speed" modes are active
+  const translationSpeed_ lowSensitivityDriveSpeed = 3.25_ft / 1_s;
+  const translationSpeed_ defaultDriveSpeed = 13_ft / 1_s;
+  const translationSpeed_ highSensitivityDriveSpeed = 18_ft / 1_s;
+  // The rotation speeds for when "slow speed", "normal speed", "fast speed" modes are active
+  const rotationSpeed_ lowSensitivityRotateSpeed = 90_deg / 1_s;
+  const rotationSpeed_ defaultRotateSpeed = 360_deg / 1_s;
+  const rotationSpeed_ highSensitivityRotateSpeed = 720_deg / 1_s;
+
+  translationSpeed_ maxMovementMagnitude = defaultDriveSpeed;
+  rotationSpeed_ maxRotationMagnitude = defaultRotateSpeed;
+};
+
+
+
+
+/**
+ * @brief Behaviour Class to handle locking wheels
+ */
+class XDrivebase : public behaviour::Behaviour{
+ public:
+   /**
+   * @param swerveDrivebase
+   * A pointer to the swerve drivebase
+  */
+  XDrivebase(wom::drivetrain::SwerveDrive *swerveDrivebase);
+
+  void OnTick(units::second_t deltaTime) override;
+
+ private:
+  wom::drivetrain::SwerveDrive *_swerveDrivebase;
+};
+
 
     class GoToPose : public behaviour::Behaviour {
       public:
-        GoToPose(wom::drivetrain::Swerve *swerve, frc::Pose3d pose);
+        GoToPose(wom::drivetrain::SwerveDrive *swerve, frc::Pose3d pose);
 
         void OnTick(units::second_t dt) override;
 
       private:
-        wom::drivetrain::Swerve *_swerve;
+        wom::drivetrain::SwerveDrive *_swerve;
         frc::Pose3d _pose;
     };
 
     class FollowTrajectory : public behaviour::Behaviour {
       public:
-        FollowTrajectory(wom::drivetrain::Swerve *swerve, wom::utils::Pathplanner *pathplanner, std::string path);
+        FollowTrajectory(wom::drivetrain::SwerveDrive *swerve, wom::utils::Pathplanner *pathplanner, std::string path);
 
         void OnTick(units::second_t dt) override;
 
@@ -67,7 +137,7 @@ namespace drivetrain {
       private:
         wom::utils::Pathplanner *_pathplanner;
         std::string _path;
-        wom::drivetrain::Swerve *_swerve;
+        wom::drivetrain::SwerveDrive *_swerve;
         frc::Trajectory _trajectory;
         frc::Timer m_timer;
     };
@@ -117,14 +187,14 @@ namespace drivetrain {
 
     class AutoSwerveDrive {
       public:
-        AutoSwerveDrive(wom::drivetrain::Swerve *swerve, frc::Timer *timer, frc::Field2d *field);
+        AutoSwerveDrive(wom::drivetrain::SwerveDrive *swerve, frc::Timer *timer, frc::Field2d *field);
   
         void OnUpdate();
   
         void SetPath(std::string path);
   
       private:
-        wom::drivetrain::Swerve *_swerve;
+        wom::drivetrain::SwerveDrive *_swerve;
 
         TempSimSwerveDrive *_simSwerveDrive;
   

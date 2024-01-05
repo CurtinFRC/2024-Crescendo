@@ -44,7 +44,7 @@ void Robot::RobotInit() {
 
     wom::BehaviourScheduler::GetInstance()->Register(&robotmap.swerve);
     robotmap.swerve.SetDefaultBehaviour([this]() {
-      return wom::make<wom::FieldRelativeSwerveDrive>(&robotmap.swerve, robotmap.controllers.driver);
+      return wom::make<wom::ManualDrivebase>(&robotmap.swerve, robotmap.controllers.driver);
     });
 
     m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
@@ -63,7 +63,7 @@ void Robot::AutonomousPeriodic() {
 void Robot::TeleopInit() {
   sched = wom::BehaviourScheduler::GetInstance();
   sched->InterruptAll();
-  sched->Schedule(wom::make<wom::FieldRelativeSwerveDrive>(&robotmap.swerve, robotmap.controllers.driver));
+  sched->Schedule(wom::make<wom::ManualDrivebase>(&robotmap.swerve, robotmap.controllers.driver));
 }
 void Robot::TeleopPeriodic() {}
 
