@@ -1,0 +1,60 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto Selector": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Path Selector": "String Chooser"
+    },
+    "windows": {
+      "/SmartDashboard/Auto Selector": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field": {
+        "bottom": 544,
+        "height": 8.013679504394531,
+        "image": "/home/paulh/FRC/2024-Crescendo/sim/PathWeaver/2023-field.png",
+        "left": 46,
+        "right": 1088,
+        "top": 36,
+        "units": "meters",
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Path Selector": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "SmartDashboard": {
+      "open": true
+    },
+    "combined": true,
+    "current_trajectory_state": {
+      "open": true
+    },
+    "trajectory": {
+      "0": {
+        "open": true
+      },
+      "1": {
+        "open": true
+      },
+      "open": true
+    },
+    "transitory": {
+      "LiveWindow": {
+        ".status": {
+          "open": true
+        }
+      }
+    }
+  }
+}
