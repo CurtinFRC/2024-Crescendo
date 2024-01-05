@@ -1,0 +1,174 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.0,
+        "y": 3.0
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.0,
+        "y": 3.0
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 5.819170736085833,
+        "y": 0.6931349201044286
+      },
+      "prevControl": {
+        "x": 5.819170736085833,
+        "y": -0.30686507989557144
+      },
+      "nextControl": {
+        "x": 5.819170736085833,
+        "y": -0.30686507989557144
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.8703566128936773,
+        "y": 3.566128936769153
+      },
+      "prevControl": {
+        "x": 8.209983938764873,
+        "y": 3.4154474323986244
+      },
+      "nextControl": {
+        "x": -0.46927071297751866,
+        "y": 3.7168104411396814
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 5.698625532589411,
+        "y": 4.600808600113441
+      },
+      "prevControl": {
+        "x": 2.614677409805946,
+        "y": 4.158809520626561
+      },
+      "nextControl": {
+        "x": 8.782573655372875,
+        "y": 5.042807679600322
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 7.3360312134158105,
+        "y": 6.208077980065735
+      },
+      "prevControl": {
+        "x": 6.474531939111602,
+        "y": 5.861085216804318
+      },
+      "nextControl": {
+        "x": 8.782573655372875,
+        "y": 6.790713130298441
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 12.16788478689739,
+        "y": 3.1040389900328687
+      },
+      "prevControl": {
+        "x": 9.390322389667334,
+        "y": 4.947376060165655
+      },
+      "nextControl": {
+        "x": 14.945447184127447,
+        "y": 1.2607019199000822
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 9.726844416094846,
+        "y": 1.5670876454534879
+      },
+      "prevControl": {
+        "x": 12.336145800111147,
+        "y": 1.4138947826767851
+      },
+      "nextControl": null,
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": []
+}
