@@ -5,6 +5,7 @@ using namespace wom::utils;
 #ifdef PLATFORM_ROBORIO
   #include <thread>
   #include "AHRS.h"
+  
   class NavX::Impl {
    public:
     Impl() : ahrs(frc::SPI::kMXP) { }

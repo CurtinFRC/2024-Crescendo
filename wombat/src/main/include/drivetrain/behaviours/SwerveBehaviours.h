@@ -153,6 +153,7 @@ class XDrivebase : public behaviour::Behaviour{
       void SetPath(std::string path);
 
       frc::Pose3d GetPose();
+      frc::Pose2d GetPose2d();
 
      private:
 

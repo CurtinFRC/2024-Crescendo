@@ -23,6 +23,8 @@
 
 #include "Wombat.h"
 
+static units::second_t lastPeriodic;
+
 
 void Robot::RobotInit() {
 
@@ -42,30 +44,53 @@ void Robot::RobotInit() {
 
     simulation_timer = frc::Timer();
 
-    wom::BehaviourScheduler::GetInstance()->Register(&robotmap.swerve);
-    robotmap.swerve.SetDefaultBehaviour([this]() {
-      return wom::make<wom::ManualDrivebase>(&robotmap.swerve, robotmap.controllers.driver);
+    robotmap.swerveBase.gyro.Reset();
+
+
+    _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+    wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
+    _swerveDrive->SetDefaultBehaviour([this]() {
+      return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver);
     });
 
     m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
     //m_driveSim = wom::TempSimSwerveDrive();
 }
 
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic() {
+  auto dt = wom::now() - lastPeriodic;
+  lastPeriodic = wom::now();
+
+  loop.Poll();
+  wom::BehaviourScheduler::GetInstance()->Tick();
+
+  _swerveDrive->OnUpdate(dt);
+
+}
 
 void Robot::AutonomousInit() {
   m_driveSim->SetPath(m_path_chooser.GetSelected());
+
+  loop.Clear();
+  sched->InterruptAll();
+  _swerveDrive->OnStart();
+
+
 }
 void Robot::AutonomousPeriodic() {
     m_driveSim->OnUpdate();
 }
 
 void Robot::TeleopInit() {
-  sched = wom::BehaviourScheduler::GetInstance();
+  _swerveDrive->OnStart();
   sched->InterruptAll();
-  sched->Schedule(wom::make<wom::ManualDrivebase>(&robotmap.swerve, robotmap.controllers.driver));
+
+
 }
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+  auto dt = wom::now() - lastPeriodic;
+
+}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}

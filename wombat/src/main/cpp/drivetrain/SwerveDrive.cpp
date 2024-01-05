@@ -377,23 +377,9 @@ frc::Pose2d SwerveDrive::GetPose() {
 void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp) {
   _poseEstimator.AddVisionMeasurement(pose, timestamp);
 }
-
-void SwerveDrive::SetZero() {
-  _state = SwerveDriveState::kZeroing;
-}
+} 
 
 }
-}
 
-frc::Pose2d SwerveDrive::GetPose() {
-  return _poseEstimator.GetEstimatedPosition();
-}
 
-void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp) {
-  _poseEstimator.AddVisionMeasurement(pose, timestamp);
-}
-
-void SwerveDrive::SetZero() {
-  _state = SwerveDriveState::kZeroing;
-}
 

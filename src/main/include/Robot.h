@@ -13,6 +13,8 @@
 #include <frc/simulation/EncoderSim.h>
 
 #include <frc/simulation/DifferentialDrivetrainSim.h>
+#include <frc/event/EventLoop.h>
+
 
 #include "RobotMap.h"
 
@@ -40,6 +42,8 @@ class Robot : public frc::TimedRobot {
  private:
   behaviour::BehaviourScheduler *sched;
   RobotMap                       robotmap;
+  frc::EventLoop loop;
+
 
     frc::SendableChooser<std::string> m_chooser;
 
