@@ -9,6 +9,10 @@
 #include "Wombat.h"
 #include "RobotMap.h"
 #include <frc/TimedRobot.h>
+#include "RobotMap.h"
+#include "Shooter.h"
+#include "ShooterBehaviour.h"
+#include <frc/event/EventLoop.h>
 
 #include "Wombat.h"
 #include "RobotMap.h"
@@ -31,10 +35,13 @@ class Robot : public frc::TimedRobot {
 
  private:
 
- frc::EventLoop loop;
- RobotMap map;
- Intake *intake;
- TankDrive *tank;
+  frc::EventLoop loop;
+
+
+  RobotMap map;
+  Shooter *shooter;
+  Intake *intake;
+  TankDrive *tank;
 
 };
 

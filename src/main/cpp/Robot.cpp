@@ -9,8 +9,15 @@ static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
 
-    lastPeriodic = wom::now();
-    intake = new Intake(map.intakeSystem.config);
+ lastPeriodic = wom::now();
+ shooter = new Shooter(map.shooterSystem.config);
+ wom::BehaviourScheduler::GetInstance()->Register(shooter);
+ shooter->SetDefaultBehaviour([this] () {
+    return wom::make<ShooterManualControl>(shooter, map.codriver);
+   
+ });
+}
+intake = new Intake(map.intakeSystem.config);
     wom::BehaviourScheduler::GetInstance()->Register(intake);
     intake->SetDefaultBehaviour([this]() {
         return wom::make<IntakeManualControl>(intake, map.codriver);
@@ -23,26 +30,27 @@ void Robot::RobotInit() {
     return wom::make<TankManualControl>(tank, map.driver);
   });
     });
-}
 void Robot::RobotPeriodic() {
-    units::second_t dt = wom::now() - lastPeriodic;
-    lastPeriodic = wom::now();
+ units::second_t dt = wom::now() - lastPeriodic;
+ lastPeriodic = wom::now();
 
-    loop.Poll();
-    wom::BehaviourScheduler::GetInstance()->Tick();
+ loop.Poll();
+ wom::BehaviourScheduler::GetInstance()->Tick();
 
-    intake->OnUpdate(dt);
-    tank->OnUpdate(dt);
+ shooter->OnUpdate(dt);
+ intake->OnUpdate(dt);
+ tank->OnUpdate(dt);
+  
 }
 
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-
     loop.Clear();
     wom::BehaviourScheduler *Scheduler = wom::BehaviourScheduler::GetInstance();
     Scheduler->InterruptAll();
+
 
 }
 void Robot::TeleopPeriodic() {}
