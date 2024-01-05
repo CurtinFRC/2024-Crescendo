@@ -3,44 +3,47 @@
 // of the MIT License at the root of this project
 
 #include "Robot.h"
+#include "intakeBehaviour.h"
 
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
-  lastPeriodic = wom::now();
 
-  tank = new TankDrive(map.tankSystem.tankConfig);
-  wom::BehaviourScheduler::GetInstance()->Register(tank);
-  arm = new Arm(map.armSystem.config);
-  wom::BehaviourScheduler::GetInstance()->Register(arm);
+    lastPeriodic = wom::now();
+    intake = new Intake(map.intakeSystem.config);
+    wom::BehaviourScheduler::GetInstance()->Register(intake);
+    intake->SetDefaultBehaviour([this]() {
+        return wom::make<IntakeManualControl>(intake, map.codriver);
+      
+     tank = new TankDrive(map.tankSystem.tankConfig);
+     wom::BehaviourScheduler::GetInstance()->Register(tank);
 
-  arm->SetDefaultBehaviour([this]() {
-    return wom::make<ArmManualControl>(arm, map.driver);
-  });
 
-  tank->SetDefaultBehaviour([this]() {
+   tank->SetDefaultBehaviour([this]() {
     return wom::make<TankManualControl>(tank, map.driver);
   });
+    });
 }
 void Robot::RobotPeriodic() {
-  units::second_t dt = wom::now() - lastPeriodic;
-  lastPeriodic = wom::now();
+    units::second_t dt = wom::now() - lastPeriodic;
+    lastPeriodic = wom::now();
 
-  loop.Poll();
-  wom::BehaviourScheduler::GetInstance()->Tick();
+    loop.Poll();
+    wom::BehaviourScheduler::GetInstance()->Tick();
 
-  arm->OnUpdate(dt);
-  tank->OnUpdate(dt);
+    intake->OnUpdate(dt);
+    tank->OnUpdate(dt);
 }
-
 
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  loop.Clear();
-  wom::BehaviourScheduler *scheduler = wom::BehaviourScheduler::GetInstance();
-  scheduler->InterruptAll();
+
+    loop.Clear();
+    wom::BehaviourScheduler *Scheduler = wom::BehaviourScheduler::GetInstance();
+    Scheduler->InterruptAll();
+
 }
 void Robot::TeleopPeriodic() {}
 

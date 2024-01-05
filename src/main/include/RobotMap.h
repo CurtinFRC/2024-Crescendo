@@ -1,29 +1,33 @@
 #pragma once
 
-#include "Wombat.h"
+
+#include "intake.h"
 #include "tank.h"
 #include <frc/XboxController.h>
 
 struct RobotMap {
-  frc::XboxController driver{0};
+    frc::XboxController driver{0};
+    frc::XboxController codriver{1};
 
-  struct ArmSystem {
-    rev::CANSparkMax ArmMotor{98, rev::CANSparkMax::MotorType::kBrushless};
-    wom::VoltageController ArmMotorGroup = wom::VoltageController::Group(ArmMotor);
+    struct Intake {
+        WPI_TalonSRX intakeMotor{99};
 
-    wom::Gearbox ArmGearbox {
-      &ArmMotorGroup,
-      nullptr,
-      wom::DCMotor::NEO(1).WithReduction(1)
-    };
+        wom::VoltageController intakeMotorGroup = wom::VoltageController::Group(intakeMotor);
 
-    ArmConfig config {
-      ArmGearbox,
-    };
+        
+        wom::Gearbox intakeGearbox {
+            &intakeMotorGroup,
+            nullptr,
+            
+            wom::DCMotor::NEO(1).WithReduction(1)
+        };
 
-  }; ArmSystem armSystem;
-  
-  struct TankSystem {
+        IntakeConfig config {
+            intakeGearbox
+        };
+    }; Intake intakeSystem;
+    
+    struct TankSystem {
     wom::VoltageController tankDriveMotorFrontLeft{ new WPI_TalonSRX(99)};
     wom::VoltageController tankDriveMotorFrontRight{ new WPI_TalonSRX(99)};
     wom::VoltageController tankDriveMotorBackLeft{ new WPI_TalonSRX(99)};
@@ -63,7 +67,7 @@ struct RobotMap {
       tankBackLeftGearbox
     };
   }; TankSystem tankSystem;
-
-  //port to be filled later.
-
+    
 };
+    
+    

@@ -9,7 +9,12 @@
 #include "Wombat.h"
 #include "RobotMap.h"
 #include <frc/TimedRobot.h>
+
+#include "Wombat.h"
+#include "RobotMap.h"
 #include <frc/event/EventLoop.h>
+#include "intake.h"
+
 
 class Robot : public frc::TimedRobot {
  public:
@@ -25,9 +30,11 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
 
  private:
-  frc::EventLoop loop;
 
-  RobotMap map;  
-  Arm *arm;
-  TankDrive *tank;
+ frc::EventLoop loop;
+ RobotMap map;
+ Intake *intake;
+ TankDrive *tank;
+
 };
+
