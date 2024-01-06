@@ -8,6 +8,7 @@
 #include <frc/geometry/Pose3d.h>
 #include <networktables/NetworkTable.h>
 #include <units/time.h>
+#include <units/voltage.h>
 
 #include <functional>
 #include <iostream>
@@ -95,5 +96,7 @@ void WritePose3NT(std::shared_ptr<nt::NetworkTable> table, frc::Pose3d pose);
 
 double deadzone(double val, double deadzone = 0.05);
 double spow2(double val);
+
+units::volt_t LimitVoltage(units::volt_t voltage);
 }  // namespace utils
 }  // namespace wom
