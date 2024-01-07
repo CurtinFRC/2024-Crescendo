@@ -44,7 +44,7 @@ class VoltageController {
   units::volt_t GetBusVoltage() const;
 
   /**
-   * Create a MotorVoltageController with a given frc::MotorController
+   * Create a VoltageController with a given frc::MotorController
    * subclass. Please note that this creates an unsafe pointer (will never
    * dealloc)
    */

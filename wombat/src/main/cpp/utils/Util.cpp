@@ -4,6 +4,8 @@
 
 #include "utils/Util.h"
 
+#include <frc/RobotController.h>
+
 units::second_t wom::utils::now() {
   uint64_t now = frc::RobotController::GetFPGATime();
   return static_cast<double>(now) / 1000000 * 1_s;
@@ -32,4 +34,12 @@ double wom::utils::deadzone(double val, double deadzone) {
 
 double wom::utils::spow2(double val) {
   return val * val * (val > 0 ? 1 : -1);
+}
+
+units::volt_t wom::utils::LimitVoltage(units::volt_t voltage) {
+  if (voltage >= frc::RobotController::GetBatteryVoltage()) {
+    return frc::RobotController::GetBatteryVoltage() - 0.5_V;
+  }
+
+  return voltage;
 }

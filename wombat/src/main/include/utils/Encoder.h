@@ -13,8 +13,6 @@
 
 #include <string>
 
-#include "utils/Util.h"
-
 namespace wom {
 namespace utils {
 class Encoder {
