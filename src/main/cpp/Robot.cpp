@@ -27,8 +27,6 @@ static units::second_t lastPeriodic;
 
 
 void Robot::RobotInit() {
-
-    
     m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
     frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
@@ -53,7 +51,7 @@ void Robot::RobotInit() {
       return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver);
     });
 
-    m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
+    // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
     //m_driveSim = wom::TempSimSwerveDrive();
 }
 
@@ -69,27 +67,26 @@ void Robot::RobotPeriodic() {
 }
 
 void Robot::AutonomousInit() {
-  m_driveSim->SetPath(m_path_chooser.GetSelected());
+  // m_driveSim->SetPath(m_path_chooser.GetSelected());
 
   loop.Clear();
   sched->InterruptAll();
-  _swerveDrive->OnStart();
+  // _swerveDrive->OnStart();
 
 
 }
 void Robot::AutonomousPeriodic() {
-    m_driveSim->OnUpdate();
+    // m_driveSim->OnUpdate();
 }
 
 void Robot::TeleopInit() {
-  _swerveDrive->OnStart();
-  sched->InterruptAll();
+  // _swerveDrive->OnStart();
+  // sched->InterruptAll();
 
 
 }
 void Robot::TeleopPeriodic() {
   auto dt = wom::now() - lastPeriodic;
-
 }
 
 void Robot::DisabledInit() {}
