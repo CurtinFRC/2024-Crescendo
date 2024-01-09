@@ -5,6 +5,7 @@
 #include "utils/Util.h"
 
 #include <frc/RobotController.h>
+#include "units/voltage.h"
 
 units::second_t wom::utils::now() {
   uint64_t now = frc::RobotController::GetFPGATime();
@@ -42,4 +43,8 @@ units::volt_t wom::utils::LimitVoltage(units::volt_t voltage) {
   }
 
   return voltage;
+}
+
+units::volt_t wom::utils::GetVoltage(frc::MotorController *controller) {
+  return controller->Get() * frc::RobotController::GetBatteryVoltage();
 }
