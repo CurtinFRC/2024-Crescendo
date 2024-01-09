@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <frc/system/plant/DCMotor.h>
 #include <frc/motorcontrol/MotorController.h>
+#include <frc/system/plant/DCMotor.h>
 
 #include "utils/Encoder.h"
 

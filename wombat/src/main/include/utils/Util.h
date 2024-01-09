@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <frc/motorcontrol/MotorController.h>
 #include <frc/geometry/Pose3d.h>
+#include <frc/motorcontrol/MotorController.h>
 #include <networktables/NetworkTable.h>
 #include <units/time.h>
 #include <units/voltage.h>
@@ -98,6 +98,6 @@ double deadzone(double val, double deadzone = 0.05);
 double spow2(double val);
 
 units::volt_t LimitVoltage(units::volt_t voltage);
-units::volt_t GetVoltage(frc::MotorController *controller);
+units::volt_t GetVoltage(frc::MotorController* controller);
 }  // namespace utils
 }  // namespace wom
