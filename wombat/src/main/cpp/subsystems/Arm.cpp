@@ -88,8 +88,8 @@ void wom::subsystems::Arm::OnUpdate(units::second_t dt) {
 
   // std::cout << "voltage: " << voltage.value() << std::endl;
 
-  _config.leftGearbox.controller->SetVoltage(voltage);
-  _config.rightGearbox.controller->SetVoltage(voltage);
+  _config.leftGearbox.motorController->SetVoltage(voltage);
+  _config.rightGearbox.motorController->SetVoltage(voltage);
 
   // creates network table instances for the angle and config of the arm
   _table->GetEntry("angle").SetDouble(angle.convert<units::degree>().value());

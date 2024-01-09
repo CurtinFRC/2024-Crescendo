@@ -39,7 +39,7 @@ void wom::subsystems::Shooter::OnUpdate(units::second_t dt) {
   voltage =
       1_V * std::min(voltage.value(), max_voltage_for_current_limit.value());
 
-  _params.gearbox.controller->SetVoltage(voltage);
+  _params.gearbox.motorController->SetVoltage(voltage);
 
   _table->GetEntry("output_volts").SetDouble(voltage.value());
   _table->GetEntry("speed_rpm").SetDouble(currentSpeed.value());

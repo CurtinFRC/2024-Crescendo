@@ -21,7 +21,7 @@ struct Gearbox {
   /**
    * The MotorController. May not be null.
    */
-  frc::MotorController* controller;
+  frc::MotorController* motorController;
 
   /**
    * The Encoder. May be null, depending on the consumer of this structure.
