@@ -16,7 +16,6 @@
 #include "utils/PID.h"
 #include "utils/RobotStartup.h"
 #include "utils/Util.h"
-#include "utils/VoltageController.h"
 
 namespace wom {
 using namespace wom;
