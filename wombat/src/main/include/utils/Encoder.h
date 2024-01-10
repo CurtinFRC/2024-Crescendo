@@ -51,11 +51,11 @@ class DigitalEncoder : public Encoder {
       : Encoder(ticksPerRotation, reduction, 0),
         _nativeEncoder(channelA, channelB) {}
 
-    double GetEncoderRawTicks() const override;
-    double GetEncoderTickVelocity() const override;
-    
-    double GetPosition() const;
-    double GetVelocity() const;
+  double GetEncoderRawTicks() const override;
+  double GetEncoderTickVelocity() const override;
+
+  double GetPosition() const;
+  double GetVelocity() const;
 
  private:
   frc::Encoder _nativeEncoder;
@@ -67,16 +67,16 @@ class CANSparkMaxEncoder : public Encoder {
   explicit CANSparkMaxEncoder(rev::CANSparkMax* controller,
                               double reduction = 1);
 
-    double GetEncoderRawTicks() const override;
-    double GetEncoderTickVelocity() const override;
-    
-    double GetPosition() const;
-    double GetVelocity() const;
+  double GetEncoderRawTicks() const override;
+  double GetEncoderTickVelocity() const override;
 
-   protected:
-    rev::SparkMaxRelativeEncoder _encoder;
-    friend class SimCANSparkMaxEncoder;
-  };
+  double GetPosition() const;
+  double GetVelocity() const;
+
+ protected:
+  rev::SparkMaxRelativeEncoder _encoder;
+  friend class SimCANSparkMaxEncoder;
+};
 
 class TalonFXEncoder : public Encoder {
  public:
