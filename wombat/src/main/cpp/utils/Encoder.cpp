@@ -3,7 +3,8 @@
 // of the MIT License at the root of this project
 
 #include "utils/Encoder.h"
-#include <math.h>
+
+#include <cmath>
 
 wom::utils::Encoder::Encoder(double encoderTicksPerRotation, int type,
                              double reduction)
@@ -54,7 +55,8 @@ units::radian_t wom::utils::Encoder::GetEncoderPosition() {
 }
 
 double wom::utils::Encoder::GetEncoderDistance() {
-  return GetEncoderTicks() * (2 * M_PI) * (_reduction / GetEncoderTicksPerRotation());
+  return GetEncoderTicks() * (2 * M_PI) *
+         (_reduction / GetEncoderTicksPerRotation());
 }
 
 units::radians_per_second_t wom::utils::Encoder::GetEncoderAngularVelocity() {
