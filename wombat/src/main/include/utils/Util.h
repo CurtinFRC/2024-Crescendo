@@ -6,6 +6,7 @@
 
 #include <frc/geometry/Pose3d.h>
 #include <frc/motorcontrol/MotorController.h>
+#include <frc/trajectory/Trajectory.h>
 #include <networktables/NetworkTable.h>
 #include <units/time.h>
 #include <units/voltage.h>
@@ -93,6 +94,12 @@ class NTBoundUnit : public NTBound {
 
 void WritePose2NT(std::shared_ptr<nt::NetworkTable> table, frc::Pose2d pose);
 void WritePose3NT(std::shared_ptr<nt::NetworkTable> table, frc::Pose3d pose);
+void WriteTrajectory(std::shared_ptr<nt::NetworkTable> table,
+                     frc::Trajectory trajectory);
+void WriteTrajectoryState(std::shared_ptr<nt::NetworkTable> table,
+                          frc::Trajectory::State state);
+
+frc::Pose2d TrajectoryStateToPose2d(frc::Trajectory::State state);
 
 double deadzone(double val, double deadzone = 0.05);
 double spow2(double val);
