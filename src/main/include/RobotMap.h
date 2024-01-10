@@ -31,7 +31,7 @@ struct RobotMap {
     CANCoder backLeftCancoder{16};
     CANCoder backRightCancoder{18};
 
-    WPI_Pigeon2 *gyro = new WPI_Pigeon2(2, "Drivebase");
+    WPI_Pigeon2* gyro = new WPI_Pigeon2(2, "Drivebase");
     wpi::array<WPI_TalonFX*, 4> turnMotors{
         new WPI_TalonFX(7, "Drivebase"), new WPI_TalonFX(5, "Drivebase"),
         new WPI_TalonFX(1, "Drivebase"), new WPI_TalonFX(3, "Drivebase")};
@@ -108,12 +108,16 @@ struct RobotMap {
         10_cm};
 
     // the config for the whole swerve drive
-    wom::SwerveDriveConfig config{
-        "/drivetrain",   anglePID,       velocityPID,
-        moduleConfigs,  // each module
-        gyro,           poseAnglePID,   posePositionPID,
-        60_kg,  // robot mass (estimate rn)
-        {0.1, 0.1, 0.1}, {0.9, 0.9, 0.9}};
+    wom::SwerveDriveConfig config{"/drivetrain",
+                                  anglePID,
+                                  velocityPID,
+                                  moduleConfigs,  // each module
+                                  gyro,
+                                  poseAnglePID,
+                                  posePositionPID,
+                                  60_kg,  // robot mass (estimate rn)
+                                  {0.1, 0.1, 0.1},
+                                  {0.9, 0.9, 0.9}};
 
     // current limiting and setting idle mode of modules to brake mode
     SwerveBase() {

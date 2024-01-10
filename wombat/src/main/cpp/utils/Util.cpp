@@ -51,23 +51,31 @@ units::volt_t wom::utils::GetVoltage(frc::MotorController* controller) {
 }
 
 void wom::utils::WriteTrajectory(std::shared_ptr<nt::NetworkTable> table,
-                                 frc::Trajectory                   trajectory) {
+                                 frc::Trajectory trajectory) {
   table->GetEntry("length").SetDouble(trajectory.TotalTime().value());
 
   // write the trajectory to the network table
   int i = 0;
   for (auto state : trajectory.States()) {
-    table->GetSubTable(std::to_string(i))->GetEntry("x").SetDouble(state.pose.X().value());
-    table->GetSubTable(std::to_string(i))->GetEntry("y").SetDouble(state.pose.Y().value());
-    table->GetSubTable(std::to_string(i))->GetEntry("angle").SetDouble(state.pose.Rotation().Degrees().value());
-    table->GetSubTable(std::to_string(i))->GetEntry("time").SetDouble(state.t.value());
+    table->GetSubTable(std::to_string(i))
+        ->GetEntry("x")
+        .SetDouble(state.pose.X().value());
+    table->GetSubTable(std::to_string(i))
+        ->GetEntry("y")
+        .SetDouble(state.pose.Y().value());
+    table->GetSubTable(std::to_string(i))
+        ->GetEntry("angle")
+        .SetDouble(state.pose.Rotation().Degrees().value());
+    table->GetSubTable(std::to_string(i))
+        ->GetEntry("time")
+        .SetDouble(state.t.value());
 
     i++;
   }
 }
 
 void wom::utils::WriteTrajectoryState(std::shared_ptr<nt::NetworkTable> table,
-                                      frc::Trajectory::State            state) {
+                                      frc::Trajectory::State state) {
   table->GetEntry("x").SetDouble(state.pose.X().value());
   table->GetEntry("y").SetDouble(state.pose.Y().value());
   table->GetEntry("angle").SetDouble(state.pose.Rotation().Degrees().value());

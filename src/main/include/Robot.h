@@ -13,6 +13,8 @@
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include <string>
+
 #include "RobotMap.h"
 #include "Wombat.h"
 #include "frc/smartdashboard/SendableChooser.h"
@@ -32,7 +34,6 @@ class Robot : public frc::TimedRobot {
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
- protected:
  private:
   behaviour::BehaviourScheduler* sched;
   RobotMap robotmap;
