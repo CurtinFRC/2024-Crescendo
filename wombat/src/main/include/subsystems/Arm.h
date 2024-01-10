@@ -24,7 +24,7 @@ struct ArmConfig {
 
   wom::utils::Gearbox leftGearbox;
   wom::utils::Gearbox rightGearbox;
-  rev::SparkMaxRelativeEncoder armEncoder;
+  wom::utils::CANSparkMaxEncoder armEncoder;
   wom::utils::PIDConfig<units::radian, units::volt> pidConfig;
   wom::utils::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
 
