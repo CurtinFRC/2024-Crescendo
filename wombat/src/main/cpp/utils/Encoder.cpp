@@ -6,14 +6,12 @@
 
 #include <cmath>
 
-#include "units/length.h"
-
 wom::utils::Encoder::Encoder(double encoderTicksPerRotation, int type,
-                             double reduction, units::meter_t wheelRadius)
+                             units::meter_t wheelRadius, double reduction)
     : _reduction(reduction),
       _encoderTicksPerRotation(encoderTicksPerRotation),
-      _type(type),
-      _wheelRadius(wheelRadius) {}
+      _wheelRadius(wheelRadius),
+      _type(type) {}
 
 double wom::utils::Encoder::GetEncoderTicks() const {
   return GetEncoderRawTicks();
@@ -78,8 +76,9 @@ double wom::utils::DigitalEncoder::GetEncoderTickVelocity() const {
 }
 
 wom::utils::CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax* controller,
+                                                   units::meter_t wheelRadius,
                                                    double reduction)
-    : wom::utils::Encoder(42, reduction, 2),
+    : wom::utils::Encoder(42, reduction, wheelRadius, 2),
       _encoder(controller->GetEncoder()) {}
 
 double wom::utils::CANSparkMaxEncoder::GetEncoderRawTicks() const {
@@ -99,8 +98,9 @@ double wom::utils::CANSparkMaxEncoder::GetVelocity() const {
 }
 
 wom::utils::TalonFXEncoder::TalonFXEncoder(
-    ctre::phoenix::motorcontrol::can::TalonFX* controller, double reduction)
-    : utils::Encoder(2048, reduction, 0), _controller(controller) {
+    ctre::phoenix::motorcontrol::can::TalonFX* controller,
+    units::meter_t wheelRadius, double reduction)
+    : utils::Encoder(2048, reduction, wheelRadius, 0), _controller(controller) {
   controller->ConfigSelectedFeedbackSensor(
       ctre::phoenix::motorcontrol::TalonFXFeedbackDevice::IntegratedSensor);
 }
@@ -115,8 +115,8 @@ double wom::utils::TalonFXEncoder::GetEncoderTickVelocity() const {
 
 wom::utils::TalonSRXEncoder::TalonSRXEncoder(
     ctre::phoenix::motorcontrol::can::TalonSRX* controller,
-    double ticksPerRotation, double reduction)
-    : wom::utils::Encoder(ticksPerRotation, reduction, 0),
+    double ticksPerRotation, units::meter_t wheelRadius, double reduction)
+    : wom::utils::Encoder(ticksPerRotation, reduction, wheelRadius, 0),
       _controller(controller) {
   controller->ConfigSelectedFeedbackSensor(
       ctre::phoenix::motorcontrol::TalonSRXFeedbackDevice::QuadEncoder);
@@ -131,9 +131,10 @@ double wom::utils::TalonSRXEncoder::GetEncoderTickVelocity() const {
 }
 
 wom::utils::DutyCycleEncoder::DutyCycleEncoder(int channel,
+                                               units::meter_t wheelRadius,
                                                double ticksPerRotation,
                                                double reduction)
-    : wom::utils::Encoder(ticksPerRotation, reduction, 0),
+    : wom::utils::Encoder(ticksPerRotation, reduction, wheelRadius, 0),
       _dutyCycleEncoder(channel) {}
 
 double wom::utils::DutyCycleEncoder::GetEncoderRawTicks() const {
@@ -144,9 +145,10 @@ double wom::utils::DutyCycleEncoder::GetEncoderTickVelocity() const {
   return 0;
 }
 
-wom::utils::CanEncoder::CanEncoder(int deviceNumber, double ticksPerRotation,
-                                   double reduction, std::string name)
-    : wom::utils::Encoder(ticksPerRotation, reduction, 1) {
+wom::utils::CanEncoder::CanEncoder(int deviceNumber, units::meter_t wheelRadius,
+                                   double ticksPerRotation, double reduction,
+                                   std::string name)
+    : wom::utils::Encoder(ticksPerRotation, reduction, wheelRadius, 1) {
   _canEncoder = new CANCoder(deviceNumber, name);
 }
 
