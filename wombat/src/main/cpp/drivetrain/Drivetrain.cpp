@@ -38,12 +38,12 @@ void wom::drivetrain::Drivetrain::OnUpdate(second_t dt) {
     case DrivetrainState::kTank: {
       double rightSpeed = wom::utils::deadzone(_driver.GetRightY());
       double leftSpeed = wom::utils::deadzone(_driver.GetLeftY());
-      _config->left1.motorController->SetVoltage(leftSpeed * maxVolts);
-      _config->left2.motorController->SetVoltage(leftSpeed * maxVolts);
-      _config->left3.motorController->SetVoltage(leftSpeed * maxVolts);
-      _config->right1.motorController->SetVoltage(rightSpeed * maxVolts);
-      _config->right2.motorController->SetVoltage(rightSpeed * maxVolts);
-      _config->right3.motorController->SetVoltage(rightSpeed * maxVolts);
+      _config->left1.transmission->SetVoltage(leftSpeed * maxVolts);
+      _config->left2.transmission->SetVoltage(leftSpeed * maxVolts);
+      _config->left3.transmission->SetVoltage(leftSpeed * maxVolts);
+      _config->right1.transmission->SetVoltage(rightSpeed * maxVolts);
+      _config->right2.transmission->SetVoltage(rightSpeed * maxVolts);
+      _config->right3.transmission->SetVoltage(rightSpeed * maxVolts);
       break;
     }
     case DrivetrainState::kAuto:

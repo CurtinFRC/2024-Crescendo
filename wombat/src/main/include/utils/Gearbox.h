@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <frc/motorcontrol/MotorController.h>
 #include <frc/system/plant/DCMotor.h>
 
+#include "VoltageController.h"
 #include "utils/Encoder.h"
 
 namespace wom {
@@ -19,9 +19,9 @@ namespace utils {
  */
 struct Gearbox {
   /**
-   * The MotorController. May not be null.
+   * The VoltageController (Motor Controller). May not be null.
    */
-  frc::MotorController* motorController;
+  VoltageController* transmission;
 
   /**
    * The Encoder. May be null, depending on the consumer of this structure.
@@ -29,9 +29,9 @@ struct Gearbox {
   Encoder* encoder = nullptr;
 
   /**
-   * The motor being used. By default, this is a single Neo.
+   * The motor being used. By default, this is a dual CIM.
    */
-  frc::DCMotor motor = frc::DCMotor::NEO(1);
+  frc::DCMotor motor = frc::DCMotor::CIM(2);
 };
 }  // namespace utils
 }  // namespace wom
