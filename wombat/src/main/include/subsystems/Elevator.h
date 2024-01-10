@@ -11,6 +11,8 @@
 #include <frc/simulation/ElevatorSim.h>
 #include <networktables/NetworkTable.h>
 
+#include "utils/Encoder.h"
+
 #include <memory>
 
 namespace wom {
@@ -26,7 +28,7 @@ namespace subsystems {
     std::string path;
     wom::utils::Gearbox leftGearbox;
     wom::utils::Gearbox rightGearbox;
-    rev::SparkMaxRelativeEncoder elevatorEncoder;
+    wom::utils::CANSparkMaxEncoder elevatorEncoder;
     frc::DigitalInput *topSensor;
     frc::DigitalInput *bottomSensor;
     units::meter_t radius;
