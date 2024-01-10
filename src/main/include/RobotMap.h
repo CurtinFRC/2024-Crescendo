@@ -31,7 +31,7 @@ struct RobotMap {
     CANCoder backLeftCancoder{16};
     CANCoder backRightCancoder{18};
 
-    WPI_Pigeon2 gyro;
+    WPI_Pigeon2 *gyro = new WPI_Pigeon2(2, "Drivebase");
     wpi::array<WPI_TalonFX*, 4> turnMotors{
         new WPI_TalonFX(7, "Drivebase"), new WPI_TalonFX(5, "Drivebase"),
         new WPI_TalonFX(1, "Drivebase"), new WPI_TalonFX(3, "Drivebase")};
@@ -46,7 +46,8 @@ struct RobotMap {
             wom::Gearbox{driveMotors[0],
                          new wom::TalonFXEncoder(driveMotors[0], 0.058_m, 6.75),
                          frc::DCMotor::Falcon500(1).WithReduction(6.75)},
-            wom::Gearbox{turnMotors[0], new wom::CanEncoder(19, 0.058_m, 4096, 12.8),
+            wom::Gearbox{turnMotors[0],
+                         new wom::CanEncoder(19, 0.058_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &frontLeftCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
@@ -55,7 +56,8 @@ struct RobotMap {
             wom::Gearbox{driveMotors[1],
                          new wom::TalonFXEncoder(driveMotors[1], 0.058_m, 6.75),
                          frc::DCMotor::Falcon500(1).WithReduction(6.75)},
-            wom::Gearbox{turnMotors[1], new wom::CanEncoder(17, 0.058_m, 4096, 12.8),
+            wom::Gearbox{turnMotors[1],
+                         new wom::CanEncoder(17, 0.058_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &frontRightCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
@@ -64,7 +66,8 @@ struct RobotMap {
             wom::Gearbox{driveMotors[2],
                          new wom::TalonFXEncoder(driveMotors[2], 0.058_m, 6.75),
                          frc::DCMotor::Falcon500(1).WithReduction(6.75)},
-            wom::Gearbox{turnMotors[2], new wom::CanEncoder(16, 0.058_m, 4096, 12.8),
+            wom::Gearbox{turnMotors[2],
+                         new wom::CanEncoder(16, 0.058_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &backRightCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
@@ -73,7 +76,8 @@ struct RobotMap {
             wom::Gearbox{driveMotors[3],
                          new wom::TalonFXEncoder(driveMotors[3], 0.058_m, 6.75),
                          frc::DCMotor::Falcon500(1).WithReduction(6.75)},
-            wom::Gearbox{turnMotors[3], new wom::CanEncoder(18, 0.058_m, 4096, 12.8),
+            wom::Gearbox{turnMotors[3],
+                         new wom::CanEncoder(18, 0.058_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &backLeftCancoder, 4_in / 2},
     };
@@ -107,7 +111,7 @@ struct RobotMap {
     wom::SwerveDriveConfig config{
         "/drivetrain",   anglePID,       velocityPID,
         moduleConfigs,  // each module
-        &gyro,           poseAnglePID,   posePositionPID,
+        gyro,           poseAnglePID,   posePositionPID,
         60_kg,  // robot mass (estimate rn)
         {0.1, 0.1, 0.1}, {0.9, 0.9, 0.9}};
 

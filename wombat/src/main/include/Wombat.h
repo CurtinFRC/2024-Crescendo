@@ -17,11 +17,13 @@
 #include "utils/PID.h"
 #include "utils/RobotStartup.h"
 #include "utils/Util.h"
+#include "drivetrain/behaviours/SwerveBehaviours.h"
 
 namespace wom {
 using namespace wom;
 using namespace wom::utils;
 using namespace wom::subsystems;
 using namespace wom::drivetrain;
+using namespace wom::drivetrain::behaviours;
 using namespace behaviour;
 }  // namespace wom
