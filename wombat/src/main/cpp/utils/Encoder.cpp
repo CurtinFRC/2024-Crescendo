@@ -6,11 +6,14 @@
 
 #include <cmath>
 
+#include "units/length.h"
+
 wom::utils::Encoder::Encoder(double encoderTicksPerRotation, int type,
-                             double reduction)
+                             double reduction, units::meter_t wheelRadius)
     : _reduction(reduction),
       _encoderTicksPerRotation(encoderTicksPerRotation),
-      _type(type) {}
+      _type(type),
+      _wheelRadius(wheelRadius) {}
 
 double wom::utils::Encoder::GetEncoderTicks() const {
   return GetEncoderRawTicks();
@@ -55,8 +58,7 @@ units::radian_t wom::utils::Encoder::GetEncoderPosition() {
 }
 
 double wom::utils::Encoder::GetEncoderDistance() {
-  return GetEncoderTicks() * (2 * M_PI) *
-         (_reduction / GetEncoderTicksPerRotation());
+  return GetEncoderTicks() * (2 * M_PI) * _wheelRadius.value();
 }
 
 units::radians_per_second_t wom::utils::Encoder::GetEncoderAngularVelocity() {
