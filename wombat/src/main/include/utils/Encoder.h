@@ -60,6 +60,9 @@ namespace utils {
 
     double GetEncoderRawTicks() const override;
     double GetEncoderTickVelocity() const override;
+    
+    double GetPosition() const;
+    double GetVelocity() const;
 
    protected:
     rev::SparkMaxRelativeEncoder _encoder;

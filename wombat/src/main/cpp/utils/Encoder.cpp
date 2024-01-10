@@ -78,6 +78,14 @@ double utils::CANSparkMaxEncoder::GetEncoderTickVelocity() const {
   return _encoder.GetVelocity() * GetEncoderTicksPerRotation() / 60;
 }
 
+double utils::CANSparkMaxEncoder::GetPosition() const {
+  return _encoder.GetPosition();
+}
+
+double utils::CANSparkMaxEncoder::GetVelocity() const {
+  return _encoder.GetVelocity();
+}
+
 utils::TalonFXEncoder::TalonFXEncoder(ctre::phoenix::motorcontrol::can::TalonFX *controller, double reduction)
   : utils::Encoder(2048, reduction, 0), _controller(controller) {
     controller->ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::TalonFXFeedbackDevice::IntegratedSensor);
