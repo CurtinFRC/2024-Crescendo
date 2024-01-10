@@ -15,6 +15,7 @@
 #include <string>
 
 #include "behaviour/HasBehaviour.h"
+#include "utils/Encoder.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
 
@@ -26,7 +27,7 @@ struct ElevatorConfig {
   std::string path;
   wom::utils::Gearbox leftGearbox;
   wom::utils::Gearbox rightGearbox;
-  rev::SparkMaxRelativeEncoder elevatorEncoder;
+  wom::utils::CANSparkMaxEncoder elevatorEncoder;
   frc::DigitalInput* topSensor;
   frc::DigitalInput* bottomSensor;
   units::meter_t radius;

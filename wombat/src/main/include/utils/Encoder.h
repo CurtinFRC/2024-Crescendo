@@ -54,6 +54,9 @@ class DigitalEncoder : public Encoder {
   double GetEncoderRawTicks() const override;
   double GetEncoderTickVelocity() const override;
 
+  double GetPosition() const;
+  double GetVelocity() const;
+
  private:
   frc::Encoder _nativeEncoder;
 };
@@ -66,6 +69,9 @@ class CANSparkMaxEncoder : public Encoder {
 
   double GetEncoderRawTicks() const override;
   double GetEncoderTickVelocity() const override;
+
+  double GetPosition() const;
+  double GetVelocity() const;
 
  protected:
   rev::SparkMaxRelativeEncoder _encoder;
