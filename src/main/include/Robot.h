@@ -4,7 +4,10 @@
 
 #pragma once
 
+#include "RobotMap.h"
+#include "behaviours/MagBehaviour.h"
 #include <frc/TimedRobot.h>
+#include <frc/event/Eventloop.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -20,4 +23,8 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
 
  private:
+  frc::EventLoop loop;
+
+  RobotMap map;
+  Mag *mag;
 };
