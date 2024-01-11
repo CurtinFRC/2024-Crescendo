@@ -26,7 +26,7 @@ ManualDrivebase::ManualDrivebase(wom::drivetrain::SwerveDrive* swerveDrivebase,
   Controls(swerveDrivebase);
 }
 
-void ManualDrivebase::OnStart(units::second_t dt) {
+void ManualDrivebase::OnStart() {
   _swerveDrivebase->OnStart();
   _swerveDrivebase->SetAccelerationLimit(6_mps_sq);
   std::cout << "Manual Drivebase Start" << std::endl;
@@ -51,7 +51,7 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
   if (_driverController->GetLeftBumperPressed()) {
     maxMovementMagnitude = lowSensitivityDriveSpeed;
     maxRotationMagnitude = lowSensitivityRotateSpeed;
-  } else if (_driverController->GetLeftBumperReleased() &
+  } else if (_driverController->GetLeftBumperReleased() &&
              !_driverController->GetRightBumper()) {
     maxMovementMagnitude = defaultDriveSpeed;
     maxRotationMagnitude = defaultRotateSpeed;
@@ -64,7 +64,7 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
     _swerveDrivebase->SetAccelerationLimit(12_mps_sq);
     _swerveDrivebase->SetVoltageLimit(14_V);
 
-  } else if (_driverController->GetRightBumperReleased() &
+  } else if (_driverController->GetRightBumperReleased() &&
              !_driverController->GetLeftBumper()) {
     maxMovementMagnitude = defaultDriveSpeed;
     maxRotationMagnitude = defaultRotateSpeed;
@@ -87,8 +87,6 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
 
     double r_x = wom::utils::spow2(
         -wom::utils::deadzone(_driverController->GetRightX(), turningDeadzone));
-    double r_y = wom::utils::spow2(
-        -wom::utils::deadzone(_driverController->GetRightY(), turningDeadzone));
 
     double turnX = _driverController->GetRightX();
     double turnY = _driverController->GetRightY();
@@ -187,9 +185,6 @@ void wom::drivetrain::behaviours::TempSimSwerveDrive::OnUpdate() {
   // get the current trajectory state
   frc::Trajectory::State desired_state =
       current_trajectory.Sample(m_timer->Get());
-
-  // get the current pose of the robot
-  frc::Pose2d current_pose = m_driveSim.GetPose();
 
   // get the current wheel speeds
   wom::utils::WriteTrajectoryState(current_trajectory_state_table,

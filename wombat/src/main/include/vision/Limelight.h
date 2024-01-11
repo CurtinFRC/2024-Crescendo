@@ -23,8 +23,6 @@
 #include <utility>
 #include <vector>
 
-#include "behaviour/HasBehaviour.h"
-
 namespace wom {
 namespace vision {
 

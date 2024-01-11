@@ -12,13 +12,8 @@
 #include <units/time.h>
 #include <units/voltage.h>
 
-// include frc::DriveKinematics
 #include <frc/kinematics/DifferentialDriveKinematics.h>
-
-// include frc::RamseteController
 #include <frc/controller/RamseteController.h>
-
-// include frc::Timer
 #include <frc/Timer.h>
 
 static units::second_t lastPeriodic;
@@ -78,9 +73,7 @@ void Robot::TeleopInit() {
   // _swerveDrive->OnStart();
   // sched->InterruptAll();
 }
-void Robot::TeleopPeriodic() {
-  auto dt = wom::now() - lastPeriodic;
-}
+void Robot::TeleopPeriodic() {}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}

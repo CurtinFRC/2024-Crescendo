@@ -10,8 +10,8 @@ wom::utils::Encoder::Encoder(double encoderTicksPerRotation, int type,
                              units::meter_t wheelRadius, double reduction)
     : _reduction(reduction),
       _encoderTicksPerRotation(encoderTicksPerRotation),
-      _wheelRadius(wheelRadius),
-      _type(type) {}
+      _type(type),
+      _wheelRadius(wheelRadius) {}
 
 double wom::utils::Encoder::GetEncoderTicks() const {
   return GetEncoderRawTicks();
