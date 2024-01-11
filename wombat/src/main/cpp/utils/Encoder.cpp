@@ -79,7 +79,8 @@ wom::utils::CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax* controller,
                                                    units::meter_t wheelRadius,
                                                    double reduction)
     : wom::utils::Encoder(42, reduction, wheelRadius, 2),
-      _encoder(controller->GetEncoder(rev::SparkRelativeEncoder::Type::kQuadrature)) {}
+      _encoder(controller->GetEncoder(
+          rev::SparkRelativeEncoder::Type::kQuadrature)) {}
 
 double wom::utils::CANSparkMaxEncoder::GetEncoderRawTicks() const {
   return _encoder.GetPosition() * _reduction;
@@ -98,9 +99,10 @@ double wom::utils::CANSparkMaxEncoder::GetVelocity() const {
 }
 
 wom::utils::TalonFXEncoder::TalonFXEncoder(
-    ctre::phoenix6::hardware::TalonFX* controller,
-    units::meter_t wheelRadius, double reduction)
-    : utils::Encoder(2048, reduction, wheelRadius, 0), _controller(controller) {}
+    ctre::phoenix6::hardware::TalonFX* controller, units::meter_t wheelRadius,
+    double reduction)
+    : utils::Encoder(2048, reduction, wheelRadius, 0),
+      _controller(controller) {}
 
 double wom::utils::TalonFXEncoder::GetEncoderRawTicks() const {
   return _controller->GetPosition().GetValue().value();

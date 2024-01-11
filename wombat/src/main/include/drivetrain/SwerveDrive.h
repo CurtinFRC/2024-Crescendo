@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <ctre/phoenix6/CANcoder.hpp>
-#include <ctre/phoenix6/Pigeon2.hpp>
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <networktables/DoubleTopic.h>
@@ -21,6 +19,9 @@
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/Pigeon2.hpp>
 
 #include "behaviour/HasBehaviour.h"
 #include "utils/Gearbox.h"

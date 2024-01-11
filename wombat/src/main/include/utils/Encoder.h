@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <ctre/phoenix6/TalonFX.hpp>
-#include <ctre/phoenix6/CANcoder.hpp>
 #include <frc/DutyCycleEncoder.h>
 #include <frc/Encoder.h>
 #include <rev/CANSparkMax.h>
@@ -14,6 +12,9 @@
 #include <units/length.h>
 
 #include <string>
+
+#include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
 
 namespace wom {
 namespace utils {

@@ -4,9 +4,6 @@
 
 #pragma once
 
-#include <ctre/phoenix6/TalonFX.hpp>
-#include <ctre/phoenix6/Pigeon2.hpp>
-#include <ctre/phoenix6/CANcoder.hpp>
 #include <frc/Compressor.h>
 #include <frc/DoubleSolenoid.h>
 #include <frc/XboxController.h>
@@ -15,6 +12,10 @@
 #include <units/length.h>
 
 #include <string>
+
+#include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/Pigeon2.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
 
 #include "Wombat.h"
 
@@ -32,13 +33,18 @@ struct RobotMap {
     ctre::phoenix6::hardware::CANcoder backLeftCancoder{16};
     ctre::phoenix6::hardware::CANcoder backRightCancoder{18};
 
-    ctre::phoenix6::hardware::Pigeon2* gyro = new ctre::phoenix6::hardware::Pigeon2(20, "Drivebase");
+    ctre::phoenix6::hardware::Pigeon2* gyro =
+        new ctre::phoenix6::hardware::Pigeon2(20, "Drivebase");
     wpi::array<ctre::phoenix6::hardware::TalonFX*, 4> turnMotors{
-        new ctre::phoenix6::hardware::TalonFX(7, "Drivebase"), new ctre::phoenix6::hardware::TalonFX(5, "Drivebase"),
-        new ctre::phoenix6::hardware::TalonFX(1, "Drivebase"), new ctre::phoenix6::hardware::TalonFX(3, "Drivebase")};
+        new ctre::phoenix6::hardware::TalonFX(7, "Drivebase"),
+        new ctre::phoenix6::hardware::TalonFX(5, "Drivebase"),
+        new ctre::phoenix6::hardware::TalonFX(1, "Drivebase"),
+        new ctre::phoenix6::hardware::TalonFX(3, "Drivebase")};
     wpi::array<ctre::phoenix6::hardware::TalonFX*, 4> driveMotors{
-        new ctre::phoenix6::hardware::TalonFX(9, "Drivebase"), new ctre::phoenix6::hardware::TalonFX(6, "Drivebase"),
-        new ctre::phoenix6::hardware::TalonFX(2, "Drivebase"), new ctre::phoenix6::hardware::TalonFX(4, "Drivebase")};
+        new ctre::phoenix6::hardware::TalonFX(9, "Drivebase"),
+        new ctre::phoenix6::hardware::TalonFX(6, "Drivebase"),
+        new ctre::phoenix6::hardware::TalonFX(2, "Drivebase"),
+        new ctre::phoenix6::hardware::TalonFX(4, "Drivebase")};
 
     wpi::array<wom::SwerveModuleConfig, 4> moduleConfigs{
         wom::SwerveModuleConfig{
@@ -125,7 +131,7 @@ struct RobotMap {
                                   {0.9, 0.9, 0.9}};
 
     // current limiting and setting idle mode of modules to brake mode
-    //SwerveBase() {
+    // SwerveBase() {
     //  for (size_t i = 0; i < 4; i++) {
     //    turnMotors[i]->ConfigSupplyCurrentLimit(
     //        SupplyCurrentLimitConfiguration(true, 15, 15, 0));
