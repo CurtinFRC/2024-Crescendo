@@ -4,9 +4,7 @@
 
 #pragma once
 
-#include <ctre/Phoenix.h>
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
-#include <frc/interfaces/Gyro.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <networktables/DoubleTopic.h>
 #include <networktables/NetworkTable.h>
@@ -21,6 +19,9 @@
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/Pigeon2.hpp>
 
 #include "behaviour/HasBehaviour.h"
 #include "utils/Gearbox.h"
@@ -37,7 +38,7 @@ struct SwerveModuleConfig {
   utils::Gearbox driveMotor;
   utils::Gearbox turnMotor;
 
-  CANCoder* canEncoder;
+  ctre::phoenix6::hardware::CANcoder* canEncoder;
 
   units::meter_t wheelRadius;
 
@@ -117,7 +118,7 @@ struct SwerveDriveConfig {
 
   wpi::array<SwerveModuleConfig, 4> modules;
 
-  frc::Gyro* gyro;
+  ctre::phoenix6::hardware::Pigeon2* gyro;
 
   pose_angle_conf_t poseAnglePID;
   pose_position_conf_t posePositionPID;

@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <ctre/Phoenix.h>
-#include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
 #include <frc/Compressor.h>
 #include <frc/DoubleSolenoid.h>
 #include <frc/XboxController.h>
@@ -14,6 +12,10 @@
 #include <units/length.h>
 
 #include <string>
+
+#include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/Pigeon2.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
 
 #include "Wombat.h"
 
@@ -26,18 +28,23 @@ struct RobotMap {
   Controllers controllers;
 
   struct SwerveBase {
-    CANCoder frontLeftCancoder{19};
-    CANCoder frontRightCancoder{17};
-    CANCoder backLeftCancoder{16};
-    CANCoder backRightCancoder{18};
+    ctre::phoenix6::hardware::CANcoder frontLeftCancoder{19};
+    ctre::phoenix6::hardware::CANcoder frontRightCancoder{17};
+    ctre::phoenix6::hardware::CANcoder backLeftCancoder{16};
+    ctre::phoenix6::hardware::CANcoder backRightCancoder{18};
 
-    WPI_Pigeon2* gyro = new WPI_Pigeon2(20, "Drivebase");
-    wpi::array<WPI_TalonFX*, 4> turnMotors{
-        new WPI_TalonFX(7, "Drivebase"), new WPI_TalonFX(5, "Drivebase"),
-        new WPI_TalonFX(1, "Drivebase"), new WPI_TalonFX(3, "Drivebase")};
-    wpi::array<WPI_TalonFX*, 4> driveMotors{
-        new WPI_TalonFX(9, "Drivebase"), new WPI_TalonFX(6, "Drivebase"),
-        new WPI_TalonFX(2, "Drivebase"), new WPI_TalonFX(4, "Drivebase")};
+    ctre::phoenix6::hardware::Pigeon2* gyro =
+        new ctre::phoenix6::hardware::Pigeon2(20, "Drivebase");
+    wpi::array<ctre::phoenix6::hardware::TalonFX*, 4> turnMotors{
+        new ctre::phoenix6::hardware::TalonFX(7, "Drivebase"),
+        new ctre::phoenix6::hardware::TalonFX(5, "Drivebase"),
+        new ctre::phoenix6::hardware::TalonFX(1, "Drivebase"),
+        new ctre::phoenix6::hardware::TalonFX(3, "Drivebase")};
+    wpi::array<ctre::phoenix6::hardware::TalonFX*, 4> driveMotors{
+        new ctre::phoenix6::hardware::TalonFX(9, "Drivebase"),
+        new ctre::phoenix6::hardware::TalonFX(6, "Drivebase"),
+        new ctre::phoenix6::hardware::TalonFX(2, "Drivebase"),
+        new ctre::phoenix6::hardware::TalonFX(4, "Drivebase")};
 
     wpi::array<wom::SwerveModuleConfig, 4> moduleConfigs{
         wom::SwerveModuleConfig{
@@ -124,15 +131,15 @@ struct RobotMap {
                                   {0.9, 0.9, 0.9}};
 
     // current limiting and setting idle mode of modules to brake mode
-    SwerveBase() {
-      for (size_t i = 0; i < 4; i++) {
-        turnMotors[i]->ConfigSupplyCurrentLimit(
-            SupplyCurrentLimitConfiguration(true, 15, 15, 0));
-        driveMotors[i]->SetNeutralMode(NeutralMode::Brake);
-        turnMotors[i]->SetNeutralMode(NeutralMode::Brake);
-        driveMotors[i]->SetInverted(true);
-      }
-    }
+    // SwerveBase() {
+    //  for (size_t i = 0; i < 4; i++) {
+    //    turnMotors[i]->ConfigSupplyCurrentLimit(
+    //        SupplyCurrentLimitConfiguration(true, 15, 15, 0));
+    //    driveMotors[i]->SetNeutralMode(NeutralMode::Brake);
+    //    turnMotors[i]->SetNeutralMode(NeutralMode::Brake);
+    //    driveMotors[i]->SetInverted(true);
+    //  }
+    //}
   };
   SwerveBase swerveBase;
 };
