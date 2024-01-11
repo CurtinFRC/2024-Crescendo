@@ -24,7 +24,8 @@ std::pair<double, double> wom::vision::Limelight::GetOffset() {
   return offset;
 }
 
-std::vector<double> wom::vision::Limelight::GetAprilTagData(LimelightAprilTagData dataType) {
+std::vector<double> wom::vision::Limelight::GetAprilTagData(
+    LimelightAprilTagData dataType) {
   std::string dataName;
 
   switch (dataType) {
@@ -68,7 +69,8 @@ std::vector<double> wom::vision::Limelight::GetAprilTagData(LimelightAprilTagDat
   return table->GetNumberArray(dataName, std::vector<double>(6));
 }
 
-double wom::vision::Limelight::GetTargetingData(LimelightTargetingData dataType, double defaultValue) {
+double wom::vision::Limelight::GetTargetingData(LimelightTargetingData dataType,
+                                                double defaultValue) {
   std::string dataName;
 
   switch (dataType) {
@@ -120,15 +122,15 @@ double wom::vision::Limelight::GetTargetingData(LimelightTargetingData dataType,
       dataName = "json";
       break;
 
-    case LimelightTargetingData::kClass:
-      dataName = "class";
+    case LimelightTargetingData::kTclass:
+      dataName = "tclass";
       break;
 
     case LimelightTargetingData::kTc:
       dataName = "tc";
       break;
   }
-  
+
   return table->GetNumber(dataName, defaultValue);
 }
 
