@@ -81,8 +81,8 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   // turnVoltage = units::math::min(units::math::max(turnVoltage, -7_V), 7_V);
   // std::cout << "turn-voltage-max: " << turnVoltageMax.value() << std::endl;
 
-  _config.driveMotor.transmission->SetVoltage(driveVoltage);
-  _config.turnMotor.transmission->SetVoltage(turnVoltage);
+  _config.driveMotor.motorController->SetVoltage(driveVoltage);
+  _config.turnMotor.motorController->SetVoltage(turnVoltage);
 
   _table->GetEntry("speed").SetDouble(GetSpeed().value());
   _table->GetEntry("angle").SetDouble(
