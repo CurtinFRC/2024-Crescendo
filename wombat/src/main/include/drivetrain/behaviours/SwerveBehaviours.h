@@ -17,9 +17,7 @@
 
 #include "behaviour/Behaviour.h"
 #include "drivetrain/SwerveDrive.h"
-#include "frc/smartdashboard/SendableChooser.h"
 #include "utils/Pathplanner.h"
-#include "utils/Util.h"
 
 namespace wom {
 namespace drivetrain {
@@ -49,7 +47,7 @@ class ManualDrivebase : public behaviour::Behaviour {
    */
   void CalculateRequestedAngle(double joystickX, double joystickY,
                                units::degree_t defaultAngle);
-  void OnStart(units::second_t dt);
+  void OnStart() override;
   void ResetMode();
 
  private:
