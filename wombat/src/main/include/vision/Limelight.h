@@ -77,7 +77,7 @@ namespace vision {
     kTvert = 9,
     kGetpipe = 10,
     kJson = 11,
-    kClass = 12,
+    kTclass = 12,
     kTc = 13,
   };
 
