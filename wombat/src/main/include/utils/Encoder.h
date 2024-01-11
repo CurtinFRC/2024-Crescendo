@@ -4,7 +4,8 @@
 
 #pragma once
 
-#include <ctre/Phoenix.h>
+#include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix6/CANcoder.hpp>
 #include <frc/DutyCycleEncoder.h>
 #include <frc/Encoder.h>
 #include <rev/CANSparkMax.h>
@@ -77,33 +78,20 @@ class CANSparkMaxEncoder : public Encoder {
   double GetVelocity() const;
 
  protected:
-  rev::SparkMaxRelativeEncoder _encoder;
+  rev::SparkRelativeEncoder _encoder;
   friend class SimCANSparkMaxEncoder;
 };
 
 class TalonFXEncoder : public Encoder {
  public:
-  TalonFXEncoder(ctre::phoenix::motorcontrol::can::TalonFX* controller,
+  TalonFXEncoder(ctre::phoenix6::hardware::TalonFX* controller,
                  units::meter_t wheelRadius, double reduction = 1);
 
   double GetEncoderRawTicks() const override;
   double GetEncoderTickVelocity() const override;
 
  private:
-  ctre::phoenix::motorcontrol::can::TalonFX* _controller;
-};
-
-class TalonSRXEncoder : public Encoder {
- public:
-  TalonSRXEncoder(ctre::phoenix::motorcontrol::can::TalonSRX* controller,
-                  double ticksPerRotation, units::meter_t wheelRadius,
-                  double reduction = 1);
-
-  double GetEncoderRawTicks() const override;
-  double GetEncoderTickVelocity() const override;
-
- private:
-  ctre::phoenix::motorcontrol::can::TalonSRX* _controller;
+  ctre::phoenix6::hardware::TalonFX* _controller;
 };
 
 class DutyCycleEncoder : public Encoder {
@@ -131,7 +119,7 @@ class CanEncoder : public Encoder {
   const double constantValue = 0.0;
 
  private:
-  CANCoder* _canEncoder;
+  ctre::phoenix6::hardware::CANcoder* _canEncoder;
 };
 }  // namespace utils
 }  // namespace wom
