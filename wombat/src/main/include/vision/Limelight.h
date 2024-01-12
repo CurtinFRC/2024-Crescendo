@@ -38,7 +38,7 @@ enum class LimelightLEDMode {
 enum class LimelightCamMode { kVisionProcessor = 0, kDriverCamera = 1 };
 
 enum class LimelightStreamMode {
-  kStandard = 0,
+  kStandard = 0, 
   kPiPMain = 1,
   kPiPSecondary = 2
 };

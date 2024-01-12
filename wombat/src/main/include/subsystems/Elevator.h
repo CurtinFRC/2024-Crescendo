@@ -54,8 +54,6 @@ class Elevator : public behaviour::HasBehaviour {
 
   void SetVelocity(units::meters_per_second_t velocity);
 
-  units::volt_t GetRaw();
-
   double GetElevatorEncoderPos();
   void SetElevatorSpeedLimit(double limit);
 
