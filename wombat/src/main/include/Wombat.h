@@ -18,6 +18,7 @@
 #include "utils/PID.h"
 #include "utils/RobotStartup.h"
 #include "utils/Util.h"
+#include "vision/Limelight.h"
 
 namespace wom {
 using namespace wom;
@@ -25,5 +26,6 @@ using namespace wom::utils;
 using namespace wom::subsystems;
 using namespace wom::drivetrain;
 using namespace wom::drivetrain::behaviours;
+using namespace wom::vision;
 using namespace behaviour;
 }  // namespace wom
