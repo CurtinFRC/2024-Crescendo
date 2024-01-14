@@ -12,6 +12,7 @@ class MagManualControl : public behaviour::Behaviour {
  private:
   Mag *_mag;
   frc::XboxController &_codriver;
+  bool _rawControl; // Default of Bool is False.
 };
 
 class MagAutoControl : public behaviour::Behaviour {

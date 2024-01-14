@@ -14,8 +14,8 @@ struct RobotMap {
     wom::VoltageController magMotorGroup = wom::VoltageController::Group(magMotor);
     // frc::DigitalInput _switch;
     // wom::CANSparkMaxEncoder magEncoder(&magMotor, 100);
-    frc::DigitalInput intakeSensor {0};
-    frc::DigitalInput magSensor {1};
+    frc::DigitalInput intakeSensor{0};
+    frc::DigitalInput magSensor{1};
 
     wom::Gearbox magGearbox {
       &magMotorGroup,
@@ -25,9 +25,10 @@ struct RobotMap {
     };
 
     MagConfig config {
-      magGearbox,
-      // intakeSensor,
-      // magSensor
-    };
-  }; Mag magSystem;
+       magGearbox,
+       &intakeSensor,
+       &magSensor
+     };
+  }; 
+  Mag magSystem;
 };

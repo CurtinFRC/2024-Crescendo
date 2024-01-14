@@ -4,15 +4,17 @@
 
 struct MagConfig {
   wom::Gearbox magGearbox;
-  // frc::DigitalInput intakeSensor;
-  // frc::DigitalInput magSensor;
+  frc::DigitalInput* intakeSensor;
+  frc::DigitalInput* magSensor;
+  frc::DigitalInput* shooterSensor;
 };
 
 enum class MagState {
   kIdle,
   kHold,
-  kPass,
-  kEject
+  kEject,
+  kRaw,
+  kPass
 };
 
 class Mag : public behaviour::HasBehaviour {
@@ -30,8 +32,5 @@ class Mag : public behaviour::HasBehaviour {
   private:
     MagConfig _config;
     MagState _state;
-    frc::DigitalInput _intakeSensor {0};
-    frc::DigitalInput _magSensor {1};
-
-    units::volt_t _voltage; 
+    units::volt_t _voltage;
 };
