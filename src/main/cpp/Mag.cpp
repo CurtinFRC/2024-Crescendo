@@ -51,6 +51,7 @@ void Mag::OnUpdate(units::second_t dt) {
 void Mag::setState(MagState state) {
   _state = state;
 }
+
 void Mag::setRaw(units::volt_t voltage) {
   _voltage = voltage;
 }
