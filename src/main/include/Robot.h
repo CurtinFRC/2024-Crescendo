@@ -3,13 +3,13 @@
 // of the MIT License at the root of this project
 
 #pragma once
-
+#include "Shooter.h"
 #include <frc/TimedRobot.h>
-#include "arm.h"
 #include "Wombat.h"
 #include "RobotMap.h"
 #include <frc/event/EventLoop.h>
-#include "intake.h"
+#include "ShooterBehaviour.h"
+
 class Robot : public frc::TimedRobot {
  public:
   void RobotInit() override;
@@ -26,7 +26,5 @@ class Robot : public frc::TimedRobot {
  private:
  frc::EventLoop loop;
  RobotMap map;
- Arm *arm;
- Intake *intake;
-
+ Shooter *shooter;
 };
