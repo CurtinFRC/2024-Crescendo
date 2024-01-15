@@ -15,9 +15,18 @@ class MagManualControl : public behaviour::Behaviour {
   bool _rawControl; // Default of Bool is False.
 };
 
-class MagAutoControl : public behaviour::Behaviour {
+class MagAutoPass : public behaviour::Behaviour {
  public:
-  MagAutoControl(Mag *mag, units::volt_t voltage);
+  MagAutoPass(Mag *mag);
+   
+  void OnTick(units::second_t dt) override;
+ private:
+  Mag *_mag;
+};
+
+class MagAutoHold : public behaviour::Behaviour {
+ public:
+  MagAutoHold(Mag *mag);
    
   void OnTick(units::second_t dt) override;
  private:
