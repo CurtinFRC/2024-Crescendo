@@ -3,11 +3,9 @@
 Mag::Mag(MagConfig config) : _config(config) {}
 
 void Mag::OnUpdate(units::second_t dt) {
-//Work on later. 
   switch (_state) {
     case MagState::kIdle: 
     {
-      //set to 0 volts
       if (_config.intakeSensor->Get()) {
         setState(MagState::kHold);
       }
@@ -19,6 +17,7 @@ void Mag::OnUpdate(units::second_t dt) {
       if (_config.magSensor->Get() == 0) {
         setState(MagState::kIdle);
       }
+      _config.magGearbox.transmission->SetVoltage(_voltage);
     }
     break;
 
@@ -27,10 +26,12 @@ void Mag::OnUpdate(units::second_t dt) {
       if (_config.magSensor->Get() == 0) {
         setState(MagState::kIdle);
       }
+      _config.magGearbox.transmission->SetVoltage(_voltage);
     }
     break;
 
     case MagState::kRaw:
+      _config.magGearbox.transmission->SetVoltage(_voltage);
     break;
 
     case MagState::kPass:
@@ -38,6 +39,7 @@ void Mag::OnUpdate(units::second_t dt) {
       if (_config.shooterSensor->Get()) {
         setState(MagState::kIdle);
       }
+      _config.magGearbox.transmission->SetVoltage(_voltage);
     }
     break;
 
@@ -58,16 +60,6 @@ void Mag::setRaw(units::volt_t voltage) {
 MagState Mag::getState() {
   return _state;
 }
-
-// void Mag::setPass(units::volt_t voltage) {
-//   _voltage = voltage;
-// }
-// void Mag::setHold(units::volt_t voltage) {
-//   _voltage = voltage;
-// }
-// void Mag::setEject(units::volt_t voltage) {
-//   _voltage = voltage;
-// }
 
 
 

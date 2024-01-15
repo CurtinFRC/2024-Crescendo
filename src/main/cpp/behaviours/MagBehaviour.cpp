@@ -17,7 +17,6 @@ void MagManualControl::OnTick(units::second_t dt) {
   if (_rawControl) {
     // Manual control, right bumper for manual override.
     if (_codriver.GetLeftBumper()) {
-      // Adjust voltage later.
       _mag->setRaw(5_V);
       _mag->setState(MagState::kRaw);
     } else if (_codriver.GetRightBumper()) {
@@ -26,7 +25,6 @@ void MagManualControl::OnTick(units::second_t dt) {
 
     } else {
       _mag->setRaw(0_V);
-      // _mag->setState(MagState::kIdle);
     }
     
   } else {
@@ -43,7 +41,6 @@ void MagManualControl::OnTick(units::second_t dt) {
     void MagAutoControl::OnTick(units::second_t dt) {  
       MagState _current = _mag->getState();
       //Auto control.
-      //adjust voltage later.
       if (_current == MagState::kHold) {
         //-1_V is for keeping the note in the magazine during transit.
         _mag->setRaw(-1_V);

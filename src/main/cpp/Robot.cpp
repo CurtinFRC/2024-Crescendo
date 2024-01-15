@@ -19,9 +19,11 @@ void Robot::RobotInit() {
 void Robot::RobotPeriodic() {
   units::second_t dt = wom::now() - lastPeriodic;
   lastPeriodic = wom::now();
-
+  
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
+
+  mag->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {}

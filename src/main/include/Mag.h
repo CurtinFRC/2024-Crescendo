@@ -23,10 +23,6 @@ class Mag : public behaviour::HasBehaviour {
 
     void OnUpdate(units::second_t dt);
     void setState(MagState state);
-    // void setReceive(units::volt_t voltage)
-    // void setHold(units::volt_t voltage)
-    // void setPass(units::volt_t voltage)
-    // void setLeave(units::volt_t voltage)
     void setRaw(units::volt_t voltage);
     MagState getState();
   private:
