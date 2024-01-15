@@ -17,20 +17,20 @@ void MagManualControl::OnTick(units::second_t dt) {
   if (_rawControl) {
     // Manual control, right bumper for manual override.
     if (_codriver.GetLeftBumper()) {
-      _mag->setRaw(5_V);
-      _mag->setState(MagState::kRaw);
+      _mag->SetRaw(5_V);
+      _mag->SetState(MagState::kRaw);
     } else if (_codriver.GetRightBumper()) {
-      _mag->setRaw(-5_V);
-      _mag->setState(MagState::kRaw);
+      _mag->SetRaw(-5_V);
+      _mag->SetState(MagState::kRaw);
 
     } else {
-      _mag->setRaw(0_V);
+      _mag->SetRaw(0_V);
     }
     
   } else {
-    _mag->setState(MagState::kIdle);
+    _mag->SetState(MagState::kIdle);
     if (_codriver.GetLeftBumper()) {
-      _mag->setState(MagState::kPass);
+      _mag->SetState(MagState::kPass);
       
     }
   }
@@ -39,11 +39,11 @@ void MagManualControl::OnTick(units::second_t dt) {
     MagAutoPass::MagAutoPass(Mag *mag) {}
     
     void MagAutoPass::OnTick(units::second_t dt) {  
-      _mag->setState(MagState::kPass);
+      _mag->SetState(MagState::kPass);
     }
 
     MagAutoHold::MagAutoHold(Mag *mag) {}
     
     void MagAutoHold::OnTick(units::second_t dt) {  
-      _mag->setState(MagState::kHold);
+      _mag->SetState(MagState::kHold);
     }

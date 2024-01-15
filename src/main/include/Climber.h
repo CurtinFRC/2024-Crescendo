@@ -17,13 +17,13 @@ class Climber : public behaviour:HasBehaviour {
     Climber(ClimberConfig config);
 
     void OnUpdate(units::second_t dt);
-    void setState(ClimberState state);
+    void SetState(ClimberState state);
     // void setReceive(units::volt_t voltage)
     // void setHold(units::volt_t voltage)
     // void setPass(units::volt_t voltage)
     // void setLeave(units::volt_t voltage)
-    void setRaw(units::volt_t voltage);
-    ClimberState getState();
+    void SetRaw(units::volt_t voltage);
+    ClimberState GetState();
   private:
     ClimberConfig _config;
     ClimberState _state;

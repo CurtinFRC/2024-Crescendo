@@ -22,9 +22,9 @@ class Mag : public behaviour::HasBehaviour {
     Mag(MagConfig config);
 
     void OnUpdate(units::second_t dt);
-    void setState(MagState state);
-    void setRaw(units::volt_t voltage);
-    MagState getState();
+    void SetState(MagState state);
+    void SetRaw(units::volt_t voltage);
+    MagState GetState();
   private:
     MagConfig _config;
     MagState _state;
