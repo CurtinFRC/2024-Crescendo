@@ -6,6 +6,8 @@
 
 #include "tankBehaviour.h"
 #include "armBehaviour.h"
+#include "Intake.h"
+#include "IntakeBehaviour.h"
 #include "Wombat.h"
 #include "RobotMap.h"
 #include <frc/TimedRobot.h>
@@ -30,4 +32,5 @@ class Robot : public frc::TimedRobot {
   RobotMap map;  
   Arm *arm;
   TankDrive *tank;
+  Intake *intake;
 };

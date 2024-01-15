@@ -13,6 +13,8 @@ void Robot::RobotInit() {
   wom::BehaviourScheduler::GetInstance()->Register(tank);
   arm = new Arm(map.armSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(arm);
+  intake = new Intake(map.intakeSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(intake);
 
   arm->SetDefaultBehaviour([this]() {
     return wom::make<ArmManualControl>(arm, map.driver);
@@ -20,6 +22,10 @@ void Robot::RobotInit() {
 
   tank->SetDefaultBehaviour([this]() {
     return wom::make<TankManualControl>(tank, map.driver);
+  });
+
+  intake->SetDefaultBehaviour([this]() {
+    return wom::make<IntakeManualControl>(intake, map.driver);
   });
 }
 void Robot::RobotPeriodic() {
@@ -31,8 +37,8 @@ void Robot::RobotPeriodic() {
 
   arm->OnUpdate(dt);
   tank->OnUpdate(dt);
+  intake->OnUpdate(dt);
 }
-
 
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
