@@ -7,14 +7,20 @@ void Intake::OnUpdate(units::second_t dt) {
 
   switch (_state) {
       case IntakeState::kIdle:
+      {
+        _config.IntakeMotor.transmission->SetVoltage(0_V);
+      }
       break;
       case IntakeState::kRaw:
+      {
+        _config.IntakeMotor.transmission->SetVoltage(_voltage);
+      }
       break;
       default:
         std::cout <<"Error: Intake in INVALID STATE." << std::endl;
       break;
   }
-  _config.IntakeMotor.transmission->SetVoltage(_voltage);
+  
 }
 
 void Intake::setState(IntakeState state) {

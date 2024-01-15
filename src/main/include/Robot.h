@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include "tankBehaviour.h"
-#include "armBehaviour.h"
+
 #include "Intake.h"
 #include "IntakeBehaviour.h"
 #include "Wombat.h"
@@ -30,7 +29,5 @@ class Robot : public frc::TimedRobot {
   frc::EventLoop loop;
 
   RobotMap map;  
-  Arm *arm;
-  TankDrive *tank;
   Intake *intake;
 };
