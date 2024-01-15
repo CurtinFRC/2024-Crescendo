@@ -12,7 +12,7 @@ struct RobotMap {
   struct Mag {
     rev::CANSparkMax magMotor{99, rev::CANSparkMax::MotorType::kBrushless};
     wom::VoltageController magMotorGroup = wom::VoltageController::Group(magMotor);
-    wom::CANSparkMaxEncoder magEncoder(&magMotor, 100);
+    wom::CANSparkMaxEncoder magEncoder(&magMotor, 42);
     frc::DigitalInput intakeSensor{0};
     frc::DigitalInput magSensor{1};
     frc::DigitalInput shooterSensor{1};

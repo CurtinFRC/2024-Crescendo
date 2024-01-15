@@ -9,6 +9,7 @@ void Mag::OnUpdate(units::second_t dt) {
       if (_config.intakeSensor->Get()) {
         setState(MagState::kHold);
       }
+      _config.magGearbox.transmission->SetVoltage(0_V);
     }
     break;
 
@@ -17,12 +18,13 @@ void Mag::OnUpdate(units::second_t dt) {
       if (_config.magSensor->Get() == 0) {
         setState(MagState::kIdle);
       }
+      _config.magGearbox.transmission->SetVoltage(0_V);
     }
     break;
 
     case MagState::kEject:
     {
-      if (_config.magSensor->Get() && _config.intakeSensor->Get()) {
+      if (_config.magSensor->Get() == 0 && _config.intakeSensor->Get() ==  0) {
         setState(MagState::kIdle);
       }
       _config.magGearbox.transmission->SetVoltage(-5_V);
