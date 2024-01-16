@@ -31,4 +31,5 @@ struct RobotMap {
      };
   }; 
   Mag magSystem;
+
 };
