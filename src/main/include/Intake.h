@@ -7,17 +7,21 @@
 struct IntakeConfig {
   wom::Gearbox IntakeMotor;
   frc::DigitalInput* intakeSensor;
+  frc::DigitalInput* magSensor;
 };
 
 enum class IntakeState {
   kIdle,
-  kRaw
+  kRaw,
+  kHold,
+  kEject,
+  kIntake
 };
 
 class Intake : public behaviour::HasBehaviour {
  public:
   Intake(IntakeConfig config);
-
+  
   void OnUpdate(units::second_t dt);
   
   void setState(IntakeState state);
@@ -27,5 +31,5 @@ class Intake : public behaviour::HasBehaviour {
   IntakeConfig _config;
   IntakeState _state = IntakeState::kIdle;
 
-  units::volt_t _voltage;
+  units::volt_t _rawVoltage;
 }; 

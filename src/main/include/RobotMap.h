@@ -10,13 +10,11 @@ struct RobotMap {
 
   struct IntakeSystem {
 
-    //rev::CANSparkMax IntakeController{99,rev::CANSparkMax::MotorType::kBrushless};
     wom::VoltageController IntakeMotor{new rev::CANSparkMax(99, rev::CANSparkMax::MotorType::kBrushless) };
-    frc::DigitalInput intakeSensor(0);
+    frc::DigitalInput intakeSensor {0};
+    frc::DigitalInput magSensor {0};
 
-    //wom::VoltageController IntakeMotor{ IntakeController NEO(99)};
-
-    wom::Gearbox IntakeGearbox {
+    wom::Gearbox IntakeGearbox { 
       &IntakeMotor,
       nullptr,
       wom::DCMotor::NEO(1).WithReduction(1)
@@ -24,6 +22,8 @@ struct RobotMap {
 
     IntakeConfig config {
       IntakeGearbox,
+      &intakeSensor,
+      &magSensor
     };
   }; IntakeSystem intakeSystem;
 
