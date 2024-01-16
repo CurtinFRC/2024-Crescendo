@@ -15,7 +15,8 @@ enum class IntakeState {
   kRaw,
   kHold,
   kEject,
-  kIntake
+  kIntake,
+  kPass
 };
 
 class Intake : public behaviour::HasBehaviour {

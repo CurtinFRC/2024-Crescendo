@@ -14,4 +14,5 @@ class IntakeManualControl : public behaviour::Behaviour {
   frc::XboxController &_codriver;
 
   units::volt_t _voltage;
+  bool _rawControl;
 }; 

@@ -37,6 +37,11 @@ void Intake::OnUpdate(units::second_t dt) {
         _config.IntakeMotor.transmission->SetVoltage(5_V);
       }
       break;
+      case IntakeState::kPass:
+      {
+        _config.IntakeMotor.transmission->SetVoltage(5_V);
+      }
+      break;
       default:
         std::cout <<"Error: Intake in INVALID STATE." << std::endl;
       break;
@@ -48,5 +53,5 @@ void Intake::setState(IntakeState state) {
   _state = state;
 }
 void Intake::setRaw(units::volt_t voltage) {
-  voltage = voltage;
+  _rawVoltage = voltage;
 }
