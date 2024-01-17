@@ -13,15 +13,13 @@ void Shooter::OnUpdate(units::second_t dt){
           _config.ShooterGearbox.transmission->SetVoltage(0_V);
           if (_shooterSensor.Get()) {       
             _state = ShooterState::kReverse;
-            // kSpinup
-            // kShooting
           } 
 				}
         break;
         case ShooterState::kSpinUp:
         {
           _pid.SetSetpoint(_goal);
-          _config.ShooterGearbox.transmission->SetVoltage(0.2_V);
+          _config.ShooterGearbox.transmission->SetVoltage(_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt));
 
           if (_pid.IsStable()) {
             setState(ShooterState::kShooting);
@@ -32,11 +30,11 @@ void Shooter::OnUpdate(units::second_t dt){
         case ShooterState::kShooting:
 				{
           _pid.SetSetpoint(_goal);
-        	_config.ShooterGearbox.transmission->SetVoltage(0.2_V);
-          // if (_pid.IsStable()) {
-            // setState(ShooterState::kIdle);
-          // }
-          // do we need this first loop?
+        	_config.ShooterGearbox.transmission->SetVoltage(_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt));
+
+           if (_pid.IsStable()) {
+             setState(ShooterState::kSpinUp);
+           }
           if (_shooterSensor.Get()) {
             setState(ShooterState::kIdle);
           }

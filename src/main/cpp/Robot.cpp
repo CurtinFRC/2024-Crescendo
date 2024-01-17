@@ -1,9 +1,6 @@
 // Copyright (c) 2023-2024 CurtinFRC
 // Open Source Software, you can modify it according to the terms
 // of the MIT License at the root of this project
-// Copyright (c) 2023-2024 CurtinFRC
-// Open Source Software, you can modify it according to the terms
-// of the MIT License at the root of this project
 #include "Robot.h"
 
 static units::second_t lastPeriodic;
@@ -26,7 +23,7 @@ void Robot::RobotPeriodic() {
     wom::BehaviourScheduler::GetInstance()->Tick();
 
      shooter->OnUpdate(dt);
-     
+
 }
 
 void Robot::AutonomousInit() {}

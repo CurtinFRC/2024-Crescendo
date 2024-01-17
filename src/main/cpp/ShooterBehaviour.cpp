@@ -6,33 +6,26 @@ ShooterManualControl::ShooterManualControl(Shooter *shooter, frc::XboxController
 }
 
 void ShooterManualControl::OnTick(units::second_t dt) {
-    if (_codriver.GetLeftBumper()) {
-       _shooter->setState(ShooterState::kSpinUp);
-       _shooter->setPidGoal(65_rad_per_s);
-    } else if (_codriver.GetRightBumper()) {
-       _shooter->setState(ShooterState::kSpinUp);
-       _shooter->setPidGoal(20_rad_per_s);
-    }
-    
-    double rawControl;
+
+
     if(_codriver.GetAButtonPressed()){
-        if (rawControl == true){
-            rawControl = false;
+        if (_rawControl == true){
+            _rawControl = false;
         } else {
-            rawControl = true;
+            _rawControl = true;
         }
     }
-if (!rawControl) { // rawControl == false
-    if (_codriver.GetLeftBumper()) {
-        _shooter->setState(ShooterState::kSpinUp);
-        _shooter->setPidGoal(65_rad_per_s);
-    } else if (_codriver.GetRightBumper()) {
-        _shooter->setState(ShooterState::kSpinUp);
-        _shooter->setPidGoal(20_rad_per_s);
+    if (!_rawControl) { // rawControl == false
+        if (_codriver.GetLeftBumper()) {
+            _shooter->setState(ShooterState::kSpinUp);
+            _shooter->setPidGoal(65_rad_per_s);
+        } else if (_codriver.GetRightBumper()) {
+            _shooter->setState(ShooterState::kSpinUp);
+            _shooter->setPidGoal(20_rad_per_s);
+        }
+    } else {
+         _shooter->setRaw(_codriver.GetRightBumperPressed() * 12_V);
+         
     }
-} else {
-     _shooter->setRaw(0_V);
-     
-}
 
 }
