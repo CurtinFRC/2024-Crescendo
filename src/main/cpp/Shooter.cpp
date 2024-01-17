@@ -19,7 +19,8 @@ void Shooter::OnUpdate(units::second_t dt){
         case ShooterState::kSpinUp:
         {
           _pid.SetSetpoint(_goal);
-          _config.ShooterGearbox.transmission->SetVoltage(_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt));
+          units::volt_t pidCalculate = _pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt);
+          _config.ShooterGearbox.transmission->SetVoltage(pidCalculate);
 
           if (_pid.IsStable()) {
             setState(ShooterState::kShooting);
@@ -30,9 +31,10 @@ void Shooter::OnUpdate(units::second_t dt){
         case ShooterState::kShooting:
 				{
           _pid.SetSetpoint(_goal);
-        	_config.ShooterGearbox.transmission->SetVoltage(_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt));
+          units::volt_t pidCalculate = _pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt);
+        	_config.ShooterGearbox.transmission->SetVoltage(pidCalculate);
 
-           if (_pid.IsStable()) {
+           if (!_pid.IsStable()) {
              setState(ShooterState::kSpinUp);
            }
           if (_shooterSensor.Get()) {

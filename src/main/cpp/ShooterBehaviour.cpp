@@ -24,7 +24,7 @@ void ShooterManualControl::OnTick(units::second_t dt) {
             _shooter->setPidGoal(20_rad_per_s);
         }
     } else {
-         _shooter->setRaw(_codriver.GetRightBumperPressed() * 12_V);
+         _shooter->setRaw(_codriver.GetRightTriggerAxis() * 12_V);
          
     }
 

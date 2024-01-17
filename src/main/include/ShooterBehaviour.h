@@ -15,7 +15,7 @@ class ShooterManualControl : public behaviour::Behaviour{
   Shooter* _shooter;
   frc::XboxController &_codriver;
 
-  bool _rawControl;
+  bool _rawControl = true;
   
 
 };
