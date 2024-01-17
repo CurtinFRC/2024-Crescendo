@@ -1,10 +1,9 @@
+name: Build
+
 # Credit to Team 1678 for most of this
 on:
-  push:
-    branches: "*"
   pull_request:
-    branches:
-      - master
+  push:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
