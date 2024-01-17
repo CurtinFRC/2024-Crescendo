@@ -16,6 +16,8 @@
 
 #include <string>
 
+#include "Behaviours/ClimberBehaviour.h"
+
 #include "RobotMap.h"
 #include "Wombat.h"
 
@@ -48,4 +50,5 @@ class Robot : public frc::TimedRobot {
   frc::SendableChooser<std::string> m_path_chooser;
 
   wom::SwerveDrive* _swerveDrive;
+  Climber* _climber;
 };

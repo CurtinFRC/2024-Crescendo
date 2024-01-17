@@ -18,6 +18,7 @@
 #include <ctre/phoenix6/TalonFX.hpp>
 
 #include "Wombat.h"
+#include "Climber.h"
 
 struct RobotMap {
   struct Controllers {
@@ -142,4 +143,23 @@ struct RobotMap {
     //}
   };
   SwerveBase swerveBase;
+
+  struct Climber {
+    // rev::CANSparkMax magMotor{99, rev::CANSparkMax::MotorType::kBrushless};
+    // wom::VoltageController magMotorGroup = wom::VoltageController::Group(magMotor);
+    // wom::CANSparkMaxEncoder magEncoder{&magMotor, 42};
+  
+    wom::Gearbox climberGearbox {
+        // &climberMotorGroup,
+        // &climberEncoder,
+        // wom::DCMotor::NEO(1).WithReduction(1)
+
+    };
+
+    ClimberConfig config {
+      climberGearbox,
+    };
+
+  };
+  Climber climberSystem;
 };
