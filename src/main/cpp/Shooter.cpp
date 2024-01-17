@@ -45,7 +45,7 @@ void Shooter::OnUpdate(units::second_t dt){
         case ShooterState::kReverse:
 				{
         	_config.ShooterGearbox.transmission->SetVoltage(-5_V);
-          if (_shooterSensor.Get()) {
+          if (!_shooterSensor.Get()) {
             setState(ShooterState::kIdle);
           }
 				}
