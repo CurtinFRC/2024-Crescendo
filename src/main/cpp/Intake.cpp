@@ -4,7 +4,7 @@ Intake::Intake(IntakeConfig config) : _config(config) {
 
 }
 
-IntakeConfig Intake::getConfig() {
+IntakeConfig Intake::GetConfig() {
   return _config;
 }
 
