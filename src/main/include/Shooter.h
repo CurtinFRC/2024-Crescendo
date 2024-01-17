@@ -25,9 +25,9 @@ class Shooter : public behaviour::HasBehaviour{
     Shooter(ShooterConfig config);
 
     void OnUpdate(units::second_t dt);
-    void setState(ShooterState state);
-    void setRaw(units::volt_t voltage);
-    void setPidGoal(units::radians_per_second_t);
+    void SetState(ShooterState state);
+    void SetRaw(units::volt_t voltage);
+    void SetPidGoal(units::radians_per_second_t);
 
 
     private:

@@ -12,19 +12,19 @@ void ShooterManualControl::OnTick(units::second_t dt) {
         if (_rawControl == true){
             _rawControl = false;
         } else {
-            _rawControl = true;
+            _rawControl != _rawControl;
         }
     }
-    if (!_rawControl) { // rawControl == false
+    if (!_rawControl) { 
         if (_codriver.GetLeftBumper()) {
-            _shooter->setState(ShooterState::kSpinUp);
-            _shooter->setPidGoal(65_rad_per_s);
+            _shooter->SetState(ShooterState::kSpinUp);
+            _shooter->SetPidGoal(65_rad_per_s);
         } else if (_codriver.GetRightBumper()) {
-            _shooter->setState(ShooterState::kSpinUp);
-            _shooter->setPidGoal(20_rad_per_s);
+            _shooter->SetState(ShooterState::kSpinUp);
+            _shooter->SetPidGoal(20_rad_per_s);
         }
     } else {
-         _shooter->setRaw(_codriver.GetRightTriggerAxis() * 12_V);
+         _shooter->SetRaw(_codriver.GetRightTriggerAxis() * 12_V);
          
     }
 

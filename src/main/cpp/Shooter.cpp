@@ -23,7 +23,7 @@ void Shooter::OnUpdate(units::second_t dt){
           _config.ShooterGearbox.transmission->SetVoltage(pidCalculate);
 
           if (_pid.IsStable()) {
-            setState(ShooterState::kShooting);
+            SetState(ShooterState::kShooting);
           }
 
         }
@@ -35,10 +35,10 @@ void Shooter::OnUpdate(units::second_t dt){
         	_config.ShooterGearbox.transmission->SetVoltage(pidCalculate);
 
            if (!_pid.IsStable()) {
-             setState(ShooterState::kSpinUp);
+             SetState(ShooterState::kSpinUp);
            }
           if (_shooterSensor.Get()) {
-            setState(ShooterState::kIdle);
+            SetState(ShooterState::kIdle);
           }
 				}
         break;
@@ -46,7 +46,7 @@ void Shooter::OnUpdate(units::second_t dt){
 				{
         	_config.ShooterGearbox.transmission->SetVoltage(-5_V);
           if (!_shooterSensor.Get()) {
-            setState(ShooterState::kIdle);
+            SetState(ShooterState::kIdle);
           }
 				}
         break;
@@ -54,7 +54,7 @@ void Shooter::OnUpdate(units::second_t dt){
 				{
         	_config.ShooterGearbox.transmission->SetVoltage(5_V);
           if (_shooterSensor.Get()) {
-            setState(ShooterState::kRaw);
+            SetState(ShooterState::kRaw);
           }
 				}
         break;
@@ -66,12 +66,12 @@ void Shooter::OnUpdate(units::second_t dt){
         }
 }
 
-void Shooter::setState(ShooterState state) {
+void Shooter::SetState(ShooterState state) {
     _state = state;
 }
-void Shooter::setRaw(units::volt_t voltage) {
+void Shooter::SetRaw(units::volt_t voltage) {
     _rawVoltage = voltage;
 }
-void Shooter::setPidGoal(units::radians_per_second_t goal) {
+void Shooter::SetPidGoal(units::radians_per_second_t goal) {
   _goal = goal;
 } 
