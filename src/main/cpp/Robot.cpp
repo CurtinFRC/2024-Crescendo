@@ -26,6 +26,7 @@ void Robot::RobotPeriodic() {
     wom::BehaviourScheduler::GetInstance()->Tick();
 
      shooter->OnUpdate(dt);
+     
 }
 
 void Robot::AutonomousInit() {}
