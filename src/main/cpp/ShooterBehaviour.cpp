@@ -32,6 +32,7 @@ if (!rawControl) { // rawControl == false
     }
 } else {
      _shooter->setRaw(0_V);
+     
 }
 
 }
