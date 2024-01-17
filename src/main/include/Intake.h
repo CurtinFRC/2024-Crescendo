@@ -8,6 +8,7 @@ struct IntakeConfig {
   wom::Gearbox IntakeMotor;
   frc::DigitalInput* intakeSensor;
   frc::DigitalInput* magSensor;
+  frc::DigitalInput* shooterSensor;
 };
 
 enum class IntakeState {
@@ -27,6 +28,7 @@ class Intake : public behaviour::HasBehaviour {
   
   void setState(IntakeState state);
   void setRaw(units::volt_t voltage);
+  IntakeConfig getConfig();
 
  private:
   IntakeConfig _config;

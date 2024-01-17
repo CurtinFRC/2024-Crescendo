@@ -14,6 +14,7 @@ struct RobotMap {
     wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 42};
     frc::DigitalInput intakeSensor {0};
     frc::DigitalInput magSensor {0};
+    frc::DigitalInput shooterSensor {0};
 
     wom::Gearbox IntakeGearbox { 
       &intakeMotorGroup,
@@ -24,7 +25,8 @@ struct RobotMap {
     IntakeConfig config {
       IntakeGearbox,
       &intakeSensor,
-      &magSensor
+      &magSensor,
+      &shooterSensor
     };
   }; IntakeSystem intakeSystem;
 

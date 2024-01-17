@@ -1,6 +1,11 @@
 #include "Intake.h"
 
 Intake::Intake(IntakeConfig config) : _config(config) {
+
+}
+
+IntakeConfig Intake::getConfig() {
+  return _config;
 }
 
 void Intake::OnUpdate(units::second_t dt) {
@@ -35,18 +40,21 @@ void Intake::OnUpdate(units::second_t dt) {
       case IntakeState::kIntake:
       {
         _config.IntakeMotor.transmission->SetVoltage(5_V);
-      }
+      } 
       break;
       case IntakeState::kPass:
       {
         _config.IntakeMotor.transmission->SetVoltage(5_V);
+        if (_config.shooterSensor->Get()) {
+          setState(IntakeState::kIdle);
       }
       break;
       default:
         std::cout <<"Error: Intake in INVALID STATE." << std::endl;
       break;
+    }
+    
   }
-  
 }
 
 void Intake::setState(IntakeState state) {

@@ -16,14 +16,24 @@ void IntakeManualControl::OnTick(units::second_t dt) {
   }
 
   if (_rawControl == true) {
-      if (_codriver.GetBButton()) {
-        _intake->setRaw(8_V);
-        _intake->setState(IntakeState::kRaw);
-      } else {
-        _intake->setRaw(0_V);
-        _intake->setState(IntakeState::kIdle);
-      };
-  } else {
-    // intake auto control
-  }
+    if (_codriver.GetBButton()) {
+      _intake->setRaw(8_V);
+      _intake->setState(IntakeState::kRaw);
+    } else {
+      _intake->setRaw(0_V);
+      _intake->setState(IntakeState::kIdle);
+    };
+  }; //else {
+    
+  // }
+}
+
+IntakeAutoControl::IntakeAutoControl(Intake *intake) : _intake(intake) {};
+
+void IntakeAutoControl::OnTick(units::second_t dt) {
+  if (_intake->getConfig().intakeSensor->Get() == 1) {
+    _intake->setState(IntakeState::kPass);
+  } else if (_intake->getConfig().magSensor->Get() == 0) {
+    _intake->setState(IntakeState::kIdle);
+  };
 }
