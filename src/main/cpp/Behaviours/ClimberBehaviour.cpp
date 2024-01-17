@@ -7,6 +7,13 @@ ClimberManualControl::ClimberManualControl(Climber *climber, frc::XboxController
 void ClimberManualControl::OnTick(units::second_t dt) {
 
   if (_codriver->GetXButtonPressed()) {
-    //start climbing, use arrow later for doing GetButton.
+    _climber->SetRaw(8_V);
+    _climber->SetState(ClimberState::kRaw);
+  } else if (_codriver->GetYButtonPressed()){
+    _climber->SetRaw(-8_V);
+    _climber->SetState(ClimberState::kRaw);
+  } else {
+    _climber->SetRaw(8_V);
+    _climber->SetState(ClimberState::kIdle);
   }
 }

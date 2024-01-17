@@ -8,8 +8,6 @@ struct ClimberConfig {
 
 enum class ClimberState {
   kIdle,
-  kClimb,
-  kHang,
   kRaw
 };
 
@@ -22,6 +20,6 @@ class Climber : public behaviour::HasBehaviour {
     void SetRaw(units::volt_t voltage);
   private:
     ClimberConfig _config;
-    ClimberState _state;
-    units::volt_t _voltage;
+    ClimberState _state = ClimberState::kIdle;
+    units::volt_t _rawVoltage;
 };
