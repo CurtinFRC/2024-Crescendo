@@ -66,10 +66,11 @@ void Intake::OnUpdate(units::second_t dt) {
       break;
     }
   }
-
   _table->GetEntry("State: ").SetString(_stringStateName);
   _table->GetEntry("Motor Voltage: ").SetDouble(_setVoltage.value());
-
+  _table->GetEntry("Intake Sensor: ").SetDouble(_config.intakeSensor->Get());
+  _table->GetEntry("Shooter Sensor: ").SetDouble(_config.shooterSensor->Get());
+  _table->GetEntry("Magazine Sensor: ").SetDouble(_config.magSensor->Get());
 }
 
 void Intake::setState(IntakeState state) {
