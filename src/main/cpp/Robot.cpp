@@ -4,7 +4,6 @@
 
 #include "Robot.h"
 
-// include units
 #include <units/velocity.h>
 #include <units/acceleration.h>
 #include <units/length.h>
@@ -15,6 +14,11 @@
 #include <frc/kinematics/DifferentialDriveKinematics.h>
 #include <frc/controller/RamseteController.h>
 #include <frc/Timer.h>
+
+#include <frc/TimedRobot.h>
+#include <networktables/DoubleTopic.h>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableInstance.h>
 
 static units::second_t lastPeriodic;
 
@@ -48,11 +52,9 @@ void Robot::RobotInit() {
   wom::BehaviourScheduler::GetInstance()->Register(intake);
 
   intake->SetDefaultBehaviour([this]() {
-    return wom::make<IntakeManualControl>(intake, robotmap.driver);
+    return wom::make<IntakeManualControl>(intake, robotmap.controllers.driver);
   });
 
-  // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
-  // m_driveSim = wom::TempSimSwerveDrive();
 }
 
 void Robot::RobotPeriodic() {
@@ -66,14 +68,12 @@ void Robot::RobotPeriodic() {
 }
 
 void Robot::AutonomousInit() {
-  // m_driveSim->SetPath(m_path_chooser.GetSelected());
 
   loop.Clear();
   sched->InterruptAll();
-  // _swerveDrive->OnStart();
 }
+
 void Robot::AutonomousPeriodic() {
-  // m_driveSim->OnUpdate();
 }
 
 void Robot::TeleopInit() {
@@ -81,7 +81,10 @@ void Robot::TeleopInit() {
   wom::BehaviourScheduler *scheduler = wom::BehaviourScheduler::GetInstance();
   scheduler->InterruptAll();
 }
-void Robot::TeleopPeriodic() {}
+
+void Robot::TeleopPeriodic() {
+  
+}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}

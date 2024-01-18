@@ -22,25 +22,19 @@
 #include "IntakeBehaviour.h"
 
 struct RobotMap {
-  struct Controllers {
-    frc::XboxController driver = frc::XboxController(0);
-    frc::XboxController coDriver = frc::XboxController(1);
-    frc::XboxController testController = frc::XboxController(2);
-  };
-  Controllers controllers;
 
   struct IntakeSystem {
+
     rev::CANSparkMax intakeMotor{99, rev::CANSparkMax::MotorType::kBrushless};
-    wom::VoltageController intakeMotorGroup = wom::VoltageController::Group(intakeMotor);
-    wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 42};
+    wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
     frc::DigitalInput intakeSensor {0};
     frc::DigitalInput magSensor {0};
     frc::DigitalInput shooterSensor {0};
 
     wom::Gearbox IntakeGearbox { 
-      &intakeMotorGroup,
+      &intakeMotor,
       &intakeEncoder,
-      wom::DCMotor::NEO(1).WithReduction(1)
+      frc::DCMotor::NEO(1)
     };
 
     IntakeConfig config {
@@ -51,7 +45,11 @@ struct RobotMap {
     };
   }; IntakeSystem intakeSystem;
 
-
+  struct Controllers {
+    frc::XboxController driver = frc::XboxController(0);
+    frc::XboxController codriver = frc::XboxController(1);
+  };
+  Controllers controllers;
 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{19};
@@ -73,7 +71,6 @@ struct RobotMap {
 
     wpi::array<wom::SwerveModuleConfig, 4> moduleConfigs{
         wom::SwerveModuleConfig{
-            // front left module
             frc::Translation2d(10.761_in, 9.455_in),
             wom::Gearbox{driveMotors[0], new wom::TalonFXEncoder(driveMotors[0], 0.0445_m, 6.75),
                          frc::DCMotor::Falcon500(1).WithReduction(6.75)},
@@ -81,7 +78,6 @@ struct RobotMap {
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &frontLeftCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
-            // front right module
             frc::Translation2d(10.761_in, -9.455_in),
             wom::Gearbox{driveMotors[1], new wom::TalonFXEncoder(driveMotors[1], 0.0445_m, 6.75),
                          frc::DCMotor::Falcon500(1).WithReduction(6.75)},
@@ -89,7 +85,6 @@ struct RobotMap {
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &frontRightCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
-            // back left module
             frc::Translation2d(-10.761_in, 9.455_in),
             wom::Gearbox{driveMotors[2], new wom::TalonFXEncoder(driveMotors[2], 0.0445_m, 6.75),
                          frc::DCMotor::Falcon500(1).WithReduction(6.75)},
@@ -97,7 +92,6 @@ struct RobotMap {
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &backRightCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
-            // back right module
             frc::Translation2d(-10.761_in, -9.455_in),
             wom::Gearbox{driveMotors[3], new wom::TalonFXEncoder(driveMotors[3], 0.0445_m, 6.75),
                          frc::DCMotor::Falcon500(1).WithReduction(6.75)},
@@ -106,14 +100,11 @@ struct RobotMap {
             &backLeftCancoder, 4_in / 2},
     };
 
-    // Setting the PID path and values to be used for SwerveDrive and
-    // SwerveModules
     wom::SwerveModule::angle_pid_conf_t anglePID{
         "/drivetrain/pid/angle/config", 2_V / 360_deg, 0.0_V / (100_deg * 1_s),
         0_V / (100_deg / 1_s),          1_deg,         0.5_deg / 2_s};
     wom::SwerveModule::velocity_pid_conf_t velocityPID{
         "/drivetrain/pid/velocity/config",
-        //  12_V / 4_mps // webers per metre
     };
     wom::SwerveDriveConfig::pose_angle_conf_t poseAnglePID{
         "/drivetrain/pid/pose/angle/config",
@@ -131,28 +122,17 @@ struct RobotMap {
         10_cm / 1_s,
         10_cm};
 
-    // the config for the whole swerve drive
     wom::SwerveDriveConfig config{"/drivetrain",
                                   anglePID,
                                   velocityPID,
-                                  moduleConfigs,  // each module
+                                  moduleConfigs, 
                                   gyro,
                                   poseAnglePID,
                                   posePositionPID,
-                                  60_kg,  // robot mass (estimate rn)
+                                  60_kg, 
                                   {0.1, 0.1, 0.1},
                                   {0.9, 0.9, 0.9}};
 
-    // current limiting and setting idle mode of modules to brake mode
-    // SwerveBase() {
-    //  for (size_t i = 0; i < 4; i++) {
-    //    turnMotors[i]->ConfigSupplyCurrentLimit(
-    //        SupplyCurrentLimitConfiguration(true, 15, 15, 0));
-    //    driveMotors[i]->SetNeutralMode(NeutralMode::Brake);
-    //    turnMotors[i]->SetNeutralMode(NeutralMode::Brake);
-    //    driveMotors[i]->SetInverted(true);
-    //  }
-    //}
   };
   SwerveBase swerveBase;
 };
@@ -162,30 +142,3 @@ struct RobotMap {
 #include "Intake.h"
 #include "IntakeBehaviour.h"
 #include <frc/XboxController.h>
-
-struct RobotMap {
-  frc::XboxController driver{0};
-
-  struct IntakeSystem {
-    rev::CANSparkMax intakeMotor{99, rev::CANSparkMax::MotorType::kBrushless};
-    wom::VoltageController intakeMotorGroup = wom::VoltageController::Group(intakeMotor);
-    wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 42};
-    frc::DigitalInput intakeSensor {0};
-    frc::DigitalInput magSensor {0};
-    frc::DigitalInput shooterSensor {0};
-
-    wom::Gearbox IntakeGearbox { 
-      &intakeMotorGroup,
-      &intakeEncoder,
-      wom::DCMotor::NEO(1).WithReduction(1)
-    };
-
-    IntakeConfig config {
-      IntakeGearbox,
-      &intakeSensor,
-      &magSensor,
-      &shooterSensor
-    };
-  }; IntakeSystem intakeSystem;
-
-};

@@ -26,7 +26,7 @@ void IntakeManualControl::OnTick(units::second_t dt) {
       _intake->setState(IntakeState::kPass);
     }
   };
-}; //else {}
+};
 
 
 IntakeAutoControl::IntakeAutoControl(Intake *intake) : _intake(intake) {};

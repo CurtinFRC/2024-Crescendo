@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "wombat.h"
@@ -35,4 +34,7 @@ class Intake : public behaviour::HasBehaviour {
   IntakeState _state = IntakeState::kIdle;
 
   units::volt_t _rawVoltage;
+  std::string _stringStateName;
+  units::volt_t _setVoltage;
+  std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("Intake");
 }; 
