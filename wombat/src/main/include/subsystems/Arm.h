@@ -24,7 +24,7 @@ struct ArmConfig {
 
   wom::utils::Gearbox leftGearbox;
   wom::utils::Gearbox rightGearbox;
-  rev::SparkMaxRelativeEncoder armEncoder;
+  wom::utils::CANSparkMaxEncoder armEncoder;
   wom::utils::PIDConfig<units::radian, units::volt> pidConfig;
   wom::utils::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
 
@@ -68,8 +68,7 @@ class Arm : public behaviour::HasBehaviour {
   ArmConfig _config;
   ArmState _state = ArmState::kIdle;
   wom::utils::PIDController<units::radian, units::volt> _pid;
-  wom::utils::PIDController<units::radians_per_second, units::volt>
-      _velocityPID;
+  wom::utils::PIDController<units::radians_per_second, units::volt> _velocityPID;
 
   std::shared_ptr<nt::NetworkTable> _table;
 

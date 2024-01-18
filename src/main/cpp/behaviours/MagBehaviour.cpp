@@ -1,12 +1,12 @@
 #include "behaviours/MagBehaviour.h"
 
-MagManualControl::MagManualControl(Mag *mag, frc::XboxController &codriver) : _mag(mag), _codriver(codriver) {
+MagManualControl::MagManualControl(Mag *mag, frc::XboxController *codriver) : _mag(mag), _codriver(codriver) {
   Controls(mag);
 }
 
 void MagManualControl::OnTick(units::second_t dt) {
 
-  if (_codriver.GetAButtonPressed()) {
+  if (_codriver->GetAButtonPressed()) {
     if (_rawControl == true) {
       _rawControl = false;
     } else {
@@ -16,10 +16,10 @@ void MagManualControl::OnTick(units::second_t dt) {
   
   if (_rawControl) {
     // Manual control, right bumper for manual override.
-    if (_codriver.GetLeftBumper()) {
+    if (_codriver->GetLeftBumper()) {
       _mag->SetRaw(5_V);
       _mag->SetState(MagState::kRaw);
-    } else if (_codriver.GetRightBumper()) {
+    } else if (_codriver->GetRightBumper()) {
       _mag->SetRaw(-5_V);
       _mag->SetState(MagState::kRaw);
 
@@ -29,7 +29,7 @@ void MagManualControl::OnTick(units::second_t dt) {
     
   } else {
     _mag->SetState(MagState::kIdle);
-    if (_codriver.GetLeftBumper()) {
+    if (_codriver->GetLeftBumper()) {
       _mag->SetState(MagState::kPass);
       
     }

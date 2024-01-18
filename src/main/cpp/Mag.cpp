@@ -11,7 +11,8 @@ void Mag::OnUpdate(units::second_t dt) {
       } else if (_config.intakeSensor->Get()){
         SetState(MagState::kHold);
       }
-      _config.magGearbox.transmission->SetVoltage(0_V);
+      _setVoltage = 0_V;
+      _stringStateName = "Idle";
     }
     break;
 
@@ -20,7 +21,8 @@ void Mag::OnUpdate(units::second_t dt) {
       if (_config.magSensor->Get() == 0) {
         SetState(MagState::kIdle);
       }
-      _config.magGearbox.transmission->SetVoltage(0_V);
+      _setVoltage = 0_V;
+      _stringStateName = "Hold";
     }
     break;
 
@@ -29,12 +31,14 @@ void Mag::OnUpdate(units::second_t dt) {
       if (_config.magSensor->Get() == 0 && _config.intakeSensor->Get() ==  0) {
         SetState(MagState::kIdle);
       }
-      _config.magGearbox.transmission->SetVoltage(-5_V);
+      _setVoltage = -5_V;
+      _stringStateName = "Eject";
     }
     break;
 
     case MagState::kRaw:
-      _config.magGearbox.transmission->SetVoltage(_voltage);
+      _setVoltage = _voltage;
+      _stringStateName = "Raw";
     break;
 
     case MagState::kPass:
@@ -42,7 +46,8 @@ void Mag::OnUpdate(units::second_t dt) {
       if (_config.shooterSensor->Get()) {
         SetState(MagState::kIdle);
       } else {
-        _config.magGearbox.transmission->SetVoltage(5_V);
+        _setVoltage = 5_V;
+        _stringStateName = "Pass";
       }
     }
     break;
@@ -51,6 +56,12 @@ void Mag::OnUpdate(units::second_t dt) {
       std::cout << "Error magazine in invalid state" << std::endl;
     break;
   }
+  _config.magGearbox.motorController->SetVoltage(_setVoltage);
+  _table->GetEntry("State: ").SetString(_stringStateName);
+  _table->GetEntry("Motor Voltage: ").SetDouble(_setVoltage.value());
+  _table->GetEntry("Intake Sensor: ").SetDouble(_config.intakeSensor->Get());
+  _table->GetEntry("Shooter Sensor: ").SetDouble(_config.shooterSensor->Get());
+  _table->GetEntry("Magazine Sensor: ").SetDouble(_config.magSensor->Get());
 }
 
 

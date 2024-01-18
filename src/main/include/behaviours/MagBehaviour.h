@@ -6,12 +6,12 @@
  
 class MagManualControl : public behaviour::Behaviour {
  public:
-  MagManualControl(Mag *mag, frc::XboxController &codriver);
+  MagManualControl(Mag *mag, frc::XboxController *codriver);
    
   void OnTick(units::second_t dt) override;
  private:
   Mag *_mag;
-  frc::XboxController &_codriver;
+  frc::XboxController *_codriver;
   bool _rawControl; // Default of Bool is False.
 };
 

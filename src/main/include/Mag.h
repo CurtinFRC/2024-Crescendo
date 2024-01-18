@@ -29,4 +29,7 @@ class Mag : public behaviour::HasBehaviour {
     MagConfig _config;
     MagState _state;
     units::volt_t _voltage;
+    std::string _stringStateName;
+    units::volt_t _setVoltage;
+    std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("Magazine");
 };
