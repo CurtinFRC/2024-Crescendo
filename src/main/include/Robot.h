@@ -1,3 +1,8 @@
+
+
+
+
+
 // Copyright (c) 2023-2024 CurtinFRC
 // Open Source Software, you can modify it according to the terms
 // of the MIT License at the root of this project
@@ -13,6 +18,11 @@
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+
+#include <frc/TimedRobot.h>
+#include <networktables/DoubleTopic.h>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableInstance.h>
 
 #include <string>
 

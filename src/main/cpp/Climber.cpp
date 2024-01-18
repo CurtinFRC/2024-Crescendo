@@ -6,18 +6,40 @@ void Climber::OnUpdate(units::second_t dt) {
   switch (_state) {
     case ClimberState::kIdle:
     {
-      _config.climberGearbox.motorController->Set(0);
+      _stringStateName = "Idle";
+      _setVoltage = 0_V;
     }
     break;
+
+    case ClimberState::kClimb:
+    {
+      _stringStateName = "Climb";
+      _setVoltage = 8_V;
+    }
+    break;
+
+    case ClimberState::kHang:
+    {
+      _stringStateName = "Hang";
+      _setVoltage = -8_V;
+    }
+    break;
+
     case ClimberState::kRaw:
     {
-      _config.climberGearbox.motorController->Set(_rawVoltage.value());
+      _stringStateName = "Raw";
+      _setVoltage = _rawVoltage;
     }
     break;
     default:
        std::cout << "Error magazine in invalid state" << std::endl;
     break;
   }
+  _config.climberGearbox.motorController->SetVoltage(_setVoltage);
+
+  _table->GetEntry("State: ").SetString(_stringStateName);
+  _table->GetEntry("Motor Voltage: ").SetDouble(_setVoltage.value());
+  
 }
 
 void Climber::SetState(ClimberState state) {

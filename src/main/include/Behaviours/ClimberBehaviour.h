@@ -11,5 +11,6 @@ class ClimberManualControl : public behaviour::Behaviour {
   private:
     Climber *_climber;
     frc::XboxController *_codriver;
+    bool _rawControl;
 };
 
