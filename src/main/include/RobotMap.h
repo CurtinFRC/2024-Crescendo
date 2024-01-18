@@ -12,7 +12,7 @@ struct RobotMap {
         frc::DigitalInput shooterSensor{2};
 
         wom::VoltageController shooterMotorGroup = wom::VoltageController::Group(shooterMotor);
-        wom::CANSparkMaxEncoder shooterEncoder=wom::CANSparkMaxEncoder(&shooterMotor, 1);
+        wom::CANSparkMaxEncoder shooterEncoder=wom::CANSparkMaxEncoder(&shooterMotor);
 
         wom::Gearbox shooterGearbox {       
             &shooterMotorGroup,
