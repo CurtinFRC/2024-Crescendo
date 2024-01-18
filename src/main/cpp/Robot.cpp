@@ -65,7 +65,7 @@ void Robot::RobotPeriodic() {
 
   _swerveDrive->OnUpdate(dt);
 
-  // climber->OnUpdate(dt);
+  climber->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {

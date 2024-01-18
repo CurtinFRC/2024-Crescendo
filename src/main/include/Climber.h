@@ -23,7 +23,7 @@ class Climber : public behaviour::HasBehaviour {
   private:
     ClimberConfig _config;
     ClimberState _state = ClimberState::kIdle;
-    units::volt_t _rawVoltage;
+    units::volt_t _rawVoltage = 0_V;
     std::string _stringStateName;
     units::volt_t _setVoltage;
     std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("Climber");
