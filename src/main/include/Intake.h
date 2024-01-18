@@ -33,8 +33,8 @@ class Intake : public behaviour::HasBehaviour {
   IntakeConfig _config;
   IntakeState _state = IntakeState::kIdle;
 
-  units::volt_t _rawVoltage;
-  std::string _stringStateName;
-  units::volt_t _setVoltage;
+  units::volt_t _rawVoltage = 0_V;
+  std::string _stringStateName = "error";
+  units::volt_t _setVoltage = 0_V;
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("Intake");
 }; 

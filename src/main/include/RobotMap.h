@@ -23,6 +23,11 @@
 
 struct RobotMap {
 
+  struct Controllers {
+    frc::XboxController driver = frc::XboxController(0);
+    frc::XboxController codriver = frc::XboxController(1);
+  };
+
   struct IntakeSystem {
 
     rev::CANSparkMax intakeMotor{99, rev::CANSparkMax::MotorType::kBrushless};
@@ -45,10 +50,6 @@ struct RobotMap {
     };
   }; IntakeSystem intakeSystem;
 
-  struct Controllers {
-    frc::XboxController driver = frc::XboxController(0);
-    frc::XboxController codriver = frc::XboxController(1);
-  };
   Controllers controllers;
 
   struct SwerveBase {
@@ -136,9 +137,3 @@ struct RobotMap {
   };
   SwerveBase swerveBase;
 };
-#pragma once
-
-#include "Wombat.h"
-#include "Intake.h"
-#include "IntakeBehaviour.h"
-#include <frc/XboxController.h>

@@ -65,6 +65,7 @@ void Robot::RobotPeriodic() {
   wom::BehaviourScheduler::GetInstance()->Tick();
 
   _swerveDrive->OnUpdate(dt);
+  intake->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {
