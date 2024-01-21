@@ -49,12 +49,12 @@ void Robot::RobotInit() {
   climber = new Climber(robotmap.climberSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(climber);
   climber->SetDefaultBehaviour([this]() {
-    return wom::make<ClimberManualControl>(climber, &robotmap.controllers.coDriver);
+    return wom::make<ClimberManualControl>(climber,
+                                           &robotmap.controllers.coDriver);
   });
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();
 }
-
 
 void Robot::RobotPeriodic() {
   units::second_t dt = wom::now() - lastPeriodic;
@@ -81,7 +81,7 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {
   loop.Clear();
-  wom::BehaviourScheduler *scheduler = wom::BehaviourScheduler::GetInstance();
+  wom::BehaviourScheduler* scheduler = wom::BehaviourScheduler::GetInstance();
   scheduler->InterruptAll();
   // _swerveDrive->OnStart();
   // sched->InterruptAll();
