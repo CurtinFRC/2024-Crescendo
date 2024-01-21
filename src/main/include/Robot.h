@@ -6,7 +6,6 @@
 
 #include "behaviours/MagBehaviour.h"
 #include <frc/TimedRobot.h>
-#include <frc/event/Eventloop.h>
 #include <frc/Encoder.h>
 #include <frc/Timer.h>
 #include <frc/event/EventLoop.h>

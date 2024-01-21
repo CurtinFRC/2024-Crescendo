@@ -1,7 +1,7 @@
 #pragma once
  
-#include "wombat.h"
-#include "mag.h"
+#include "Wombat.h"
+#include "Mag.h"
 #include <frc/XboxController.h>
  
 class MagManualControl : public behaviour::Behaviour {

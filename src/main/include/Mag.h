@@ -1,5 +1,5 @@
 #pragma once
-#include "wombat.h"
+#include "Wombat.h"
 #include <frc/DigitalInput.h>
 #include <string>
 #include <memory>
