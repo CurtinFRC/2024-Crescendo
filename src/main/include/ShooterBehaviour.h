@@ -17,5 +17,6 @@ class ShooterManualControl : public behaviour::Behaviour{
 
   bool _rawControl = true;
   
+  
 
 };

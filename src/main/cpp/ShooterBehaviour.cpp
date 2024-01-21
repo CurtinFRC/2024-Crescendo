@@ -7,6 +7,7 @@ ShooterManualControl::ShooterManualControl(Shooter *shooter, frc::XboxController
 
 void ShooterManualControl::OnTick(units::second_t dt) {
 
+    _shooter->table->GetEntry("RawControl").SetBoolean(_rawControl);
 
     if(_codriver.GetAButtonPressed()){
         if (_rawControl == true){

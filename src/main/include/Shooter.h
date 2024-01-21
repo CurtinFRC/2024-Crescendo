@@ -28,6 +28,8 @@ class Shooter : public behaviour::HasBehaviour{
     void SetState(ShooterState state);
     void SetRaw(units::volt_t voltage);
     void SetPidGoal(units::radians_per_second_t);
+    std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Shooter");
+
 
 
     private:

@@ -14,7 +14,10 @@ void Robot::RobotInit() {
          return wom::make<ShooterManualControl>(shooter, map.codriver);
      });
 
+
+
 }
+
 void Robot::RobotPeriodic() {
     units::second_t dt = wom::now() - lastPeriodic;
     lastPeriodic = wom::now();
@@ -23,14 +26,17 @@ void Robot::RobotPeriodic() {
     wom::BehaviourScheduler::GetInstance()->Tick();
 
      shooter->OnUpdate(dt);
+    
 
 }
+
 
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {}
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}

@@ -14,7 +14,7 @@ struct RobotMap {
         wom::VoltageController shooterMotorGroup = wom::VoltageController::Group(shooterMotor);
         wom::CANSparkMaxEncoder shooterEncoder=wom::CANSparkMaxEncoder(&shooterMotor);
 
-        wom::Gearbox shooterGearbox {       
+        wom::Gearbox shooterGearbox {
             &shooterMotorGroup,
 
             &shooterEncoder,
