@@ -28,7 +28,7 @@ class Mag : public behaviour::HasBehaviour {
   private:
     MagConfig _config;
     MagState _state;
-    units::volt_t _voltage;
+    units::volt_t _rawVoltage = 0_V;
     std::string _stringStateName = "No State";
     units::volt_t _setVoltage = 0_V;
     std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("Magazine");

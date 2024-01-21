@@ -37,7 +37,7 @@ void Mag::OnUpdate(units::second_t dt) {
     break;
 
     case MagState::kRaw:
-      _setVoltage = _voltage;
+      _setVoltage = _rawVoltage;
       _stringStateName = "Raw";
     break;
 
@@ -70,7 +70,7 @@ void Mag::SetState(MagState state) {
 }
 
 void Mag::SetRaw(units::volt_t voltage) {
-  _voltage = voltage;
+  _rawVoltage = voltage;
 }
 MagState Mag::GetState() {
   return _state;
