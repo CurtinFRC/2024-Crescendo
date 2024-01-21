@@ -9,7 +9,7 @@
 #include <memory>
 #include <string>
 
-#include "wombat.h"
+#include "Wombat.h"
 
 struct IntakeConfig {
   wom::Gearbox IntakeMotor;
