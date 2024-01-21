@@ -4,14 +4,10 @@
 
 #pragma once
 
-#include "mag.h"
-#include "Wombat.h"
-
-#include <frc/XboxController.h>
-#include <frc/DigitalInput.h>
-
 #include <frc/Compressor.h>
+#include <frc/DigitalInput.h>
 #include <frc/DoubleSolenoid.h>
+#include <frc/XboxController.h>
 #include <frc/system/plant/DCMotor.h>
 #include <units/angle.h>
 #include <units/length.h>
@@ -22,6 +18,9 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
+#include "Wombat.h"
+#include "mag.h"
+
 struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
@@ -29,7 +28,7 @@ struct RobotMap {
     frc::XboxController testController = frc::XboxController(2);
   };
   Controllers controllers;
-  
+
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{19};
     ctre::phoenix6::hardware::CANcoder frontRightCancoder{17};
@@ -134,26 +133,21 @@ struct RobotMap {
   SwerveBase swerveBase;
 
   struct Mag {
-    rev::CANSparkMax *magMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
-    //wom::VoltageController magMotorGroup = wom::VoltageController::Group(magMotor);
+    rev::CANSparkMax* magMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
+    // wom::VoltageController magMotorGroup = wom::VoltageController::Group(magMotor);
     wom::CANSparkMaxEncoder magEncoder{magMotor, 0.1_m};
     frc::DigitalInput intakeSensor{0};
     frc::DigitalInput magSensor{1};
     frc::DigitalInput shooterSensor{1};
 
-    wom::Gearbox magGearbox {
-      magMotor,
-      &magEncoder,
-      frc::DCMotor::NEO(1)
+    wom::Gearbox magGearbox{magMotor, &magEncoder, frc::DCMotor::NEO(1)};
+
+    MagConfig config{
+        magGearbox,
+        &intakeSensor,
+        &magSensor,
+        &shooterSensor,
     };
-
-    MagConfig config {
-       magGearbox,
-       &intakeSensor,
-       &magSensor,
-       &shooterSensor,
-     };
-  }; 
+  };
   Mag magSystem;
-
 };
