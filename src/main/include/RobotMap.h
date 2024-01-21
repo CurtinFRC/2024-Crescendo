@@ -17,38 +17,28 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-#include "Wombat.h"
 #include "Intake.h"
 #include "IntakeBehaviour.h"
+#include "Wombat.h"
 
 struct RobotMap {
-
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
     frc::XboxController codriver = frc::XboxController(1);
   };
 
   struct IntakeSystem {
-
     rev::CANSparkMax intakeMotor{99, rev::CANSparkMax::MotorType::kBrushless};
     wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
-    frc::DigitalInput intakeSensor {0};
-    frc::DigitalInput magSensor {0};
-    frc::DigitalInput shooterSensor {0};
+    frc::DigitalInput intakeSensor{0};
+    frc::DigitalInput magSensor{0};
+    frc::DigitalInput shooterSensor{0};
 
-    wom::Gearbox IntakeGearbox { 
-      &intakeMotor,
-      &intakeEncoder,
-      frc::DCMotor::NEO(1)
-    };
+    wom::Gearbox IntakeGearbox{&intakeMotor, &intakeEncoder, frc::DCMotor::NEO(1)};
 
-    IntakeConfig config {
-      IntakeGearbox,
-      &intakeSensor,
-      &magSensor,
-      &shooterSensor
-    };
-  }; IntakeSystem intakeSystem;
+    IntakeConfig config{IntakeGearbox, &intakeSensor, &magSensor, &shooterSensor};
+  };
+  IntakeSystem intakeSystem;
 
   Controllers controllers;
 
@@ -123,17 +113,9 @@ struct RobotMap {
         10_cm / 1_s,
         10_cm};
 
-    wom::SwerveDriveConfig config{"/drivetrain",
-                                  anglePID,
-                                  velocityPID,
-                                  moduleConfigs, 
-                                  gyro,
-                                  poseAnglePID,
-                                  posePositionPID,
-                                  60_kg, 
-                                  {0.1, 0.1, 0.1},
-                                  {0.9, 0.9, 0.9}};
-
+    wom::SwerveDriveConfig config{
+        "/drivetrain", anglePID,        velocityPID, moduleConfigs,   gyro,
+        poseAnglePID,  posePositionPID, 60_kg,       {0.1, 0.1, 0.1}, {0.9, 0.9, 0.9}};
   };
   SwerveBase swerveBase;
 };

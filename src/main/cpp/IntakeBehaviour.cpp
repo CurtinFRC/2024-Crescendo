@@ -1,14 +1,19 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include "IntakeBehaviour.h"
+
 #include <frc/XboxController.h>
 
-IntakeManualControl::IntakeManualControl(Intake *intake, frc::XboxController &codriver) : _intake(intake), _codriver(codriver) {
+IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver)
+    : _intake(intake), _codriver(codriver) {
   Controls(intake);
 }
 
 void IntakeManualControl::OnTick(units::second_t dt) {
-
   if (_codriver.GetBButtonPressed()) {
-    if(_rawControl == true) {
+    if (_rawControl == true) {
       _rawControl = false;
     } else {
       _rawControl = true;
@@ -28,7 +33,7 @@ void IntakeManualControl::OnTick(units::second_t dt) {
   }
 }
 
-IntakeAutoControl::IntakeAutoControl(Intake *intake) : _intake(intake) {}
+IntakeAutoControl::IntakeAutoControl(Intake* intake) : _intake(intake) {}
 
 void IntakeAutoControl::OnTick(units::second_t dt) {
   if (_intake->GetConfig().intakeSensor->Get() == 1) {

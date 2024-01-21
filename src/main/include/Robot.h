@@ -5,11 +5,6 @@
 #pragma once
 
 #include <frc/Encoder.h>
-
-#include "Intake.h"
-#include "IntakeBehaviour.h"
-#include "Wombat.h"
-#include "RobotMap.h"
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
 #include <frc/event/EventLoop.h>
@@ -21,6 +16,8 @@
 
 #include <string>
 
+#include "Intake.h"
+#include "IntakeBehaviour.h"
 #include "RobotMap.h"
 #include "Wombat.h"
 
@@ -54,5 +51,5 @@ class Robot : public frc::TimedRobot {
 
   wom::SwerveDrive* _swerveDrive;
 
-  Intake *intake;
+  Intake* intake;
 };

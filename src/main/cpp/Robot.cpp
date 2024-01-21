@@ -4,26 +4,23 @@
 
 #include "Robot.h"
 
-#include <units/velocity.h>
-#include <units/acceleration.h>
-#include <units/length.h>
-#include <units/angle.h>
-#include <units/time.h>
-#include <units/voltage.h>
-
-#include <frc/kinematics/DifferentialDriveKinematics.h>
-#include <frc/controller/RamseteController.h>
-#include <frc/Timer.h>
-
 #include <frc/TimedRobot.h>
+#include <frc/Timer.h>
+#include <frc/controller/RamseteController.h>
+#include <frc/kinematics/DifferentialDriveKinematics.h>
 #include <networktables/DoubleTopic.h>
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableInstance.h>
+#include <units/acceleration.h>
+#include <units/angle.h>
+#include <units/length.h>
+#include <units/time.h>
+#include <units/velocity.h>
+#include <units/voltage.h>
 
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
-
   lastPeriodic = wom::now();
 
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
@@ -51,10 +48,8 @@ void Robot::RobotInit() {
   intake = new Intake(robotmap.intakeSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(intake);
 
-  intake->SetDefaultBehaviour([this]() {
-    return wom::make<IntakeManualControl>(intake, robotmap.controllers.driver);
-  });
-
+  intake->SetDefaultBehaviour(
+      [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.driver); });
 }
 
 void Robot::RobotPeriodic() {
@@ -69,23 +64,19 @@ void Robot::RobotPeriodic() {
 }
 
 void Robot::AutonomousInit() {
-
   loop.Clear();
   sched->InterruptAll();
 }
 
-void Robot::AutonomousPeriodic() {
-}
+void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
   loop.Clear();
-  wom::BehaviourScheduler *scheduler = wom::BehaviourScheduler::GetInstance();
+  wom::BehaviourScheduler* scheduler = wom::BehaviourScheduler::GetInstance();
   scheduler->InterruptAll();
 }
 
-void Robot::TeleopPeriodic() {
-  
-}
+void Robot::TeleopPeriodic() {}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
