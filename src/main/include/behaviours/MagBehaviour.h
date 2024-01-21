@@ -26,7 +26,7 @@ class MagAutoPass : public behaviour::Behaviour {
 
 class MagAutoHold : public behaviour::Behaviour {
  public:
-  MagAutoHold(Mag *mag);
+  explicit MagAutoHold(Mag *mag);
    
   void OnTick(units::second_t dt) override;
  private:

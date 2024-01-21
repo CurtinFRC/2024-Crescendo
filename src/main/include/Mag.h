@@ -1,6 +1,9 @@
 #pragma once
 #include "wombat.h"
 #include <frc/DigitalInput.h>
+#include <string>
+#include <memory>
+
 
 struct MagConfig {
   wom::Gearbox magGearbox;
@@ -19,7 +22,7 @@ enum class MagState {
 
 class Mag : public behaviour::HasBehaviour {
   public:
-    Mag(MagConfig config);
+    explicit Mag(MagConfig config);
 
     void OnUpdate(units::second_t dt);
     void SetState(MagState state);
