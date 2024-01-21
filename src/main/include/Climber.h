@@ -1,6 +1,6 @@
 #pragma once
 
-#include "wombat.h"
+#include "Wombat.h"
 #include <string>
 #include <memory>
 

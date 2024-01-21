@@ -1,7 +1,7 @@
 #pragma once
 
-#include "wombat.h"
-#include "climber.h"
+#include "Wombat.h"
+#include "Climber.h"
 #include <frc/XboxController.h>
 
 class ClimberManualControl : public behaviour::Behaviour {
@@ -13,4 +13,3 @@ class ClimberManualControl : public behaviour::Behaviour {
     frc::XboxController *_codriver;
     bool _rawControl = false;
 };
-
