@@ -11,8 +11,7 @@
 using namespace frc;
 using namespace units;
 
-wom::drivetrain::Drivetrain::Drivetrain(DrivetrainConfig* config,
-                                        XboxController& driver)
+wom::drivetrain::Drivetrain::Drivetrain(DrivetrainConfig* config, XboxController& driver)
     : _config(config), _driver(driver) {}
 wom::drivetrain::Drivetrain::~Drivetrain() {}
 
