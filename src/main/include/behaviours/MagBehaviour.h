@@ -6,7 +6,7 @@
  
 class MagManualControl : public behaviour::Behaviour {
  public:
-  MagManualControl(Mag *mag, frc::XboxController *codriver);
+  explicit MagManualControl(Mag *mag, frc::XboxController *codriver);
    
   void OnTick(units::second_t dt) override;
  private:
@@ -17,7 +17,7 @@ class MagManualControl : public behaviour::Behaviour {
 
 class MagAutoPass : public behaviour::Behaviour {
  public:
-  MagAutoPass(Mag *mag);
+  explicit MagAutoPass(Mag *mag);
    
   void OnTick(units::second_t dt) override;
  private:
