@@ -1,9 +1,15 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
-#include "wombat.h"
 #include <frc/DigitalInput.h>
-#include <string>
+
 #include <memory>
+#include <string>
+
+#include "wombat.h"
 
 struct IntakeConfig {
   wom::Gearbox IntakeMotor;
@@ -12,21 +18,14 @@ struct IntakeConfig {
   frc::DigitalInput* shooterSensor;
 };
 
-enum class IntakeState {
-  kIdle,
-  kRaw,
-  kHold,
-  kEject,
-  kIntake,
-  kPass
-};
+enum class IntakeState { kIdle, kRaw, kHold, kEject, kIntake, kPass };
 
 class Intake : public behaviour::HasBehaviour {
  public:
   explicit Intake(IntakeConfig config);
-  
+
   void OnUpdate(units::second_t dt);
-  
+
   void setState(IntakeState state);
   void setRaw(units::volt_t voltage);
   IntakeConfig GetConfig();
