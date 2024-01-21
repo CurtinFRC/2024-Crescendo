@@ -4,8 +4,7 @@
 
 #include "behaviours/ClimberBehaviour.h"
 
-ClimberManualControl::ClimberManualControl(Climber* climber,
-                                           frc::XboxController* codriver)
+ClimberManualControl::ClimberManualControl(Climber* climber, frc::XboxController* codriver)
     : _climber(climber), _codriver(codriver) {
   Controls(climber);
 }

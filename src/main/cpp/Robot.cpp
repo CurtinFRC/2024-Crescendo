@@ -45,10 +45,8 @@ void Robot::RobotInit() {
 
   climber = new Climber(robotmap.climberSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(climber);
-  climber->SetDefaultBehaviour([this]() {
-    return wom::make<ClimberManualControl>(climber,
-                                           &robotmap.controllers.coDriver);
-  });
+  climber->SetDefaultBehaviour(
+      [this]() { return wom::make<ClimberManualControl>(climber, &robotmap.controllers.coDriver); });
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();
 }

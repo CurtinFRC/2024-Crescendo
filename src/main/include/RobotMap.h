@@ -133,12 +133,10 @@ struct RobotMap {
   SwerveBase swerveBase;
 
   struct Climber {
-    rev::CANSparkMax* climberMotor =
-        new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax* climberMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
     wom::CANSparkMaxEncoder climberEncoder{climberMotor, 0.1_m};
 
-    wom::Gearbox climberGearbox{climberMotor, &climberEncoder,
-                                frc::DCMotor::NEO(1)};
+    wom::Gearbox climberGearbox{climberMotor, &climberEncoder, frc::DCMotor::NEO(1)};
 
     ClimberConfig config{
         climberGearbox,
