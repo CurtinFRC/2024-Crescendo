@@ -6,7 +6,7 @@
 
 class IntakeManualControl : public behaviour::Behaviour {
  public:
-  IntakeManualControl(Intake *intake, frc::XboxController &codriver);
+  explicit IntakeManualControl(Intake *intake, frc::XboxController &codriver);
 
   void OnTick(units::second_t dt) override;
  private:
@@ -19,7 +19,7 @@ class IntakeManualControl : public behaviour::Behaviour {
 
 class IntakeAutoControl : public behaviour::Behaviour {
  public:
-  IntakeAutoControl(Intake *intake);
+  explicit IntakeAutoControl(Intake *intake);
 
   void OnTick(units::second_t dt) override;
  private:

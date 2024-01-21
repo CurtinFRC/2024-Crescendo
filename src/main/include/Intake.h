@@ -2,6 +2,8 @@
 
 #include "wombat.h"
 #include <frc/DigitalInput.h>
+#include <string>
+#include <memory>
 
 struct IntakeConfig {
   wom::Gearbox IntakeMotor;
@@ -21,7 +23,7 @@ enum class IntakeState {
 
 class Intake : public behaviour::HasBehaviour {
  public:
-  Intake(IntakeConfig config);
+  explicit Intake(IntakeConfig config);
   
   void OnUpdate(units::second_t dt);
   
@@ -37,4 +39,4 @@ class Intake : public behaviour::HasBehaviour {
   std::string _stringStateName = "error";
   units::volt_t _setVoltage = 0_V;
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("Intake");
-}; 
+};

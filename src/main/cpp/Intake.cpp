@@ -47,7 +47,7 @@ void Intake::OnUpdate(units::second_t dt) {
       break;
       case IntakeState::kIntake:
       {
-        //_config.IntakeMotor.motorController->SetVoltage(5_V);
+        _config.IntakeMotor.motorController->SetVoltage(5_V);
         _stringStateName = "Intake";
         _setVoltage = 5_V;
       } 
