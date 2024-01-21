@@ -4,12 +4,11 @@
 
 #pragma once
 
-#include "behaviours/MagBehaviour.h"
-#include <frc/TimedRobot.h>
-#include <frc/event/Eventloop.h>
 #include <frc/Encoder.h>
+#include <frc/TimedRobot.h>
 #include <frc/Timer.h>
 #include <frc/event/EventLoop.h>
+#include <frc/event/Eventloop.h>
 #include <frc/simulation/DifferentialDrivetrainSim.h>
 #include <frc/simulation/EncoderSim.h>
 #include <frc/smartdashboard/Field2d.h>
@@ -20,6 +19,7 @@
 
 #include "RobotMap.h"
 #include "Wombat.h"
+#include "behaviours/MagBehaviour.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -38,7 +38,7 @@ class Robot : public frc::TimedRobot {
 
  private:
   behaviour::BehaviourScheduler* sched;
-  
+
   RobotMap robotmap;
 
   frc::EventLoop loop;
@@ -48,5 +48,5 @@ class Robot : public frc::TimedRobot {
   frc::SendableChooser<std::string> m_path_chooser;
 
   wom::SwerveDrive* _swerveDrive;
-  Mag *mag;
+  Mag* mag;
 };
