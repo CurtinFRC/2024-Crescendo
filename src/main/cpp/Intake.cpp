@@ -13,7 +13,7 @@ void Intake::OnUpdate(units::second_t dt) {
   switch (_state) {
       case IntakeState::kIdle:
       {
-        //_config.IntakeMotor.motorController->SetVoltage(0_V);
+        _config.IntakeMotor.motorController->SetVoltage(0_V);
         if (_config.intakeSensor->Get()) {
           setState(IntakeState::kHold);
         }
@@ -23,14 +23,14 @@ void Intake::OnUpdate(units::second_t dt) {
       break;
       case IntakeState::kRaw:
       {
-        //_config.IntakeMotor.motorController->SetVoltage(_rawVoltage);
+        _config.IntakeMotor.motorController->SetVoltage(_rawVoltage);
         _stringStateName = "Raw";
         _setVoltage = _rawVoltage;
       }
       break;
       case IntakeState::kEject:
       {
-        //_config.IntakeMotor.motorController->SetVoltage(-5_V);
+        _config.IntakeMotor.motorController->SetVoltage(-5_V);
         if (_config.intakeSensor->Get() == 0 && _config.magSensor->Get() == 0) {
           setState(IntakeState::kIdle);
         }
@@ -40,7 +40,7 @@ void Intake::OnUpdate(units::second_t dt) {
       break;
       case IntakeState::kHold:
       {
-        //_config.IntakeMotor.motorController->SetVoltage(0_V);
+        _config.IntakeMotor.motorController->SetVoltage(0_V);
         _stringStateName = "Hold";
         _setVoltage = 0_V;
       }
@@ -54,7 +54,7 @@ void Intake::OnUpdate(units::second_t dt) {
       break;
       case IntakeState::kPass:
       {
-        //_config.IntakeMotor.motorController->SetVoltage(5_V);
+        _config.IntakeMotor.motorController->SetVoltage(5_V);
         if (_config.shooterSensor->Get()) {
           setState(IntakeState::kIdle);
           _stringStateName = "Pass";
@@ -72,7 +72,7 @@ void Intake::OnUpdate(units::second_t dt) {
   _table->GetEntry("Shooter Sensor: ").SetBoolean(_config.shooterSensor->Get());
   _table->GetEntry("Magazine Sensor: ").SetBoolean(_config.magSensor->Get());
 
-  _config.IntakeMotor.motorController->SetVoltage(5_V);
+  _config.IntakeMotor.motorController->SetVoltage(_setVoltage);
 }
 
 void Intake::setState(IntakeState state) {
