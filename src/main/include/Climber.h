@@ -1,6 +1,8 @@
 #pragma once
 
 #include "wombat.h"
+#include <string>
+#include <memory>
 
 struct ClimberConfig {
   wom::Gearbox climberGearbox;
@@ -15,7 +17,7 @@ enum class ClimberState {
 
 class Climber : public behaviour::HasBehaviour {
   public:
-    Climber(ClimberConfig config);
+    explicit Climber(ClimberConfig config);
 
     void OnUpdate(units::second_t dt);
     void SetState(ClimberState state);
