@@ -77,7 +77,7 @@ void Intake::OnUpdate(units::second_t dt) {
 
 void Intake::setState(IntakeState state) {
   _state = state;
-}
+};
 void Intake::setRaw(units::volt_t voltage) {
   _rawVoltage = voltage;
-}
+};
