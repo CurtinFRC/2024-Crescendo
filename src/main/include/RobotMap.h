@@ -7,11 +7,10 @@
 #include <frc/Compressor.h>
 #include <frc/DoubleSolenoid.h>
 #include <frc/XboxController.h>
+#include <frc/motorcontrol/MotorControllerGroup.h>
 #include <frc/system/plant/DCMotor.h>
 #include <units/angle.h>
 #include <units/length.h>
-#include <frc/motorcontrol/MotorControllerGroup.h>
-#include <frc/system/plant/DCMotor.h>
 
 #include <string>
 
@@ -19,8 +18,8 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-#include "Wombat.h"
 #include "Climber.h"
+#include "Wombat.h"
 
 struct RobotMap {
   struct Controllers {
@@ -36,8 +35,7 @@ struct RobotMap {
     ctre::phoenix6::hardware::CANcoder backLeftCancoder{16};
     ctre::phoenix6::hardware::CANcoder backRightCancoder{18};
 
-    ctre::phoenix6::hardware::Pigeon2* gyro =
-        new ctre::phoenix6::hardware::Pigeon2(20, "Drivebase");
+    ctre::phoenix6::hardware::Pigeon2* gyro = new ctre::phoenix6::hardware::Pigeon2(20, "Drivebase");
     wpi::array<ctre::phoenix6::hardware::TalonFX*, 4> turnMotors{
         new ctre::phoenix6::hardware::TalonFX(7, "Drivebase"),
         new ctre::phoenix6::hardware::TalonFX(5, "Drivebase"),
@@ -53,45 +51,33 @@ struct RobotMap {
         wom::SwerveModuleConfig{
             // front left module
             frc::Translation2d(10.761_in, 9.455_in),
-            wom::Gearbox{
-                driveMotors[0],
-                new wom::TalonFXEncoder(driveMotors[0], 0.0445_m, 6.75),
-                frc::DCMotor::Falcon500(1).WithReduction(6.75)},
-            wom::Gearbox{turnMotors[0],
-                         new wom::CanEncoder(19, 0.0445_m, 4096, 12.8),
+            wom::Gearbox{driveMotors[0], new wom::TalonFXEncoder(driveMotors[0], 0.0445_m, 6.75),
+                         frc::DCMotor::Falcon500(1).WithReduction(6.75)},
+            wom::Gearbox{turnMotors[0], new wom::CanEncoder(19, 0.0445_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &frontLeftCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
             // front right module
             frc::Translation2d(10.761_in, -9.455_in),
-            wom::Gearbox{
-                driveMotors[1],
-                new wom::TalonFXEncoder(driveMotors[1], 0.0445_m, 6.75),
-                frc::DCMotor::Falcon500(1).WithReduction(6.75)},
-            wom::Gearbox{turnMotors[1],
-                         new wom::CanEncoder(17, 0.0445_m, 4096, 12.8),
+            wom::Gearbox{driveMotors[1], new wom::TalonFXEncoder(driveMotors[1], 0.0445_m, 6.75),
+                         frc::DCMotor::Falcon500(1).WithReduction(6.75)},
+            wom::Gearbox{turnMotors[1], new wom::CanEncoder(17, 0.0445_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &frontRightCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
             // back left module
             frc::Translation2d(-10.761_in, 9.455_in),
-            wom::Gearbox{
-                driveMotors[2],
-                new wom::TalonFXEncoder(driveMotors[2], 0.0445_m, 6.75),
-                frc::DCMotor::Falcon500(1).WithReduction(6.75)},
-            wom::Gearbox{turnMotors[2],
-                         new wom::CanEncoder(16, 0.0445_m, 4096, 12.8),
+            wom::Gearbox{driveMotors[2], new wom::TalonFXEncoder(driveMotors[2], 0.0445_m, 6.75),
+                         frc::DCMotor::Falcon500(1).WithReduction(6.75)},
+            wom::Gearbox{turnMotors[2], new wom::CanEncoder(16, 0.0445_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &backRightCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
             // back right module
             frc::Translation2d(-10.761_in, -9.455_in),
-            wom::Gearbox{
-                driveMotors[3],
-                new wom::TalonFXEncoder(driveMotors[3], 0.0445_m, 6.75),
-                frc::DCMotor::Falcon500(1).WithReduction(6.75)},
-            wom::Gearbox{turnMotors[3],
-                         new wom::CanEncoder(18, 0.0445_m, 4096, 12.8),
+            wom::Gearbox{driveMotors[3], new wom::TalonFXEncoder(driveMotors[3], 0.0445_m, 6.75),
+                         frc::DCMotor::Falcon500(1).WithReduction(6.75)},
+            wom::Gearbox{turnMotors[3], new wom::CanEncoder(18, 0.0445_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &backLeftCancoder, 4_in / 2},
     };
@@ -147,19 +133,14 @@ struct RobotMap {
   SwerveBase swerveBase;
 
   struct Climber {
-    rev::CANSparkMax *climberMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax* climberMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
     wom::CANSparkMaxEncoder climberEncoder{climberMotor, 0.1_m};
-  
-    wom::Gearbox climberGearbox {
-        climberMotor,
-        &climberEncoder,
-        frc::DCMotor::NEO(1)
-    };
 
-    ClimberConfig config {
-      climberGearbox,
-    };
+    wom::Gearbox climberGearbox{climberMotor, &climberEncoder, frc::DCMotor::NEO(1)};
 
+    ClimberConfig config{
+        climberGearbox,
+    };
   };
   Climber climberSystem;
 };

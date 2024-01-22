@@ -36,25 +36,20 @@ void Robot::RobotInit() {
 
   robotmap.swerveBase.gyro->Reset();
 
-  _swerveDrive =
-      new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+  _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
-  _swerveDrive->SetDefaultBehaviour([this]() {
-    return wom::make<wom::ManualDrivebase>(_swerveDrive,
-                                           &robotmap.controllers.driver);
-  });
+  _swerveDrive->SetDefaultBehaviour(
+      [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
   lastPeriodic = wom::now();
 
   climber = new Climber(robotmap.climberSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(climber);
-  climber->SetDefaultBehaviour([this]() {
-    return wom::make<ClimberManualControl>(climber, &robotmap.controllers.coDriver);
-  });
+  climber->SetDefaultBehaviour(
+      [this]() { return wom::make<ClimberManualControl>(climber, &robotmap.controllers.coDriver); });
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();
 }
-
 
 void Robot::RobotPeriodic() {
   units::second_t dt = wom::now() - lastPeriodic;
@@ -81,7 +76,7 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {
   loop.Clear();
-  wom::BehaviourScheduler *scheduler = wom::BehaviourScheduler::GetInstance();
+  wom::BehaviourScheduler* scheduler = wom::BehaviourScheduler::GetInstance();
   scheduler->InterruptAll();
   // _swerveDrive->OnStart();
   // sched->InterruptAll();
