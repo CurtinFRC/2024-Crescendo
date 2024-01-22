@@ -33,11 +33,9 @@ struct RobotMap {
 
         // wom::VoltageController shooterMotorGroup = wom::VoltageController::Group(shooterMotor);
         wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
-
         wom::Gearbox shooterGearbox {
             &shooterMotor,
             shooterEncoder,
-
             frc::DCMotor::NEO(1)
         };
 
