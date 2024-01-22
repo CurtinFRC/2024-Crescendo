@@ -17,7 +17,7 @@ enum class AlphaArmState {
 
 class AlphaArm : public::behaviour::HasBehaviour{
     public:
-     AlphaArm(AlphaArmConfig config);
+     explicit AlphaArm(AlphaArmConfig config);
 
     void OnUpdate(units::second_t dt);
     void SetRaw(units::volt_t volt);
