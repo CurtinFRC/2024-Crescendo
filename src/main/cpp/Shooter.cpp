@@ -25,7 +25,6 @@ void Shooter::OnUpdate(units::second_t dt){
           if (_pid.IsStable()) {
             SetState(ShooterState::kShooting);
           }
-
         }
         break;
         case ShooterState::kShooting:
