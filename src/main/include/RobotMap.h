@@ -19,7 +19,7 @@
 #include <ctre/phoenix6/TalonFX.hpp>
 
 #include "Wombat.h"
-#include "mag.h"
+#include "Mag.h"
 
 struct RobotMap {
   struct Controllers {

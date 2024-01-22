@@ -9,7 +9,7 @@ MagManualControl::MagManualControl(Mag* mag, frc::XboxController* codriver) : _m
 }
 
 void MagManualControl::OnTick(units::second_t dt) {
-  if (_codriver->GetAButtonPressed()) {
+  if (_codriver->GetXButtonPressed()) {
     if (_rawControl == true) {
       _rawControl = false;
     } else {

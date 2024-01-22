@@ -3,11 +3,11 @@
 // of the MIT License at the root of this project
 
 #pragma once
- 
-#include "Wombat.h"
-#include "Mag.h"
 
 #include <frc/XboxController.h>
+
+#include "Mag.h"
+#include "Wombat.h"
 
 class MagManualControl : public behaviour::Behaviour {
  public:
