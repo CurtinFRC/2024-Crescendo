@@ -29,7 +29,7 @@ void AlphaArm::SetState(AlphaArmState state){
     _state = state;
 }
 
-void AlphaArm::SetRaw(units::volt_t voltR){
-    _voltR = voltR;
+void AlphaArm::SetRaw(units::volt_t volt){
+    _armVoltage = volt;
 }
 
