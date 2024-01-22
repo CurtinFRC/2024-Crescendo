@@ -18,8 +18,9 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-#include "Wombat.h"
 #include "Mag.h"
+#include "Wombat.h"
+
 
 struct RobotMap {
   struct Controllers {
