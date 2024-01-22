@@ -10,7 +10,7 @@ void Shooter::OnUpdate(units::second_t dt){
     switch(_state){
         case ShooterState::kIdle:
 				{
-          _config.ShooterGearbox.transmission->SetVoltage(0_V);
+          _config.ShooterGearbox.motorController->SetVoltage(0_V);
           if (_shooterSensor.Get()) {       
             _state = ShooterState::kReverse;
           } 
@@ -20,7 +20,7 @@ void Shooter::OnUpdate(units::second_t dt){
         {
           _pid.SetSetpoint(_goal);
           units::volt_t pidCalculate = _pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt);
-          _config.ShooterGearbox.transmission->SetVoltage(pidCalculate);
+          _config.ShooterGearbox.motorController->SetVoltage(pidCalculate);
 
           if (_pid.IsStable()) {
             SetState(ShooterState::kShooting);
@@ -32,7 +32,7 @@ void Shooter::OnUpdate(units::second_t dt){
 				{
           _pid.SetSetpoint(_goal);
           units::volt_t pidCalculate = _pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt);
-        	_config.ShooterGearbox.transmission->SetVoltage(pidCalculate);
+        	_config.ShooterGearbox.motorController->SetVoltage(pidCalculate);
 
            if (!_pid.IsStable()) {
              SetState(ShooterState::kSpinUp);
@@ -44,7 +44,7 @@ void Shooter::OnUpdate(units::second_t dt){
         break;
         case ShooterState::kReverse:
 				{
-        	_config.ShooterGearbox.transmission->SetVoltage(-5_V);
+        	_config.ShooterGearbox.motorController->SetVoltage(-5_V);
           if (!_shooterSensor.Get()) {
             SetState(ShooterState::kIdle);
           }
@@ -52,7 +52,7 @@ void Shooter::OnUpdate(units::second_t dt){
         break;
         case ShooterState::kRaw:
 				{
-        	_config.ShooterGearbox.transmission->SetVoltage(5_V);
+        	_config.ShooterGearbox.motorController->SetVoltage(5_V);
           if (_shooterSensor.Get()) {
             SetState(ShooterState::kRaw);
           }
