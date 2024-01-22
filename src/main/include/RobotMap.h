@@ -28,30 +28,23 @@ struct RobotMap {
   Controllers controllers;
 
   struct Shooter {
-        rev::CANSparkMax shooterMotor{99, rev::CANSparkMax::MotorType::kBrushless};
-        frc::DigitalInput shooterSensor{2};
+    rev::CANSparkMax shooterMotor{99, rev::CANSparkMax::MotorType::kBrushless};
+    frc::DigitalInput shooterSensor{2};
 
-        // wom::VoltageController shooterMotorGroup = wom::VoltageController::Group(shooterMotor);
-        wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
-        wom::Gearbox shooterGearbox {
-            &shooterMotor,
-            shooterEncoder,
-            frc::DCMotor::NEO(1)
-        };
+    // wom::VoltageController shooterMotorGroup = wom::VoltageController::Group(shooterMotor);
+    wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
+    wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder, frc::DCMotor::NEO(1)};
 
-        ShooterConfig config {
-            "shooterGearbox",
-            shooterGearbox,
-            wom::PIDConfig<units::radians_per_second, units::volt>  {
-                "/Shooter/shooter/velocityPID/config",
-                9_V / (180_deg / 1_s),
-                0_V / 25_deg,
-                0_V / (90_deg / 1_s / 1_s)
-            },
-            &shooterSensor,
-        };
-
-    }; Shooter shooterSystem;
+    ShooterConfig config{
+        "shooterGearbox",
+        shooterGearbox,
+        wom::PIDConfig<units::radians_per_second, units::volt>{"/Shooter/shooter/velocityPID/config",
+                                                               9_V / (180_deg / 1_s), 0_V / 25_deg,
+                                                               0_V / (90_deg / 1_s / 1_s)},
+        &shooterSensor,
+    };
+  };
+  Shooter shooterSystem;
 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{19};

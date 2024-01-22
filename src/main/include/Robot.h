@@ -1,9 +1,12 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 // of the MIT License at the root of this project
 
 #pragma once
 
 #include <frc/Encoder.h>
-#include "Shooter.h"
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
 #include <frc/event/EventLoop.h>
@@ -15,16 +18,13 @@
 
 #include <string>
 
-#include "Wombat.h"
 #include "RobotMap.h"
-#include <frc/event/EventLoop.h>
+#include "Shooter.h"
 #include "ShooterBehaviour.h"
-
-
-
+#include "Wombat.h"
 
 class Robot : public frc::TimedRobot {
-  public:
+ public:
   void TestPeriodic() override;
   void RobotInit() override;
   void RobotPeriodic() override;
