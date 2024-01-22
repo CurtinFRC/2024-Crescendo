@@ -14,16 +14,9 @@ void AlphaArmManualControl::OnTick(units::second_t dt){
         }
     }
 
-
 if (_rawControl) {
     _alphaArm->SetState(AlphaArmState::kRaw);
-    _alphaArm->SetRaw(_rightStick);
- }
+    //mess around with _rightStick later
+    _alphaArm->SetRaw(_codriver->GetRightY() * 2_V);
+  }
 }
-
-// void AlphaArmManualControl::OnTick(units::second_t dt){
-     
-
-//     _alphaArm->SetState(AlphaArmState::kRaw); 
-//     _alphaArm->SetRaw(_rightStick);
-// }

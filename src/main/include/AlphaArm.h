@@ -3,7 +3,9 @@
 #include <frc/DigitalInput.h>
 
 struct AlphaArmConfig {
-    wom::Gearbox armGearBox;
+    //wom::Gearbox armGearBox;
+    wom::Gearbox alphaArmGearbox;
+    wom::Gearbox wristGearbox;
 
 };
 
@@ -26,7 +28,8 @@ class AlphaArm : public::behaviour::HasBehaviour{
     private:
     AlphaArmConfig _config;
     AlphaArmState _state = AlphaArmState::kIdle;
-    units::volt_t setAlphaArmVoltage;
+    units::volt_t setAlphaArmVoltage = 0_V;
+    units::volt_t setWristVoltage = 0_V;
     units::volt_t _armVoltage;
     units::volt_t _voltR;
 };

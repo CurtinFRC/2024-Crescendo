@@ -31,10 +31,12 @@ struct RobotMap {
 
   struct AlphaArmSystem {
     rev::CANSparkMax alphaArmMotor{99, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax wristMotor{99, rev::CANSparkMax::MotorType::kBrushless};
 
     wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
+    wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
 
-    AlphaArmConfig config{alphaArmGearbox};
+    AlphaArmConfig config{alphaArmGearbox, wristGearbox};
  }; 
  AlphaArmSystem alphaArmSystem;
 
