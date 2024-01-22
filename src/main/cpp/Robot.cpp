@@ -46,10 +46,9 @@ void Robot::RobotInit() {
 
   alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
-  alphaArm->SetDefaultBehaviour([this]()
-     {return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
-  }
-
+  alphaArm->SetDefaultBehaviour(
+      [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
+}
 
 void Robot::RobotPeriodic() {
   auto dt = wom::now() - lastPeriodic;
