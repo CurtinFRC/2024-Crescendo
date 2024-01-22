@@ -13,6 +13,8 @@
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include "AlphaArm.h"
+#include "AlphaArmBehaviour.h"
 
 #include <string>
 
@@ -48,4 +50,6 @@ class Robot : public frc::TimedRobot {
   frc::SendableChooser<std::string> m_path_chooser;
 
   wom::SwerveDrive* _swerveDrive;
+
+  AlphaArm* alphaArm;
 };

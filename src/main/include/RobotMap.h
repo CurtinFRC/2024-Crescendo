@@ -18,11 +18,13 @@
 #include <ctre/phoenix6/TalonFX.hpp>
 
 #include "Wombat.h"
+#include "AlphaArm.h"
+#include "AlphaArmBehaviour.h"
 
 struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
-    frc::XboxController coDriver = frc::XboxController(1);
+    frc::XboxController codriver = frc::XboxController(1);
     frc::XboxController testController = frc::XboxController(2);
   };
   Controllers controllers;
@@ -127,6 +129,23 @@ struct RobotMap {
     //    driveMotors[i]->SetInverted(true);
     //  }
     //}
+  }; SwerveBase swerveBase;
+
+  struct AlphaArmSystem{
+    //wom::VoltageController armMotor{new rev::CANSparkMax(99, rev::CANSparkMax::MotorType::kBrushless) };
+    //rev::CANSparkMax* armMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax alphaArmMotor{99, rev::CANSparkMax::MotorType::kBrushless};
+    //rev::CANSparkMax* armMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
+    wom::Gearbox alphaArmGearbox{
+    &alphaArmMotor,
+    nullptr,
+    frc::DCMotor::NEO(1)
   };
-  SwerveBase swerveBase;
+
+  AlphaArmConfig config {
+    alphaArmGearbox
+  };
+  
+  
+ }; AlphaArmSystem alphaArmSystem;
 };
