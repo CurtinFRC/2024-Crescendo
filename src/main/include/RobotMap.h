@@ -40,5 +40,4 @@ struct RobotMap {
     IntakeConfig config{IntakeGearbox /*, &intakeSensor, &magSensor, &shooterSensor*/};
   };
   IntakeSystem intakeSystem;
-
 };
