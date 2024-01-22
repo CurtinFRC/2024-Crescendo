@@ -7,13 +7,13 @@
 
 class ShooterManualControl : public behaviour::Behaviour{
  public:
-  ShooterManualControl(Shooter *shooter, frc::XboxController &codriver);
+  ShooterManualControl(Shooter *shooter, frc::XboxController *codriver);
 
   void OnTick(units::second_t dt) override;
 
  private:
   Shooter* _shooter;
-  frc::XboxController &_codriver;
+  frc::XboxController *_codriver;
 
   bool _rawControl = true;
   

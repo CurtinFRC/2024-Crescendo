@@ -52,7 +52,7 @@ void Shooter::OnUpdate(units::second_t dt){
         break;
         case ShooterState::kRaw:
 				{
-        	_config.ShooterGearbox.transmission->SetVoltage(5_V);
+        	_config.ShooterGearbox.transmission->SetVoltage(_rawVoltage);
           if (_shooterSensor.Get()) {
             SetState(ShooterState::kRaw);
           }
@@ -71,6 +71,7 @@ void Shooter::SetState(ShooterState state) {
 }
 void Shooter::SetRaw(units::volt_t voltage) {
     _rawVoltage = voltage;
+    _state = ShooterState::kRaw;
 }
 void Shooter::SetPidGoal(units::radians_per_second_t goal) {
   _goal = goal;

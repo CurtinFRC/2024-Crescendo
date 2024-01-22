@@ -11,7 +11,7 @@ void Robot::RobotInit() {
     shooter = new Shooter(map.shooterSystem.config);
     wom::BehaviourScheduler::GetInstance()->Register(shooter);
     shooter->SetDefaultBehaviour([this]() {
-         return wom::make<ShooterManualControl>(shooter, map.codriver);
+         return wom::make<ShooterManualControl>(shooter, &map.codriver);
      });
 
 
@@ -25,7 +25,7 @@ void Robot::RobotPeriodic() {
     loop.Poll();
     wom::BehaviourScheduler::GetInstance()->Tick();
 
-     shooter->OnUpdate(dt);
+    shooter->OnUpdate(dt);
     
 
 }
