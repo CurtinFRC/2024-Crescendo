@@ -23,7 +23,7 @@ void IntakeManualControl::OnTick(units::second_t dt) {
   if (_rawControl) {
     _intake->setState(IntakeState::kRaw);
     _intake->setRaw(_codriver.GetLeftY() * 10_V);
-    std::cout <<"Raw"<< std::endl;
+    std::cout << "Raw" << std::endl;
   } else {
     if (_codriver.GetYButtonPressed()) {
       _intake->setState(IntakeState::kIntake);

@@ -25,18 +25,19 @@ struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
     frc::XboxController codriver = frc::XboxController(1);
-  }; Controllers controllers;
+  };
+  Controllers controllers;
 
   struct IntakeSystem {
     rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
     // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
-    //frc::DigitalInput intakeSensor{0};
-    //frc::DigitalInput magSensor{0};
-    //frc::DigitalInput shooterSensor{0};
+    // frc::DigitalInput intakeSensor{0};
+    // frc::DigitalInput magSensor{0};
+    // frc::DigitalInput shooterSensor{0};
 
     wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::CIM(1)};
 
-    IntakeConfig config{IntakeGearbox/*, &intakeSensor, &magSensor, &shooterSensor*/};
+    IntakeConfig config{IntakeGearbox /*, &intakeSensor, &magSensor, &shooterSensor*/};
   };
   IntakeSystem intakeSystem;
 

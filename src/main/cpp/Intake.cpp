@@ -50,19 +50,18 @@ void Intake::OnUpdate(units::second_t dt) {
       //   _stringStateName = "Pass";
       // }
       _setVoltage = 5_V;
-      break;
-      default:
-        std::cout << "Error: Intake in INVALID STATE." << std::endl;
-      break;
-    }
+    } break;
+    default:
+      std::cout << "Error: Intake in INVALID STATE." << std::endl;
+    break;
   }
   _table->GetEntry("State: ").SetString(_stringStateName);
-   _table->GetEntry("Motor Voltage: ").SetDouble(_setVoltage.value());
+  _table->GetEntry("Motor Voltage: ").SetDouble(_setVoltage.value());
   // _table->GetEntry("Intake Sensor: ").SetBoolean(_config.intakeSensor->Get());
   // _table->GetEntry("Shooter Sensor: ").SetBoolean(_config.shooterSensor->Get());
   // _table->GetEntry("Magazine Sensor: ").SetBoolean(_config.magSensor->Get());
 
-  std::cout <<_setVoltage.value()<< std::endl;
+  std::cout << _setVoltage.value() << std::endl;
 
   _config.IntakeMotor.motorController->SetVoltage(_setVoltage);
 }
