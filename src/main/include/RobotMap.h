@@ -29,6 +29,15 @@ struct RobotMap {
   };
   Controllers controllers;
 
+  struct AlphaArmSystem {
+    rev::CANSparkMax alphaArmMotor{99, rev::CANSparkMax::MotorType::kBrushless};
+
+    wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
+
+    AlphaArmConfig config{alphaArmGearbox};
+ }; 
+ AlphaArmSystem alphaArmSystem;
+
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{19};
     ctre::phoenix6::hardware::CANcoder frontRightCancoder{17};
@@ -131,21 +140,4 @@ struct RobotMap {
     //}
   }; SwerveBase swerveBase;
 
-  struct AlphaArmSystem{
-    //wom::VoltageController armMotor{new rev::CANSparkMax(99, rev::CANSparkMax::MotorType::kBrushless) };
-    //rev::CANSparkMax* armMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
-    rev::CANSparkMax alphaArmMotor{99, rev::CANSparkMax::MotorType::kBrushless};
-    //rev::CANSparkMax* armMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
-    wom::Gearbox alphaArmGearbox{
-    &alphaArmMotor,
-    nullptr,
-    frc::DCMotor::NEO(1)
-  };
-
-  AlphaArmConfig config {
-    alphaArmGearbox
-  };
-  
-  
- }; AlphaArmSystem alphaArmSystem;
 };
