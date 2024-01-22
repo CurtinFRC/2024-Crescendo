@@ -2,13 +2,14 @@
 #include "Wombat.h"
 #include <units/angular_velocity.h>
 #include <frc/DigitalInput.h>
+#include <string>
+#include <memory>
 
 struct ShooterConfig {
   std::string path;
   wom::Gearbox ShooterGearbox;
   wom::PIDConfig<units::radians_per_second, units::volt> pidConfig;
   frc::DigitalInput* shooterSensor;
-
 };  
 
 enum class ShooterState {
@@ -22,7 +23,7 @@ enum class ShooterState {
 
 class Shooter : public behaviour::HasBehaviour{
   public:
-    Shooter(ShooterConfig config);
+   explicit Shooter(ShooterConfig config);
 
     void OnUpdate(units::second_t dt);
     void SetState(ShooterState state);

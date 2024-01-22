@@ -36,7 +36,6 @@ struct RobotMap {
 
         wom::Gearbox shooterGearbox {
             &shooterMotor,
-
             shooterEncoder,
 
             frc::DCMotor::NEO(1)
