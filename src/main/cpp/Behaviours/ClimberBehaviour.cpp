@@ -1,4 +1,4 @@
-#include "behaviours/ClimberBehaviour.h"
+#include "Behaviours/ClimberBehaviour.h"
 
 ClimberManualControl::ClimberManualControl(Climber *climber, frc::XboxController *codriver) : _climber(climber), _codriver(codriver) {
   Controls(climber); 
