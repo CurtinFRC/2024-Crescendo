@@ -2,8 +2,19 @@
 
 #pragma once
 
+#include <frc/Encoder.h>
 #include "Shooter.h"
 #include <frc/TimedRobot.h>
+#include <frc/Timer.h>
+#include <frc/event/EventLoop.h>
+#include <frc/simulation/DifferentialDrivetrainSim.h>
+#include <frc/simulation/EncoderSim.h>
+#include <frc/smartdashboard/Field2d.h>
+#include <frc/smartdashboard/SendableChooser.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+
+#include <string>
+
 #include "Wombat.h"
 #include "RobotMap.h"
 #include <frc/event/EventLoop.h>
@@ -24,10 +35,21 @@ class Robot : public frc::TimedRobot {
   void DisabledInit() override;
   void DisabledPeriodic() override;
   void TestInit() override;
-
+  void SimulationInit() override;
+  void SimulationPeriodic() override;
 
  private:
- frc::EventLoop loop;
- RobotMap map;
- Shooter *shooter;
+  behaviour::BehaviourScheduler* sched;
+  RobotMap robotmap;
+  frc::EventLoop loop;
+
+  frc::SendableChooser<std::string> m_chooser;
+
+  frc::Field2d m_field;
+
+  frc::Timer simulation_timer;
+
+  frc::SendableChooser<std::string> m_path_chooser;
+
+  wom::SwerveDrive* _swerveDrive;
 };
