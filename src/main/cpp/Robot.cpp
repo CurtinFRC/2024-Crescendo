@@ -23,33 +23,10 @@ static units::second_t lastPeriodic;
 void Robot::RobotInit() {
   lastPeriodic = wom::now();
 
-  m_chooser.SetDefaultOption("Default Auto", "Default Auto");
-
-  frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
-
-  m_path_chooser.SetDefaultOption("Path1", "paths/output/Path1.wpilib.json");
-
-  m_path_chooser.AddOption("Path1", "paths/output/Path1.wpilib.json");
-  m_path_chooser.AddOption("Path2", "paths/output/Path2.wpilib.json");
-
-  frc::SmartDashboard::PutData("Path Selector", &m_path_chooser);
-
-  frc::SmartDashboard::PutData("Field", &m_field);
-
-  simulation_timer = frc::Timer();
-
-  robotmap.swerveBase.gyro->Reset();
-
-  _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
-  wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
-  _swerveDrive->SetDefaultBehaviour(
-      [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
-
   intake = new Intake(robotmap.intakeSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(intake);
-
   intake->SetDefaultBehaviour(
-      [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.driver); });
+      [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
 }
 
 void Robot::RobotPeriodic() {
@@ -59,13 +36,13 @@ void Robot::RobotPeriodic() {
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
 
-  _swerveDrive->OnUpdate(dt);
   intake->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {
   loop.Clear();
-  sched->InterruptAll();
+  wom::BehaviourScheduler* scheduler = wom::BehaviourScheduler::GetInstance();
+  scheduler->InterruptAll();
 }
 
 void Robot::AutonomousPeriodic() {}

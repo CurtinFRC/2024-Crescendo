@@ -41,15 +41,5 @@ class Robot : public frc::TimedRobot {
   RobotMap robotmap;
   frc::EventLoop loop;
 
-  frc::SendableChooser<std::string> m_chooser;
-
-  frc::Field2d m_field;
-
-  frc::Timer simulation_timer;
-
-  frc::SendableChooser<std::string> m_path_chooser;
-
-  wom::SwerveDrive* _swerveDrive;
-
   Intake* intake;
 };
