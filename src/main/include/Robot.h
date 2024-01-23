@@ -33,12 +33,9 @@ class Robot : public frc::TimedRobot {
   void DisabledPeriodic() override;
   void TestInit() override;
   void TestPeriodic() override;
-  void SimulationInit() override;
-  void SimulationPeriodic() override;
-
  private:
-  behaviour::BehaviourScheduler* sched;
   RobotMap robotmap;
+  wom::BehaviourScheduler* sched;
   frc::EventLoop loop;
 
   frc::SendableChooser<std::string> m_chooser;
@@ -51,5 +48,10 @@ class Robot : public frc::TimedRobot {
 
   wom::SwerveDrive* _swerveDrive;
 
-  AlphaArm* alphaArm;
+  AlphaArm *alphaArm;
+
+  // ctre::phoenix6::hardware::TalonFX *frontLeft;
+  // ctre::phoenix6::hardware::TalonFX *frontRight;
+  // ctre::phoenix6::hardware::TalonFX *backLeft;
+  // ctre::phoenix6::hardware::TalonFX *backRight;
 };
