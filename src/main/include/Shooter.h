@@ -4,6 +4,7 @@
 
 #pragma once
 #include <frc/DigitalInput.h>
+#include <frc/controller/PIDController.h>
 #include <units/angular_velocity.h>
 
 #include <memory>
@@ -14,8 +15,8 @@
 struct ShooterConfig {
   std::string path;
   wom::Gearbox ShooterGearbox;
-  wom::PIDConfig<units::radians_per_second, units::volt> pidConfig;
-  frc::DigitalInput* shooterSensor;
+  // wom::PIDConfig<units::radians_per_second, units::volt> pidConfig;
+  // frc::DigitalInput* shooterSensor;
 };
 
 enum class ShooterState { kIdle, kShooting, kSpinUp, kReverse, kRaw };
@@ -36,6 +37,7 @@ class Shooter : public behaviour::HasBehaviour {
   ShooterState _state = ShooterState::kRaw;
   units::volt_t _rawVoltage;
   units::radians_per_second_t _goal;
-  wom::PIDController<units::radians_per_second, units::volt> _pid;
-  frc::DigitalInput _shooterSensor{0};
+  units::volt_t _setVoltage = 0_V;
+  // frc::PIDController _pid;
+  // frc::DigitalInput _shooterSensor{0};
 };
