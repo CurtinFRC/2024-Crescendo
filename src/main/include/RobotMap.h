@@ -10,7 +10,7 @@
 #include <frc/system/plant/DCMotor.h>
 #include <units/angle.h>
 #include <units/length.h>
-
+#include "Shooter.h"
 #include <string>
 
 #include <ctre/phoenix6/CANcoder.hpp>
