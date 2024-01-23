@@ -10,13 +10,14 @@
 #include <frc/system/plant/DCMotor.h>
 #include <units/angle.h>
 #include <units/length.h>
-#include "Shooter.h"
+
 #include <string>
 
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
+#include "Shooter.h"
 #include "Wombat.h"
 
 struct RobotMap {
