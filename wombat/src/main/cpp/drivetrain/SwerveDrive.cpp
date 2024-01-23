@@ -31,7 +31,8 @@ SwerveModule::SwerveModule(std::string path, SwerveModuleConfig config,
       _config(config),
       _velocityPIDController(frc::PIDController(1.2, 0, 0, 0.005_s)),
       _table(nt::NetworkTableInstance::GetDefault().GetTable(path)) {
-  // _anglePIDController.SetTolerance(360);
+  // _anglePIDController.(2 * 3.1415);
+  _anglePIDController.EnableContinuousInput(0, (2 * 3.1415));
 }
 
 void SwerveModule::OnStart() {
@@ -62,7 +63,11 @@ void SwerveModule::OnUpdate(units::second_t dt) {
       _table->GetEntry("/testing/GetEncoderPos").SetDouble(input);
       // _velocityPIDController.SetSetpoint(3);
       driveVoltage = units::volt_t{_velocityPIDController.Calculate(GetSpeed().value())};
+      std::cout << "Turn angle input: " << input << std::endl;
       turnVoltage = units::volt_t{_anglePIDController.Calculate(input)};
+
+      _table->GetEntry("Input angle").SetDouble(input);
+      _table->GetEntry("Setpoint angle").SetDouble(_anglePIDController.GetSetpoint());
     } break;
     case wom::drivetrain::SwerveModuleState::kZeroing: {
     } break;
@@ -141,11 +146,16 @@ void SwerveModule::SetPID(units::radian_t angle,
                           units::second_t dt) {
   _state = SwerveModuleState::kPID;
   // @liam start added
+  // std::cout << "angle Setpoint: " << _anglePIDController.GetSetpoint() << std::endl;
+  // std::cout << "angle value: " << angle.value() << std::endl;
+
   double diff = std::fmod((_anglePIDController.GetSetpoint() - angle.value()),
-                          360);
-  if (std::abs(diff) >= 90) {
+                          (2 * 3.1415));
+  std::cout << "DIFF value: " << diff << std::endl;
+  _table->GetEntry("/Differential value:").SetDouble(diff);
+  if (std::abs(diff) >= 3.1415) {
     speed *= -1;
-    angle += 180_deg;
+    angle -= 3.1415_rad;
   }
   // @liam end added
 
@@ -175,7 +185,7 @@ units::meters_per_second_t SwerveModule::GetSpeed() const {
   units::meters_per_second_t returnVal{
     _config.driveMotor.encoder->GetVelocityValue() *
     _config.wheelRadius.value()};
-    std::cout << returnVal.value() << std::endl;
+    // std::cout << returnVal.value() << std::endl;
     return returnVal;
 }
 
