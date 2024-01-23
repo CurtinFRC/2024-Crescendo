@@ -1,7 +1,6 @@
 // Copyright (c) 2023-2024 CurtinFRC
 // Open Source Software, you can modify it according to the terms
 // of the MIT License at the root of this project
-
 #pragma once
 
 #include <frc/Compressor.h>
@@ -199,15 +198,5 @@ struct RobotMap {
         nt::NetworkTableInstance::GetDefault().GetTable("swerve");
   };
   SwerveTable swerveTable;
-
-  // struct AlphaArmSystem {
-  //   rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
-  //   rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
-
-  //   wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
-  //   wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
-
-  //   AlphaArmConfig config{alphaArmGearbox, wristGearbox};
-  // };
-  // AlphaArmSystem alphaArmSystem;
 };
+

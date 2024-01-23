@@ -36,7 +36,6 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void DisabledInit() override;
   void DisabledPeriodic() override;
-
  private:
   RobotMap robotmap;
   wom::BehaviourScheduler* sched;
@@ -55,7 +54,6 @@ class Robot : public frc::TimedRobot {
   wom::SwerveDrive* _swerveDrive;
   // AlphaArm* alphaArm;
 
-  ctre::phoenix6::hardware::TalonFX* frontLeft;
   // AlphaArm *alphaArm;
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;

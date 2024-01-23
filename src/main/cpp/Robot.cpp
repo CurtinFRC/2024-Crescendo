@@ -58,10 +58,13 @@ void Robot::RobotInit() {
 
   // robotmap.swerveBase.gyro->Reset();
 
-  _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+  _swerveDrive =
+      new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
-  _swerveDrive->SetDefaultBehaviour(
-      [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
+  _swerveDrive->SetDefaultBehaviour([this]() {
+    return wom::make<wom::ManualDrivebase>(_swerveDrive,
+                                           &robotmap.controllers.driver);
+  });
 
   // alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   // wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
@@ -100,6 +103,26 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
 
   lastPeriodic = wom::now();
+  
+  // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
+  // m_driveSim = wom::TempSimSwerveDrive();
+
+  //robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
+  //robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
+  //robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
+  //robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
+
+
+
+
+  // frontLeft = new ctre::phoenix6::hardware::TalonFX(7, "Drivebase");  // front left
+  // frontRight = new ctre::phoenix6::hardware::TalonFX(2, "Drivebase");   // front right
+  // backLeft = new ctre::phoenix6::hardware::TalonFX(6, "Drivebase");   // back left
+  // backRight = new ctre::phoenix6::hardware::TalonFX(4, "Drivebase");  // back right
+  // frontLeft = new ctre::phoenix6::hardware::TalonFX(9, "Drivebase");   // front left
+  // frontRight = new ctre::phoenix6::hardware::TalonFX(1, "Drivebase");   // front right
+  // backLeft = new ctre::phoenix6::hardware::TalonFX(5, "Drivebase");   // back left
+  // backRight = new ctre::phoenix6::hardware::TalonFX(3, "Drivebase");
 }
 
 void Robot::RobotPeriodic() {
@@ -110,6 +133,11 @@ void Robot::RobotPeriodic() {
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
   sched->Tick();
+
+  robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder").SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
+  robotmap.swerveTable.swerveDriveTable->GetEntry("frontRightEncoder").SetDouble(robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->GetEncoderPosition().value());
+  robotmap.swerveTable.swerveDriveTable->GetEntry("backLeftEncoder").SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
+  robotmap.swerveTable.swerveDriveTable->GetEntry("backRightEncoder").SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 0 offset: ")
       .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());

@@ -8,7 +8,8 @@
 
 #include "utils/Util.h"
 
-wom::vision::Limelight::Limelight(std::string limelightName) : _limelightName(limelightName) {}
+wom::vision::Limelight::Limelight(std::string limelightName)
+    : _limelightName(limelightName) {}
 
 std::string wom::vision::Limelight::GetName() {
   return _limelightName;
@@ -23,7 +24,8 @@ std::pair<double, double> wom::vision::Limelight::GetOffset() {
   return offset;
 }
 
-std::vector<double> wom::vision::Limelight::GetAprilTagData(LimelightAprilTagData dataType) {
+std::vector<double> wom::vision::Limelight::GetAprilTagData(
+    LimelightAprilTagData dataType) {
   std::string dataName;
 
   switch (dataType) {
@@ -67,7 +69,8 @@ std::vector<double> wom::vision::Limelight::GetAprilTagData(LimelightAprilTagDat
   return table->GetNumberArray(dataName, std::vector<double>(6));
 }
 
-double wom::vision::Limelight::GetTargetingData(LimelightTargetingData dataType, double defaultValue) {
+double wom::vision::Limelight::GetTargetingData(LimelightTargetingData dataType,
+                                                double defaultValue) {
   std::string dataName;
 
   switch (dataType) {
@@ -155,8 +158,8 @@ void wom::vision::Limelight::SetCrop(std::array<double, 4> crop) {
   table->PutNumberArray("camtran", crop);
 }
 
-units::meters_per_second_t wom::vision::Limelight::GetSpeed(frc::Pose3d pose1, frc::Pose3d pose2,
-                                                            units::second_t dt) {
+units::meters_per_second_t wom::vision::Limelight::GetSpeed(
+    frc::Pose3d pose1, frc::Pose3d pose2, units::second_t dt) {
   frc::Transform3d dPose{pose1, pose2};
   frc::Translation3d dTranslation = dPose.Translation();
 
@@ -169,8 +172,9 @@ units::meters_per_second_t wom::vision::Limelight::GetSpeed(frc::Pose3d pose1, f
 
 frc::Pose3d wom::vision::Limelight::GetPose() {
   std::vector<double> pose = GetAprilTagData(LimelightAprilTagData::kBotpose);
-  return frc::Pose3d(pose[1] * 1_m, 1_m * pose[2], 1_m * pose[3],
-                     frc::Rotation3d(1_deg * (pose[4]), 1_deg * (pose[5]), 1_deg * (pose[6])));
+  return frc::Pose3d(
+      pose[1] * 1_m, 1_m * pose[2], 1_m * pose[3],
+      frc::Rotation3d(1_deg * (pose[4]), 1_deg * (pose[5]), 1_deg * (pose[6])));
 }
 
 void wom::vision::Limelight::OnStart() {
@@ -181,9 +185,11 @@ void wom::vision::Limelight::OnUpdate(units::time::second_t dt) {
   wom::utils::WritePose3NT(table, GetPose());
 }
 
-bool wom::vision::Limelight::IsAtSetPoseVision(frc::Pose3d pose, units::second_t dt) {
+bool wom::vision::Limelight::IsAtSetPoseVision(frc::Pose3d pose,
+                                               units::second_t dt) {
   frc::Pose3d actualPose = GetPose();
   frc::Pose3d relativePose = actualPose.RelativeTo(pose);
-  return (units::math::fabs(relativePose.X()) < 0.01_m && units::math::fabs(relativePose.Y()) < 0.01_m &&
+  return (units::math::fabs(relativePose.X()) < 0.01_m &&
+          units::math::fabs(relativePose.Y()) < 0.01_m &&
           GetSpeed(pose, GetPose(), dt) < 1_m / 1_s);
 }

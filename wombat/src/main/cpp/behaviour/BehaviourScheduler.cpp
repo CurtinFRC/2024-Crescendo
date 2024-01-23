@@ -52,8 +52,8 @@ void BehaviourScheduler::Schedule(Behaviour::ptr behaviour) {
         std::lock_guard<std::recursive_mutex> lk(_active_mtx);
         behaviour->Tick();
       }
-      std::this_thread::sleep_for(
-          std::chrono::milliseconds(static_cast<int64_t>(behaviour->GetPeriod().value() * 1000)));
+      std::this_thread::sleep_for(std::chrono::milliseconds(
+          static_cast<int64_t>(behaviour->GetPeriod().value() * 1000)));
     }
   });
 }
