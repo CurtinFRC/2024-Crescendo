@@ -4,12 +4,18 @@
 
 #include "Robot.h"
 
-// include units
-#include <units/velocity.h>
+#include <frc/TimedRobot.h>
+#include <frc/Timer.h>
+#include <frc/controller/RamseteController.h>
+#include <frc/kinematics/DifferentialDriveKinematics.h>
+#include <networktables/DoubleTopic.h>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableInstance.h>
 #include <units/acceleration.h>
-#include <units/length.h>
 #include <units/angle.h>
+#include <units/length.h>
 #include <units/time.h>
+#include <units/velocity.h>
 #include <units/voltage.h>
 
 #include <frc/kinematics/DifferentialDriveKinematics.h>
@@ -72,6 +78,12 @@ void Robot::RobotInit() {
   // frontRight = new ctre::phoenix6::hardware::TalonFX(1, "Drivebase");   // front right
   // backLeft = new ctre::phoenix6::hardware::TalonFX(5, "Drivebase");   // back left
   // backRight = new ctre::phoenix6::hardware::TalonFX(3, "Drivebase");
+  lastPeriodic = wom::now();
+
+  intake = new Intake(robotmap.intakeSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(intake);
+  intake->SetDefaultBehaviour(
+      [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
 }
 
 void Robot::RobotPeriodic() {
@@ -88,7 +100,7 @@ void Robot::RobotPeriodic() {
   robotmap.swerveTable.swerveDriveTable->GetEntry("backLeftEncoder").SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("backRightEncoder").SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
-  _swerveDrive->OnUpdate(dt);
+  intake->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {
@@ -102,10 +114,17 @@ void Robot::TeleopInit() {
   loop.Clear();
   wom::BehaviourScheduler *sched = wom::BehaviourScheduler::GetInstance();
   sched->InterruptAll();
+
+  // frontLeft->SetVoltage(4_V);
+  // frontRight->SetVoltage(4_V);
+  // backLeft->SetVoltage(4_V);
+  // backRight->SetVoltage(4_V);
+  loop.Clear();
+  wom::BehaviourScheduler* scheduler = wom::BehaviourScheduler::GetInstance();
+  scheduler->InterruptAll();
 }
-void Robot::TeleopPeriodic() {
-  
-}
+
+void Robot::TeleopPeriodic() {}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
