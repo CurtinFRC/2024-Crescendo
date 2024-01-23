@@ -20,11 +20,6 @@ static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
   lastPeriodic = wom::now();
-
-  mag = new Mag(robotmap.magSystem.config);
-  wom::BehaviourScheduler::GetInstance()->Register(mag);
-  mag->SetDefaultBehaviour(
-      [this]() { return wom::make<MagManualControl>(mag, &robotmap.controllers.coDriver); });
 }
 
 void Robot::RobotPeriodic() {
@@ -36,6 +31,7 @@ void Robot::RobotPeriodic() {
 
   _swerveDrive->OnUpdate(dt);
   mag->OnUpdate(dt);
+  climber->OnUpdate(dt);
 }
 
 void Robot::TeleopInit() {
@@ -60,31 +56,24 @@ void Robot::TeleopInit() {
 
   robotmap.swerveBase.gyro->Reset();
 
+  lastPeriodic = wom::now();
+
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour(
       [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
-  lastPeriodic = wom::now();
-
   climber = new Climber(robotmap.climberSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(climber);
   climber->SetDefaultBehaviour(
       [this]() { return wom::make<ClimberManualControl>(climber, &robotmap.controllers.coDriver); });
+
+  mag = new Mag(robotmap.magSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(mag);
+  mag->SetDefaultBehaviour(
+      [this]() { return wom::make<MagManualControl>(mag, &robotmap.controllers.coDriver); });
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();
-}
-
-void Robot::RobotPeriodic() {
-  units::second_t dt = wom::now() - lastPeriodic;
-  lastPeriodic = wom::now();
-
-  loop.Poll();
-  wom::BehaviourScheduler::GetInstance()->Tick();
-
-  _swerveDrive->OnUpdate(dt);
-
-  climber->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {
@@ -96,14 +85,6 @@ void Robot::AutonomousInit() {
 }
 void Robot::AutonomousPeriodic() {
   // m_driveSim->OnUpdate();
-}
-
-void Robot::TeleopInit() {
-  loop.Clear();
-  wom::BehaviourScheduler* scheduler = wom::BehaviourScheduler::GetInstance();
-  scheduler->InterruptAll();
-  // _swerveDrive->OnStart();
-  // sched->InterruptAll();
 }
 
 void Robot::TeleopPeriodic() {}
