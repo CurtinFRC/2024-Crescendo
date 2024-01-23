@@ -3,7 +3,6 @@
 #include <frc/DigitalInput.h>
 
 struct AlphaArmConfig {
-    //wom::Gearbox armGearBox;
     wom::Gearbox alphaArmGearbox;
     wom::Gearbox wristGearbox;
 
@@ -14,6 +13,8 @@ enum class AlphaArmState {
     kIntakeAngle,
     kAmpAngle,
     kSpeakerAngle,
+    kForwardWrist,
+    kReverseWrist,
     kRaw
 };
 
@@ -22,14 +23,21 @@ class AlphaArm : public::behaviour::HasBehaviour{
      explicit AlphaArm(AlphaArmConfig config);
 
     void OnUpdate(units::second_t dt);
-    void SetRaw(units::volt_t volt);
+    void SetArmRaw(units::volt_t voltage);
+    void setWristRaw(units::volt_t voltage);
     void SetState(AlphaArmState state);
+    AlphaArmConfig GetConfig();
+    //void SetRaw(units::volt_t voltage);
 
     private:
     AlphaArmConfig _config;
     AlphaArmState _state = AlphaArmState::kIdle;
-    units::volt_t setAlphaArmVoltage = 0_V;
-    units::volt_t setWristVoltage = 0_V;
-    units::volt_t _armVoltage;
-    units::volt_t _voltR;
+    units::volt_t _setAlphaArmVoltage = 0_V;
+    units::volt_t _setWristVoltage = 0_V;
+
+    units::volt_t _rawArmVoltage = 0_V;
+    units::volt_t _rawWristVoltage = 0_V;
+
+    
+   
 };

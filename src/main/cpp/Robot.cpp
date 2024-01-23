@@ -19,27 +19,27 @@
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
-  m_chooser.SetDefaultOption("Default Auto", "Default Auto");
+  // m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
-  frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
+  // frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
 
-  m_path_chooser.SetDefaultOption("Path1", "paths/output/Path1.wpilib.json");
+  // m_path_chooser.SetDefaultOption("Path1", "paths/output/Path1.wpilib.json");
 
-  m_path_chooser.AddOption("Path1", "paths/output/Path1.wpilib.json");
-  m_path_chooser.AddOption("Path2", "paths/output/Path2.wpilib.json");
+  // m_path_chooser.AddOption("Path1", "paths/output/Path1.wpilib.json");
+  // m_path_chooser.AddOption("Path2", "paths/output/Path2.wpilib.json");
 
-  frc::SmartDashboard::PutData("Path Selector", &m_path_chooser);
+  // frc::SmartDashboard::PutData("Path Selector", &m_path_chooser);
 
-  frc::SmartDashboard::PutData("Field", &m_field);
+  // frc::SmartDashboard::PutData("Field", &m_field);
 
-  simulation_timer = frc::Timer();
+  // simulation_timer = frc::Timer();
 
-  robotmap.swerveBase.gyro->Reset();
+  // robotmap.swerveBase.gyro->Reset();
 
-  _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
-  wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
-  _swerveDrive->SetDefaultBehaviour(
-      [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
+  // _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+  // wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
+  // _swerveDrive->SetDefaultBehaviour(
+  //     [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();
@@ -58,7 +58,8 @@ void Robot::RobotPeriodic() {
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
 
-  _swerveDrive->OnUpdate(dt);
+  //_swerveDrive->OnUpdate(dt);
+  alphaArm->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {
