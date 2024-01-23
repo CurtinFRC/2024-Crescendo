@@ -19,9 +19,10 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-#include "Mag.h"
 #include "Climber.h"
+#include "Mag.h"
 #include "Wombat.h"
+#include "Intake.h"
 
 struct RobotMap {
   struct Controllers {
@@ -134,6 +135,18 @@ struct RobotMap {
   };
   SwerveBase swerveBase;
 
+  struct Climber {
+    rev::CANSparkMax* climberMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
+    wom::CANSparkMaxEncoder climberEncoder{climberMotor, 0.1_m};
+
+    wom::Gearbox climberGearbox{climberMotor, &climberEncoder, frc::DCMotor::NEO(1)};
+
+    ClimberConfig config{
+        climberGearbox,
+    };
+  };
+  Climber climberSystem;
+
   struct Mag {
     rev::CANSparkMax* magMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
     // wom::VoltageController magMotorGroup = wom::VoltageController::Group(magMotor);
@@ -153,15 +166,21 @@ struct RobotMap {
   };
   Mag magSystem;
 
-  struct Climber {
-    rev::CANSparkMax* climberMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
-    wom::CANSparkMaxEncoder climberEncoder{climberMotor, 0.1_m};
+  struct IntakeSystem {
+    rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
+    // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
+    // frc::DigitalInput intakeSensor{0};
+    // frc::DigitalInput magSensor{0};
+    // frc::DigitalInput shooterSensor{0};
 
-    wom::Gearbox climberGearbox{climberMotor, &climberEncoder, frc::DCMotor::NEO(1)};
+    wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::CIM(1)};
 
-    ClimberConfig config{
-        climberGearbox,
+    IntakeConfig config {
+      IntakeGearbox,
+      // &intakeSensor,
+      // &magSensor,
+      // &shooterSensor
     };
   };
-  Climber climberSystem;
+  IntakeSystem intakeSystem;
 };

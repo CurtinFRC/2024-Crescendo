@@ -20,9 +20,10 @@
 #include <string>
 
 #include "Behaviours/ClimberBehaviour.h"
+#include "Behaviours/IntakeBehaviour.h"
+#include "Behaviours/MagBehaviour.h"
 #include "RobotMap.h"
 #include "Wombat.h"
-#include "behaviours/MagBehaviour.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -53,4 +54,5 @@ class Robot : public frc::TimedRobot {
   wom::SwerveDrive* _swerveDrive;
   Mag* mag;
   Climber* climber;
+  Intake* intake;
 };
