@@ -1,4 +1,4 @@
-// #include "Auto.h"
+#include "Auto.h"
 
 // std::shared_ptr<Behaviour> Taxi(DriveBase _driveBase, Shooter _shooter, Mag _mag, Intake _intake, Arm _arm) {
 //   return 
@@ -249,3 +249,11 @@
 //     16. Climb down
 //     */
 // }
+
+std::shared_ptr<Behaviour> AutoTest(DriveBase _driveBase, Shooter _shooter, Mag _mag, Intake _intake, Arm _arm) {
+  return
+    <<make<ArmToSetPoint>(_arm, 0, -90)
+    <<make<DriveToLocation>(_driveBase, raw, distance)
+    <<make<AutoShoot>(_shooter, 8_V)
+    <<make<AutoIntake>(_intake, 8_V)
+} // This auto is a test for auto to see if all things work, it does not build as the behaviours are not done.

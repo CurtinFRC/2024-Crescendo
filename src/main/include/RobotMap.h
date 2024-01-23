@@ -21,16 +21,32 @@
 
 #include "Climber.h"
 #include "Mag.h"
-#include "Wombat.h"
+#include "AlphaArm.h"
 #include "Intake.h"
+#include "Behaviours/AlphaArmBehaviour.h"
+#include "Behaviours/ClimberBehaviour.h"
+#include "Behaviours/MagBehaviour.h"
+#include "Behaviours/IntakeBehaviour.h"
+#include "Wombat.h"
 
 struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
-    frc::XboxController coDriver = frc::XboxController(1);
+    frc::XboxController codriver = frc::XboxController(1);
     frc::XboxController testController = frc::XboxController(2);
   };
   Controllers controllers;
+
+  struct AlphaArmSystem {
+    rev::CANSparkMax alphaArmMotor{99, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax wristMotor{99, rev::CANSparkMax::MotorType::kBrushless};
+
+    wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
+    wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
+
+    AlphaArmConfig config{alphaArmGearbox, wristGearbox};
+  };
+  AlphaArmSystem alphaArmSystem;
 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{19};

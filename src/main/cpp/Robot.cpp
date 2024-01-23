@@ -35,6 +35,7 @@ void Robot::RobotPeriodic() {
   mag->OnUpdate(dt);
   climber->OnUpdate(dt);
   intake->OnUpdate(dt);
+  alphaArm->OnUpdate(dt);
 }
 
 void Robot::TeleopInit() {
@@ -69,17 +70,22 @@ void Robot::TeleopInit() {
   climber = new Climber(robotmap.climberSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(climber);
   climber->SetDefaultBehaviour(
-      [this]() { return wom::make<ClimberManualControl>(climber, &robotmap.controllers.coDriver); });
+      [this]() { return wom::make<ClimberManualControl>(climber, &robotmap.controllers.codriver); });
 
   mag = new Mag(robotmap.magSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(mag);
   mag->SetDefaultBehaviour(
-      [this]() { return wom::make<MagManualControl>(mag, &robotmap.controllers.coDriver); });
+      [this]() { return wom::make<MagManualControl>(mag, &robotmap.controllers.codriver); });
 
   intake = new Intake(robotmap.intakeSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(intake);
   intake->SetDefaultBehaviour(
-      [this]() { return wom::make<IntakeManualControl>(intake, &robotmap.controllers.coDriver); });
+      [this]() { return wom::make<IntakeManualControl>(intake, &robotmap.controllers.codriver); });
+
+  alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
+  alphaArm->SetDefaultBehaviour(
+      [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
 
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();

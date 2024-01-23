@@ -19,6 +19,11 @@
 
 #include <string>
 
+#include "AlphaArm.h"
+#include "Climber.h"
+#include "Intake.h"
+#include "Mag.h"
+#include "Behaviours/AlphaArmBehaviour.h"
 #include "Behaviours/ClimberBehaviour.h"
 #include "Behaviours/IntakeBehaviour.h"
 #include "Behaviours/MagBehaviour.h"
@@ -52,6 +57,8 @@ class Robot : public frc::TimedRobot {
   frc::SendableChooser<std::string> m_path_chooser;
 
   wom::SwerveDrive* _swerveDrive;
+
+  AlphaArm* alphaArm;
   Mag* mag;
   Climber* climber;
   Intake* intake;
