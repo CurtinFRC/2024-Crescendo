@@ -16,16 +16,33 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
+#include "Shooter.h"
 #include "Wombat.h"
 
 struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
-    frc::XboxController coDriver = frc::XboxController(1);
+    frc::XboxController codriver = frc::XboxController(1);
     frc::XboxController testController = frc::XboxController(2);
   };
   Controllers controllers;
 
+  struct Shooter {
+    rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};
+    // frc::DigitalInput shooterSensor{2};
+
+    // wom::VoltageController shooterMotorGroup = wom::VoltageController::Group(shooterMotor);
+    // wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
+    wom::Gearbox shooterGearbox{&shooterMotor, nullptr, frc::DCMotor::NEO(1)};
+
+    ShooterConfig config{
+        "shooterGearbox",
+        shooterGearbox,
+        // &shooterSensor,
+    };
+  };
+  Shooter shooterSystem;
+  
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{18, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder frontRightCancoder{19, "Drivebase"};
