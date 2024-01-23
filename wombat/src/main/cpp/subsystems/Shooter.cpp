@@ -14,14 +14,16 @@ wom::subsystems::Shooter::Shooter(std::string path, ShooterParams params)
 
 void wom::subsystems::Shooter::OnUpdate(units::second_t dt) {
   units::volt_t voltage{0};
-  units::revolutions_per_minute_t currentSpeed = _params.gearbox.encoder->GetEncoderAngularVelocity();
+  units::revolutions_per_minute_t currentSpeed =
+      _params.gearbox.encoder->GetEncoderAngularVelocity();
 
   switch (_state) {
     case ShooterState::kManual:
       voltage = _setpointManual;
       break;
     case ShooterState::kPID: {
-      auto feedforward = _params.gearbox.motor.Voltage(0_Nm, _pid.GetSetpoint());
+      auto feedforward =
+          _params.gearbox.motor.Voltage(0_Nm, _pid.GetSetpoint());
       voltage = _pid.Calculate(currentSpeed, dt, feedforward);
     } break;
     case ShooterState::kIdle:
@@ -29,17 +31,20 @@ void wom::subsystems::Shooter::OnUpdate(units::second_t dt) {
       break;
   }
 
-  units::newton_meter_t max_torque_at_current_limit = _params.gearbox.motor.Torque(_params.currentLimit);
+  units::newton_meter_t max_torque_at_current_limit =
+      _params.gearbox.motor.Torque(_params.currentLimit);
   units::volt_t max_voltage_for_current_limit =
       _params.gearbox.motor.Voltage(max_torque_at_current_limit, currentSpeed);
 
-  voltage = 1_V * std::min(voltage.value(), max_voltage_for_current_limit.value());
+  voltage =
+      1_V * std::min(voltage.value(), max_voltage_for_current_limit.value());
 
-  _params.gearbox.motorController->SetVoltage(voltage);
+  // _params.gearbox.motorController->SetVoltage(voltage);
 
   _table->GetEntry("output_volts").SetDouble(voltage.value());
   _table->GetEntry("speed_rpm").SetDouble(currentSpeed.value());
-  _table->GetEntry("setpoint_rpm").SetDouble(units::revolutions_per_minute_t{_pid.GetSetpoint()}.value());
+  _table->GetEntry("setpoint_rpm")
+      .SetDouble(units::revolutions_per_minute_t{_pid.GetSetpoint()}.value());
   _table->GetEntry("stable").SetBoolean(_pid.IsStable());
 }
 
@@ -62,7 +67,8 @@ bool wom::subsystems::Shooter::IsStable() const {
 
 // Shooter Manual Set
 
-wom::subsystems::ShooterConstant::ShooterConstant(Shooter* s, units::volt_t setpoint)
+wom::subsystems::ShooterConstant::ShooterConstant(Shooter* s,
+                                                  units::volt_t setpoint)
     : _shooter(s), _setpoint(setpoint) {
   Controls(_shooter);
 }
@@ -73,7 +79,9 @@ void wom::subsystems::ShooterConstant::OnTick(units::second_t dt) {
 
 // ShooterSpinup
 
-wom::subsystems::ShooterSpinup::ShooterSpinup(Shooter* s, units::radians_per_second_t speed, bool hold)
+wom::subsystems::ShooterSpinup::ShooterSpinup(Shooter* s,
+                                              units::radians_per_second_t speed,
+                                              bool hold)
     : _shooter(s), _speed(speed), _hold(hold) {
   Controls(_shooter);
 }
