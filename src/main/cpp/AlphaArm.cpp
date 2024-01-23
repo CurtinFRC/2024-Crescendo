@@ -1,3 +1,7 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include "AlphaArm.h"
 
 AlphaArm::AlphaArm(AlphaArmConfig config) : _config(config) {}
@@ -45,8 +49,8 @@ void AlphaArm::OnUpdate(units::second_t dt){
         //_config.wristGearbox.motorController->SetVoltage(_setVoltage);
 }
 
-void AlphaArm::SetState(AlphaArmState state){
-    _state = state;
+void AlphaArm::SetState(AlphaArmState state) {
+  _state = state;
 }
 
 // void AlphaArm::SetRaw(units::volt_t voltage){
@@ -61,4 +65,3 @@ void AlphaArm::SetArmRaw(units::volt_t voltage){
 void AlphaArm::setWristRaw(units::volt_t voltage){
     _rawWristVoltage = voltage;
 }
-

@@ -17,9 +17,9 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-#include "Wombat.h"
 #include "AlphaArm.h"
 #include "AlphaArmBehaviour.h"
+#include "Wombat.h"
 
 struct RobotMap {
   struct Controllers {
@@ -37,8 +37,8 @@ struct RobotMap {
     wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
 
     AlphaArmConfig config{alphaArmGearbox, wristGearbox};
- }; 
- AlphaArmSystem alphaArmSystem;
+  };
+  AlphaArmSystem alphaArmSystem;
 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{19};
@@ -140,6 +140,6 @@ struct RobotMap {
     //    driveMotors[i]->SetInverted(true);
     //  }
     //}
-  }; SwerveBase swerveBase;
-
+  };
+  SwerveBase swerveBase;
 };

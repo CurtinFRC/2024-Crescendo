@@ -1,6 +1,11 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
-#include "Wombat.h"
 #include <frc/DigitalInput.h>
+
+#include "Wombat.h"
 
 struct AlphaArmConfig {
     wom::Gearbox alphaArmGearbox;
