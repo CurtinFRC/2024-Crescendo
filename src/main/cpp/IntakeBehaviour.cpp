@@ -22,24 +22,34 @@ void IntakeManualControl::OnTick(units::second_t dt) {
 
   if (_rawControl) {
     _intake->setState(IntakeState::kRaw);
-    _intake->setRaw(_codriver.GetLeftY() * 10_V);
+    if (_codriver.GetLeftBumper()) {
+      _intake->setRaw(10_V);
+    } else if (_codriver.GetRightBumper()) {
+      _intake->setRaw(-10_V);
+    } else {
+      _intake->setRaw(0_V);
+    }
+
+    // _intake->setRaw(_codriver.GetLeftBumper() * 10_V);
+    // _intake->setRaw(_codriver.GetRightBumper() * -10_V);
     std::cout << "Raw" << std::endl;
-  } else {
-    if (_codriver.GetYButtonPressed()) {
-      _intake->setState(IntakeState::kIntake);
-    }
-    if (_codriver.GetAButtonPressed()) {
-      _intake->setState(IntakeState::kPass);
-    }
   }
+  // } else {
+  //   if (_codriver.GetYButtonPressed()) {
+  //     _intake->setState(IntakeState::kIntake);
+  //   }
+  //   if (_codriver.GetAButtonPressed()) {
+  //     _intake->setState(IntakeState::kPass);
+  //   }
+  // }
 }
 
-IntakeAutoControl::IntakeAutoControl(Intake* intake) : _intake(intake) {}
+// IntakeAutoControl::IntakeAutoControl(Intake* intake) : _intake(intake) {}
 
-void IntakeAutoControl::OnTick(units::second_t dt) {
-  if (_intake->GetConfig().intakeSensor->Get() == 1) {
-    _intake->setState(IntakeState::kPass);
-  } else if (_intake->GetConfig().magSensor->Get() == 0) {
-    _intake->setState(IntakeState::kIdle);
-  }
-}
+// void IntakeAutoControl::OnTick(units::second_t dt) {
+//   if (_intake->GetConfig().intakeSensor->Get() == 1) {
+//     _intake->setState(IntakeState::kPass);
+//   } else if (_intake->GetConfig().magSensor->Get() == 0) {
+//     _intake->setState(IntakeState::kIdle);
+//   }
+// }
