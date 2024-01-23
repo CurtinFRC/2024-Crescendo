@@ -12,6 +12,9 @@
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <string>
+
+#include "Intake.h"
+#include "IntakeBehaviour.h"
 #include "RobotMap.h"
 #include "Shooter.h"
 #include "ShooterBehaviour.h"
@@ -35,6 +38,7 @@ class Robot : public frc::TimedRobot {
   frc::EventLoop loop;
   Shooter *shooter;
 
+  Intake* intake;
   frc::SendableChooser<std::string> m_chooser;
 
   frc::Field2d m_field;
