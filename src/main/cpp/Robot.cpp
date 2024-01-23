@@ -109,6 +109,3 @@ void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}
 void Robot::TestPeriodic() {}
-
-void Robot::SimulationInit() {}
-void Robot::SimulationPeriodic() {}
