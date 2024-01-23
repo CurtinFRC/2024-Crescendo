@@ -19,6 +19,30 @@
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
+  lastPeriodic = wom::now();
+
+  mag = new Mag(robotmap.magSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(mag);
+  mag->SetDefaultBehaviour(
+      [this]() { return wom::make<MagManualControl>(mag, &robotmap.controllers.coDriver); });
+}
+
+void Robot::RobotPeriodic() {
+  auto dt = wom::now() - lastPeriodic;
+  lastPeriodic = wom::now();
+
+  loop.Poll();
+  wom::BehaviourScheduler::GetInstance()->Tick();
+
+  _swerveDrive->OnUpdate(dt);
+  mag->OnUpdate(dt);
+}
+
+void Robot::TeleopInit() {
+  loop.Clear();
+  wom::BehaviourScheduler* scheduler = wom::BehaviourScheduler::GetInstance();
+  scheduler->InterruptAll();
+
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
   frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
@@ -91,5 +115,4 @@ void Robot::TestInit() {}
 void Robot::TestPeriodic() {}
 
 void Robot::SimulationInit() {}
-
 void Robot::SimulationPeriodic() {}

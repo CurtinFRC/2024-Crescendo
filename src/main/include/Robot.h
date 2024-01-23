@@ -22,6 +22,7 @@
 #include "Behaviours/ClimberBehaviour.h"
 #include "RobotMap.h"
 #include "Wombat.h"
+#include "behaviours/MagBehaviour.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -40,17 +41,16 @@ class Robot : public frc::TimedRobot {
 
  private:
   behaviour::BehaviourScheduler* sched;
+
   RobotMap robotmap;
+
   frc::EventLoop loop;
-
   frc::SendableChooser<std::string> m_chooser;
-
   frc::Field2d m_field;
-
   frc::Timer simulation_timer;
-
   frc::SendableChooser<std::string> m_path_chooser;
 
   wom::SwerveDrive* _swerveDrive;
+  Mag* mag;
   Climber* climber;
 };

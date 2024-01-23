@@ -5,6 +5,7 @@
 #pragma once
 
 #include <frc/Compressor.h>
+#include <frc/DigitalInput.h>
 #include <frc/DoubleSolenoid.h>
 #include <frc/XboxController.h>
 #include <frc/motorcontrol/MotorControllerGroup.h>
@@ -18,6 +19,7 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
+#include "Mag.h"
 #include "Climber.h"
 #include "Wombat.h"
 
@@ -131,6 +133,25 @@ struct RobotMap {
     //}
   };
   SwerveBase swerveBase;
+
+  struct Mag {
+    rev::CANSparkMax* magMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
+    // wom::VoltageController magMotorGroup = wom::VoltageController::Group(magMotor);
+    wom::CANSparkMaxEncoder magEncoder{magMotor, 0.1_m};
+    frc::DigitalInput intakeSensor{0};
+    frc::DigitalInput magSensor{1};
+    frc::DigitalInput shooterSensor{1};
+
+    wom::Gearbox magGearbox{magMotor, &magEncoder, frc::DCMotor::NEO(1)};
+
+    MagConfig config{
+        magGearbox,
+        &intakeSensor,
+        &magSensor,
+        &shooterSensor,
+    };
+  };
+  Mag magSystem;
 
   struct Climber {
     rev::CANSparkMax* climberMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
