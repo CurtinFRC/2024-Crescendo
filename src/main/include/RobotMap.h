@@ -18,6 +18,7 @@
 
 #include "Intake.h"
 #include "IntakeBehaviour.h"
+#include "Shooter.h"
 #include "Wombat.h"
 
 struct RobotMap {
@@ -37,9 +38,23 @@ struct RobotMap {
     wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::CIM(1)};
 
     IntakeConfig config{IntakeGearbox /*, &intakeSensor, &magSensor, &shooterSensor*/};
-  };
-  IntakeSystem intakeSystem;
+  }; IntakeSystem intakeSystem;
 
+
+  struct Shooter {
+    rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};
+    // frc::DigitalInput shooterSensor{2};
+
+    // wom::VoltageController shooterMotorGroup = wom::VoltageController::Group(shooterMotor);
+    // wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
+    wom::Gearbox shooterGearbox{&shooterMotor, nullptr, frc::DCMotor::NEO(1)};
+
+    ShooterConfig config{
+        "shooterGearbox",
+        shooterGearbox,
+        // &shooterSensor,
+    };
+  }; Shooter shooterSystem;
   
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{18, "Drivebase"};

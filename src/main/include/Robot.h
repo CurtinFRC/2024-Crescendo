@@ -1,9 +1,7 @@
 // Copyright (c) 2023-2024 CurtinFRC
 // Open Source Software, you can modify it according to the terms
 // of the MIT License at the root of this project
-
 #pragma once
-
 #include <frc/Encoder.h>
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
@@ -13,16 +11,19 @@
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-
 #include <string>
 
 #include "Intake.h"
 #include "IntakeBehaviour.h"
 #include "RobotMap.h"
+#include "Shooter.h"
+#include "ShooterBehaviour.h"
 #include "Wombat.h"
-
+#include "RobotMap.h"
 class Robot : public frc::TimedRobot {
  public:
+  void TestInit() override;
+  void TestPeriodic() override;
   void RobotInit() override;
   void RobotPeriodic() override;
   void AutonomousInit() override;
@@ -31,12 +32,11 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void DisabledInit() override;
   void DisabledPeriodic() override;
-  void TestInit() override;
-  void TestPeriodic() override;
  private:
   RobotMap robotmap;
   wom::BehaviourScheduler* sched;
   frc::EventLoop loop;
+  Shooter *shooter;
 
   Intake* intake;
   frc::SendableChooser<std::string> m_chooser;

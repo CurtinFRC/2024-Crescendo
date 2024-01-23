@@ -26,6 +26,12 @@
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
+
+  shooter = new Shooter(robotmap.shooterSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(shooter);
+  shooter->SetDefaultBehaviour(
+     [this]() {return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver); });
+  
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
@@ -85,6 +91,8 @@ void Robot::RobotPeriodic() {
   lastPeriodic = wom::now();
 
   loop.Poll();
+  wom::BehaviourScheduler::GetInstance()->Tick();
+  shooter->OnUpdate(dt);
   sched->Tick();
 
   robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder").SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
@@ -100,11 +108,11 @@ void Robot::AutonomousInit() {
   sched->InterruptAll();
 }
 void Robot::AutonomousPeriodic() {
-  // m_driveSim->OnUpdate();
 }
 
 void Robot::TeleopInit() {
   loop.Clear();
+  wom::BehaviourScheduler *sched = wom::BehaviourScheduler::GetInstance();
   sched->InterruptAll();
 
   // frontLeft->SetVoltage(4_V);
