@@ -1,4 +1,5 @@
 // Copyright (c) 2023-2024 CurtinFRC
+
 // Open Source Software, you can modify it according to the terms
 // of the MIT License at the root of this project
 
@@ -21,12 +22,8 @@
 
 #include "Climber.h"
 #include "Mag.h"
-#include "AlphaArm.h"
-#include "Intake.h"
-#include "Behaviours/AlphaArmBehaviour.h"
 #include "Behaviours/ClimberBehaviour.h"
 #include "Behaviours/MagBehaviour.h"
-#include "Behaviours/IntakeBehaviour.h"
 #include "Wombat.h"
 
 struct RobotMap {
@@ -36,17 +33,6 @@ struct RobotMap {
     frc::XboxController testController = frc::XboxController(2);
   };
   Controllers controllers;
-
-  struct AlphaArmSystem {
-    rev::CANSparkMax alphaArmMotor{99, rev::CANSparkMax::MotorType::kBrushless};
-    rev::CANSparkMax wristMotor{99, rev::CANSparkMax::MotorType::kBrushless};
-
-    wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
-    wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
-
-    AlphaArmConfig config{alphaArmGearbox, wristGearbox};
-  };
-  AlphaArmSystem alphaArmSystem;
 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{19};
@@ -181,22 +167,4 @@ struct RobotMap {
     };
   };
   Mag magSystem;
-
-  struct IntakeSystem {
-    rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
-    // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
-    // frc::DigitalInput intakeSensor{0};
-    // frc::DigitalInput magSensor{0};
-    // frc::DigitalInput shooterSensor{0};
-
-    wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::CIM(1)};
-
-    IntakeConfig config {
-      IntakeGearbox,
-      // &intakeSensor,
-      // &magSensor,
-      // &shooterSensor
-    };
-  };
-  IntakeSystem intakeSystem;
 };

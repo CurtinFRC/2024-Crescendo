@@ -19,13 +19,9 @@
 
 #include <string>
 
-#include "AlphaArm.h"
 #include "Climber.h"
-#include "Intake.h"
 #include "Mag.h"
-#include "Behaviours/AlphaArmBehaviour.h"
 #include "Behaviours/ClimberBehaviour.h"
-#include "Behaviours/IntakeBehaviour.h"
 #include "Behaviours/MagBehaviour.h"
 #include "RobotMap.h"
 #include "Wombat.h"
@@ -58,8 +54,6 @@ class Robot : public frc::TimedRobot {
 
   wom::SwerveDrive* _swerveDrive;
 
-  AlphaArm* alphaArm;
   Mag* mag;
   Climber* climber;
-  Intake* intake;
 };
