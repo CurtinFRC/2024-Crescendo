@@ -41,7 +41,11 @@ class Robot : public frc::TimedRobot {
   RobotMap robotmap;
   wom::BehaviourScheduler* sched;
   frc::EventLoop loop;
+<<<<<<< HEAD
   // Shooter* shooter;
+=======
+  Shooter* shooter;
+>>>>>>> 0029f49 (fix some formatting)
 
   // Intake* intake;
   frc::SendableChooser<std::string> m_chooser;
@@ -58,7 +62,7 @@ class Robot : public frc::TimedRobot {
   ctre::phoenix6::hardware::TalonFX* frontLeft;
   // AlphaArm *alphaArm;
 
-  AlphaArm *alphaArm;
+  AlphaArm* alphaArm;
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;

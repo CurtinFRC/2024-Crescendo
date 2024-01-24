@@ -101,12 +101,16 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
   //                                            r_x * maxRotationMagnitude});
   // } else {
   _swerveDrivebase->SetFieldRelativeVelocity(wom::drivetrain::FieldRelativeSpeeds{
+<<<<<<< HEAD
       xVelocity * -maxMovementMagnitude, yVelocity * -maxMovementMagnitude, r_x * maxRotationMagnitude});
 
   //  _swerveDrivebase->SetVelocity(
   //       frc::ChassisSpeeds{xVelocity * maxMovementMagnitude,
   //                          yVelocity * maxMovementMagnitude,
   //                          r_x * maxRotationMagnitude});
+=======
+      xVelocity * maxMovementMagnitude, yVelocity * maxMovementMagnitude, r_x * maxRotationMagnitude});
+>>>>>>> 0029f49 (fix some formatting)
   //   }
   // }
   // _swerveDrivebase->SetIndividualTuning(2, 0_deg, 0_mps);

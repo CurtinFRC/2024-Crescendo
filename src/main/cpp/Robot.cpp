@@ -18,6 +18,7 @@
 #include <units/velocity.h>
 #include <units/voltage.h>
 
+<<<<<<< HEAD
 // include units
 #include <units/velocity.h>
 #include <units/acceleration.h>
@@ -29,11 +30,21 @@
 #include <frc/kinematics/DifferentialDriveKinematics.h>
 #include <frc/controller/RamseteController.h>
 #include <frc/Timer.h>
+=======
+>>>>>>> 0029f49 (fix some formatting)
 #include "behaviour/HasBehaviour.h"
 
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
+<<<<<<< HEAD
+=======
+  shooter = new Shooter(robotmap.shooterSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(shooter);
+  shooter->SetDefaultBehaviour(
+      [this]() { return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver); });
+
+>>>>>>> 0029f49 (fix some formatting)
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
@@ -58,11 +69,19 @@ void Robot::RobotInit() {
 
   // robotmap.swerveBase.gyro->Reset();
 
+<<<<<<< HEAD
+=======
+  // _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+  // wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
+  // _swerveDrive->SetDefaultBehaviour(
+  //     [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
+>>>>>>> 0029f49 (fix some formatting)
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour(
       [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
+<<<<<<< HEAD
   // alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   // wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
   // alphaArm->SetDefaultBehaviour(
@@ -99,6 +118,29 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
 
+=======
+  // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
+  // m_driveSim = wom::TempSimSwerveDrive();
+
+  alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
+  alphaArm->SetDefaultBehaviour(
+      [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
+
+  robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
+  robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
+  robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
+  robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
+
+  // frontLeft = new ctre::phoenix6::hardware::TalonFX(7, "Drivebase");  // front left
+  // frontRight = new ctre::phoenix6::hardware::TalonFX(2, "Drivebase");   // front right
+  // backLeft = new ctre::phoenix6::hardware::TalonFX(6, "Drivebase");   // back left
+  // backRight = new ctre::phoenix6::hardware::TalonFX(4, "Drivebase");  // back right
+  // frontLeft = new ctre::phoenix6::hardware::TalonFX(9, "Drivebase");   // front left
+  // frontRight = new ctre::phoenix6::hardware::TalonFX(1, "Drivebase");   // front right
+  // backLeft = new ctre::phoenix6::hardware::TalonFX(5, "Drivebase");   // back left
+  // backRight = new ctre::phoenix6::hardware::TalonFX(3, "Drivebase");
+>>>>>>> 0029f49 (fix some formatting)
   lastPeriodic = wom::now();
 }
 
@@ -111,6 +153,7 @@ void Robot::RobotPeriodic() {
   wom::BehaviourScheduler::GetInstance()->Tick();
   sched->Tick();
 
+<<<<<<< HEAD
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 0 offset: ")
       .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 1 offset: ")
@@ -118,6 +161,15 @@ void Robot::RobotPeriodic() {
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 2 offset: ")
       .SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 3 offset: ")
+=======
+  robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder")
+      .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
+  robotmap.swerveTable.swerveDriveTable->GetEntry("frontRightEncoder")
+      .SetDouble(robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->GetEncoderPosition().value());
+  robotmap.swerveTable.swerveDriveTable->GetEntry("backLeftEncoder")
+      .SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
+  robotmap.swerveTable.swerveDriveTable->GetEntry("backRightEncoder")
+>>>>>>> 0029f49 (fix some formatting)
       .SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
   // shooter->OnUpdate(dt);
@@ -132,15 +184,22 @@ void Robot::AutonomousInit() {
   loop.Clear();
   sched->InterruptAll();
 }
+<<<<<<< HEAD
 void Robot::AutonomousPeriodic() {
   // m_driveSim->OnUpdate();
 }
+=======
+void Robot::AutonomousPeriodic() {}
+>>>>>>> 0029f49 (fix some formatting)
 
 void Robot::TeleopInit() {
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
+<<<<<<< HEAD
   // shooter->OnStart();
   // alphaArm->OnStart();
+=======
+>>>>>>> 0029f49 (fix some formatting)
   sched->InterruptAll();
 
   // frontLeft->SetVoltage(4_V);

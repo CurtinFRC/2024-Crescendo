@@ -16,6 +16,7 @@
 
 struct AlphaArmConfig {
   wom::Gearbox alphaArmGearbox;
+<<<<<<< HEAD
   // wom::Gearbox wristGearbox;
   // wom::DutyCycleEncoder* armEncoder;
   // wom::CANSparkMaxEncoder* armEncoder;
@@ -23,6 +24,9 @@ struct AlphaArmConfig {
   // wom::utils::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
   std::string path;
   // void WriteNT(std::shared_ptr<nt::NetworkTable> table);
+=======
+  wom::Gearbox wristGearbox;
+>>>>>>> 0029f49 (fix some formatting)
 };
 
 enum class AlphaArmState {
@@ -30,16 +34,23 @@ enum class AlphaArmState {
   kIntakeAngle,
   kAmpAngle,
   kSpeakerAngle,
+<<<<<<< HEAD
   kStowed,
   kRaw
   // kForwardWrist,
   // kReverseWrist,
+=======
+  kForwardWrist,
+  kReverseWrist,
+  kRaw
+>>>>>>> 0029f49 (fix some formatting)
 };
 
 class AlphaArm : public ::behaviour::HasBehaviour {
  public:
   explicit AlphaArm(AlphaArmConfig config);
 
+<<<<<<< HEAD
   void OnStart();
   void OnUpdate(units::second_t dt);
   void SetArmRaw(units::volt_t voltage);
@@ -79,3 +90,21 @@ class AlphaArm : public ::behaviour::HasBehaviour {
   std::string _stateName = "Default";
   bool started = false;
 };
+=======
+  void OnUpdate(units::second_t dt);
+  void SetArmRaw(units::volt_t voltage);
+  void setWristRaw(units::volt_t voltage);
+  void SetState(AlphaArmState state);
+  AlphaArmConfig GetConfig();
+  // void SetRaw(units::volt_t voltage);
+
+ private:
+  AlphaArmConfig _config;
+  AlphaArmState _state = AlphaArmState::kIdle;
+  units::volt_t _setAlphaArmVoltage = 0_V;
+  units::volt_t _setWristVoltage = 0_V;
+
+  units::volt_t _rawArmVoltage = 0_V;
+  units::volt_t _rawWristVoltage = 0_V;
+};
+>>>>>>> 0029f49 (fix some formatting)

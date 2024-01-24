@@ -21,7 +21,6 @@
 #include <ctre/phoenix6/TalonFX.hpp>
 
 #include "AlphaArm.h"
-#include "AlphaArmBehaviour.h"
 #include "Intake.h"
 #include "Shooter.h"
 #include "Wombat.h"
@@ -42,18 +41,32 @@ struct RobotMap {
 
   //     wom::Gearbox alphaArmGearbox{&alphaArmMotor, armEncoder, frc::DCMotor::NEO(1)};
 
+<<<<<<< HEAD
   //     wom::utils::PIDConfig<units::radian, units::volt> pidConfigA{
   //      "/path/to/pid/in/nt/tables",
   //     15_V / 180_deg,
   //     0_V / (1_deg * 1_s),
   //     0_V / (1_deg / 1_s),
   //     };
+=======
+    AlphaArmConfig config{alphaArmGearbox, wristGearbox};
+  };
+  AlphaArmSystem alphaArmSystem;
+
+  struct IntakeSystem {
+    rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
+    // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
+    // frc::DigitalInput intakeSensor{0};
+    // frc::DigitalInput magSensor{0};
+    // frc::DigitalInput shooterSensor{0};
+>>>>>>> 0029f49 (fix some formatting)
 
   //     AlphaArmConfig config {
   //         alphaArmGearbox,
   //         pidConfigA,
   //     };
 
+<<<<<<< HEAD
   //   };
   //   AlphaArmSystem alphaArmSystem;
 
@@ -63,6 +76,11 @@ struct RobotMap {
   //     frc::DigitalInput intakeSensor{4};
   //     // frc::DigitalInput magSensor{0};
   //     // frc::DigitalInput shooterSensor{0};
+=======
+    IntakeConfig config{IntakeGearbox /*, &intakeSensor, &magSensor, &shooterSensor*/};
+  };
+  IntakeSystem intakeSystem;
+>>>>>>> 0029f49 (fix some formatting)
 
   //     wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::CIM(1)};
 
@@ -96,6 +114,16 @@ struct RobotMap {
   //   };
   //   Shooter shooterSystem;
 
+<<<<<<< HEAD
+=======
+    ShooterConfig config{
+        "shooterGearbox", shooterGearbox,
+        // &shooterSensor,
+    };
+  };
+  Shooter shooterSystem;
+
+>>>>>>> 0029f49 (fix some formatting)
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{16, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder frontRightCancoder{18, "Drivebase"};
@@ -118,35 +146,63 @@ struct RobotMap {
         wom::SwerveModuleConfig{
             // CORRECT
             // front left module
+<<<<<<< HEAD
             frc::Translation2d(-10_in, 9_in),
             wom::Gearbox{driveMotors[0], new wom::TalonFXEncoder(driveMotors[0], 0.0445_m, 6.75),
                          frc::DCMotor::Falcon500(1).WithReduction(6.75)},
             wom::Gearbox{turnMotors[0], new wom::CanEncoder(16, 0.0445_m, 4096, 12.8),
+=======
+            frc::Translation2d(10.761_in, 9.455_in),
+            wom::Gearbox{driveMotors[0], new wom::TalonFXEncoder(driveMotors[0], 0.0445_m, 6.75),
+                         frc::DCMotor::Falcon500(1).WithReduction(6.75)},
+            wom::Gearbox{turnMotors[0], new wom::CanEncoder(18, 0.0445_m, 4096, 12.8),
+>>>>>>> 0029f49 (fix some formatting)
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &frontLeftCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
             // CORRECT
             // front right module
+<<<<<<< HEAD
             frc::Translation2d(10_in, 9_in),
             wom::Gearbox{driveMotors[1], new wom::TalonFXEncoder(driveMotors[1], 0.0445_m, 6.75),
                          frc::DCMotor::Falcon500(1).WithReduction(6.75)},
             wom::Gearbox{turnMotors[1], new wom::CanEncoder(18, 0.0445_m, 4096, 12.8),
+=======
+            frc::Translation2d(10.761_in, -9.455_in),
+            wom::Gearbox{driveMotors[1], new wom::TalonFXEncoder(driveMotors[1], 0.0445_m, 6.75),
+                         frc::DCMotor::Falcon500(1).WithReduction(6.75)},
+            wom::Gearbox{turnMotors[1], new wom::CanEncoder(19, 0.0445_m, 4096, 12.8),
+>>>>>>> 0029f49 (fix some formatting)
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &frontRightCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
             // back left module
+<<<<<<< HEAD
             frc::Translation2d(-10_in, 9_in),
             wom::Gearbox{driveMotors[2], new wom::TalonFXEncoder(driveMotors[2], 0.0445_m, 6.75),
                          frc::DCMotor::Falcon500(1).WithReduction(6.75)},
             wom::Gearbox{turnMotors[2], new wom::CanEncoder(17, 0.0445_m, 4096, 12.8),
+=======
+            frc::Translation2d(-10.761_in, 9.455_in),
+            wom::Gearbox{driveMotors[2], new wom::TalonFXEncoder(driveMotors[2], 0.0445_m, 6.75),
+                         frc::DCMotor::Falcon500(1).WithReduction(6.75)},
+            wom::Gearbox{turnMotors[2], new wom::CanEncoder(16, 0.0445_m, 4096, 12.8),
+>>>>>>> 0029f49 (fix some formatting)
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &backRightCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
             // back right module
+<<<<<<< HEAD
             frc::Translation2d(-10_in, -9_in),
             wom::Gearbox{driveMotors[3], new wom::TalonFXEncoder(driveMotors[3], 0.0445_m, 6.75),
                          frc::DCMotor::Falcon500(1).WithReduction(6.75)},
             wom::Gearbox{turnMotors[3], new wom::CanEncoder(19, 0.0445_m, 4096, 12.8),
+=======
+            frc::Translation2d(-10.761_in, -9.455_in),
+            wom::Gearbox{driveMotors[3], new wom::TalonFXEncoder(driveMotors[3], 0.0445_m, 6.75),
+                         frc::DCMotor::Falcon500(1).WithReduction(6.75)},
+            wom::Gearbox{turnMotors[3], new wom::CanEncoder(17, 0.0445_m, 4096, 12.8),
+>>>>>>> 0029f49 (fix some formatting)
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &backLeftCancoder, 4_in / 2},
     };
@@ -199,6 +255,7 @@ struct RobotMap {
         nt::NetworkTableInstance::GetDefault().GetTable("swerve");
   };
   SwerveTable swerveTable;
+<<<<<<< HEAD
 
   // struct AlphaArmSystem {
   //   rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
@@ -211,3 +268,6 @@ struct RobotMap {
   // };
   // AlphaArmSystem alphaArmSystem;
 };
+=======
+};
+>>>>>>> 0029f49 (fix some formatting)

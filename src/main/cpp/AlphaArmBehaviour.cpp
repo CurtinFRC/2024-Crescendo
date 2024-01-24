@@ -24,7 +24,16 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
     _alphaArm->SetState(AlphaArmState::kRaw);
     _alphaArm->SetArmRaw(_codriver->GetRightY() * 12_V);
   } else {
+<<<<<<< HEAD
     _alphaArm->SetState(AlphaArmState::kAmpAngle);
     _alphaArm->setControllerRaw(wom::deadzone(_codriver->GetRightY()) * 12_V);
+=======
+    if (_codriver->GetRightBumperPressed()) {
+      _alphaArm->SetState(AlphaArmState::kForwardWrist);
+    }
+    if (_codriver->GetLeftBumperPressed()) {
+      _alphaArm->SetState(AlphaArmState::kReverseWrist);
+    }
+>>>>>>> 0029f49 (fix some formatting)
   }
 }

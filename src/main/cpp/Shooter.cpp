@@ -4,12 +4,20 @@
 
 #include "Shooter.h"
 
+<<<<<<< HEAD
 Shooter::Shooter(ShooterConfig config) : _config(config), _pid(config.path + "/pid", config.pidConfig) {}
 
 void Shooter::OnStart() {
   _pid.Reset();
 }
 
+=======
+Shooter::Shooter(ShooterConfig config)
+    : _config(config)
+// ,
+// _pid{frc::PIDController (1, 0, 0, 0.005_s)}
+{}  // config.path + "/pid", config.pidConfig
+>>>>>>> 0029f49 (fix some formatting)
 void Shooter::OnUpdate(units::second_t dt) {
   // _pid.SetTolerance(0.5, 4);
   table->GetEntry("Error").SetDouble(_pid.GetError().value());
@@ -93,10 +101,14 @@ void Shooter::OnUpdate(units::second_t dt) {
       std::cout << "Error shooter in invalid state" << std::endl;
     } break;
   }
+<<<<<<< HEAD
   // table->GetEntry("Motor OutPut").SetDouble(_setVoltage.value());
   table->GetEntry("Encoder Output")
       .SetDouble(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value());
 
+=======
+  std::cout << "Voltage:" << _setVoltage.value() << std::endl;
+>>>>>>> 0029f49 (fix some formatting)
   _config.ShooterGearbox.motorController->SetVoltage(_setVoltage);
 }
 
