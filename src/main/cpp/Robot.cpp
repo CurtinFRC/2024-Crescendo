@@ -24,7 +24,7 @@ void Robot::RobotInit() {
   shooter = new Shooter(robotmap.shooterSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(shooter);
   shooter->SetDefaultBehaviour(
-     [this]() {return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver); });
+     [this]() {return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.testController); });
   
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");

@@ -4,12 +4,15 @@
 
 #include "Shooter.h"
 
-Shooter::Shooter(ShooterConfig config) : _config(config)
-// , 
-// _pid{frc::PIDController (1, 0, 0, 0.005_s)}
-{} //config.path + "/pid", config.pidConfig
+Shooter::Shooter(ShooterConfig config) : _config(config), _pid{frc::PIDController (0.03, 0, 0, 0.005_s)} {} //config.path + "/pid", config.pidConfig ALSO IM CONFUSED HERE
+
+
 void Shooter::OnUpdate(units::second_t dt) {
-  // _pid.SetTolerance(0.1, 1);
+  _pid.SetTolerance(0.1, 1);
+  table->GetEntry("Error").SetDouble(_pid.GetPositionError());
+  table->GetEntry("Acceleration Error").SetDouble(_pid.GetVelocityError());
+  table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint());
+  table->GetEntry("Current Pos").SetDouble(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value());
   switch (_state) {
     case ShooterState::kIdle: {
       std::cout << "KIdle" << std::endl;
@@ -19,22 +22,37 @@ void Shooter::OnUpdate(units::second_t dt) {
       // }
     } break;
     case ShooterState::kSpinUp: {
-      // std::cout << "KSpinUp" << std::endl;
+      std::cout << "KSpinUp" << std::endl;
       // _pid.SetSetpoint(_goal.value());
-      // units::volt_t pidCalculate =
-      //     units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
+      // std::cout << "encoder value: " << _config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value() << std::endl;
+      // units::volt_t pidCalculate = units::volt_t {_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
       // _setVoltage = pidCalculate;
 
       // if (_pid.AtSetpoint()) {
       //   SetState(ShooterState::kShooting);
       // }
+      // table->GetEntry("PID Setpoint:").SetDouble(_pid.GetSetpoint());
+      std::cout << "KShooting" << std::endl;
+      _pid.SetSetpoint(20);
+      // _pid.SetSetpoint(_goal.value());
+
+      units::volt_t pidCalculate =
+          // units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
+          units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetVelocityValue())};
+      table->GetEntry("Demand").SetDouble(pidCalculate.value());
+      _setVoltage = pidCalculate;
+
+
     } break;
     case ShooterState::kShooting: {
-      // std::cout << "KShooting" << std::endl;
+      std::cout << "KShooting" << std::endl;
+      _pid.SetSetpoint(20);
       // _pid.SetSetpoint(_goal.value());
-      // units::volt_t pidCalculate =
-      //     units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
-      // _setVoltage = pidCalculate;
+
+      units::volt_t pidCalculate =
+          // units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
+          units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetVelocityValue())};
+      _setVoltage = pidCalculate;
 
       // if (!_pid.AtSetpoint()) {
       //   SetState(ShooterState::kSpinUp);
@@ -74,6 +92,6 @@ void Shooter::SetRaw(units::volt_t voltage) {
   _rawVoltage = voltage;
   _state = ShooterState::kRaw;
 }
-void Shooter::SetPidGoal(units::radians_per_second_t goal) {
+void Shooter::SetPidGoal(units::radians_per_second_t goal) { 
   _goal = goal;
 }

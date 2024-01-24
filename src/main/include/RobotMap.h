@@ -22,23 +22,23 @@
 struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
-    frc::XboxController codriver = frc::XboxController(1);
+    frc::XboxController tester = frc::XboxController(1);
     frc::XboxController testController = frc::XboxController(2);
   };
   Controllers controllers;
 
   struct Shooter {
-    rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};//11
     // frc::DigitalInput shooterSensor{2};
 
-    // wom::VoltageController shooterMotorGroup = wom::VoltageController::Group(shooterMotor);
-    // wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
-    wom::Gearbox shooterGearbox{&shooterMotor, nullptr, frc::DCMotor::NEO(1)};
+    // wom::VoltageController shooterMotorGroup = wom::VoltagedController::Group(shooterMotor);
+    wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
+    wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder, frc::DCMotor::NEO(1)};
 
     ShooterConfig config{
         "shooterGearbox",
         shooterGearbox,
-        // &shooterSensor,
+        // &shooterSensor,kop
     };
   };
   Shooter shooterSystem;
