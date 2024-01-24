@@ -16,6 +16,8 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
+#include "AlphaArm.h"
+#include "AlphaArmBehaviour.h"
 #include "Intake.h"
 #include "IntakeBehaviour.h"
 #include "Shooter.h"
@@ -25,9 +27,21 @@ struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
     frc::XboxController codriver = frc::XboxController(1);
+    frc::XboxController testController = frc::XboxController(2);
   };
   Controllers controllers;
 
+  struct AlphaArmSystem {
+    rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
+
+    wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
+    wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
+
+    AlphaArmConfig config{alphaArmGearbox, wristGearbox};
+  };
+  AlphaArmSystem alphaArmSystem;
+  
   struct IntakeSystem {
     rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
     // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
