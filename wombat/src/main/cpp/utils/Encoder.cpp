@@ -43,20 +43,21 @@ void wom::utils::Encoder::SetReduction(double reduction) {
 }
 
 units::radian_t wom::utils::Encoder::GetEncoderPosition() {
-  if (_type == 0) {
-    units::turn_t n_turns{GetEncoderTicks() / GetEncoderTicksPerRotation()};
-    return n_turns;
-  } else if (_type == 2) {
-    units::degree_t pos = GetEncoderTicks() * 1_deg;
-    return pos - _offset;
-  } else {
-    units::degree_t pos = GetEncoderTicks() * 1_deg;
-    return pos - _offset;
-  }
+  // if (_type == 0) {
+  //   units::turn_t n_turns{GetEncoderTicks() / GetEncoderTicksPerRotation()};
+  //   return n_turns;
+  // } else if (_type == 2) {
+  //   units::degree_t pos = GetEncoderTicks() * 1_deg;
+  //   return pos;
+  // } else {
+  //   units::degree_t pos = GetEncoderTicks() * 1_deg;
+  //   return pos - _offset;
+  // }
+  return GetEncoderTicks() * 1_rad;
 }
 
 double wom::utils::Encoder::GetEncoderDistance() {
-  return GetEncoderTicks() * (2 * 3.141592653589) * _wheelRadius.value();
+  return GetEncoderTicks() * (2 * 3.141592) * _wheelRadius.value();
 }
 
 units::radians_per_second_t wom::utils::Encoder::GetEncoderAngularVelocity() {
@@ -66,8 +67,18 @@ units::radians_per_second_t wom::utils::Encoder::GetEncoderAngularVelocity() {
   return n_turns_per_s;
 }
 
+double wom::utils::Encoder::GetVelocityValue() const {
+  // std::cout << "GET VELOCITY: " << GetVelocity() << std::endl;
+  return GetVelocity();
+  // return 0;
+}
+
 double wom::utils::DigitalEncoder::GetEncoderRawTicks() const {
   return _nativeEncoder.Get();
+}
+
+double wom::utils::DigitalEncoder::GetVelocity() const {
+  return 0;
 }
 
 double wom::utils::DigitalEncoder::GetEncoderTickVelocity() const {
@@ -85,6 +96,18 @@ double wom::utils::CANSparkMaxEncoder::GetEncoderRawTicks() const {
 
 double wom::utils::CANSparkMaxEncoder::GetEncoderTickVelocity() const {
   return _encoder.GetVelocity() * GetEncoderTicksPerRotation() / 60;
+}
+
+double wom::utils::TalonFXEncoder::GetVelocity() const {
+  return _controller->GetVelocity().GetValue().value();
+}
+
+double wom::utils::CanEncoder::GetVelocity() const {
+  return _canEncoder->GetVelocity().GetValue().value();
+}
+
+double wom::utils::DutyCycleEncoder::GetVelocity() const {
+  return 0;
 }
 
 double wom::utils::CANSparkMaxEncoder::GetPosition() const {
@@ -121,12 +144,12 @@ double wom::utils::DutyCycleEncoder::GetEncoderTickVelocity() const {
 
 wom::utils::CanEncoder::CanEncoder(int deviceNumber, units::meter_t wheelRadius, double ticksPerRotation,
                                    double reduction, std::string name)
-    : wom::utils::Encoder(ticksPerRotation, reduction, wheelRadius, 1) {
+    : wom::utils::Encoder(ticksPerRotation, 2, wheelRadius, reduction) {
   _canEncoder = new ctre::phoenix6::hardware::CANcoder(deviceNumber, name);
 }
 
 double wom::utils::CanEncoder::GetEncoderRawTicks() const {
-  return _canEncoder->GetAbsolutePosition().GetValue().value();
+  return _canEncoder->GetPosition().GetValue().value() * 2 * 3.14;
 }
 
 double wom::utils::CanEncoder::GetEncoderTickVelocity() const {

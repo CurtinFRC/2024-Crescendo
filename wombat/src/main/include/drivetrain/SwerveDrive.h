@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <frc/controller/PIDController.h>
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <networktables/DoubleTopic.h>
@@ -47,11 +48,11 @@ struct SwerveModuleConfig {
 
 class SwerveModule {
  public:
-  using angle_pid_conf_t = utils::PIDConfig<units::radian, units::volt>;
+  // using angle_pid_conf_t = utils::PIDConfig<units::radian, units::volt>;
   using velocity_pid_conf_t = utils::PIDConfig<units::meters_per_second, units::volt>;
 
-  SwerveModule(std::string path, SwerveModuleConfig config, angle_pid_conf_t anglePID,
-               velocity_pid_conf_t velocityPID);
+  SwerveModule(std::string path, SwerveModuleConfig config,
+               /*angle_pid_conf_t anglePID,*/ velocity_pid_conf_t velocityPID);
   void OnUpdate(units::second_t dt);
   void OnStart();
 
@@ -81,7 +82,8 @@ class SwerveModule {
 
   const SwerveModuleConfig& GetConfig() const;
 
-  utils::PIDController<units::radians, units::volt> _anglePIDController;
+  // utils::PIDController<units::radians, units::volt> _anglePIDController;
+  frc::PIDController _anglePIDController;
 
  private:
   SwerveModuleConfig _config;
@@ -91,7 +93,7 @@ class SwerveModule {
   bool _hasZeroedEncoder = false;
   bool _hasZeroed = false;
 
-  utils::PIDController<units::meters_per_second, units::volt> _velocityPIDController;
+  frc::PIDController _velocityPIDController;
 
   std::shared_ptr<nt::NetworkTable> _table;
 
@@ -102,19 +104,20 @@ class SwerveModule {
 };
 
 struct SwerveDriveConfig {
-  using pose_angle_conf_t = utils::PIDConfig<units::radian, units::radians_per_second>;
+  /*using pose_angle_conf_t =
+      utils::PIDConfig<units::radian, units::radians_per_second>;*/
   using pose_position_conf_t = utils::PIDConfig<units::meter, units::meters_per_second>;
   using balance_conf_t = utils::PIDConfig<units::degree, units::meters_per_second>;
 
   std::string path;
-  SwerveModule::angle_pid_conf_t anglePID;
+  // SwerveModule::angle_pid_conf_t anglePID;
   SwerveModule::velocity_pid_conf_t velocityPID;
 
   wpi::array<SwerveModuleConfig, 4> modules;
 
   ctre::phoenix6::hardware::Pigeon2* gyro;
 
-  pose_angle_conf_t poseAnglePID;
+  // pose_angle_conf_t poseAnglePID;
   pose_position_conf_t posePositionPID;
 
   units::kilogram_t mass;
@@ -213,7 +216,9 @@ class SwerveDrive : public behaviour::HasBehaviour {
   frc::SwerveDriveKinematics<4> _kinematics;
   frc::SwerveDrivePoseEstimator<4> _poseEstimator;
 
-  utils::PIDController<units::radian, units::radians_per_second> _anglePIDController;
+  /*utils::PIDController<units::radian, units::radians_per_second>
+      _anglePIDController;*/
+  frc::PIDController _anglePIDController;
   utils::PIDController<units::meter, units::meters_per_second> _xPIDController;
   utils::PIDController<units::meter, units::meters_per_second> _yPIDController;
 

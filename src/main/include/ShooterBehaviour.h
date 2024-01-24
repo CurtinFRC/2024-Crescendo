@@ -6,16 +6,19 @@
 
 #include <frc/XboxController.h>
 
-#include "Climber.h"
+#include "Robot.h"
+#include "Shooter.h"
 #include "Wombat.h"
 
-class ClimberManualControl : public behaviour::Behaviour {
+class ShooterManualControl : public behaviour::Behaviour {
  public:
-  explicit ClimberManualControl(Climber* climber, frc::XboxController* codriver);
+  ShooterManualControl(Shooter* shooter, frc::XboxController* codriver);
+
   void OnTick(units::second_t dt) override;
 
  private:
-  Climber* _climber;
+  Shooter* _shooter;
   frc::XboxController* _codriver;
-  bool _rawControl = false;
+
+  bool _rawControl = true;
 };

@@ -84,8 +84,8 @@ void wom::subsystems::Elevator::OnUpdate(units::second_t dt) {
 
   // Set voltage to motors...
   voltage *= speedLimit;
-  _config.leftGearbox.motorController->SetVoltage(voltage);
-  _config.rightGearbox.motorController->SetVoltage(voltage);
+  // _config.leftGearbox.motorController->SetVoltage(voltage);
+  // _config.rightGearbox.motorController->SetVoltage(voltage);
 }
 
 void wom::subsystems::Elevator::SetManual(units::volt_t voltage) {
