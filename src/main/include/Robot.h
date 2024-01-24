@@ -1,6 +1,7 @@
 // Copyright (c) 2023-2024 CurtinFRC
 // Open Source Software, you can modify it according to the terms
 // of the MIT License at the root of this project
+
 #pragma once
 #include <frc/Encoder.h>
 #include <frc/TimedRobot.h>
@@ -11,6 +12,7 @@
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+
 #include <string>
 
 #include "AlphaArm.h"
@@ -21,7 +23,7 @@
 #include "Shooter.h"
 #include "ShooterBehaviour.h"
 #include "Wombat.h"
-#include "RobotMap.h"
+
 class Robot : public frc::TimedRobot {
  public:
   void TestInit() override;
@@ -34,11 +36,12 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void DisabledInit() override;
   void DisabledPeriodic() override;
+
  private:
   RobotMap robotmap;
   wom::BehaviourScheduler* sched;
   frc::EventLoop loop;
-  Shooter *shooter;
+  Shooter* shooter;
 
   Intake* intake;
   frc::SendableChooser<std::string> m_chooser;
@@ -51,7 +54,7 @@ class Robot : public frc::TimedRobot {
 
   wom::SwerveDrive* _swerveDrive;
 
-  AlphaArm *alphaArm;
+  AlphaArm* alphaArm;
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;

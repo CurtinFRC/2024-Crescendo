@@ -25,11 +25,11 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
     _alphaArm->SetArmRaw(_codriver->GetRightY() * 6_V);
     _alphaArm->setWristRaw(_codriver->GetLeftY() * -6_V);
   } else {
-    if (_codriver->GetRightBumperPressed()){
-        _alphaArm->SetState(AlphaArmState::kForwardWrist);
+    if (_codriver->GetRightBumperPressed()) {
+      _alphaArm->SetState(AlphaArmState::kForwardWrist);
     }
-    if (_codriver->GetLeftBumperPressed()){
-        _alphaArm->SetState(AlphaArmState::kReverseWrist);
+    if (_codriver->GetLeftBumperPressed()) {
+      _alphaArm->SetState(AlphaArmState::kReverseWrist);
     }
   }
 }
