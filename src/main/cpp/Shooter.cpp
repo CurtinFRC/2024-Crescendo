@@ -4,10 +4,11 @@
 
 #include "Shooter.h"
 
-Shooter::Shooter(ShooterConfig config) : _config(config)
-// , 
+Shooter::Shooter(ShooterConfig config)
+    : _config(config)
+// ,
 // _pid{frc::PIDController (1, 0, 0, 0.005_s)}
-{} //config.path + "/pid", config.pidConfig
+{}  // config.path + "/pid", config.pidConfig
 void Shooter::OnUpdate(units::second_t dt) {
   // _pid.SetTolerance(0.1, 1);
   switch (_state) {
@@ -64,7 +65,6 @@ void Shooter::OnUpdate(units::second_t dt) {
   }
   std::cout << "Voltage:" << _setVoltage.value() << std::endl;
   _config.ShooterGearbox.motorController->SetVoltage(_setVoltage);
-
 }
 
 void Shooter::SetState(ShooterState state) {
