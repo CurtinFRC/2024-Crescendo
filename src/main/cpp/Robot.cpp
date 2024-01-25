@@ -23,6 +23,7 @@
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
+
   shooter = new Shooter(robotmap.shooterSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(shooter);
   shooter->SetDefaultBehaviour(
@@ -30,6 +31,9 @@ void Robot::RobotInit() {
 
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
+
+  // m_chooser.SetDefaultOption("Default Auto", "Default Auto");
+
 
   // frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
 
@@ -45,6 +49,11 @@ void Robot::RobotInit() {
   // simulation_timer = frc::Timer();
 
   // robotmap.swerveBase.gyro->Reset();
+
+  // _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+  // wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
+  // _swerveDrive->SetDefaultBehaviour(
+  //     [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
@@ -78,6 +87,9 @@ void Robot::RobotInit() {
   wom::BehaviourScheduler::GetInstance()->Register(intake);
   intake->SetDefaultBehaviour(
       [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
+
+  //_vision = new Vision("limelight", FMAP("fmap.fmap"));
+
 }
 
 void Robot::RobotPeriodic() {
@@ -98,10 +110,14 @@ void Robot::RobotPeriodic() {
   robotmap.swerveTable.swerveDriveTable->GetEntry("backRightEncoder")
       .SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
+
   _swerveDrive->OnUpdate(dt);
   alphaArm->OnUpdate(dt);
   shooter->OnStart();
   intake->OnUpdate(dt);
+
+  // _swerveDrive->OnUpdate(dt);
+
 }
 
 void Robot::AutonomousInit() {
@@ -111,6 +127,7 @@ void Robot::AutonomousInit() {
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
+
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
   sched->InterruptAll();
@@ -119,9 +136,12 @@ void Robot::TeleopInit() {
   // frontRight->SetVoltage(4_V);
   // backLeft->SetVoltage(4_V);
   // backRight->SetVoltage(4_V);
-  loop.Clear();
-  wom::BehaviourScheduler* scheduler = wom::BehaviourScheduler::GetInstance();
-  scheduler->InterruptAll();
+  
+
+//  FMAP("fmap.fmap");
+  // _swerveDrive->OnStart();
+  // sched->InterruptAll();
+
 }
 
 void Robot::TeleopPeriodic() {}

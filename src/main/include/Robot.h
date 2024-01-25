@@ -20,8 +20,12 @@
 #include "Intake.h"
 #include "IntakeBehaviour.h"
 #include "RobotMap.h"
+
 #include "Shooter.h"
 #include "ShooterBehaviour.h"
+
+#include "vision/Vision.h"
+
 #include "Wombat.h"
 
 class Robot : public frc::TimedRobot {
@@ -54,10 +58,14 @@ class Robot : public frc::TimedRobot {
 
   wom::SwerveDrive* _swerveDrive;
 
+
   AlphaArm* alphaArm;
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;
   // ctre::phoenix6::hardware::TalonFX *backLeft;
   // ctre::phoenix6::hardware::TalonFX *backRight;
+
+  Vision* _vision;
+
 };
