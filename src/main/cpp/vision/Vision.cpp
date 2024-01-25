@@ -72,6 +72,8 @@ frc::Pose3d Vision::GetPose() {
 };
 
 std::pair<units::meter_t, units::degree_t> Vision::GetDistanceToTarget(VisionTarget target) {
+    SetMode(VisionModes::kAprilTag);
+
     std::vector<AprilTag> tags = _fmap.GetTags();
 
     frc::Pose3d pose = _limelight->GetPose();
@@ -94,6 +96,8 @@ std::pair<units::meter_t, units::degree_t> Vision::GetDistanceToTarget(VisionTar
 
 std::pair<units::meter_t, units::degree_t> Vision::GetDistanceToTarget(int id) {
     if (id < APRILTAGS_MIN || id > APRILTAGS_MAX) { return std::make_pair(0_m, 0_deg); };
+
+    SetMode(VisionModes::kAprilTag);
     
     std::vector<AprilTag> tags = _fmap.GetTags();
 
@@ -119,6 +123,8 @@ std::vector<AprilTag> Vision::GetTags() {
 };
 
 frc::Pose2d Vision::AlignToTarget(VisionTarget target, wom::SwerveDrive* swerveDrive) {
+    SetMode(VisionModes::kAprilTag);
+
     std::pair<units::meter_t, units::degree_t> distance = GetDistanceToTarget(target);
 
     units::meter_t x = distance.first * units::math::cos(distance.second);
@@ -129,4 +135,32 @@ frc::Pose2d Vision::AlignToTarget(VisionTarget target, wom::SwerveDrive* swerveD
     swerveDrive->SetPose(pose);
 
     return pose;
+};
+
+bool Vision::IsAtPose(frc::Pose3d pose, units::second_t dt) {
+    return _limelight->IsAtSetPoseVision(pose, dt);
+};
+
+void Vision::SetMode(VisionModes mode) {
+    switch (mode) {
+        case VisionModes::kAprilTag:
+        {
+            _limelight->SetPipeline(wom::LimelightPipeline::kPipeline0);
+        }
+        case VisionModes::kRing:
+        {
+            _limelight->SetPipeline(wom::LimelightPipeline::kPipeline1);
+        }
+    }
+};
+
+bool Vision::TargetIsVisible(VisionTargetObjects target) {
+    switch (target) {
+        case VisionTargetObjects::kNote:
+        {
+            SetMode(VisionModes::kRing);
+        }
+    }
+
+    return _limelight->HasTarget();
 };
