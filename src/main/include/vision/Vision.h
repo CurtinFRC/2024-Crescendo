@@ -1,90 +1,94 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
-#include <units/length.h>
-#include <string>
-#include "Wombat.h"
 #include <frc/Filesystem.h>
+#include <units/length.h>
+#include <units/math.h>
 #include <wpi/fs.h>
 #include <wpi/json.h>
-#include <units/math.h>
+
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "Wombat.h"
 
 #define APRILTAGS_MAX 16
 #define APRILTAGS_MIN 0
 
-enum class VisionTarget { 
-    /* 
-        Left is toward the blue side of the diagram here: https://firstfrc.blob.core.windows.net/frc2024/FieldAssets/2024LayoutMarkingDiagram.pdf 
+enum class VisionTarget {
+  /*
+      Left is toward the blue side of the diagram here:
+     https://firstfrc.blob.core.windows.net/frc2024/FieldAssets/2024LayoutMarkingDiagram.pdf
 
-        The numbers are the numbers on the field diagram (and the numbers on the tags).
-    */
-    kBlueAmp = 6,
-    kBlueSpeakerCenter = 7,
-    kBlueSpeakerOffset = 8,
-    kBlueChain1 = 15,
-    kBlueChain2 = 16,
-    kBlueChain3 = 14,
-    kBlueSourceLeft = 1,
-    kBlueSourceRight = 2,
+      The numbers are the numbers on the field diagram (and the numbers on the tags).
+  */
+  kBlueAmp = 6,
+  kBlueSpeakerCenter = 7,
+  kBlueSpeakerOffset = 8,
+  kBlueChain1 = 15,
+  kBlueChain2 = 16,
+  kBlueChain3 = 14,
+  kBlueSourceLeft = 1,
+  kBlueSourceRight = 2,
 
-    kRedAmp = 5,
-    kRedSpeakerCenter = 4,
-    kRedSpeakerOffset = 3,
-    kRedChain1 = 12,
-    kRedChain2 = 11,
-    kRedChain3 = 13,
-    kRedSourceLeft = 9,
-    kRedSourceRight = 10
+  kRedAmp = 5,
+  kRedSpeakerCenter = 4,
+  kRedSpeakerOffset = 3,
+  kRedChain1 = 12,
+  kRedChain2 = 11,
+  kRedChain3 = 13,
+  kRedSourceLeft = 9,
+  kRedSourceRight = 10
 };
 
-enum class VisionModes {
-    kAprilTag = 0,
-    kRing = 1
-};
+enum class VisionModes { kAprilTag = 0, kRing = 1 };
 
-enum class VisionTargetObjects {
-    kNote
-};
+enum class VisionTargetObjects { kNote };
 
 struct AprilTag {
-    int id;
-    double size;
-    std::array<std::array<double, 4>, 4> transform;
-    bool unique;
+  int id;
+  double size;
+  std::array<std::array<double, 4>, 4> transform;
+  bool unique;
 };
 
 class FMAP {
-    public:
-        FMAP(std::string path);
+ public:
+  explicit FMAP(std::string path);
 
-        std::vector<AprilTag> GetTags();
+  std::vector<AprilTag> GetTags();
 
-    private:
-        std::vector<AprilTag> _tags;
-        std::string _path;
-        std::string deploy_dir;
+ private:
+  std::vector<AprilTag> _tags;
+  std::string _path;
+  std::string deploy_dir;
 };
 
 class Vision {
-    public:
-        Vision(std::string name, FMAP fmap);
+ public:
+  Vision(std::string name, FMAP fmap);
 
-        std::pair<units::meter_t, units::degree_t> GetDistanceToTarget(VisionTarget target);
-        std::pair<units::meter_t, units::degree_t> GetDistanceToTarget(int id);
+  std::pair<units::meter_t, units::degree_t> GetDistanceToTarget(VisionTarget target);
+  std::pair<units::meter_t, units::degree_t> GetDistanceToTarget(int id);
 
-        void SetMode(VisionModes mode);
+  void SetMode(VisionModes mode);
 
-        frc::Pose3d GetPose();
+  frc::Pose3d GetPose();
 
-        frc::Pose2d AlignToTarget(VisionTarget target, wom::SwerveDrive* swerveDrive);
+  frc::Pose2d AlignToTarget(VisionTarget target, wom::SwerveDrive* swerveDrive);
 
-        std::vector<AprilTag> GetTags();
+  std::vector<AprilTag> GetTags();
 
-        bool IsAtPose(frc::Pose3d pose, units::second_t dt);
+  bool IsAtPose(frc::Pose3d pose, units::second_t dt);
 
-        bool TargetIsVisible(VisionTargetObjects target);
+  bool TargetIsVisible(VisionTargetObjects target);
 
-    private:
-        wom::Limelight* _limelight;    
-        FMAP _fmap;
-        VisionModes _mode = VisionModes::kAprilTag;
+ private:
+  wom::Limelight* _limelight;
+  FMAP _fmap;
+  VisionModes _mode = VisionModes::kAprilTag;
 };

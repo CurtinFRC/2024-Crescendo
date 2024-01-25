@@ -139,6 +139,7 @@ void Robot::RobotInit() {
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();
 
+<<<<<<< HEAD
   alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
   alphaArm->SetDefaultBehaviour(
@@ -169,7 +170,12 @@ void Robot::RobotInit() {
 
   //_vision = new Vision("limelight", FMAP("fmap.fmap"));
 
+<<<<<<< HEAD
 >>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
+=======
+  _vision = new Vision("limelight", FMAP("fmap.fmap"));
+
+>>>>>>> c89d969 ([wpiformat] Run wpiformat)
 }
 
 void Robot::RobotPeriodic() {
@@ -248,6 +254,7 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
 
+
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
 <<<<<<< HEAD
@@ -273,6 +280,7 @@ void Robot::TeleopInit() {
   
 
 //  FMAP("fmap.fmap");
+
   // _swerveDrive->OnStart();
   // sched->InterruptAll();
 
