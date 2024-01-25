@@ -104,6 +104,8 @@ class Limelight {
 
   frc::Pose3d GetPose();
 
+  bool HasTarget();
+
  private:
   std::string _limelightName;
 };

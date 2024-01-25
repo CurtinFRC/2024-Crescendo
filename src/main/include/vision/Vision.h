@@ -11,11 +11,38 @@
 #define APRILTAGS_MAX 16
 #define APRILTAGS_MIN 0
 
-enum class VisionTarget {
-    kNote = 0,
-    kAmp = 1,
-    kSource = 2,
-    kNone = 3
+enum class VisionTarget { 
+    /* 
+        Left is toward the blue side of the diagram here: https://firstfrc.blob.core.windows.net/frc2024/FieldAssets/2024LayoutMarkingDiagram.pdf 
+
+        The numbers are the numbers on the field diagram (and the numbers on the tags).
+    */
+    kBlueAmp = 6,
+    kBlueSpeakerCenter = 7,
+    kBlueSpeakerOffset = 8,
+    kBlueChain1 = 15,
+    kBlueChain2 = 16,
+    kBlueChain3 = 14,
+    kBlueSourceLeft = 1,
+    kBlueSourceRight = 2,
+
+    kRedAmp = 5,
+    kRedSpeakerCenter = 4,
+    kRedSpeakerOffset = 3,
+    kRedChain1 = 12,
+    kRedChain2 = 11,
+    kRedChain3 = 13,
+    kRedSourceLeft = 9,
+    kRedSourceRight = 10
+};
+
+enum class VisionModes {
+    kAprilTag = 0,
+    kRing = 1
+};
+
+enum class VisionTargetObjects {
+    kNote
 };
 
 struct AprilTag {
@@ -44,13 +71,20 @@ class Vision {
         std::pair<units::meter_t, units::degree_t> GetDistanceToTarget(VisionTarget target);
         std::pair<units::meter_t, units::degree_t> GetDistanceToTarget(int id);
 
+        void SetMode(VisionModes mode);
+
         frc::Pose3d GetPose();
 
         frc::Pose2d AlignToTarget(VisionTarget target, wom::SwerveDrive* swerveDrive);
 
         std::vector<AprilTag> GetTags();
 
+        bool IsAtPose(frc::Pose3d pose, units::second_t dt);
+
+        bool TargetIsVisible(VisionTargetObjects target);
+
     private:
         wom::Limelight* _limelight;    
         FMAP _fmap;
+        VisionModes _mode = VisionModes::kAprilTag;
 };
