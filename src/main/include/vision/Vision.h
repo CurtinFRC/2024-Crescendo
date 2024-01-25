@@ -87,6 +87,8 @@ class Vision {
 
   bool TargetIsVisible(VisionTargetObjects target);
 
+  int CurrentAprilTag();
+
  private:
   wom::Limelight* _limelight;
   FMAP _fmap;

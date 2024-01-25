@@ -155,9 +155,11 @@ void Vision::SetMode(VisionModes mode) {
   switch (mode) {
     case VisionModes::kAprilTag: {
       _limelight->SetPipeline(wom::LimelightPipeline::kPipeline0);
+      break;
     }
     case VisionModes::kRing: {
       _limelight->SetPipeline(wom::LimelightPipeline::kPipeline1);
+      break;
     }
   }
 }
@@ -166,8 +168,13 @@ bool Vision::TargetIsVisible(VisionTargetObjects target) {
   switch (target) {
     case VisionTargetObjects::kNote: {
       SetMode(VisionModes::kRing);
+      break;
     }
   }
 
   return _limelight->HasTarget();
+}
+
+int Vision::CurrentAprilTag() {
+  return _limelight->GetAprilTagData(wom::LimelightAprilTagData::kTid)[0];
 }
