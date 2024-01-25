@@ -17,6 +17,7 @@
 #include <string>
 
 #include "RobotMap.h"
+#include "vision/Vision.h"
 #include "Wombat.h"
 
 class Robot : public frc::TimedRobot {
@@ -48,4 +49,6 @@ class Robot : public frc::TimedRobot {
   frc::SendableChooser<std::string> m_path_chooser;
 
   wom::SwerveDrive* _swerveDrive;
+
+  Vision* _vision;
 };
