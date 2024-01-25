@@ -187,3 +187,7 @@ bool wom::vision::Limelight::IsAtSetPoseVision(frc::Pose3d pose, units::second_t
   return (units::math::fabs(relativePose.X()) < 0.01_m && units::math::fabs(relativePose.Y()) < 0.01_m &&
           GetSpeed(pose, GetPose(), dt) < 1_m / 1_s);
 }
+
+bool wom::vision::Limelight::HasTarget() {
+  return GetTargetingData(LimelightTargetingData::kTv) == 1.0;
+}
