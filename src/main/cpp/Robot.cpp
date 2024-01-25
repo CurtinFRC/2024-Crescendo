@@ -63,6 +63,7 @@ void Robot::RobotInit() {
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();
 
+<<<<<<< HEAD
   alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
   alphaArm->SetDefaultBehaviour(
@@ -89,6 +90,8 @@ void Robot::RobotInit() {
       [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
 
   //_vision = new Vision("limelight", FMAP("fmap.fmap"));
+
+  _vision = new Vision("limelight", FMAP("fmap.fmap"));
 
 }
 
@@ -128,6 +131,7 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
 
+
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
   sched->InterruptAll();
@@ -139,6 +143,7 @@ void Robot::TeleopInit() {
   
 
 //  FMAP("fmap.fmap");
+
   // _swerveDrive->OnStart();
   // sched->InterruptAll();
 
