@@ -20,8 +20,12 @@
 #include "Intake.h"
 #include "IntakeBehaviour.h"
 #include "RobotMap.h"
+
 #include "Shooter.h"
 #include "ShooterBehaviour.h"
+
+#include "vision/Vision.h"
+
 #include "Wombat.h"
 
 class Robot : public frc::TimedRobot {
@@ -62,10 +66,18 @@ class Robot : public frc::TimedRobot {
   ctre::phoenix6::hardware::TalonFX* frontLeft;
   // AlphaArm *alphaArm;
 
+
   AlphaArm* alphaArm;
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;
   // ctre::phoenix6::hardware::TalonFX *backLeft;
   // ctre::phoenix6::hardware::TalonFX *backRight;
+<<<<<<< HEAD
 };
+=======
+
+  Vision* _vision;
+
+};
+>>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)

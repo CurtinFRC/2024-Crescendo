@@ -38,7 +38,11 @@ static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+
+>>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
   shooter = new Shooter(robotmap.shooterSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(shooter);
   shooter->SetDefaultBehaviour(
@@ -47,6 +51,9 @@ void Robot::RobotInit() {
 >>>>>>> 0029f49 (fix some formatting)
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
+
+  // m_chooser.SetDefaultOption("Default Auto", "Default Auto");
+
 
   // frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
 
@@ -71,14 +78,21 @@ void Robot::RobotInit() {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
   // _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   // wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   // _swerveDrive->SetDefaultBehaviour(
   //     [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
+<<<<<<< HEAD
 >>>>>>> 0029f49 (fix some formatting)
 =======
 >>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
+=======
+
+>>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour(
@@ -145,6 +159,17 @@ void Robot::RobotInit() {
   // backRight = new ctre::phoenix6::hardware::TalonFX(3, "Drivebase");
 >>>>>>> 0029f49 (fix some formatting)
   lastPeriodic = wom::now();
+<<<<<<< HEAD
+=======
+
+  intake = new Intake(robotmap.intakeSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(intake);
+  intake->SetDefaultBehaviour(
+      [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
+
+  //_vision = new Vision("limelight", FMAP("fmap.fmap"));
+
+>>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
 }
 
 void Robot::RobotPeriodic() {
@@ -185,16 +210,26 @@ void Robot::RobotPeriodic() {
 >>>>>>> 0029f49 (fix some formatting)
       .SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
+<<<<<<< HEAD
   // shooter->OnUpdate(dt);
   // intake->OnUpdate(dt);
   // alphaArm->OnUpdate(dt);
+=======
+
+>>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
   _swerveDrive->OnUpdate(dt);
 <<<<<<< HEAD
 =======
   alphaArm->OnUpdate(dt);
   shooter->OnStart();
   intake->OnUpdate(dt);
+<<<<<<< HEAD
 >>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
+=======
+
+  // _swerveDrive->OnUpdate(dt);
+
+>>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
 }
 
 void Robot::AutonomousInit() {
@@ -212,6 +247,7 @@ void Robot::AutonomousPeriodic() {}
 >>>>>>> 0029f49 (fix some formatting)
 
 void Robot::TeleopInit() {
+
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
 <<<<<<< HEAD
@@ -232,6 +268,15 @@ void Robot::TeleopInit() {
   // frontRight->SetVoltage(4_V);
   // backLeft->SetVoltage(4_V);
   // backRight->SetVoltage(4_V);
+<<<<<<< HEAD
+=======
+  
+
+//  FMAP("fmap.fmap");
+  // _swerveDrive->OnStart();
+  // sched->InterruptAll();
+
+>>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
 }
 void Robot::TeleopPeriodic() {}
 
