@@ -43,6 +43,7 @@ void Shooter::OnUpdate(units::second_t dt) {
       _setVoltage = pidCalculate;
 
 
+
     } break;
     case ShooterState::kShooting: {
       std::cout << "KShooting" << std::endl;
