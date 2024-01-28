@@ -359,7 +359,7 @@ class SwerveModule {
   const SwerveModuleConfig& GetConfig() const;
 
   //utils::PIDController<units::radians, units::volt> _anglePIDController;
-  PIDController _anglePIDController;
+  frc::PIDController _anglePIDController;
 
  private:
   SwerveModuleConfig _config;
@@ -369,7 +369,7 @@ class SwerveModule {
   bool _hasZeroedEncoder = false;
   bool _hasZeroed = false;
 
-  PIDController _velocityPIDController;
+  frc::PIDController _velocityPIDController;
 
   std::shared_ptr<nt::NetworkTable> _table;
 

@@ -38,7 +38,6 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
   // }
 
   // if (_driverController->GetYButton()) {
-  //   std::cout << "RESETING POSE" << std::endl;
   //   _swerveDrivebase->ResetPose(frc::Pose2d());
   // }
 
@@ -109,7 +108,7 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
                                                r_x * maxRotationMagnitude});
   //   }
   // }
-  // _swerveDrivebase->SetTuning(100_deg, 1_mps);
+  // _swerveDrivebase->SetTuning(100_deg, 0_mps);
 }
 
 void ManualDrivebase::ResetMode() {
