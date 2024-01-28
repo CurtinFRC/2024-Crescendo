@@ -31,7 +31,7 @@ void Intake::OnUpdate(units::second_t dt) {
         setState(IntakeState::kIdle);
       }
       _stringStateName = "Eject";
-      _setVoltage = -5_V;
+      _setVoltage = 7_V;
     } break;
     case IntakeState::kHold: {
       // _config.IntakeMotor.motorController->SetVoltage(0_V);
@@ -41,7 +41,7 @@ void Intake::OnUpdate(units::second_t dt) {
     case IntakeState::kIntake: {
       // _config.IntakeMotor.motorController->SetVoltage(5_V);
       _stringStateName = "Intake";
-      _setVoltage = 5_V;
+      _setVoltage = -7_V;
     } break;
     case IntakeState::kPass: {
       // _config.IntakeMotor.motorController->SetVoltage(5_V);
@@ -49,7 +49,7 @@ void Intake::OnUpdate(units::second_t dt) {
       //   setState(IntakeState::kIdle);
       //   _stringStateName = "Pass";
       // }
-      _setVoltage = 5_V;
+      _setVoltage = -7_V;
     } break;
     default:
       std::cout << "Error: Intake in INVALID STATE." << std::endl;
@@ -71,4 +71,7 @@ void Intake::setState(IntakeState state) {
 }
 void Intake::setRaw(units::volt_t voltage) {
   _rawVoltage = voltage;
+}
+IntakeState Intake::getState() {
+  return _state;
 }

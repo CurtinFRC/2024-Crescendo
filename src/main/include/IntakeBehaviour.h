@@ -20,7 +20,10 @@ class IntakeManualControl : public behaviour::Behaviour {
   frc::XboxController& _codriver;
 
   units::volt_t _rawVoltage;
-  bool _rawControl;
+  units::volt_t _setVoltage;
+  bool _rawControl = true;
+  bool _intaking = false;
+  bool _ejecting = false;
 };
 
 class IntakeAutoControl : public behaviour::Behaviour {
