@@ -11,6 +11,7 @@
 #include <units/length.h>
 
 #include <string>
+#include <memory>
 
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
