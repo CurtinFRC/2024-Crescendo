@@ -92,5 +92,4 @@ class Vision {
  private:
   wom::Limelight* _limelight;
   FMAP _fmap;
-  VisionModes _mode = VisionModes::kAprilTag;
 };

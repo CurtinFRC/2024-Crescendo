@@ -63,7 +63,6 @@ void Robot::RobotInit() {
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();
 
-<<<<<<< HEAD
   alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
   alphaArm->SetDefaultBehaviour(
