@@ -58,13 +58,9 @@ std::vector<double> wom::vision::Limelight::GetAprilTagData(LimelightAprilTagDat
     case LimelightAprilTagData::kCamerapose_robotspace:
       dataName = "camerapose_robotspace";
       break;
-
-    case LimelightAprilTagData::kTid:
-      dataName = "tid";
-      break;
   }
 
-  return table->GetNumberArray(dataName, std::vector<double>(6));
+  return table->GetEntry(dataName).GetDoubleArray(std::vector<double>(6));
 }
 
 double wom::vision::Limelight::GetTargetingData(LimelightTargetingData dataType, double defaultValue) {
@@ -126,9 +122,13 @@ double wom::vision::Limelight::GetTargetingData(LimelightTargetingData dataType,
     case LimelightTargetingData::kTc:
       dataName = "tc";
       break;
+
+    case LimelightTargetingData::kTid:
+      dataName = "tid";
+      break;
   }
 
-  return table->GetNumber(dataName, defaultValue);
+  return table->GetEntry(dataName).GetDouble(0);
 }
 
 void wom::vision::Limelight::SetLEDMode(LimelightLEDMode mode) {

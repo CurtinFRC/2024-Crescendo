@@ -62,6 +62,7 @@ enum class LimelightTargetingData {
   kJson = 11,
   kTclass = 12,
   kTc = 13,
+  kTid = 14
 };
 
 enum class LimelightAprilTagData {
@@ -73,7 +74,6 @@ enum class LimelightAprilTagData {
   kTargetpose_robotspace = 5,
   kBotpose_targetspace = 6,
   kCamerapose_robotspace = 7,
-  kTid = 8
 };
 
 class Limelight {

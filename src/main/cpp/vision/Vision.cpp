@@ -176,5 +176,7 @@ bool Vision::TargetIsVisible(VisionTargetObjects target) {
 }
 
 int Vision::CurrentAprilTag() {
-  return _limelight->GetAprilTagData(wom::LimelightAprilTagData::kTid)[0];
+  SetMode(VisionModes::kAprilTag);
+
+  return _limelight->GetTargetingData(wom::LimelightTargetingData::kTid);
 }
