@@ -13,12 +13,13 @@ void ShooterManualControl::OnTick(units::second_t dt) {
   table->GetEntry("RawControl").SetBoolean(_rawControl);
 
 
-  if (_tester->GetAButtonReleased()) {
+  if (_tester->GetAButtonPressed()) {
     if (_rawControl == true) {
       _rawControl = false;
     } else {
       _rawControl = true;
     }
+  }
 
     if (_rawControl) {
       _shooter->SetState(ShooterState::kRaw);
@@ -29,13 +30,11 @@ void ShooterManualControl::OnTick(units::second_t dt) {
         _shooter->SetRaw(-12_V * _tester->GetRightTriggerAxis());
       } else {
         _shooter->SetRaw(0_V);
-
       }
-      std::cout << "Raw" << std::endl;
     } else {
       _shooter->SetState(ShooterState::kSpinUp);
-      _shooter->SetPidGoal(150_rad_per_s);
+      _shooter->SetPidGoal(20_rad_per_s);
     }
-  }
+  // }
 }
 

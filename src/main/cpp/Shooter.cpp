@@ -4,15 +4,17 @@
 
 #include "Shooter.h"
 
-Shooter::Shooter(ShooterConfig config) : _config(config), _pid{frc::PIDController (0.03, 0, 0, 0.005_s)} {} //config.path + "/pid", config.pidConfig ALSO IM CONFUSED HERE
+
+Shooter::Shooter(ShooterConfig config) : _config(config), _pid{frc::PIDController (1, 0,-0.001, 0.005_s)} {} //config.path + "/pid", config.pidConfig ALSO IM CONFUSED HERE
 
 
 void Shooter::OnUpdate(units::second_t dt) {
-  _pid.SetTolerance(0.1, 1);
+  // _pid.SetTolerance(0.5, 4);
   table->GetEntry("Error").SetDouble(_pid.GetPositionError());
   table->GetEntry("Acceleration Error").SetDouble(_pid.GetVelocityError());
   table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint());
   table->GetEntry("Current Pos").SetDouble(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value());
+  table->GetEntry("EncoderValue").SetDouble(_config.ShooterGearbox.encoder->GetVelocityValue());
   switch (_state) {
     case ShooterState::kIdle: {
       std::cout << "KIdle" << std::endl;
@@ -38,11 +40,12 @@ void Shooter::OnUpdate(units::second_t dt) {
 
       units::volt_t pidCalculate =
           // units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
-          units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetVelocityValue())};
+          units::volt_t{_pid.Calculate(-_config.ShooterGearbox.encoder->GetVelocityValue())};
       table->GetEntry("Demand").SetDouble(pidCalculate.value());
+      table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint());
       _setVoltage = pidCalculate;
 
-
+      
 
     } break;
     case ShooterState::kShooting: {
@@ -53,7 +56,7 @@ void Shooter::OnUpdate(units::second_t dt) {
       units::volt_t pidCalculate =
           // units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
           units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetVelocityValue())};
-      _setVoltage = pidCalculate;
+      _setVoltage = pidCalculate * 1;
 
       // if (!_pid.AtSetpoint()) {
       //   SetState(ShooterState::kSpinUp);
@@ -81,8 +84,8 @@ void Shooter::OnUpdate(units::second_t dt) {
       std::cout << "Error shooter in invalid state" << std::endl;
     } break;
   }
-  std::cout << "Voltage:" << _setVoltage.value() << std::endl;
-  _config.ShooterGearbox.motorController->SetVoltage(_setVoltage);
+  table->GetEntry("Motor OutPut").SetDouble(_setVoltage.value());
+  _config.ShooterGearbox.motorController->SetVoltage(-_setVoltage);
 
 }
 

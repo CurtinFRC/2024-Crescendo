@@ -4,7 +4,6 @@
 
 #include "Robot.h"
 
-// include units
 #include <units/velocity.h>
 #include <units/acceleration.h>
 #include <units/length.h>

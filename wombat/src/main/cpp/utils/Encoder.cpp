@@ -118,7 +118,7 @@ double wom::utils::CANSparkMaxEncoder::GetPosition() const {
 }
 
 double wom::utils::CANSparkMaxEncoder::GetVelocity() const {
-  return _encoder.GetVelocity();
+  return _encoder.GetVelocity() * 3.14159265 * 2 /60;
 }
 
 wom::utils::TalonFXEncoder::TalonFXEncoder(
