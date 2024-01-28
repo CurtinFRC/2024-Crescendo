@@ -11,9 +11,11 @@ IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& co
 }
 
 void IntakeManualControl::OnTick(units::second_t dt) {
-  if (_codriver.GetBButtonPressed()) {
+  if (_codriver.GetBButtonReleased()) {
     if (_rawControl) {
       _rawControl = false;
+      _intaking = false;
+      _ejecting = false;
       _intake->setState(IntakeState::kIdle);
     } else {
       _rawControl = true;
@@ -46,19 +48,20 @@ void IntakeManualControl::OnTick(units::second_t dt) {
         _ejecting = false;
       } else {
         _ejecting = true;
+        _intaking = false;
       }
     }
 
     if (_intaking) {
       if (_intake->getState() == IntakeState::kHold || _intake->getState() == IntakeState::kPass) {
-        if (_intake->GetConfig().intakeSensor->Get() == 1) {
+        if (_intake->GetConfig().intakeSensor->Get() == 0) {
           _intake->setState(IntakeState::kIdle);
           _intaking = false;
         } else {
           _intake->setState(IntakeState::kPass);
         }
       } else {
-        if (_intake->GetConfig().intakeSensor->Get() == 0) {
+        if (_intake->GetConfig().intakeSensor->Get() == 1) {
           _intake->setState(IntakeState::kHold);
           _intaking = false;
         } else {
@@ -68,7 +71,7 @@ void IntakeManualControl::OnTick(units::second_t dt) {
     }
 
     if (_ejecting) {
-      if (_intake->GetConfig().intakeSensor->Get() == 1) {
+      if (_intake->GetConfig().intakeSensor->Get() == 0) {
         _intake->setState(IntakeState::kIdle);
         _ejecting = false;
       } else {
