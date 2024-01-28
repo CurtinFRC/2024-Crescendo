@@ -267,7 +267,8 @@ SwerveModule::SwerveModule(std::string path, SwerveModuleConfig config,
       _velocityPIDController(frc::PIDController(1.2, 0, 0, 0.005_s)),
       _table(nt::NetworkTableInstance::GetDefault().GetTable(path)) {
   // _anglePIDController.SetTolerance(360);
-  _anglePIDController.EnableContinuousInput(-3.1415, (2 * 3.1415));
+  // _anglePIDController.EnableContinuousInput(-3.1415, (2 * 3.1415));
+  _anglePIDController.EnableContinuousInput(-3.1415, (3.1415));
 }
 
 void SwerveModule::OnStart() {
@@ -297,7 +298,15 @@ void SwerveModule::OnUpdate(units::second_t dt) {
       double input = _config.turnMotor.encoder->GetEncoderPosition().value();
       _table->GetEntry("/testing/GetEncoderPos").SetDouble(input);
       // _velocityPIDController.SetSetpoint(3);
+      
+
       driveVoltage = units::volt_t{_velocityPIDController.Calculate(GetSpeed().value())};
+      if (_turnOffset == TurnOffsetValues::forward) {
+        input = input + (3.1415/2);
+      } else if (_turnOffset == TurnOffsetValues::reverse) {
+        input = input - (3.1415/2);
+        driveVoltage = -driveVoltage;
+      }
       double demand = _anglePIDController.Calculate(input);
       // if ((_anglePIDController.GetSetpoint() - input) > 180) {
       //   if (demand > 0) {
@@ -346,11 +355,20 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   _config.turnMotor.motorController->SetVoltage(turnVoltage);
 
   _table->GetEntry("speed").SetDouble(GetSpeed().value());
-  _table->GetEntry("angle").SetDouble(
-      _config.turnMotor.encoder->GetEncoderPosition()
-          .convert<units::degree>()
-          .value());
+  _table->GetEntry("angle").SetDouble(_config.turnMotor.encoder->GetEncoderPosition().value());
   _config.WriteNT(_table->GetSubTable("config"));
+}
+
+void SwerveModule::SetTurnOffsetForward() {
+  _turnOffset = TurnOffsetValues::forward;
+}
+
+void SwerveModule::SetTurnOffsetReverse() {
+  _turnOffset = TurnOffsetValues::reverse;
+}
+
+void SwerveModule::TurnOffset() {
+  _turnOffset = TurnOffsetValues::none;
 }
 
 // double SwerveModule::GetCancoderPosition() {
@@ -388,17 +406,17 @@ void SwerveModule::SetPID(units::radian_t angle,
   _state = SwerveModuleState::kPID;
 
 
-  double diff = std::abs(_config.turnMotor.encoder->GetEncoderPosition().value() - angle.value());
-  _table->GetEntry("diff").SetDouble(diff);
-  if (std::abs(diff) > (3.14159/2)) {
-    speed *= -1;
-    angle = 3.14159_rad - units::radian_t{diff};
+  // double diff = std::abs(_config.turnMotor.encoder->GetEncoderPosition().value() - angle.value());
+  // _table->GetEntry("diff").SetDouble(diff);
+  // if (std::abs(diff) > (3.14159/2)) {
+  //   speed *= -1;
+  //   angle = 3.14159_rad - units::radian_t{diff};
+  //   _anglePIDController.SetSetpoint(angle.value());
+  //   _velocityPIDController.SetSetpoint(speed.value());
+  // } else {
     _anglePIDController.SetSetpoint(angle.value());
     _velocityPIDController.SetSetpoint(speed.value());
-  } else {
-    _anglePIDController.SetSetpoint(angle.value());
-    _velocityPIDController.SetSetpoint(speed.value());
-  }
+  // }
 }
 
 void SwerveModule::ModuleVectorHandler(frc::ChassisSpeeds speeds) {
@@ -509,6 +527,19 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       // _target_fr_speeds.vy.value() << std::endl;
       [[fallthrough]];
     case SwerveDriveState::kVelocity: {
+      _table->GetEntry("Swerve module VX").SetDouble(_target_speed.vx.value());
+      _table->GetEntry("Swerve module VY").SetDouble(_target_speed.vy.value());
+      _table->GetEntry("Swerve module Omega").SetDouble(_target_speed.omega.value());
+      if (_target_speed.omega.value() > 0) {
+        _modules[0].SetTurnOffsetForward();
+        _modules[1].SetTurnOffsetForward();
+      } else if (_target_speed.omega.value() < 0) {
+        _modules[0].SetTurnOffsetReverse();
+        _modules[1].SetTurnOffsetReverse();
+      } else {
+        _modules[0].TurnOffset();
+        _modules[1].TurnOffset();
+      }
       auto target_states = _kinematics.ToSwerveModuleStates(_target_speed);
       for (size_t i = 0; i < _modules.size(); i++) {
         _modules[i].SetPID(target_states[i].angle.Radians(),

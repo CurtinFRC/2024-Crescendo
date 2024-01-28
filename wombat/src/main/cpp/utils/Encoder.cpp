@@ -22,18 +22,18 @@ double wom::utils::Encoder::GetEncoderTicksPerRotation() const {
 }
 
 void wom::utils::Encoder::ZeroEncoder() {
-  _offset = GetEncoderRawTicks() * 1_rad;
+  // _offtt = GetEncoderRawTicks() * 1_rad;
 }
 
 void wom::utils::Encoder::SetEncoderPosition(units::degree_t position) {
   // units::radian_t offset_turns = position - GetEncoderPosition();
-  units::degree_t offset = position - (GetEncoderRawTicks() * 360 * 1_deg);
-  _offset = offset;
+  // units::degree_t offset = position - (GetEncoderRawTicks() * 360 * 1_deg);
+  // _offset = offset;
   // _offset = -offset_turns;
 }
 
-void wom::utils::Encoder::SetEncoderOffset(units::radian_t offset) {
-  _offset = offset;
+void wom::utils::Encoder::SetEncoderOffset(units::radian_t offset) { //HERE!
+  _offset = offset; 
   // units::turn_t offset_turns = offset;
   // _offset = offset_turns.value() * GetEncoderTicksPerRotation();
 }
@@ -158,7 +158,7 @@ wom::utils::CanEncoder::CanEncoder(int deviceNumber, units::meter_t wheelRadius,
 }
 
 double wom::utils::CanEncoder::GetEncoderRawTicks() const {
-  return _canEncoder->GetAbsolutePosition().GetValue().value() * 2 * 3.14;
+  return (_canEncoder->GetAbsolutePosition().GetValue().value() * 2 * 3.14) - _offset.value();
 }
 
 double wom::utils::CanEncoder::GetEncoderTickVelocity() const {
