@@ -5,7 +5,7 @@
 #include "Shooter.h"
 
 
-Shooter::Shooter(ShooterConfig config) : _config(config), _pid{frc::PIDController (1, 0,-0.001, 0.005_s)} {} //config.path + "/pid", config.pidConfig ALSO IM CONFUSED HERE
+Shooter::Shooter(ShooterConfig config) : _config(config), _pid{frc::PIDController (1, 0,-0.001, 0.005_s)} {} //config.path + "/pid", config.pidConfig
 
 
 void Shooter::OnUpdate(units::second_t dt) {
@@ -43,7 +43,7 @@ void Shooter::OnUpdate(units::second_t dt) {
           units::volt_t{_pid.Calculate(-_config.ShooterGearbox.encoder->GetVelocityValue())};
       table->GetEntry("Demand").SetDouble(pidCalculate.value());
       table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint());
-      _setVoltage = pidCalculate;
+      _setVoltage = pidCalculate * 1;
 
       
 
