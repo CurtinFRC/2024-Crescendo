@@ -306,22 +306,23 @@ void Robot::TestInit() {}
 void Robot::TestPeriodic() {}
 
 void Robot::SimulationInit() {
-  std::string x = "[";
-  std::string y = "[";
-  // _vision->GetDistanceToTarget(16);
-  for (int i = 1; i < 17; i++) {
-    for (int j = 0; j < 17; j++) {
-      frc::Pose2d pose = _vision->AlignToTarget(i, units::meter_t{j * 0.1}, _swerveDrive);
-      x += std::to_string(pose.X().value()) + ",";
-      y += std::to_string(pose.Y().value()) + ",";
+  /*  std::string x = "[";
+    std::string y = "[";
+    // _vision->GetDistanceToTarget(16);
+    for (int i = 1; i < 17; i++) {
+      for (int j = 0; j < 17; j++) {
+        frc::Pose2d pose = _vision->AlignToTarget(i, units::meter_t{j * 0.1}, _swerveDrive);
+        x += std::to_string(pose.X().value()) + ",";
+        y += std::to_string(pose.Y().value()) + ",";
+      }
     }
-  }
 
-  x += "]";
-  y += "]";
+    x += "]";
+    y += "]";
 
-  std::cout << x << std::endl;
-  std::cout << y << std::endl;
+    std::cout << x << std::endl;
+    std::cout << y << std::endl; */
+  _vision->TurnToTarget(1, _swerveDrive);
 }
 
 void Robot::SimulationPeriodic() {}

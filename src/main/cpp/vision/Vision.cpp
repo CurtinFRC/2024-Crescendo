@@ -4,6 +4,9 @@
 
 #include "vision/Vision.h"
 
+#include <variant>
+
+#include "units/length.h"
 #include "units/math.h"
 
 FMAP::FMAP(std::string path) : _path(path) {
@@ -302,6 +305,34 @@ frc::Pose2d Vision::AlignToTarget(int target, frc::Translation2d offset, wom::Sw
   // swerveDrive->SetPose(pose);
 
   return pose;
+}
+
+frc::Pose2d Vision::TurnToTarget(int target, wom::SwerveDrive* swerveDrive) {
+  AprilTag tag = GetTags()[target];
+
+  units::degree_t angle = GetDistanceToTarget(target).second;
+
+  frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
+
+  frc::Pose2d pose = frc::Pose2d(current_pose.X(), current_pose.Y(), angle);
+
+  std::cout << pose.Rotation().Degrees().value() << std::endl;
+
+  swerveDrive->SetPose(pose);
+}
+
+frc::Pose2d Vision::TurnToTarget(VisionTarget target, wom::SwerveDrive* swerveDrive) {
+  AprilTag tag = GetTags()[static_cast<int>(target)];
+
+  units::degree_t angle = GetDistanceToTarget(target).second;
+
+  frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
+
+  frc::Pose2d pose = frc::Pose2d(current_pose.X(), current_pose.Y(), angle);
+
+  std::cout << pose.Rotation().Degrees().value() << std::endl;
+
+  swerveDrive->SetPose(pose);
 }
 
 bool Vision::IsAtPose(frc::Pose3d pose, units::second_t dt) {
