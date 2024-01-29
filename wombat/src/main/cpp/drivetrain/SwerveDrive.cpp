@@ -335,6 +335,10 @@ void SwerveDrive::OnResetMode() {
   _anglePIDController.Reset();
 }
 
+void SwerveDrive::SetLocked(frc::Pose2d pose) {
+  _state = SwerveDriveState::kLockedOn;
+}
+
 void SwerveDrive::RotateMatchJoystick(units::radian_t joystickAngle, FieldRelativeSpeeds speeds) {
   // _state = SwerveDriveState::kFRVelocityRotationLock;
   // _anglePIDController.SetSetpoint(joystickAngle);

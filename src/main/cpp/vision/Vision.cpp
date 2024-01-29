@@ -312,13 +312,16 @@ frc::Pose2d Vision::TurnToTarget(int target, wom::SwerveDrive* swerveDrive) {
 
   units::degree_t angle = GetDistanceToTarget(target).second;
 
-  frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
+  //frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
+  frc::Pose2d current_pose = frc::Pose2d();
 
   frc::Pose2d pose = frc::Pose2d(current_pose.X(), current_pose.Y(), angle);
 
-  std::cout << pose.Rotation().Degrees().value() << std::endl;
+  //std::cout << pose.Rotation().Degrees().value() << std::endl;
 
-  swerveDrive->SetPose(pose);
+  //swerveDrive->SetPose(pose);
+  
+  return pose;
 }
 
 frc::Pose2d Vision::TurnToTarget(VisionTarget target, wom::SwerveDrive* swerveDrive) {
@@ -332,7 +335,19 @@ frc::Pose2d Vision::TurnToTarget(VisionTarget target, wom::SwerveDrive* swerveDr
 
   std::cout << pose.Rotation().Degrees().value() << std::endl;
 
-  swerveDrive->SetPose(pose);
+  //swerveDrive->SetPose(pose);
+}
+
+frc::Pose2d Vision::LockOn(VisionTargetObjects object, wom::SwerveDrive* swerveDrive) {
+  SetMode(VisionModes::kRing);
+
+  if (TargetIsVisible(object)) {
+    swerveDrive->SetLocked(frc::Pose2d());
+  } else {
+    swerveDrive->SetIdle();
+  }
+
+  return frc::Pose2d();
 }
 
 bool Vision::IsAtPose(frc::Pose3d pose, units::second_t dt) {
