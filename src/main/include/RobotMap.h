@@ -28,18 +28,28 @@ struct RobotMap {
   Controllers controllers;
 
   struct Shooter {
-    rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};//11
+    rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};// Port 11
     // frc::DigitalInput shooterSensor{2};
 
     // wom::VoltageController shooterMotorGroup = wom::VoltagedController::Group(shooterMotor);
     wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
     wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder, frc::DCMotor::NEO(1)};
 
+    wom::utils::PIDConfig<units::radians_per_second, units::volts> pidConfigS{
+          "/armavator/arm/velocityPID/config",
+          9_V / (180_deg / 1_s),
+          0_V / 25_deg,
+          0_V / (90_deg / 1_s / 1_s)
+    };
+
     ShooterConfig config{
         "shooterGearbox",
         shooterGearbox,
-        // &shooterSensor,kop
+        pidConfigS
     };
+
+    
+
   };
   Shooter shooterSystem;
   

@@ -5,16 +5,16 @@
 #include "Shooter.h"
 
 
-Shooter::Shooter(ShooterConfig config) : _config(config), _pid{frc::PIDController (1, 0,-0.001, 0.005_s)} {} //config.path + "/pid", config.pidConfig
+Shooter::Shooter(ShooterConfig config) : _config(config), _pid(config.path + "/pid", config.pidConfig) {} 
 
 
 void Shooter::OnUpdate(units::second_t dt) {
   // _pid.SetTolerance(0.5, 4);
-  table->GetEntry("Error").SetDouble(_pid.GetPositionError());
-  table->GetEntry("Acceleration Error").SetDouble(_pid.GetVelocityError());
-  table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint());
-  table->GetEntry("Current Pos").SetDouble(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value());
-  table->GetEntry("EncoderValue").SetDouble(_config.ShooterGearbox.encoder->GetVelocityValue());
+  // table->GetEntry("Error").SetDouble(_pid.GetPositionError());
+  // table->GetEntry("Acceleration Error").SetDouble(_pid.GetVelocityError());
+  // table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint());
+  // table->GetEntry("Current Pos").SetDouble(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value());
+  // table->GetEntry("EncoderValue").SetDouble(_config.ShooterGearbox.encoder->GetVelocityValue());
   switch (_state) {
     case ShooterState::kIdle: {
       std::cout << "KIdle" << std::endl;
@@ -25,38 +25,36 @@ void Shooter::OnUpdate(units::second_t dt) {
     } break;
     case ShooterState::kSpinUp: {
       std::cout << "KSpinUp" << std::endl;
-      // _pid.SetSetpoint(_goal.value());
+      _pid.SetSetpoint(_goal);
       // std::cout << "encoder value: " << _config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value() << std::endl;
-      // units::volt_t pidCalculate = units::volt_t {_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
-      // _setVoltage = pidCalculate;
+      units::volt_t pidCalculate = units::volt_t {_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt, 0.02_V)};
+      _setVoltage = pidCalculate;
 
       // if (_pid.AtSetpoint()) {
       //   SetState(ShooterState::kShooting);
       // }
       // table->GetEntry("PID Setpoint:").SetDouble(_pid.GetSetpoint());
       std::cout << "KShooting" << std::endl;
-      _pid.SetSetpoint(20);
+      // _pid.SetSetpoint(20_rad / 1_s);
       // _pid.SetSetpoint(_goal.value());
 
-      units::volt_t pidCalculate =
-          // units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
-          units::volt_t{_pid.Calculate(-_config.ShooterGearbox.encoder->GetVelocityValue())};
-      table->GetEntry("Demand").SetDouble(pidCalculate.value());
-      table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint());
-      _setVoltage = pidCalculate * 1;
-
-      
+      // units::volt_t pidCalculate =
+      //     // units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
+      //     _pid.Calculate(-_config.ShooterGearbox.encoder->GetVelocityValue() * 1_rad / 1_s);
+      // table->GetEntry("Demand").SetDouble(pidCalculate.value());
+      // table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint());
+      // _setVoltage = pidCalculate * 1;
 
     } break;
     case ShooterState::kShooting: {
-      std::cout << "KShooting" << std::endl;
-      _pid.SetSetpoint(20);
-      // _pid.SetSetpoint(_goal.value());
+      // std::cout << "KShooting" << std::endl;
+      // _pid.SetSetpoint(20);
+      // // _pid.SetSetpoint(_goal.value());
 
-      units::volt_t pidCalculate =
-          // units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
-          units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetVelocityValue())};
-      _setVoltage = pidCalculate * 1;
+      // units::volt_t pidCalculate =
+      //     // units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
+      //     units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetVelocityValue())};
+      // _setVoltage = pidCalculate * 1;
 
       // if (!_pid.AtSetpoint()) {
       //   SetState(ShooterState::kSpinUp);

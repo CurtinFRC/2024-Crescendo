@@ -91,8 +91,8 @@ void Robot::RobotPeriodic() {
 }
 
 void Robot::AutonomousInit() {
-  loop.Clear();
-  sched->InterruptAll();
+  // loop.Clear();
+  // sched->InterruptAll();
 }
 void Robot::AutonomousPeriodic() {
 }
