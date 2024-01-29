@@ -94,6 +94,8 @@ class Vision {
   frc::Pose2d TurnToTarget(int target, wom::SwerveDrive* swerveDrive);
   frc::Pose2d TurnToTarget(VisionTarget target, wom::SwerveDrive* swerveDrive);
 
+  frc::Pose2d LockOn(VisionTargetObjects target, wom::SwerveDrive* swerveDrive);
+
   std::vector<AprilTag> GetTags();
 
   bool IsAtPose(frc::Pose3d pose, units::second_t dt);

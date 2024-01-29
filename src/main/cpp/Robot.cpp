@@ -34,6 +34,12 @@
 >>>>>>> 0029f49 (fix some formatting)
 #include "behaviour/HasBehaviour.h"
 
+#include <frc/kinematics/DifferentialDriveKinematics.h>
+#include <frc/controller/RamseteController.h>
+#include <frc/Timer.h>
+#include "networktables/NetworkTableInstance.h"
+
+
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
@@ -322,8 +328,12 @@ void Robot::SimulationInit() {
 
     std::cout << x << std::endl;
     std::cout << y << std::endl; */
-  _vision->TurnToTarget(1, _swerveDrive);
+  //std::cout << _vision->TurnToTarget(1, _swerveDrive).Rotation().Degrees().value() << std::endl;
+  frc::Pose2d pose = _vision->TurnToTarget(2, _swerveDrive);
+  nt::NetworkTableInstance::GetDefault().GetTable("vision")->PutNumber("rot", pose.Rotation().Degrees().value()); 
+  
 }
+
 
 void Robot::SimulationPeriodic() {}
 

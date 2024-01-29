@@ -152,7 +152,8 @@ enum class SwerveDriveState {
   kTuning,
   kXWheels,
   kModuleTurn,
-  kFRVelocityRotationLock
+  kFRVelocityRotationLock,
+  kLockedOn
 };
 
 struct FieldRelativeSpeeds {
@@ -200,6 +201,7 @@ class SwerveDrive : public behaviour::HasBehaviour {
   void SetZero();
   void SetVoltageLimit(units::volt_t driveVoltageLimit);
   void OnResetMode();
+  void SetLocked(frc::Pose2d pose);
   // double GetModuleCANPosition(int mod);  // from liam's
 
   void SetXWheelState();

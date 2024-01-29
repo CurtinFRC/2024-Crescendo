@@ -11,6 +11,9 @@
         "pid": {
           "open": true
         }
+      },
+      "vision": {
+        "open": true
       }
     }
   },
