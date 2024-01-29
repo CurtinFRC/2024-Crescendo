@@ -3,6 +3,7 @@
 // of the MIT License at the root of this project
 
 #include "vision/Vision.h"
+#include "units/math.h"
 
 FMAP::FMAP(std::string path) : _path(path) {
   std::cout << "Parsing FMAP" << std::endl;
@@ -82,16 +83,28 @@ std::pair<units::meter_t, units::degree_t> Vision::GetDistanceToTarget(VisionTar
   for (int i = 0; i < tags.size(); i++) {
     if (tags[i].id == static_cast<int>(target)) {
       AprilTag tag = tags[i];
-      frc::Pose3d pose = _limelight->GetPose();
-      //frc::Pose3d pose = frc::Pose3d(0_m, 0_m, 0_m, frc::Rotation3d(0_deg, 0_deg, 0_deg));
+      //frc::Pose3d pose = _limelight->GetPose();
+      frc::Pose3d pose = frc::Pose3d(0_m, 0_m, 0_m, frc::Rotation3d(0_deg, 0_deg, 0_deg));
 
-      units::meter_t distance = pose.Translation().Distance(tag.pos.Translation());
+      SetMode(VisionModes::kAprilTag);
 
-      units::degree_t angle = units::math::atan((pose.X() - tag.pos.X()) / (pose.Y() - tag.pos.Y()));
+      // Get distance to target
+      // Get current position from Limelight
+      //frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
+      frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
 
-      std::cout << "Distance: " << distance.value() << " Angle: " << angle.value() << std::endl;
+      units::meter_t a = tag.pos.X() - current_pose.X();
+      units::meter_t b = tag.pos.Y() - current_pose.Y();
 
-      return std::make_pair(distance, angle);
+      units::radian_t theta = units::math::atan2(b, a);
+      
+      //std::cout << "A: " << a.value() << ", B:" << b.value() << std::endl;
+      units::meter_t r = units::meter_t{std::sqrt(std::pow(a.value(), 2) + std::pow(b.value(), 2))};
+
+      units::meter_t x = current_pose.X() + r * units::math::cos(theta);
+      units::meter_t y = current_pose.Y() + r * units::math::sin(theta);
+      
+      return std::make_pair(r, theta);
     }
   }
 
@@ -104,23 +117,34 @@ std::pair<units::meter_t, units::degree_t> Vision::GetDistanceToTarget(int id) {
   }
 
   SetMode(VisionModes::kAprilTag);
-
+      
   std::vector<AprilTag> tags = _fmap.GetTags();
 
   for (int i = 0; i < tags.size(); i++) {
     if (tags[i].id == id) {
       AprilTag tag = tags[i];
-      frc::Pose3d pose = _limelight->GetPose();
-      //frc::Pose3d pose = frc::Pose3d(0_m, 0_m, 0_m, frc::Rotation3d(0_deg, 0_deg, 0_deg));
+      //frc::Pose3d pose = _limelight->GetPose();
+      frc::Pose3d pose = frc::Pose3d(0_m, 0_m, 0_m, frc::Rotation3d(0_deg, 0_deg, 0_deg));
 
-      // units::meter_t distance = pose.Translation().Distance(tag.pos.Translation());
-      units::meter_t distance = units::meter_t{std::sqrt(std::pow(tag.pos.X().value(), 2) + std::pow(tag.pos.Y().value(), 2))};
+      SetMode(VisionModes::kAprilTag);
 
-      units::degree_t angle = units::math::atan((pose.X() - tag.pos.X()) / (pose.Y() - tag.pos.Y()));
+      // Get distance to target
+      // Get current position from Limelight
+      //frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
+      frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
 
-      //std::cout << "Distance: " << distance.value() << " Angle: " << angle.value() << std::endl;
+      units::meter_t a = tag.pos.X() - current_pose.X();
+      units::meter_t b = tag.pos.Y() - current_pose.Y();
 
-      return std::make_pair(distance, angle);
+      units::radian_t theta = units::math::atan2(b, a);
+      
+      //std::cout << "A: " << a.value() << ", B:" << b.value() << std::endl;
+      units::meter_t r = units::meter_t{std::sqrt(std::pow(a.value(), 2) + std::pow(b.value(), 2))};
+
+      units::meter_t x = current_pose.X() + r * units::math::cos(theta);
+      units::meter_t y = current_pose.Y() + r * units::math::sin(theta);
+      
+      return std::make_pair(r, theta);
     }
   }
 
@@ -134,27 +158,35 @@ std::vector<AprilTag> Vision::GetTags() {
 frc::Pose2d Vision::AlignToTarget(VisionTarget target, units::meter_t offset, wom::SwerveDrive* swerveDrive) {
   SetMode(VisionModes::kAprilTag);
 
-  std::pair<units::meter_t, units::degree_t> distance = GetDistanceToTarget(target);
-
+  // Get distance to target
+  AprilTag tag = GetTags()[static_cast<int>(target) - 1];
   // Get current position from Limelight
-  frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
-  //frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
+  //frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
+  frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
+
+  units::meter_t a = tag.pos.X() - current_pose.X();
+  units::meter_t b = tag.pos.Y() - current_pose.Y();
+
+  units::radian_t theta = units::math::atan2(b, a);
   
-  units::meter_t x_offset = distance.first * units::math::cos(distance.second);
-  units::meter_t y_offset = distance.first * units::math::sin(distance.second);
+  //std::cout << "A: " << a.value() << ", B:" << b.value() << std::endl;
+  units::meter_t r = units::meter_t{std::sqrt(std::pow(a.value(), 2) + std::pow(b.value(), 2))};
+
+  units::meter_t x = current_pose.X() + r * units::math::cos(theta);
+  units::meter_t y = current_pose.Y() + r * units::math::sin(theta);
 
   // reduce both offsets by the offset parameter (in relative amount)
-  x_offset -= offset * units::math::cos(distance.second);
-  y_offset -= offset * units::math::sin(distance.second);
+  x += offset * units::math::cos(theta);
+  y += offset * units::math::sin(theta);
 
-  frc::Pose2d pose = frc::Pose2d(y_offset, x_offset, distance.second);
   
+  frc::Pose2d pose = frc::Pose2d(x, y, theta); 
 
   // Print the results
-  std::cout << "Aligning to tag " << static_cast<int>(target) << ": X: " << pose.X().value() << " Y: " << pose.Y().value() << " Angle: " << pose.Rotation().Degrees().value() << ". At offset " << offset.value() << "." << std::endl;
+  //std::cout << "Aligning to tag " << target << ": X: " << pose.X().value() << " Y: " << pose.Y().value() << " Angle: " << pose.Rotation().Degrees().value() << ". At offset " << offset.value() << "." << std::endl;
 
   // Set the new pose to the swerve drive
-  swerveDrive->SetPose(pose);
+  //swerveDrive->SetPose(pose);
 
   return pose;
 }
@@ -164,23 +196,31 @@ frc::Pose2d Vision::AlignToTarget(int target, units::meter_t offset, wom::Swerve
 
   // Get distance to target
   std::pair<units::meter_t, units::degree_t> distance = GetDistanceToTarget(target);
-
+  AprilTag tag = GetTags()[target - 1];
   // Get current position from Limelight
-  frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
-  //frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
+  //frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
+  frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
+
+  units::meter_t a = tag.pos.X() - current_pose.X();
+  units::meter_t b = tag.pos.Y() - current_pose.Y();
+
+  units::radian_t theta = units::math::atan2(b, a);
   
-  units::meter_t x_offset = distance.first * units::math::cos(distance.second);
-  units::meter_t y_offset = distance.first * units::math::sin(distance.second);
+  //std::cout << "A: " << a.value() << ", B:" << b.value() << std::endl;
+  units::meter_t r = units::meter_t{std::sqrt(std::pow(a.value(), 2) + std::pow(b.value(), 2))};
+
+  units::meter_t x = current_pose.X() + r * units::math::cos(theta);
+  units::meter_t y = current_pose.Y() + r * units::math::sin(theta);
 
   // reduce both offsets by the offset parameter (in relative amount)
-  x_offset -= offset * units::math::cos(distance.second);
-  y_offset -= offset * units::math::sin(distance.second);
+  x += offset * units::math::cos(theta);
+  y += offset * units::math::sin(theta);
 
-  frc::Pose2d pose = frc::Pose2d(y_offset, x_offset, distance.second);
   
+  frc::Pose2d pose = frc::Pose2d(x, y, theta); 
 
   // Print the results
-  std::cout << "Aligning to tag " << target << ": X: " << pose.X().value() << " Y: " << pose.Y().value() << " Angle: " << pose.Rotation().Degrees().value() << ". At offset " << offset.value() << "." << std::endl;
+  //std::cout << "Aligning to tag " << target << ": X: " << pose.X().value() << " Y: " << pose.Y().value() << " Angle: " << pose.Rotation().Degrees().value() << ". At offset " << offset.value() << "." << std::endl;
 
   // Set the new pose to the swerve drive
   //swerveDrive->SetPose(pose);
@@ -191,39 +231,34 @@ frc::Pose2d Vision::AlignToTarget(int target, units::meter_t offset, wom::Swerve
 frc::Pose2d Vision::AlignToTarget(VisionTarget target, frc::Translation2d offset, wom::SwerveDrive* swerveDrive) {
   SetMode(VisionModes::kAprilTag);
 
-  std::pair<units::meter_t, units::degree_t> distance = GetDistanceToTarget(target);
-
+  // Get distance to target
+  AprilTag tag = GetTags()[static_cast<int>(target) - 1];
   // Get current position from Limelight
-  frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
-  //frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
+  //frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
+  frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
+
+  units::meter_t a = tag.pos.X() - current_pose.X();
+  units::meter_t b = tag.pos.Y() - current_pose.Y();
+
+  units::radian_t theta = units::math::atan2(b, a);
   
-  units::meter_t x_offset = distance.first * units::math::cos(distance.second);
-  units::meter_t y_offset = distance.first * units::math::sin(distance.second);
+  //std::cout << "A: " << a.value() << ", B:" << b.value() << std::endl;
+  units::meter_t r = units::meter_t{std::sqrt(std::pow(a.value(), 2) + std::pow(b.value(), 2))};
+
+  units::meter_t x = current_pose.X() + r * units::math::cos(theta);
+  units::meter_t y = current_pose.Y() + r * units::math::sin(theta);
 
   // reduce both offsets by the offset parameter (in relative amount)
-  //x_offset -= offset * units::math::cos(distance.second);
-  //y_offset -= offset * units::math::sin(distance.second);
-
-  if (offset.X() > 0_m) {
-    x_offset -= offset.X() * units::math::cos(distance.second);
-  } else {
-    x_offset += offset.X() * units::math::cos(distance.second);
-  }
-
-  if (offset.Y() > 0_m) {
-    y_offset -= offset.Y() * units::math::sin(distance.second);
-  } else {
-    y_offset += offset.Y() * units::math::sin(distance.second);
-  }
-
-  frc::Pose2d pose = frc::Pose2d(y_offset, x_offset, distance.second);
+  x += offset.X();
+  y += offset.Y();
   
+  frc::Pose2d pose = frc::Pose2d(x, y, theta); 
 
   // Print the results
-  std::cout << "Aligning to tag " << static_cast<int>(target) << ": X: " << pose.X().value() << " Y: " << pose.Y().value() << " Angle: " << pose.Rotation().Degrees().value() << ". At offset: X: " << offset.X().value() << ", Y: " << offset.Y().value() << "." << std::endl;
+  //std::cout << "Aligning to tag " << target << ": X: " << pose.X().value() << " Y: " << pose.Y().value() << " Angle: " << pose.Rotation().Degrees().value() << ". At offset " << offset.value() << "." << std::endl;
 
   // Set the new pose to the swerve drive
-  swerveDrive->SetPose(pose);
+  //swerveDrive->SetPose(pose);
 
   return pose;
 }
@@ -233,19 +268,31 @@ frc::Pose2d Vision::AlignToTarget(int target, frc::Translation2d offset, wom::Sw
 
   // Get distance to target
   std::pair<units::meter_t, units::degree_t> distance = GetDistanceToTarget(target);
-
+  AprilTag tag = GetTags()[target - 1];
   // Get current position from Limelight
-  frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
-  //frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
-  
-  units::meter_t x_offset = distance.first * units::math::cos(distance.second);
-  units::meter_t y_offset = distance.first * units::math::sin(distance.second);
+  //frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
+  frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
 
-  frc::Pose2d pose = frc::Pose2d(y_offset, x_offset, distance.second);
+  units::meter_t a = tag.pos.X() - current_pose.X();
+  units::meter_t b = tag.pos.Y() - current_pose.Y();
+
+  units::radian_t theta = units::math::atan2(b, a);
   
+  //std::cout << "A: " << a.value() << ", B:" << b.value() << std::endl;
+  units::meter_t r = units::meter_t{std::sqrt(std::pow(a.value(), 2) + std::pow(b.value(), 2))};
+
+  units::meter_t x = current_pose.X() + r * units::math::cos(theta);
+  units::meter_t y = current_pose.Y() + r * units::math::sin(theta);
+
+  // reduce both offsets by the offset parameter (in relative amount)
+  x += offset.X();
+  y += offset.Y();
+
+  
+  frc::Pose2d pose = frc::Pose2d(x, y, theta); 
 
   // Print the results
-  std::cout << "Aligning to tag " << target << ": X: " << pose.X().value() << " Y: " << pose.Y().value() << " Angle: " << pose.Rotation().Degrees().value() << ". At offset: X: " << offset.X().value() << ", Y: " << offset.Y().value() << "." << std::endl;
+  //std::cout << "Aligning to tag " << target << ": X: " << pose.X().value() << " Y: " << pose.Y().value() << " Angle: " << pose.Rotation().Degrees().value() << ". At offset " << offset.value() << "." << std::endl;
 
   // Set the new pose to the swerve drive
   //swerveDrive->SetPose(pose);
