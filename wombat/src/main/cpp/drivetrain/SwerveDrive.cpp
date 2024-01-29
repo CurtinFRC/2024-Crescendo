@@ -9,10 +9,9 @@
 #include <units/voltage.h>
 #include <units/angle.h>
 
-#include <iostream>
-
 #include "utils/Util.h"
 
+#include <iostream>
 #include <algorithm>
 #include <cmath>
 
@@ -301,21 +300,15 @@ void SwerveModule::OnUpdate(units::second_t dt) {
       
 
       driveVoltage = units::volt_t{_velocityPIDController.Calculate(GetSpeed().value())};
-      if (_turnOffset == TurnOffsetValues::forward) {
-        input = input + (3.1415/2);
-      } else if (_turnOffset == TurnOffsetValues::reverse) {
-        input = input - (3.1415/2);
-        driveVoltage = -driveVoltage;
-      }
+      // if (_turnOffset == TurnOffsetValues::forward) {
+        
+      // } else if (_turnOffset == TurnOffsetValues::reverse) {
+      //   input = input - (3.1415/2);
+      //   driveVoltage = -driveVoltage;
+      // }
       double demand = _anglePIDController.Calculate(input);
-      // if ((_anglePIDController.GetSetpoint() - input) > 180) {
-      //   if (demand > 0) {
-      //     demand *= -1;
-      //   }
-      // } else {
-      //   if (demand < 0) {
-      //     demand *= -1;
-      //   }
+      // if ((_anglePIDController.GetSetpoint() - input) > (3.14159/2)) {
+      //   demand *= -1;
       // }
       turnVoltage = units::volt_t{demand};
     } break;
@@ -465,7 +458,7 @@ void SwerveDriveConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
 
 SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
     : _config(config),
-      _kinematics(_config.modules[0].position, _config.modules[1].position,
+      _kinematics(_config.modules[1].position, _config.modules[0].position,
                   _config.modules[2].position, _config.modules[3].position),
       _poseEstimator(
           _kinematics, frc::Rotation2d(0_deg),
@@ -504,7 +497,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
   switch (_state) {
     case SwerveDriveState::kZeroing:
       for (auto mod = _modules.begin(); mod < _modules.end(); mod++) {
-        mod->SetZero(dt);
+        // mod->SetZero(dt);
       }
       break;
     case SwerveDriveState::kIdle:
@@ -531,20 +524,32 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       _table->GetEntry("Swerve module VY").SetDouble(_target_speed.vy.value());
       _table->GetEntry("Swerve module Omega").SetDouble(_target_speed.omega.value());
       if (_target_speed.omega.value() > 0) {
-        _modules[0].SetTurnOffsetForward();
+        // _modules[0].SetTurnOffsetForward();
         _modules[1].SetTurnOffsetForward();
       } else if (_target_speed.omega.value() < 0) {
-        _modules[0].SetTurnOffsetReverse();
+        // _modules[0].SetTurnOffsetReverse();
         _modules[1].SetTurnOffsetReverse();
       } else {
-        _modules[0].TurnOffset();
+        // _modules[0].TurnOffset();
         _modules[1].TurnOffset();
       }
+
+      if (_target_speed.vx > 0_mps || _target_speed.vy > 0_mps) {
+        _angle = _target_speed.omega * 1_s;
+      }
+
       auto target_states = _kinematics.ToSwerveModuleStates(_target_speed);
+      frc::ChassisSpeeds new_target_speed {_target_speed.vx, _target_speed.vy, -_target_speed.omega};
+      auto new_target_states = _kinematics.ToSwerveModuleStates(new_target_speed);
       for (size_t i = 0; i < _modules.size(); i++) {
-        _modules[i].SetPID(target_states[i].angle.Radians(),
-                           target_states[i].speed, dt);
-        // target_states[i].angle.Radians().value() << std::endl;
+        if (i == 1) {
+          _modules[i].SetPID(new_target_states[i].angle.Radians(),
+                            new_target_states[i].speed, dt);
+        } else {
+          _modules[i].SetPID(target_states[i].angle.Radians(),
+                            target_states[i].speed, dt);
+          // target_states[i].angle.Radians().value() << std::endl;
+        }
       }
     } break;
     case SwerveDriveState::kIndividualTuning:
@@ -702,5 +707,4 @@ void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose,
   _poseEstimator.AddVisionMeasurement(pose, timestamp);
 }
 }  // namespace drivetrain
-
 }  // namespace wom

@@ -43,21 +43,21 @@ struct RobotMap {
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{16, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder frontRightCancoder{18, "Drivebase"};
-    ctre::phoenix6::hardware::CANcoder backLeftCancoder{19, "Drivebase"};
-    ctre::phoenix6::hardware::CANcoder backRightCancoder{17, "Drivebase"};
+    ctre::phoenix6::hardware::CANcoder backLeftCancoder{17, "Drivebase"};
+    ctre::phoenix6::hardware::CANcoder backRightCancoder{19, "Drivebase"};
 
     ctre::phoenix6::hardware::Pigeon2* gyro =
         new ctre::phoenix6::hardware::Pigeon2(20, "Drivebase");
     wpi::array<ctre::phoenix6::hardware::TalonFX*, 4> turnMotors{
         new ctre::phoenix6::hardware::TalonFX(6, "Drivebase"),   // front left
         new ctre::phoenix6::hardware::TalonFX(7, "Drivebase"),   // front right
-        new ctre::phoenix6::hardware::TalonFX(2, "Drivebase"),   // back left
-        new ctre::phoenix6::hardware::TalonFX(4, "Drivebase")};  // back right
+        new ctre::phoenix6::hardware::TalonFX(4, "Drivebase"),   // back left
+        new ctre::phoenix6::hardware::TalonFX(2, "Drivebase")};  // back right
     wpi::array<ctre::phoenix6::hardware::TalonFX*, 4> driveMotors{
         new ctre::phoenix6::hardware::TalonFX(5, "Drivebase"),   // front left
         new ctre::phoenix6::hardware::TalonFX(9, "Drivebase"),   // front right
-        new ctre::phoenix6::hardware::TalonFX(1, "Drivebase"),   // back left
-        new ctre::phoenix6::hardware::TalonFX(3, "Drivebase")};  // back right
+        new ctre::phoenix6::hardware::TalonFX(3, "Drivebase"),   // back left
+        new ctre::phoenix6::hardware::TalonFX(1, "Drivebase")};  // back right
 
     wpi::array<wom::SwerveModuleConfig, 4> moduleConfigs{
         wom::SwerveModuleConfig{ //CORRECT
@@ -84,24 +84,24 @@ struct RobotMap {
             &frontRightCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
             // back left module
-            frc::Translation2d(-10_in, -9_in),
+            frc::Translation2d(-10_in, 9_in),
             wom::Gearbox{
                 driveMotors[2],
                 new wom::TalonFXEncoder(driveMotors[2], 0.0445_m, 6.75),
                 frc::DCMotor::Falcon500(1).WithReduction(6.75)},
             wom::Gearbox{turnMotors[2],
-                         new wom::CanEncoder(19, 0.0445_m, 4096, 12.8),
+                         new wom::CanEncoder(17, 0.0445_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &backRightCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
             // back right module
-            frc::Translation2d(-10_in, 9_in),
+            frc::Translation2d(-10_in, -9_in),
             wom::Gearbox{
                 driveMotors[3],
                 new wom::TalonFXEncoder(driveMotors[3], 0.0445_m, 6.75),
                 frc::DCMotor::Falcon500(1).WithReduction(6.75)},
             wom::Gearbox{turnMotors[3],
-                         new wom::CanEncoder(17, 0.0445_m, 4096, 12.8),
+                         new wom::CanEncoder(19, 0.0445_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &backLeftCancoder, 4_in / 2},
     };
