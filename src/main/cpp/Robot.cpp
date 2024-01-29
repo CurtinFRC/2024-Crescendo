@@ -285,7 +285,19 @@ void Robot::TeleopInit() {
 
 >>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
 }
+<<<<<<< HEAD
 void Robot::TeleopPeriodic() {}
+=======
+
+void Robot::TeleopPeriodic() {
+  // std::cout << "Current AprilTag: " << _vision->CurrentAprilTag() << std::endl;
+  // std::cout << "Current Target: " << _vision->TargetIsVisible(VisionTargetObjects::kNote) << std::endl;
+  std::cout << "Dist to target: " << _vision->GetDistanceToTarget(VisionTarget::kBlueAmp).first.value()
+            << std::endl;
+  std::cout << "Angle to target: " << _vision->GetDistanceToTarget(VisionTarget::kBlueAmp).second.value()
+            << std::endl;
+}
+>>>>>>> ae1a0fc ([wpiformat + add ctre_sim to gitignore])
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
@@ -296,9 +308,9 @@ void Robot::TestPeriodic() {}
 void Robot::SimulationInit() {
   std::string x = "[";
   std::string y = "[";
-  //_vision->GetDistanceToTarget(16);
-  for (int i = 1; i< 17; i++) {
-    for (int j = 0; j<17; j++) {
+  // _vision->GetDistanceToTarget(16);
+  for (int i = 1; i < 17; i++) {
+    for (int j = 0; j < 17; j++) {
       frc::Pose2d pose = _vision->AlignToTarget(i, units::meter_t{j * 0.1}, _swerveDrive);
       x += std::to_string(pose.X().value()) + ",";
       y += std::to_string(pose.Y().value()) + ",";
