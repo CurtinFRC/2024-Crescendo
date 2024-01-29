@@ -292,3 +292,13 @@ void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}
 void Robot::TestPeriodic() {}
+
+void Robot::SimulationInit() {
+  //_vision->GetDistanceToTarget(16);
+  for (int i = 1; i< 17; i++) {
+    _vision->AlignToTarget(i, 0_m, _swerveDrive);
+  }  
+}
+
+void Robot::SimulationPeriodic() {}
+
