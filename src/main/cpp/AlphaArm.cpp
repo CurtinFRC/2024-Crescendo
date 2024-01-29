@@ -3,19 +3,24 @@
 // of the MIT License at the root of this project
 
 #include "AlphaArm.h"
+//fiddle with these values
+AlphaArm::AlphaArm(AlphaArmConfig config) : _config(config), _pidFRC{frc::PIDController (0, 0, 0, 0_s)} {}
 
-AlphaArm::AlphaArm(AlphaArmConfig config) : _config(config) {}
+ /*_pidWom(_config.path + "/pid", config.pidConfig), _velocityPID(config.path + "/velocityPID", config.velocityConfig), _table(nt::NetworkTableInstance::GetDefault().GetTable(config.path))*/ 
 
 AlphaArmConfig AlphaArm::GetConfig(){
     return _config;
 }
 
 void AlphaArm::OnUpdate(units::second_t dt){
+_table->GetEntry("Error").SetDouble(_pidFRC.GetPositionError());
+_table->GetEntry("Acceleration Error").SetDouble(_pidFRC.GetVelocityError());
+_table->GetEntry("Current Pos").SetDouble(_config.alphaArmGearbox.encoder->GetEncoderAngularVelocity().value());
+
+
         switch(_state){
             case AlphaArmState::kIdle:
-        
-            //_config.alphaArmGearbox.motorController->SetVoltage(0_V);
-            //_config.wristGearbox.motorController->SetVoltage(0_V);
+            
             _setAlphaArmVoltage = 0_V;
             _setWristVoltage = 0_V;
 
@@ -25,26 +30,36 @@ void AlphaArm::OnUpdate(units::second_t dt){
             _setWristVoltage = _rawWristVoltage;
             _config.alphaArmGearbox.motorController->SetVoltage(_rawArmVoltage);
             _config.wristGearbox.motorController->SetVoltage(_rawWristVoltage);
-            
-            break;
-            case AlphaArmState::kForwardWrist:
-            _config.wristGearbox.motorController->SetVoltage(3_V);
-            _setWristVoltage = 3_V;
 
-            case AlphaArmState::kReverseWrist:
-            _config.wristGearbox.motorController->SetVoltage(-3_V);
-            _setWristVoltage = -3_V;
+            break;
+            case AlphaArmState::kAmpAngle:
+            std::cout << "AmpAngle" << std::endl;
+            //_pidFRC.SetSetpoint(_goal.value());
+            //set value 
+            //_pidFRC.SetSetpoint()
+            _pidFRC.SetSetpoint(_goal.convert<units::rad_per_s>().value());
+            units::volt_t{_pidFRC.Calculate(_config.alphaArmGearbox.encoder->GetEncoderAngularVelocity().value(), _goal.value())} = _setAlphaArmVoltage;
+
+            case AlphaArmState::kSpeakerAngle:
+            std::cout << "SpeakerAngle" << std::endl;
+            _pidFRC.SetSetpoint(_goal.convert<units::rad_per_s>().value());
+            units::volt_t{_pidFRC.Calculate(_config.alphaArmGearbox.encoder->GetEncoderAngularVelocity().value(), _goal.value())} = _setAlphaArmVoltage;
+
+            case AlphaArmState::kStowed:
+            //not hitting the floor magic
+            std::cout << "Stowed" << std::endl;
+            _pidFRC.SetSetpoint(_goal.convert<units::rad_per_s>().value());
+            units::volt_t{_pidFRC.Calculate(_config.alphaArmGearbox.encoder->GetEncoderAngularVelocity().value(), _goal.value())} = _setAlphaArmVoltage;
+
             default:
             std::cout << "oops, wrong state" << std::endl;
             break;
             
         }
-        //transmission translate
-       // _config.armGearBox.motorController->SetVoltage(setAlphaArmVoltage);
-       //_config.alphaArmGearbox.motorController->SetVoltage(setAlphaArmVoltage);
-       //_config.wristGearbox.motorController->SetVoltage(setWristVoltage);
+
         _config.alphaArmGearbox.motorController->SetVoltage(_setAlphaArmVoltage);
-        _config.wristGearbox.motorController->SetVoltage(_setWristVoltage);
+        //_config.wristGearbox.motorController->SetVoltage(_setWristVoltage);
+
         
         //_config.wristGearbox.motorController->SetVoltage(_setVoltage);
 }
@@ -53,10 +68,9 @@ void AlphaArm::SetState(AlphaArmState state) {
   _state = state;
 }
 
-// void AlphaArm::SetRaw(units::volt_t voltage){
-//     _rawArmVoltage = voltage;
-//     _rawWristVoltage = voltage;
-// }
+void AlphaArm::setGoal(units::radians_per_second_t goal){
+  _goal = goal;
+}
 
 void AlphaArm::SetArmRaw(units::volt_t voltage){
     _rawArmVoltage = voltage;

@@ -38,7 +38,7 @@ class Robot : public frc::TimedRobot {
   RobotMap robotmap;
   wom::BehaviourScheduler* sched;
   frc::EventLoop loop;
-  Shooter *shooter;
+  //Shooter *shooter;
 
   Intake* intake;
   frc::SendableChooser<std::string> m_chooser;

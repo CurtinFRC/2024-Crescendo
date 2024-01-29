@@ -27,10 +27,10 @@ static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
 
-  shooter = new Shooter(robotmap.shooterSystem.config);
-  wom::BehaviourScheduler::GetInstance()->Register(shooter);
-  shooter->SetDefaultBehaviour(
-     [this]() {return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver); });
+  // shooter = new Shooter(robotmap.shooterSystem.config);
+  // wom::BehaviourScheduler::GetInstance()->Register(shooter);
+  // shooter->SetDefaultBehaviour(
+  //    [this]() {return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver); });
   
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
@@ -71,6 +71,9 @@ void Robot::RobotInit() {
   wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
   alphaArm->SetDefaultBehaviour(
       [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
+
+  //robotmap.alphaArmSystem.armEncoder->Reset();
+  
       
   robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
   robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
@@ -97,12 +100,13 @@ void Robot::RobotInit() {
 }
 
 void Robot::RobotPeriodic() {
+  //double encoderDistance = robotmap.alphaArmSystem.armEncoder.GetDistance();
   auto dt = wom::now() - lastPeriodic;
   lastPeriodic = wom::now();
 
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
-  shooter->OnUpdate(dt);
+  //shooter->OnUpdate(dt);
   sched->Tick();
 
   robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder").SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
@@ -113,6 +117,8 @@ void Robot::RobotPeriodic() {
   _swerveDrive->OnUpdate(dt);
   alphaArm->OnUpdate(dt);
   intake->OnUpdate(dt);
+ // std::cout << robotmap.alphaArmSystem.armEncoder.GetDistance() << std::endl;
+  
 }
 
 void Robot::AutonomousInit() {

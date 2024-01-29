@@ -7,8 +7,12 @@
 #include <frc/DoubleSolenoid.h>
 #include <frc/XboxController.h>
 #include <frc/system/plant/DCMotor.h>
+#include <frc/Encoder.h>
+#include <frc/DutyCycleEncoder.h>
 #include <units/angle.h>
 #include <units/length.h>
+#include "utils/PID.h"
+#include "utils/Encoder.h"
 
 #include <string>
 
@@ -22,6 +26,7 @@
 #include "IntakeBehaviour.h"
 #include "Shooter.h"
 #include "Wombat.h"
+//#include "Wombat/Encoder.h"
 
 struct RobotMap {
   struct Controllers {
@@ -35,10 +40,19 @@ struct RobotMap {
     rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
     rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
 
-    wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
-    wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
+    //frc::DutyCycleEncoder* armEncoder = new frc::DutyCycleEncoder{12};
+    wom::DutyCycleEncoder* armEncoder = new wom::DutyCycleEncoder(12, 0.02_m);
 
-    AlphaArmConfig config{alphaArmGearbox, wristGearbox};
+    //frc::Encoder wristEncoder{0, 1};
+    //frc::Encoder wristEncoder{0, 1, false, frc::Encoder::EncodingType::k2X};
+    //frc::DutyCycleEncoder armEncoder{12};
+    //_armEncoder = frc::DutyCycleEncoder{12};
+    
+    //wom::Gearbox alphaArmGearbox{&alphaArmMotor, armEncoder, frc::DCMotor::NEO(1)};
+    wom::Gearbox alphaArmGearbox{&alphaArmMotor, armEncoder, frc::DCMotor::NEO(1)};
+    //wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
+
+    AlphaArmConfig config{alphaArmGearbox,  /*armEncoder*/};
   };
   AlphaArmSystem alphaArmSystem;
   
@@ -55,20 +69,21 @@ struct RobotMap {
   }; IntakeSystem intakeSystem;
 
 
-  struct Shooter {
-    rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};
-    // frc::DigitalInput shooterSensor{2};
+//   struct Shooter {
+//     rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};
+//     // frc::DigitalInput shooterSensor{2};
 
-    // wom::VoltageController shooterMotorGroup = wom::VoltageController::Group(shooterMotor);
-    // wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
-    wom::Gearbox shooterGearbox{&shooterMotor, nullptr, frc::DCMotor::NEO(1)};
+//     // wom::VoltageController shooterMotorGroup = wom::VoltageController::Group(shooterMotor);
+//     // wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
+//     wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
+//     wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder, frc::DCMotor::NEO(1)};
 
-    ShooterConfig config{
-        "shooterGearbox",
-        shooterGearbox,
-        // &shooterSensor,
-    };
-  }; Shooter shooterSystem;
+//     ShooterConfig config{
+//         "shooterGearbox",
+//         shooterGearbox,
+//         // &shooterSensor,
+//     };
+//   }; Shooter shooterSystem;
   
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{18, "Drivebase"};

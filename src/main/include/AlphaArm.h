@@ -4,12 +4,20 @@
 
 #pragma once
 #include <frc/DigitalInput.h>
-
+#include <frc/DutyCycleEncoder.h>
+#include <frc/controller/PIDController.h>
+#include <units/angular_velocity.h>
 #include "Wombat.h"
+#include "utils/PID.h"
 
 struct AlphaArmConfig {
     wom::Gearbox alphaArmGearbox;
     wom::Gearbox wristGearbox;
+    frc::DutyCycleEncoder* armEncoder;
+    //wom::utils::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
+    //wom::utils::PIDConfig<units::radian_t, units::volt> pidConfig;
+    //std::string path;
+    //void WriteNT(std::shared_ptr<nt::NetworkTable> table);
 
 };
 
@@ -18,9 +26,10 @@ enum class AlphaArmState {
     kIntakeAngle,
     kAmpAngle,
     kSpeakerAngle,
-    kForwardWrist,
-    kReverseWrist,
+    kStowed,
     kRaw
+    //kForwardWrist,
+    //kReverseWrist,
 };
 
 class AlphaArm : public::behaviour::HasBehaviour{
@@ -31,18 +40,33 @@ class AlphaArm : public::behaviour::HasBehaviour{
     void SetArmRaw(units::volt_t voltage);
     void setWristRaw(units::volt_t voltage);
     void SetState(AlphaArmState state);
+    void setGoal(units::radians_per_second_t);
+    double GetArmEncoder();
     AlphaArmConfig GetConfig();
+    std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("AlphaArm");
+    //units::radians_per_second_t goal;
+    //double goal;
+    
+    //frc::DutyCycleEncoder armEncoder{12};
     //void SetRaw(units::volt_t voltage);
 
     private:
+    frc::PIDController _pidFRC;
+    //wom::utils::PIDController<units::radians_per_second, units::volt> _pidWom;
+    //wom::utils::PIDController<units::radians_per_second, units::volt> _velocityPID;
+
+    std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("AlphaArm");
     AlphaArmConfig _config;
     AlphaArmState _state = AlphaArmState::kIdle;
+    units::radians_per_second_t _goal; 
+    //double _goal;
     units::volt_t _setAlphaArmVoltage = 0_V;
     units::volt_t _setWristVoltage = 0_V;
 
     units::volt_t _rawArmVoltage = 0_V;
     units::volt_t _rawWristVoltage = 0_V;
+    //units::radiant_t maxAngle = 1_radian_t;
 
     
-   
+    //wom::PIDController<units::radians_per_second_t, units::volt_t> _pid;
 };
