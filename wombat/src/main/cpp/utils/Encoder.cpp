@@ -57,7 +57,7 @@ units::radian_t wom::utils::Encoder::GetEncoderPosition() {
 }
 
 double wom::utils::Encoder::GetEncoderDistance() {
-  return GetEncoderTicks() * (2 * 3.141592) * _wheelRadius.value();
+  return GetEncoderTicks() * (2 * 3.14159265358979323846) * _wheelRadius.value();
 }
 
 units::radians_per_second_t wom::utils::Encoder::GetEncoderAngularVelocity() {

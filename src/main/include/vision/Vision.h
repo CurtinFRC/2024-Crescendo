@@ -54,6 +54,11 @@ struct AprilTag {
   double size;
   std::array<std::array<double, 4>, 4> transform;
   bool unique;
+
+  frc::Pose3d pos;
+  units::radian_t yaw;
+  units::radian_t pitch;
+  units::radian_t roll;
 };
 
 class FMAP {
@@ -79,7 +84,11 @@ class Vision {
 
   frc::Pose3d GetPose();
 
-  frc::Pose2d AlignToTarget(VisionTarget target, wom::SwerveDrive* swerveDrive);
+  frc::Pose2d AlignToTarget(VisionTarget target, units::meter_t offset, wom::SwerveDrive* swerveDrive);
+  frc::Pose2d AlignToTarget(int target, units::meter_t offset, wom::SwerveDrive* swerveDrive);
+
+  frc::Pose2d AlignToTarget(VisionTarget target, frc::Translation2d offset, wom::SwerveDrive* swerveDrive);
+  frc::Pose2d AlignToTarget(int target, frc::Translation2d offset, wom::SwerveDrive* swerveDrive);
 
   std::vector<AprilTag> GetTags();
 
