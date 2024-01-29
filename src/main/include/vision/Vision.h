@@ -38,6 +38,7 @@ enum class VisionTarget {
   kRedAmp = 5,
   kRedSpeakerCenter = 4,
   kRedSpeakerOffset = 3,
+
   kRedChain1 = 12,
   kRedChain2 = 11,
   kRedChain3 = 13,
@@ -89,6 +90,9 @@ class Vision {
 
   frc::Pose2d AlignToTarget(VisionTarget target, frc::Translation2d offset, wom::SwerveDrive* swerveDrive);
   frc::Pose2d AlignToTarget(int target, frc::Translation2d offset, wom::SwerveDrive* swerveDrive);
+
+  frc::Pose2d TurnToTarget(int target, wom::SwerveDrive* swerveDrive);
+  frc::Pose2d TurnToTarget(VisionTarget target, wom::SwerveDrive* swerveDrive);
 
   std::vector<AprilTag> GetTags();
 
