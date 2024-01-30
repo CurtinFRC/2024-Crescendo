@@ -57,6 +57,9 @@ class Robot : public frc::TimedRobot {
   AlphaArm* alphaArm;
 
   ctre::phoenix6::hardware::TalonFX *frontLeft;
+  // AlphaArm *alphaArm;
+
+  // ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;
   // ctre::phoenix6::hardware::TalonFX *backLeft;
   // ctre::phoenix6::hardware::TalonFX *backRight;

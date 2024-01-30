@@ -1,6 +1,6 @@
-// Copyright (c) 2023-2024 CurtinFRC
-// Open Source Software, you can modify it according to the terms
-// of the MIT License at the root of this project
+// // Copyright (c) 2023-2024 CurtinFRC
+// // Open Source Software, you can modify it according to the terms
+// // of the MIT License at the root of this project
 
 #pragma once
 
@@ -12,13 +12,13 @@
 
 class ShooterManualControl : public behaviour::Behaviour {
  public:
-  ShooterManualControl(Shooter* shooter, frc::XboxController* tester); 
+  ShooterManualControl(Shooter* shooter, frc::XboxController* codriver); 
 
   void OnTick(units::second_t dt) override;
 
  private:
   Shooter* _shooter;
-  frc::XboxController* _tester;
+  frc::XboxController* _codriver;
 
   bool _rawControl = true;
   std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Shooter Behaviour");

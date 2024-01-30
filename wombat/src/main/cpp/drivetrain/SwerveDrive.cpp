@@ -26,6 +26,8 @@ using namespace wom;
 namespace wom {
 namespace drivetrain {
 
+
+
 void SwerveModuleConfig::WriteNT(
     std::shared_ptr<nt::NetworkTable> table) const {
   std::array<double, 2> pos{position.X().value(), position.Y().value()};
@@ -102,8 +104,7 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   //     -torqueLimit, _config.driveMotor.encoder->GetEncoderAngularVelocity());
 
   // driveVoltage =
-  //     units::math::max(units::math::min(driveVoltage, voltageMax),
-  //     voltageMin);
+  //     units::math::max(units::math::min(driveVoltage, voltageMax), voltageMin);
 
   driveVoltage = units::math::min(driveVoltage, 7_V);
   turnVoltage = units::math::min(turnVoltage, 4_V);

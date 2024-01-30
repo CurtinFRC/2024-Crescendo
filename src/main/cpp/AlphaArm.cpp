@@ -3,64 +3,74 @@
 // of the MIT License at the root of this project
 
 #include "AlphaArm.h"
+//fiddle with these values
+AlphaArm::AlphaArm(AlphaArmConfig config) : _config(config), _pidWom(_config.path + "/pid", config.pidConfigA) /*_table(nt::NetworkTableInstance::GetDefault().GetTable(config.path)*/{}
 
-AlphaArm::AlphaArm(AlphaArmConfig config) : _config(config) {}
+void AlphaArm::OnUpdate(units::second_t dt){
+  _table->GetEntry("Error").SetDouble(_pidWom.GetError().value());
+  _table->GetEntry("Current Pos").SetDouble(-_config.alphaArmGearbox.encoder->GetEncoderPosition().value());
+  _table->GetEntry("Setpoint").SetDouble(_pidWom.GetSetpoint().value());
+        switch(_state){
+          case AlphaArmState::kIdle:
+            
+            _setAlphaArmVoltage = 0_V;
 
-AlphaArmConfig AlphaArm::GetConfig() {
-  return _config;
-}
+          break;
+          case AlphaArmState::kRaw:
+          
+            _setAlphaArmVoltage = _rawArmVoltage;
 
-void AlphaArm::OnUpdate(units::second_t dt) {
-  switch (_state) {
-    case AlphaArmState::kIdle:
+          break;
+          case AlphaArmState::kAmpAngle:
+            std::cout << "AmpAngle" << std::endl;
+            // _pidWom.SetSetpoint(_goal);
+            // _setAlphaArmVoltage = _pidWom.Calculate(_config.alphaArmGearbox.encoder->GetEncoderPosition(), dt, 0_V);
 
-      // _config.alphaArmGearbox.motorController->SetVoltage(0_V);
-      // _config.wristGearbox.motorController->SetVoltage(0_V);
-      _setAlphaArmVoltage = 0_V;
-      _setWristVoltage = 0_V;
 
-      break;
-    case AlphaArmState::kRaw:
-      _setAlphaArmVoltage = _rawArmVoltage;
-      _setWristVoltage = _rawWristVoltage;
-      _config.alphaArmGearbox.motorController->SetVoltage(_rawArmVoltage);
-      _config.wristGearbox.motorController->SetVoltage(_rawWristVoltage);
-
-      break;
-    case AlphaArmState::kForwardWrist:
-      _config.wristGearbox.motorController->SetVoltage(3_V);
-      _setWristVoltage = 3_V;
-
-    case AlphaArmState::kReverseWrist:
-      _config.wristGearbox.motorController->SetVoltage(-3_V);
-      _setWristVoltage = -3_V;
-    default:
-      std::cout << "oops, wrong state" << std::endl;
-      break;
-  }
-  // transmission translate
-  // _config.armGearBox.motorController->SetVoltage(setAlphaArmVoltage);
-  // _config.alphaArmGearbox.motorController->SetVoltage(setAlphaArmVoltage);
-  // _config.wristGearbox.motorController->SetVoltage(setWristVoltage);
-  _config.alphaArmGearbox.motorController->SetVoltage(_setAlphaArmVoltage);
-  _config.wristGearbox.motorController->SetVoltage(_setWristVoltage);
-
-  // _config.wristGearbox.motorController->SetVoltage(_setVoltage);
+            if (_controlledRawVoltage.value() == 0) {
+              if (_encoderSetpoint.value() != 0) {
+                _pidWom.SetSetpoint(_encoderSetpoint);
+                _setAlphaArmVoltage = -_pidWom.Calculate(-_config.alphaArmGearbox.encoder->GetEncoderPosition(), dt, 0_V);
+                _table->GetEntry("Demand").SetDouble(_setAlphaArmVoltage.value());
+              }
+            } else {
+              _pidWom.Reset();
+              _encoderSetpoint = -_config.alphaArmGearbox.encoder->GetEncoderPosition();
+              _setAlphaArmVoltage = _controlledRawVoltage;
+            }
+            break;
+          case AlphaArmState::kSpeakerAngle:
+            std::cout << "SpeakerAngle" << std::endl;
+            //_pidWom.SetSetpoint(_goal);
+           // _setAlphaArmVoltage = _pidWom.Calculate(_config.alphaArmGearbox.encoder->GetEncoderPosition(), dt, 0_V);
+              break;
+          case AlphaArmState::kStowed:
+            std::cout << "Stowed" << std::endl;
+            //_pidWom.SetSetpoint(_goal);
+            //_setAlphaArmVoltage = _pidWom.Calculate(_config.alphaArmGearbox.encoder->GetEncoderPosition(), dt, 0_V);
+          break;
+          default:
+            std::cout << "oops, wrong state" << std::endl;
+          break;
+        }
+        std::cout << " ARM POSITION: " << _config.alphaArmGearbox.encoder->GetEncoderPosition().value() << std::endl;
+        //std::cout << "OUTPUT VOLTAGE: " << _setAlphaArmVoltage.value() << std::endl;
+        _config.alphaArmGearbox.motorController->SetVoltage(_setAlphaArmVoltage);
 }
 
 void AlphaArm::SetState(AlphaArmState state) {
   _state = state;
 }
 
-// void AlphaArm::SetRaw(units::volt_t voltage){
-//     _rawArmVoltage = voltage;
-//     _rawWristVoltage = voltage;
-// }
+void AlphaArm::SetGoal(units::radian_t goal){
+  _goal = goal;
+}
 
-void AlphaArm::SetArmRaw(units::volt_t voltage) {
+void AlphaArm::SetArmRaw(units::volt_t voltage){
+  std::cout << "VOLTAGE: " << voltage.value() << std::endl;
   _rawArmVoltage = voltage;
 }
 
-void AlphaArm::setWristRaw(units::volt_t voltage) {
-  _rawWristVoltage = voltage;
+void AlphaArm::setControllerRaw(units::volt_t voltage) {
+  _controlledRawVoltage = voltage;
 }
