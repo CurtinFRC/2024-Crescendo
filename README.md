@@ -55,7 +55,7 @@ Runs a simulation of your code at highest optimisation.
 
 **Debug**
 `./gradlew :simulateNativeDebug`
-Runs a debug simulation of your code, including a variety of debugging tools similar to glass but at lower optimisation.
+Runs a debug simulation of your code.
 
 Documentation
 =============

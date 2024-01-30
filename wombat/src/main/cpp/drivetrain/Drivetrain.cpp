@@ -1,4 +1,4 @@
-// Copyright (c) 2023-2024 CurtinFRC
+/* // Copyright (c) 2023-2024 CurtinFRC
 // Open Source Software, you can modify it according to the terms
 // of the MIT License at the root of this project
 
@@ -11,7 +11,8 @@
 using namespace frc;
 using namespace units;
 
-wom::drivetrain::Drivetrain::Drivetrain(DrivetrainConfig* config, XboxController& driver)
+wom::drivetrain::Drivetrain::Drivetrain(DrivetrainConfig* config,
+                                        XboxController& driver)
     : _config(config), _driver(driver) {}
 wom::drivetrain::Drivetrain::~Drivetrain() {}
 
@@ -49,3 +50,4 @@ void wom::drivetrain::Drivetrain::OnUpdate(second_t dt) {
       break;
   }
 }
+ */

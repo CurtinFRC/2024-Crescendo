@@ -44,9 +44,9 @@ class Encoder {
   virtual double GetVelocity() const = 0;
   double GetVelocityValue() const;
 
+  units::radian_t _offset = 0_rad; //bad
  private:
   double _encoderTicksPerRotation;
-  units::radian_t _offset = 0_rad;
   int _type = 0;
   units::meter_t _wheelRadius;
 };

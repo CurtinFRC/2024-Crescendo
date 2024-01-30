@@ -34,8 +34,6 @@ void wom::utils::Encoder::SetEncoderPosition(units::degree_t position) {
 
 void wom::utils::Encoder::SetEncoderOffset(units::radian_t offset) {
   _offset = offset;
-  // units::turn_t offset_turns = offset;
-  // _offset = offset_turns.value() * GetEncoderTicksPerRotation();
 }
 
 void wom::utils::Encoder::SetReduction(double reduction) {
@@ -43,16 +41,16 @@ void wom::utils::Encoder::SetReduction(double reduction) {
 }
 
 units::radian_t wom::utils::Encoder::GetEncoderPosition() {
-  // if (_type == 0) {
-  //   units::turn_t n_turns{GetEncoderTicks() / GetEncoderTicksPerRotation()};
-  //   return n_turns;
-  // } else if (_type == 2) {
-  //   units::degree_t pos = GetEncoderTicks() * 1_deg;
-  //   return pos;
-  // } else {
-  //   units::degree_t pos = GetEncoderTicks() * 1_deg;
-  //   return pos - _offset;
-  // }
+  //if (_type == 0) {
+  //  units::turn_t n_turns{GetEncoderTicks() / GetEncoderTicksPerRotation()};
+  //  return n_turns;
+  //} else if (_type == 2) {
+  //  units::degree_t pos = GetEncoderTicks() * 1_deg;
+  //  return pos;
+  //} else {
+  //  units::degree_t pos = GetEncoderTicks() * 1_deg;
+  //  return pos - _offset;
+  //}
   return GetEncoderTicks() * 1_rad;
 }
 

@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <frc/controller/PIDController.h>
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
+#include <frc/controller/PIDController.h>
 #include <networktables/DoubleTopic.h>
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableInstance.h>
@@ -28,10 +28,19 @@
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
 
+#include <functional>
+#include <limits>
+
+#include <wpi/SymbolExports.h>
+#include <wpi/sendable/Sendable.h>
+#include <wpi/sendable/SendableHelper.h>
+
+
 namespace wom {
 namespace drivetrain {
 
 enum class SwerveModuleState { kZeroing, kIdle, kPID };
+enum class TurnOffsetValues { reverse, forward, none };
 
 struct SwerveModuleConfig {
   frc::Translation2d position;
@@ -48,8 +57,9 @@ struct SwerveModuleConfig {
 
 class SwerveModule {
  public:
-  // using angle_pid_conf_t = utils::PIDConfig<units::radian, units::volt>;
-  using velocity_pid_conf_t = utils::PIDConfig<units::meters_per_second, units::volt>;
+  //using angle_pid_conf_t = utils::PIDConfig<units::radian, units::volt>;
+  using velocity_pid_conf_t =
+      utils::PIDConfig<units::meters_per_second, units::volt>;
 
   SwerveModule(std::string path, SwerveModuleConfig config,
                /*angle_pid_conf_t anglePID,*/ velocity_pid_conf_t velocityPID);
@@ -66,9 +76,14 @@ class SwerveModule {
 
   void SetZero(units::second_t dt);
   void SetIdle();
-  void SetPID(units::radian_t angle, units::meters_per_second_t speed, units::second_t dt);
+  void SetPID(units::radian_t angle, units::meters_per_second_t speed,
+              units::second_t dt);
   void SetZero();
   void SetVoltageLimit(units::volt_t driveModuleVoltageLimit);
+
+  void SetTurnOffsetForward();
+  void SetTurnOffsetReverse();
+  void TurnOffset();
 
   // double GetCancoderPosition(); // from liam's
 
@@ -82,7 +97,7 @@ class SwerveModule {
 
   const SwerveModuleConfig& GetConfig() const;
 
-  // utils::PIDController<units::radians, units::volt> _anglePIDController;
+  //utils::PIDController<units::radians, units::volt> _anglePIDController;
   frc::PIDController _anglePIDController;
 
  private:
@@ -101,23 +116,27 @@ class SwerveModule {
 
   double _offset;
   units::meters_per_second_squared_t _currentAccelerationLimit = 6_mps / 1_s;
+
+  TurnOffsetValues _turnOffset = TurnOffsetValues::none;
 };
 
 struct SwerveDriveConfig {
   /*using pose_angle_conf_t =
       utils::PIDConfig<units::radian, units::radians_per_second>;*/
-  using pose_position_conf_t = utils::PIDConfig<units::meter, units::meters_per_second>;
-  using balance_conf_t = utils::PIDConfig<units::degree, units::meters_per_second>;
+  using pose_position_conf_t =
+      utils::PIDConfig<units::meter, units::meters_per_second>;
+  using balance_conf_t =
+      utils::PIDConfig<units::degree, units::meters_per_second>;
 
   std::string path;
-  // SwerveModule::angle_pid_conf_t anglePID;
+  //SwerveModule::angle_pid_conf_t anglePID;
   SwerveModule::velocity_pid_conf_t velocityPID;
 
   wpi::array<SwerveModuleConfig, 4> modules;
 
   ctre::phoenix6::hardware::Pigeon2* gyro;
 
-  // pose_angle_conf_t poseAnglePID;
+  //pose_angle_conf_t poseAnglePID;
   pose_position_conf_t posePositionPID;
 
   units::kilogram_t mass;
@@ -171,7 +190,8 @@ class SwerveDrive : public behaviour::HasBehaviour {
    * @brief This function switches the state to handle the robot's rotation
    * matching that of the joystick
    */
-  void RotateMatchJoystick(units::radian_t joystickAngle, FieldRelativeSpeeds speeds);
+  void RotateMatchJoystick(units::radian_t joystickAngle,
+                           FieldRelativeSpeeds speeds);
 
   void SetIdle();
 
@@ -181,7 +201,8 @@ class SwerveDrive : public behaviour::HasBehaviour {
   void SetFieldRelativeVelocity(FieldRelativeSpeeds speeds);
   void SetPose(frc::Pose2d pose);
   bool IsAtSetPose();
-  void SetIndividualTuning(int mod, units::radian_t angle, units::meters_per_second_t speed);
+  void SetIndividualTuning(int mod, units::radian_t angle,
+                           units::meters_per_second_t speed);
   void SetTuning(units::radian_t angle, units::meters_per_second_t speed);
   void SetZero();
   void SetVoltageLimit(units::volt_t driveVoltageLimit);
@@ -231,10 +252,10 @@ class SwerveDrive : public behaviour::HasBehaviour {
   units::radian_t _angle;
   units::meters_per_second_t _speed;
 
-  double frontLeftEncoderOffset = -143.26171875;
-  double frontRightEncoderOffset = 167.87109375;
-  double backLeftEncoderOffset = -316.669921875;
-  double backRightEncoderOffset = -119.619140625;
+  // double frontLeftEncoderOffset = -143.26171875;
+  // double frontRightEncoderOffset = 167.87109375;
+  // double backLeftEncoderOffset = -316.669921875;
+  // double backRightEncoderOffset = -119.619140625;
 };
 }  // namespace drivetrain
 }  // namespace wom
