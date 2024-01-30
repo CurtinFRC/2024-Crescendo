@@ -22,3 +22,14 @@ class AlphaArmManualControl : public behaviour::Behaviour {
   // )?_codriver->GetRightY():0) * 2_V;
   bool _rawControl;
 };
+
+class ArmToSetPoint : public behaviour::Behaviour {
+ public:
+  explicit ArmToSetPoint(AlphaArm* alphaArm, units::degree_t armAngle, float armSpeed);
+  void OnTick(units::second_t dt);
+
+
+ private:
+  AlphaArm* _alphaArm;
+  // double _armCurrentDegree;
+};

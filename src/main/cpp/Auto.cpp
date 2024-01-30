@@ -1,32 +1,32 @@
-// #include "Auto.h"
+#include "Auto.h"
 
 // std::shared_ptr<Behaviour> Taxi(DriveBase _driveBase, Shooter _shooter, Mag _mag, Intake _intake, Arm _arm) {
 //   return 
-//     <<make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     <<make<ArmToSetPoint>(_arm, armAngle)
 //     <<make<AutoShoot>(_shooter, shooterVolt)
-//     <<make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     <<make<ArmToSetPoint>(_arm, armAngle)
 //     <<make<DriveToLocation>(_driveBase, raw, distance)
 //   //Shoots starting note then moves out of starting position.
 // }
 
 // std::shared_ptr<Behaviour> QuadrupleClose(DriveBase _driveBase, Shooter _shooter, Mag _mag, Intake _intake, Arm _arm) {
 //   return
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AuttoIntake>(_intake, intakeVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)we
 //     << make<AutoShoot>(_shooter, shooterVolt)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoo>(_shooter, shooterVolt)
 
 //     /* 
@@ -43,35 +43,35 @@
 
 // std::shared_ptr<Behaviour> QuadrupleFar(DriveBase _driveBase, Shooter _shooter, Mag _mag, Intake _intake, Arm _arm) {
 //   return
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     //<< make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     //<< make<ArmToSetPoint>(_arm, armAngle)
 //     //<< make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     //<< make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     //<< make<ArmToSetPoint>(_arm, armAngle)
 //     //<< make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     //<< make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     //<< make<ArmToSetPoint>(_arm, armAngle)
 //     //<< make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     // << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     // << make<ArmToSetPoint>(_arm, armAngle)
 //     // << make<DriveToLocation>(_driveBase, raw, distance)   do this if possible
-//     // << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     // << make<ArmToSetPoint>(_arm, armAngle)
 //     // << make<AutoIntake>(_intake, intakeVolt)
 
 //     /*
@@ -95,53 +95,53 @@
 
 // std::shared_ptr<Behaviour> QuadrupleCloseDoubleFar(DriveBase _driveBase, Shooter _shooter, Mag _mag, Intake _intake, Arm _arm) {
 //   return
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     //<< make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     //<< make<ArmToSetPoint>(_arm, armAngle)
 //     //<< make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     //<< make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     //<< make<ArmToSetPoint>(_arm, armAngle)
 //     //<< make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     //<< make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     //<< make<ArmToSetPoint>(_arm, armAngle)
 //     //<< make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
 //     /*
 //       4N Close 2N Far
@@ -168,33 +168,33 @@
 
 // std::shared_ptr<Behaviour> QuadrupleCloseSingleFar(DriveBase _driveBase, Shooter _shooter, Mag _mag, Intake _intake, Arm _arm) {
 //   return
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoIntake>(_intake, intakeVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<DriveToLocation>(_driveBase, raw, distance)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 
 //     /*
 //     4N Close 1N Far
@@ -222,7 +222,7 @@
 //   return 
 //     << make<DriveToLocation>(_driveBase, raw, distance)
 //     << make<>
-//     << make<ArmToSetPoint>(_arm, armAngle, wristAngle)
+//     << make<ArmToSetPoint>(_arm, armAngle)
 //     << make<AutoShoot>(_shooter, shooterVolt)
 //     << make<>
 //     << make<DriveToLocation>(_driveBase, raw, distance)
@@ -250,10 +250,10 @@
 //     */
 // }
 
-// std::shared_ptr<Behaviour> AutoTest(DriveBase _driveBase, Shooter _shooter, Mag _mag, Intake _intake, Arm _arm) {
-//   return
-//     <<make<ArmToSetPoint>(_arm, 0, -90)
+std::shared_ptr<behaviour::Behaviour> autos::AutoTest(wom::drivetrain::SwerveDrive _driveBase, Shooter _shooter, Intake _intake, AlphaArm _alphaArm) {
+  return behaviour::make<ArmToSetPoint>(&_alphaArm, 0 * 1_deg, 0.2);
 //     <<make<DriveToLocation>(_driveBase, raw, distance)
 //     <<make<AutoShoot>(_shooter, 8_V)
 //     <<make<AutoIntake>(_intake, 8_V)
-// } // This auto is a test for auto to see if all things work, it does not build as the behaviours are not done.
+} // This auto is a test for auto to see if all things work.
+

@@ -37,8 +37,8 @@ struct RobotMap {
   struct AlphaArmSystem {
     rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
     rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
-
-    wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
+    wom::CANSparkMaxEncoder* alphaArmEncoder = new wom::CANSparkMaxEncoder(&alphaArmMotor, 0.1_m);
+    wom::Gearbox alphaArmGearbox{&alphaArmMotor, alphaArmEncoder, frc::DCMotor::NEO(1)};
     wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
 
     AlphaArmConfig config{alphaArmGearbox, wristGearbox};

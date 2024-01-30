@@ -36,3 +36,4 @@ void ShooterManualControl::OnTick(units::second_t dt) {
     _shooter->SetState(ShooterState::kRaw);
   }
 }
+

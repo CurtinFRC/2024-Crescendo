@@ -6,6 +6,7 @@
 
 #include <frc/XboxController.h>
 
+
 AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxController* codriver)
     : _alphaArm(alphaArm), _codriver(codriver) {
   Controls(alphaArm);
@@ -32,4 +33,14 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
       _alphaArm->SetState(AlphaArmState::kReverseWrist);
     }
   }
+}
+
+ArmToSetPoint::ArmToSetPoint(AlphaArm* alphaArm, units::degree_t armAngle, float armSpeed) : _alphaArm(alphaArm) {
+  Controls(alphaArm);
+}
+// // ArmSpeed is a float from 0-1, 1 being instantly and 0 being don't move at all.
+
+void ArmToSetPoint::OnTick(units::second_t dt) {
+  // _armCurrentDegree = _alphaArm->GetConfig().alphaArmGearbox.encoder.GetEncoderPosition();
+  // _alphaArm->GetConfig().alphaArmGearbox.encoder.SetEncoderPosition(armAngle * armSpeed);
 }

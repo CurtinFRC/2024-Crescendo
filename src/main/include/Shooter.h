@@ -15,7 +15,7 @@
 struct ShooterConfig {
   std::string path;
   wom::Gearbox ShooterGearbox;
-  // wom::PIDConfig<units::radians_per_second, units::volt> pidConfig;
+  // wom::PIDConfig<units::radians_per_second, units::volt> pidConfig;  
   // frc::DigitalInput* shooterSensor;
 };
 
