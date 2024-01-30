@@ -19,17 +19,11 @@
 #include <units/voltage.h>
 
 #include "behaviour/HasBehaviour.h"
-
-#include <frc/kinematics/DifferentialDriveKinematics.h>
-#include <frc/controller/RamseteController.h>
-#include <frc/Timer.h>
 #include "networktables/NetworkTableInstance.h"
-
 
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
-
   shooter = new Shooter(robotmap.shooterSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(shooter);
   shooter->SetDefaultBehaviour(
@@ -39,7 +33,6 @@ void Robot::RobotInit() {
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
   // m_chooser.SetDefaultOption("Default Auto", "Default Auto");
-
 
   // frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
 
@@ -94,10 +87,9 @@ void Robot::RobotInit() {
   intake->SetDefaultBehaviour(
       [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
 
-  //_vision = new Vision("limelight", FMAP("fmap.fmap"));
+  // _vision = new Vision("limelight", FMAP("fmap.fmap"));
 
   _vision = new Vision("limelight", FMAP("fmap.fmap"));
-
 }
 
 void Robot::RobotPeriodic() {
@@ -118,14 +110,12 @@ void Robot::RobotPeriodic() {
   robotmap.swerveTable.swerveDriveTable->GetEntry("backRightEncoder")
       .SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
-
   _swerveDrive->OnUpdate(dt);
   alphaArm->OnUpdate(dt);
   shooter->OnStart();
   intake->OnUpdate(dt);
 
   // _swerveDrive->OnUpdate(dt);
-
 }
 
 void Robot::AutonomousInit() {
@@ -135,8 +125,6 @@ void Robot::AutonomousInit() {
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-
-
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
   sched->InterruptAll();
@@ -145,13 +133,11 @@ void Robot::TeleopInit() {
   // frontRight->SetVoltage(4_V);
   // backLeft->SetVoltage(4_V);
   // backRight->SetVoltage(4_V);
-  
 
-//  FMAP("fmap.fmap");
+  //  FMAP("fmap.fmap");
 
   // _swerveDrive->OnStart();
   // sched->InterruptAll();
-
 }
 
 void Robot::TeleopPeriodic() {
@@ -193,5 +179,3 @@ void Robot::SimulationInit() {
 }
 
 void Robot::SimulationPeriodic() {}
-
-

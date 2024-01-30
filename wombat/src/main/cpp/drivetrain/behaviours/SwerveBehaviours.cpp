@@ -32,7 +32,6 @@ void ManualDrivebase::OnStart() {
 }
 
 void ManualDrivebase::OnTick(units::second_t deltaTime) {
-
   // if (_driverController->GetXButtonPressed()) {
   //   ResetMode();
   //   isRotateMatch = !isRotateMatch;
@@ -88,12 +87,11 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
     turnX = 0;
     turnY = 0;
 
-  if (_driverController->GetXButtonPressed()) {
-    ResetMode();
+    if (_driverController->GetXButtonPressed()) {
+      ResetMode();
 
-    isRotateMatch = !isRotateMatch;
-
-  }
+      isRotateMatch = !isRotateMatch;
+    }
   }
 
   // if (isRotateMatch) {

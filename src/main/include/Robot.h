@@ -20,15 +20,10 @@
 #include "Intake.h"
 #include "IntakeBehaviour.h"
 #include "RobotMap.h"
-
-
 #include "Shooter.h"
 #include "ShooterBehaviour.h"
-
-#include "vision/Vision.h"
-
 #include "Wombat.h"
-
+#include "vision/Vision.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -42,6 +37,8 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void DisabledInit() override;
   void DisabledPeriodic() override;
+  void SimulationInit() override;
+  void SimulationPeriodic() override;
 
  private:
   RobotMap robotmap;
@@ -60,7 +57,6 @@ class Robot : public frc::TimedRobot {
 
   wom::SwerveDrive* _swerveDrive;
 
-
   AlphaArm* alphaArm;
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
@@ -69,5 +65,4 @@ class Robot : public frc::TimedRobot {
   // ctre::phoenix6::hardware::TalonFX *backRight;
 
   Vision* _vision;
-
 };
