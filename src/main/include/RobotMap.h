@@ -27,9 +27,21 @@ struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
     frc::XboxController codriver = frc::XboxController(1);
-    frc::XboxController testController = frc::XboxController(2);
   };
   Controllers controllers;
+
+  struct IntakeSystem {
+    rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
+    // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
+    frc::DigitalInput intakeSensor{4};
+    // frc::DigitalInput magSensor{0};
+    // frc::DigitalInput shooterSensor{0};
+
+    wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::CIM(1)};
+
+    IntakeConfig config{IntakeGearbox, &intakeSensor /*, &magSensor, &shooterSensor*/};
+  };
+  IntakeSystem intakeSystem;
 
   struct Shooter {
     rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};  // Port 11
@@ -51,19 +63,6 @@ struct RobotMap {
     ShooterConfig config{"shooterGearbox", shooterGearbox, pidConfigS};
   };
   Shooter shooterSystem;
-
-  struct IntakeSystem {
-    rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
-    // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
-    // frc::DigitalInput intakeSensor{0};
-    // frc::DigitalInput magSensor{0};
-    // frc::DigitalInput shooterSensor{0};
-
-    wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::CIM(1)};
-
-    IntakeConfig config{IntakeGearbox /*, &intakeSensor, &magSensor, &shooterSensor*/};
-  };
-  IntakeSystem intakeSystem;
 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{18, "Drivebase"};
