@@ -138,16 +138,11 @@ void Robot::TeleopInit() {
 
   // _swerveDrive->OnStart();
   // sched->InterruptAll();
+
+  _swerveDrive->SetPose(_vision->GetAngleToObject(VisionTargetObjects::kNote).first);
 }
 
-void Robot::TeleopPeriodic() {
-  // std::cout << "Current AprilTag: " << _vision->CurrentAprilTag() << std::endl;
-  // std::cout << "Current Target: " << _vision->TargetIsVisible(VisionTargetObjects::kNote) << std::endl;
-  std::cout << "Dist to target: " << _vision->GetDistanceToTarget(VisionTarget::kBlueAmp).first.value()
-            << std::endl;
-  std::cout << "Angle to target: " << _vision->GetDistanceToTarget(VisionTarget::kBlueAmp).second.value()
-            << std::endl;
-}
+void Robot::TeleopPeriodic() {}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
