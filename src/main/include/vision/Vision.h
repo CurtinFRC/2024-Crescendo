@@ -94,8 +94,8 @@ class Vision {
 
   frc::Pose2d TurnToTarget(int target, wom::SwerveDrive* swerveDrive);
   frc::Pose2d TurnToTarget(VisionTarget target, wom::SwerveDrive* swerveDrive);
-  
-  std::pair<frc::Pose2d, units::degree_t> GetAngleToObject(VisionTargetObjects object); 
+
+  std::pair<frc::Pose2d, units::degree_t> GetAngleToObject(VisionTargetObjects object);
   units::degree_t LockOn(VisionTargetObjects target, wom::SwerveDrive* swerveDrive);
 
   std::vector<AprilTag> GetTags();

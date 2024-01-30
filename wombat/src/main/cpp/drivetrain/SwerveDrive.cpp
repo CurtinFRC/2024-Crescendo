@@ -363,10 +363,14 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
     case SwerveDriveState::kZeroing:
       for (auto mod = _modules.begin(); mod < _modules.end(); mod++) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         // mod->SetZero(dt);
 =======
       mod->SetZero(dt);
 >>>>>>> befb502 (More vision)
+=======
+        mod->SetZero(dt);
+>>>>>>> 57e941a ([wpiformat])
       }
       break;
     case SwerveDriveState::kIdle:
@@ -437,7 +441,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
 
     case SwerveDriveState::kTuning:
       for (size_t i = 0; i < _modules.size(); i++) {
-        _modules[i].SetPID(_angle, _speed, dt);      
+        _modules[i].SetPID(_angle, _speed, dt);
       }
       break;
     case SwerveDriveState::kXWheels:
@@ -446,8 +450,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       _modules[2].SetPID(225_deg, 0_mps, dt);
       _modules[3].SetPID(315_deg, 0_mps, dt);
       break;
-    case SwerveDriveState::kFRVelocityRotationLock:
-      {
+    case SwerveDriveState::kFRVelocityRotationLock: {
       _target_speed.vx = _xPIDController.Calculate(GetPose().X(), dt);
       _target_speed.vy = _yPIDController.Calculate(GetPose().Y(), dt);
       _target_speed.omega =
@@ -458,8 +461,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
         _modules[i].SetPID(target_states[i].angle.Radians(), target_states[i].speed, dt);
       }
       break;
-      }
-    
+    }
   }
 
   for (auto mod = _modules.begin(); mod < _modules.end(); mod++) {

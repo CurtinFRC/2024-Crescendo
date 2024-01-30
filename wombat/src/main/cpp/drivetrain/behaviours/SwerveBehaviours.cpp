@@ -89,7 +89,7 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
 
   if (_driverController->GetXButtonPressed()) {
     ResetMode();
-    
+
     isRotateMatch = !isRotateMatch;
 
   }
