@@ -4,42 +4,35 @@
 
 #include "ShooterBehaviour.h"
 
-ShooterManualControl::ShooterManualControl(Shooter* shooter,
-                                           frc::XboxController* tester)
-    : _shooter(shooter), _tester(tester) {
+ShooterManualControl::ShooterManualControl(Shooter* shooter, frc::XboxController* codriver)
+    : _shooter(shooter), _codriver(codriver) {
   Controls(shooter);
 }
 
 void ShooterManualControl::OnTick(units::second_t dt) {
-  table->GetEntry("RawControl").SetBoolean(_rawControl);
+  _shooter->table->GetEntry("RawControl").SetBoolean(_rawControl);
 
-  if (_tester->GetAButtonPressed()) {
-    if (_rawControl == true) {
+  if (_codriver->GetAButtonReleased()) {
+    if (_rawControl) {
       _rawControl = false;
     } else {
       _rawControl = true;
     }
   }
 
-  if (_rawControl) {
-    _shooter->SetState(ShooterState::kRaw);
-
-    if (_tester->GetLeftTriggerAxis() > 0.1) {
-      _shooter->SetRaw(12_V * _tester->GetLeftTriggerAxis());
-    } else if (_tester->GetRightTriggerAxis() > 0.1) {
-      _shooter->SetRaw(-12_V * _tester->GetRightTriggerAxis());
+  if (!_rawControl) {
+    if (_codriver->GetYButton()) {
+      _shooter->SetState(ShooterState::kSpinUp);
+      _shooter->SetPidGoal(10_rad_per_s);
+    }
+  } else {
+    if (_codriver->GetRightTriggerAxis() > 0.1) {
+      _shooter->SetRaw(_codriver->GetRightTriggerAxis() * 12_V);
+    } else if (_codriver->GetLeftTriggerAxis() > 0.1) {
+      _shooter->SetRaw(_codriver->GetLeftTriggerAxis() * -12_V);
     } else {
       _shooter->SetRaw(0_V);
     }
-  } else {
-    if (_tester->GetXButton()) {
-      _shooter->SetPidGoal(150_rad_per_s);
-      _shooter->SetState(ShooterState::kSpinUp);
-    } else if (_tester->GetYButton()) {
-      _shooter->SetPidGoal(300_rad_per_s);
-      _shooter->SetState(ShooterState::kSpinUp);
-    } else {
-      _shooter->SetState(ShooterState::kIdle);
-    }
+    _shooter->SetState(ShooterState::kRaw);
   }
 }

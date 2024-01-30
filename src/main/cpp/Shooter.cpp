@@ -96,11 +96,7 @@ void Shooter::OnUpdate(units::second_t dt) {
       std::cout << "Error shooter in invalid state" << std::endl;
     } break;
   }
-  // table->GetEntry("Motor OutPut").SetDouble(_setVoltage.value());
-  table->GetEntry("Encoder Output")
-      .SetDouble(
-          _config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value());
-
+  std::cout << "Voltage:" << _setVoltage.value() << std::endl;
   _config.ShooterGearbox.motorController->SetVoltage(_setVoltage);
 }
 

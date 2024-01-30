@@ -15,6 +15,10 @@
 
 #include <string>
 
+#include "AlphaArm.h"
+#include "AlphaArmBehaviour.h"
+#include "Intake.h"
+#include "IntakeBehaviour.h"
 #include "RobotMap.h"
 #include "Shooter.h"
 #include "ShooterBehaviour.h"
@@ -39,6 +43,7 @@ class Robot : public frc::TimedRobot {
   frc::EventLoop loop;
   Shooter* shooter;
 
+  Intake* intake;
   frc::SendableChooser<std::string> m_chooser;
 
   frc::Field2d m_field;
@@ -48,6 +53,8 @@ class Robot : public frc::TimedRobot {
   frc::SendableChooser<std::string> m_path_chooser;
 
   wom::SwerveDrive* _swerveDrive;
+
+  AlphaArm* alphaArm;
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;
