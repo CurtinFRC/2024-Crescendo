@@ -49,16 +49,10 @@ struct RobotMap {
         10_rad_per_s / 1_s};
 
     ShooterConfig config{"shooterGearbox", shooterGearbox, pidConfigS};
-    struct AlphaArmSystem {
-      rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
-      rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
 
-      wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
-      wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
 
-      AlphaArmConfig config{alphaArmGearbox, wristGearbox};
-    };
-    AlphaArmSystem alphaArmSystem;
+  };
+  Shooter shooterSystem;
 
     struct IntakeSystem {
       rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
@@ -71,9 +65,7 @@ struct RobotMap {
 
       IntakeConfig config{IntakeGearbox /*, &intakeSensor, &magSensor, &shooterSensor*/};
     };
-    IntakeSystem intakeSystem;
-  };
-  Shooter shooterSystem;
+  IntakeSystem intakeSystem;
 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{18, "Drivebase"};
@@ -178,4 +170,15 @@ struct RobotMap {
         nt::NetworkTableInstance::GetDefault().GetTable("swerve");
   };
   SwerveTable swerveTable;
+
+    struct AlphaArmSystem {
+      rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
+      rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
+
+      wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
+      wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
+
+      AlphaArmConfig config{alphaArmGearbox, wristGearbox};
+    };
+    AlphaArmSystem alphaArmSystem;
 };
