@@ -296,15 +296,21 @@ void Robot::TeleopInit() {
   // _swerveDrive->OnStart();
   // sched->InterruptAll();
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 >>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
 =======
 >>>>>>> bf9b1b4 (Merged with swerve)
+=======
+
+  _swerveDrive->SetPose(_vision->GetAngleToObject(VisionTargetObjects::kNote).first);
+>>>>>>> 87c92ed (Did more vision stuff)
 }
 <<<<<<< HEAD
 void Robot::TeleopPeriodic() {}
 =======
 
+<<<<<<< HEAD
 void Robot::TeleopPeriodic() {
   // std::cout << "Current AprilTag: " << _vision->CurrentAprilTag() << std::endl;
   // std::cout << "Current Target: " << _vision->TargetIsVisible(VisionTargetObjects::kNote) << std::endl;
@@ -314,6 +320,9 @@ void Robot::TeleopPeriodic() {
             << std::endl;
 }
 >>>>>>> ae1a0fc ([wpiformat + add ctre_sim to gitignore])
+=======
+void Robot::TeleopPeriodic() {}
+>>>>>>> 87c92ed (Did more vision stuff)
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
