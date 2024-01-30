@@ -18,7 +18,11 @@
 #include <cmath>
 #include <iostream>
 
+<<<<<<< HEAD
 #include "frc/MathUtil.h"
+=======
+#include "units/mass.h"
+>>>>>>> befb502 (More vision)
 #include "utils/Util.h"
 #include "wpimath/MathShared.h"
 
@@ -358,7 +362,11 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
   switch (_state) {
     case SwerveDriveState::kZeroing:
       for (auto mod = _modules.begin(); mod < _modules.end(); mod++) {
+<<<<<<< HEAD
         // mod->SetZero(dt);
+=======
+      mod->SetZero(dt);
+>>>>>>> befb502 (More vision)
       }
       break;
     case SwerveDriveState::kIdle:
@@ -429,7 +437,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
 
     case SwerveDriveState::kTuning:
       for (size_t i = 0; i < _modules.size(); i++) {
-        _modules[i].SetPID(_angle, _speed, dt);
+        _modules[i].SetPID(_angle, _speed, dt);      
       }
       break;
     case SwerveDriveState::kXWheels:
@@ -439,6 +447,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       _modules[3].SetPID(315_deg, 0_mps, dt);
       break;
     case SwerveDriveState::kFRVelocityRotationLock:
+      {
       _target_speed.vx = _xPIDController.Calculate(GetPose().X(), dt);
       _target_speed.vy = _yPIDController.Calculate(GetPose().Y(), dt);
       _target_speed.omega =
@@ -449,6 +458,8 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
         _modules[i].SetPID(target_states[i].angle.Radians(), target_states[i].speed, dt);
       }
       break;
+      }
+    
   }
 
   for (auto mod = _modules.begin(); mod < _modules.end(); mod++) {
@@ -497,8 +508,9 @@ void SwerveDrive::OnResetMode() {
   _anglePIDController.Reset();
 }
 
-void SwerveDrive::SetLocked(frc::Pose2d pose) {
+void SwerveDrive::SetLocked(units::degree_t angle) {
   _state = SwerveDriveState::kLockedOn;
+  _lockedAngle = angle;
 }
 
 void SwerveDrive::RotateMatchJoystick(units::radian_t joystickAngle, FieldRelativeSpeeds speeds) {

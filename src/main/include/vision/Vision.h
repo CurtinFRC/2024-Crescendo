@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "Wombat.h"
+#include "units/angle.h"
 
 #define APRILTAGS_MAX 16
 #define APRILTAGS_MIN 0
@@ -93,8 +94,9 @@ class Vision {
 
   frc::Pose2d TurnToTarget(int target, wom::SwerveDrive* swerveDrive);
   frc::Pose2d TurnToTarget(VisionTarget target, wom::SwerveDrive* swerveDrive);
-
-  frc::Pose2d LockOn(VisionTargetObjects target, wom::SwerveDrive* swerveDrive);
+  
+  std::pair<frc::Pose2d, units::degree_t> GetAngleToObject(VisionTargetObjects object); 
+  units::degree_t LockOn(VisionTargetObjects target, wom::SwerveDrive* swerveDrive);
 
   std::vector<AprilTag> GetTags();
 

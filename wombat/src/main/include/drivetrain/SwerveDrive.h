@@ -201,7 +201,7 @@ class SwerveDrive : public behaviour::HasBehaviour {
   void SetZero();
   void SetVoltageLimit(units::volt_t driveVoltageLimit);
   void OnResetMode();
-  void SetLocked(frc::Pose2d pose);
+  void SetLocked(units::degree_t pose);
   // double GetModuleCANPosition(int mod);  // from liam's
 
   void SetXWheelState();
@@ -247,10 +247,19 @@ class SwerveDrive : public behaviour::HasBehaviour {
   units::radian_t _angle;
   units::meters_per_second_t _speed;
 
+<<<<<<< HEAD
   // double frontLeftEncoderOffset = -143.26171875;
   // double frontRightEncoderOffset = 167.87109375;
   // double backLeftEncoderOffset = -316.669921875;
   // double backRightEncoderOffset = -119.619140625;
+=======
+  double frontLeftEncoderOffset = -143.26171875;
+  double frontRightEncoderOffset = 167.87109375;
+  double backLeftEncoderOffset = -316.669921875;
+  double backRightEncoderOffset = -119.619140625;
+
+  units::degree_t _lockedAngle;
+>>>>>>> befb502 (More vision)
 };
 }  // namespace drivetrain
 }  // namespace wom
