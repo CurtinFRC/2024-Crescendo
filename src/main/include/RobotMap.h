@@ -35,6 +35,7 @@ struct RobotMap {
   };
   Controllers controllers;
 
+<<<<<<< HEAD
   //   struct AlphaArmSystem {
   //     rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
   //     wom::CANSparkMaxEncoder* armEncoder = new wom::CANSparkMaxEncoder(&alphaArmMotor, 0.02_m);
@@ -50,8 +51,28 @@ struct RobotMap {
   //     };
 =======
     AlphaArmConfig config{alphaArmGearbox, wristGearbox};
+=======
+  struct Shooter {
+    rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};  // Port 11
+    // frc::DigitalInput shooterSensor{2};
+
+    // wom::VoltageController shooterMotorGroup =
+    // wom::VoltagedController::Group(shooterMotor);
+    wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
+    wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder, frc::DCMotor::NEO(1)};
+
+    wom::utils::PIDConfig<units::radians_per_second, units::volts> pidConfigS{
+        "/armavator/arm/velocityPID/config",
+        0.1_V / (360_deg / 1_s),
+        0.03_V / 25_deg,
+        0.001_V / (90_deg / 1_s / 1_s),
+        5_rad_per_s,
+        10_rad_per_s / 1_s};
+
+    ShooterConfig config{"shooterGearbox", shooterGearbox, pidConfigS};
+>>>>>>> 57d11c0 (Shooter pid (#117))
   };
-  AlphaArmSystem alphaArmSystem;
+  Shooter shooterSystem;
 
   struct IntakeSystem {
     rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
@@ -82,6 +103,7 @@ struct RobotMap {
   IntakeSystem intakeSystem;
 >>>>>>> 0029f49 (fix some formatting)
 
+<<<<<<< HEAD
   //     wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::CIM(1)};
 
   //     IntakeConfig config{IntakeGearbox, &intakeSensor /*, &magSensor, &shooterSensor*/};
@@ -124,6 +146,8 @@ struct RobotMap {
   Shooter shooterSystem;
 
 >>>>>>> 0029f49 (fix some formatting)
+=======
+>>>>>>> 57d11c0 (Shooter pid (#117))
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{16, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder frontRightCancoder{18, "Drivebase"};
@@ -256,6 +280,7 @@ struct RobotMap {
   };
   SwerveTable swerveTable;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
   // struct AlphaArmSystem {
   //   rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
@@ -267,6 +292,19 @@ struct RobotMap {
   //   AlphaArmConfig config{alphaArmGearbox, wristGearbox};
   // };
   // AlphaArmSystem alphaArmSystem;
+=======
+
+  struct AlphaArmSystem {
+    rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
+
+    wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
+    wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
+
+    AlphaArmConfig config{alphaArmGearbox, wristGearbox};
+  };
+  AlphaArmSystem alphaArmSystem;
+>>>>>>> 57d11c0 (Shooter pid (#117))
 };
 =======
 };

@@ -46,4 +46,8 @@ class Shooter : public behaviour::HasBehaviour {
 
   units::volt_t holdVoltage = 0_V;
   std::string _statename = "default";
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 57d11c0 (Shooter pid (#117))

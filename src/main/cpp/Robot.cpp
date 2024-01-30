@@ -154,6 +154,7 @@ void Robot::RobotPeriodic() {
   sched->Tick();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 0 offset: ")
       .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 1 offset: ")
@@ -163,6 +164,11 @@ void Robot::RobotPeriodic() {
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 3 offset: ")
 =======
   robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder")
+=======
+  robotmap.swerveTable.swerveDriveTable
+      ->GetEntry("frontLeftEncoder")
+
+>>>>>>> 57d11c0 (Shooter pid (#117))
       .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("frontRightEncoder")
       .SetDouble(robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->GetEncoderPosition().value());
@@ -196,10 +202,14 @@ void Robot::TeleopInit() {
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
 <<<<<<< HEAD
+<<<<<<< HEAD
   // shooter->OnStart();
   // alphaArm->OnStart();
 =======
 >>>>>>> 0029f49 (fix some formatting)
+=======
+  shooter->OnStart();
+>>>>>>> 57d11c0 (Shooter pid (#117))
   sched->InterruptAll();
 
   // frontLeft->SetVoltage(4_V);

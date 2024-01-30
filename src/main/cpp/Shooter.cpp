@@ -5,12 +5,16 @@
 #include "Shooter.h"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 57d11c0 (Shooter pid (#117))
 Shooter::Shooter(ShooterConfig config) : _config(config), _pid(config.path + "/pid", config.pidConfig) {}
 
 void Shooter::OnStart() {
   _pid.Reset();
 }
 
+<<<<<<< HEAD
 =======
 Shooter::Shooter(ShooterConfig config)
     : _config(config)
@@ -18,6 +22,8 @@ Shooter::Shooter(ShooterConfig config)
 // _pid{frc::PIDController (1, 0, 0, 0.005_s)}
 {}  // config.path + "/pid", config.pidConfig
 >>>>>>> 0029f49 (fix some formatting)
+=======
+>>>>>>> 57d11c0 (Shooter pid (#117))
 void Shooter::OnUpdate(units::second_t dt) {
   // _pid.SetTolerance(0.5, 4);
   table->GetEntry("Error").SetDouble(_pid.GetError().value());

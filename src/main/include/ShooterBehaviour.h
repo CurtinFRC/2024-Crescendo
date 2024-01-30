@@ -19,9 +19,16 @@ class ShooterManualControl : public behaviour::Behaviour {
 
  private:
   Shooter* _shooter;
-  frc::XboxController* _codriver;
 
+<<<<<<< HEAD
   bool _rawControl = false;
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("Shooter Behaviour");
 };
+=======
+  bool _rawControl = true;
+  std::shared_ptr<nt::NetworkTable> table =
+      nt::NetworkTableInstance::GetDefault().GetTable("Shooter Behaviour");
+  frc::XboxController* _codriver;
+};
+>>>>>>> 57d11c0 (Shooter pid (#117))
