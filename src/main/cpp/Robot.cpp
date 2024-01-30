@@ -70,12 +70,15 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.gyro->Reset();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   // _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   // wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   // _swerveDrive->SetDefaultBehaviour(
   //     [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 >>>>>>> 0029f49 (fix some formatting)
+=======
+>>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour(
@@ -155,6 +158,7 @@ void Robot::RobotPeriodic() {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 0 offset: ")
       .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 1 offset: ")
@@ -169,6 +173,9 @@ void Robot::RobotPeriodic() {
       ->GetEntry("frontLeftEncoder")
 
 >>>>>>> 57d11c0 (Shooter pid (#117))
+=======
+  robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder")
+>>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
       .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("frontRightEncoder")
       .SetDouble(robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->GetEncoderPosition().value());
@@ -182,6 +189,12 @@ void Robot::RobotPeriodic() {
   // intake->OnUpdate(dt);
   // alphaArm->OnUpdate(dt);
   _swerveDrive->OnUpdate(dt);
+<<<<<<< HEAD
+=======
+  alphaArm->OnUpdate(dt);
+  shooter->OnStart();
+  intake->OnUpdate(dt);
+>>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
 }
 
 void Robot::AutonomousInit() {
@@ -203,6 +216,7 @@ void Robot::TeleopInit() {
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   // shooter->OnStart();
   // alphaArm->OnStart();
 =======
@@ -210,6 +224,8 @@ void Robot::TeleopInit() {
 =======
   shooter->OnStart();
 >>>>>>> 57d11c0 (Shooter pid (#117))
+=======
+>>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
   sched->InterruptAll();
 
   // frontLeft->SetVoltage(4_V);

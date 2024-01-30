@@ -30,12 +30,22 @@ void Intake::OnUpdate(units::second_t dt) {
       _setVoltage = 7_V;
       if (_config.intakeSensor->Get() == true) {
         setState(IntakeState::kIdle);
+<<<<<<< HEAD
+=======
+        _ejecting = false;
+>>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
       }
     } break;
 
     case IntakeState::kHold: {
       _stringStateName = "Hold";
       _setVoltage = 0_V;
+<<<<<<< HEAD
+=======
+      // if (_config.intakeSensor->Get() == false) {
+      //   setState(IntakeState::kHold);
+      // }
+>>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
     } break;
 
     case IntakeState::kIntake: {
@@ -43,6 +53,10 @@ void Intake::OnUpdate(units::second_t dt) {
       _setVoltage = -7_V;
       if (_config.intakeSensor->Get() == false) {
         setState(IntakeState::kHold);
+<<<<<<< HEAD
+=======
+        _intaking = false;
+>>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
       }
     } break;
 
@@ -51,6 +65,10 @@ void Intake::OnUpdate(units::second_t dt) {
       _setVoltage = -7_V;
       if (_config.intakeSensor->Get() == true) {
         setState(IntakeState::kIdle);
+<<<<<<< HEAD
+=======
+        _passing = false;
+>>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
       }
     } break;
     default:
@@ -78,4 +96,8 @@ void Intake::setRaw(units::volt_t voltage) {
 }
 IntakeState Intake::getState() {
   return _state;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c30477a (Intake - Manual/Auto fixes (#114))

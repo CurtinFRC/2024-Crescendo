@@ -31,10 +31,10 @@ struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
     frc::XboxController codriver = frc::XboxController(1);
-    frc::XboxController testController = frc::XboxController(2);
   };
   Controllers controllers;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   //   struct AlphaArmSystem {
   //     rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
@@ -52,6 +52,21 @@ struct RobotMap {
 =======
     AlphaArmConfig config{alphaArmGearbox, wristGearbox};
 =======
+=======
+  struct IntakeSystem {
+    rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
+    // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
+    frc::DigitalInput intakeSensor{4};
+    // frc::DigitalInput magSensor{0};
+    // frc::DigitalInput shooterSensor{0};
+
+    wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::CIM(1)};
+
+    IntakeConfig config{IntakeGearbox, &intakeSensor /*, &magSensor, &shooterSensor*/};
+  };
+  IntakeSystem intakeSystem;
+
+>>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
   struct Shooter {
     rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};  // Port 11
     // frc::DigitalInput shooterSensor{2};
@@ -74,6 +89,7 @@ struct RobotMap {
   };
   Shooter shooterSystem;
 
+<<<<<<< HEAD
   struct IntakeSystem {
     rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
     // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
@@ -148,6 +164,8 @@ struct RobotMap {
 >>>>>>> 0029f49 (fix some formatting)
 =======
 >>>>>>> 57d11c0 (Shooter pid (#117))
+=======
+>>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{16, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder frontRightCancoder{18, "Drivebase"};
