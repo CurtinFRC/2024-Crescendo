@@ -93,7 +93,9 @@ void Robot::RobotPeriodic() {
   shooter->OnUpdate(dt);
   sched->Tick();
 
-  robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder")
+  robotmap.swerveTable.swerveDriveTable
+      ->GetEntry("frontLeftEncoder")
+
       .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("frontRightEncoder")
       .SetDouble(robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->GetEncoderPosition().value());
@@ -116,6 +118,7 @@ void Robot::AutonomousPeriodic() {}
 void Robot::TeleopInit() {
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
+  shooter->OnStart();
   sched->InterruptAll();
 
   // frontLeft->SetVoltage(4_V);

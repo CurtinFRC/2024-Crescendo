@@ -80,7 +80,8 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   //     -torqueLimit, _config.driveMotor.encoder->GetEncoderAngularVelocity());
 
   // driveVoltage =
-  //     units::math::max(units::math::min(driveVoltage, voltageMax), voltageMin);
+  //     units::math::max(units::math::min(driveVoltage, voltageMax),
+  //     voltageMin);
 
   // driveVoltage = units::math::min(driveVoltage, 10_V);
   turnVoltage = units::math::min(turnVoltage, 7_V);
@@ -136,8 +137,8 @@ void SwerveModule::SetZero(units::second_t dt) {
 void SwerveModule::SetPID(units::radian_t angle, units::meters_per_second_t speed, units::second_t dt) {
   _state = SwerveModuleState::kPID;
   // @liam start added
-  // std::cout << "angle Setpoint: " << _anglePIDController.GetSetpoint() << std::endl;
-  // std::cout << "angle value: " << angle.value() << std::endl;
+  // std::cout << "angle Setpoint: " << _anglePIDController.GetSetpoint() <<
+  // std::endl; std::cout << "angle value: " << angle.value() << std::endl;
 
   double diff = std::fmod((_anglePIDController.GetSetpoint() - angle.value()), (2 * 3.1415));
   std::cout << "DIFF value: " << diff << std::endl;
