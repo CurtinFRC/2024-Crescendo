@@ -46,38 +46,34 @@ struct RobotMap {
   };
   IntakeSystem intakeSystem;
 
-//   struct Shooter {
-//     rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};  // Port 11
-//     // frc::DigitalInput shooterSensor{2};
+    struct Shooter {
+    rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};// Port 11
+    // frc::DigitalInput shooterSensor{2};
 
-//     // wom::VoltageController shooterMotorGroup =
-//     // wom::VoltagedController::Group(shooterMotor);
-//     wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
-//     wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder, frc::DCMotor::NEO(1)};
+    // wom::VoltageController shooterMotorGroup = wom::VoltagedController::Group(shooterMotor);
+    wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
+    wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder, frc::DCMotor::NEO(1)};
 
-//     wom::utils::PIDConfig<units::radians_per_second, units::volts> pidConfigS{
-//         "/armavator/arm/velocityPID/config",
-//         0.1_V / (360_deg / 1_s),
-//         0.03_V / 25_deg,
-//         0.001_V / (90_deg / 1_s / 1_s),
-//         5_rad_per_s,
-//         10_rad_per_s / 1_s};
+    wom::utils::PIDConfig<units::radians_per_second, units::volts> pidConfigS{
+          "/armavator/arm/velocityPID/config",
+          0.1_V / (360_deg / 1_s),
+          0.03_V / 25_deg,
+          0.001_V / (90_deg / 1_s / 1_s),
+          5_rad_per_s,
+          10_rad_per_s / 1_s
+    };
 
-//     ShooterConfig config{"shooterGearbox", shooterGearbox, pidConfigS};
-//   };
-//   Shooter shooterSystem;
+    ShooterConfig config{
+        "shooterGearbox",
+        shooterGearbox,
+        pidConfigS
+    };
 
-  struct AlphaArmSystem {
-    rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
-    rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
+    
 
-    wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
-    wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
-
-    AlphaArmConfig config{alphaArmGearbox, wristGearbox};
   };
-  AlphaArmSystem alphaArmSystem;
-
+  Shooter shooterSystem;
+ 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{16, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder frontRightCancoder{18, "Drivebase"};
@@ -196,4 +192,14 @@ struct RobotMap {
   };
   SwerveTable swerveTable;
 
+  struct AlphaArmSystem {
+    rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
+
+    wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
+    wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
+
+    AlphaArmConfig config{alphaArmGearbox, wristGearbox};
+  };
+  AlphaArmSystem alphaArmSystem;
 };

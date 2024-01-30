@@ -102,7 +102,8 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   //     -torqueLimit, _config.driveMotor.encoder->GetEncoderAngularVelocity());
 
   // driveVoltage =
-  //     units::math::max(units::math::min(driveVoltage, voltageMax), voltageMin);
+  //     units::math::max(units::math::min(driveVoltage, voltageMax),
+  //     voltageMin);
 
   driveVoltage = units::math::min(driveVoltage, 7_V);
   turnVoltage = units::math::min(turnVoltage, 4_V);

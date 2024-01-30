@@ -1,7 +1,6 @@
 // Copyright (c) 2023-2024 CurtinFRC
 // Open Source Software, you can modify it according to the terms
 // of the MIT License at the root of this project
-
 #pragma once
 #include <frc/DigitalInput.h>
 #include <frc/controller/PIDController.h>
@@ -11,6 +10,7 @@
 #include <string>
 
 #include "Wombat.h"
+
 
 struct ShooterConfig {
   std::string path;
@@ -32,11 +32,11 @@ class Shooter : public behaviour::HasBehaviour {
   void SetState(ShooterState state);
   void SetRaw(units::volt_t voltage);
   void SetPidGoal(units::radians_per_second_t);
-  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Shooter");
   ShooterConfig GetConfig() { return _config; }
 
  private:
   ShooterConfig _config;
+  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Shooter");
   ShooterState _state = ShooterState::kRaw;
   units::volt_t _rawVoltage;
   units::radians_per_second_t _goal;
