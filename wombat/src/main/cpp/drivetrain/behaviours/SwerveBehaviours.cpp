@@ -116,8 +116,7 @@ void ManualDrivebase::ResetMode() {
 void ManualDrivebase::CalculateRequestedAngle(double joystickX, double joystickY,
                                               units::degree_t defaultAngle) {
   _requestedAngle = (1_rad * std::atan2(joystickY, -joystickX)) + 90_deg;
-  if (wom::utils::deadzone(joystickX) == 0 &&
-      wom::utils::deadzone(joystickY) == 0) {
+  if (wom::utils::deadzone(joystickX) == 0 && wom::utils::deadzone(joystickY) == 0) {
     _requestedAngle = _swerveDrivebase->GetPose().Rotation().Radians();
   }
 }

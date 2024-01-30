@@ -60,14 +60,12 @@ void SwerveModule::OnUpdate(units::second_t dt) {
       double input = -_config.turnMotor.encoder->GetEncoderPosition().value();
       _table->GetEntry("/testing/GetEncoderPos").SetDouble(input);
       // _velocityPIDController.SetSetpoint(3);
-      driveVoltage =
-          units::volt_t{_velocityPIDController.Calculate(GetSpeed().value())};
+      driveVoltage = units::volt_t{_velocityPIDController.Calculate(GetSpeed().value())};
       std::cout << "Turn angle input: " << input << std::endl;
       turnVoltage = units::volt_t{_anglePIDController.Calculate(input)};
 
       _table->GetEntry("Input angle").SetDouble(input);
-      _table->GetEntry("Setpoint angle")
-          .SetDouble(_anglePIDController.GetSetpoint());
+      _table->GetEntry("Setpoint angle").SetDouble(_anglePIDController.GetSetpoint());
     } break;
     case wom::drivetrain::SwerveModuleState::kZeroing: {
     } break;
@@ -390,8 +388,8 @@ void SwerveDrive::SetPose(frc::Pose2d pose) {
 }
 
 bool SwerveDrive::IsAtSetPose() {
-  return /*_anglePIDController.IsStable()*/ true &&
-         _xPIDController.IsStable() && _yPIDController.IsStable(0.05_m);
+  return /*_anglePIDController.IsStable()*/ true && _xPIDController.IsStable() &&
+         _yPIDController.IsStable(0.05_m);
 }
 
 void SwerveDrive::ResetPose(frc::Pose2d pose) {

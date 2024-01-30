@@ -6,6 +6,8 @@
 
 #include <frc/XboxController.h>
 
+#include <memory>
+
 #include "Shooter.h"
 #include "Wombat.h"
 

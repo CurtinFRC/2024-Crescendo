@@ -4,8 +4,7 @@
 
 #include "Shooter.h"
 
-Shooter::Shooter(ShooterConfig config)
-    : _config(config), _pid(config.path + "/pid", config.pidConfig) {}
+Shooter::Shooter(ShooterConfig config) : _config(config), _pid(config.path + "/pid", config.pidConfig) {}
 
 void Shooter::OnStart() {
   _pid.Reset();
@@ -35,9 +34,8 @@ void Shooter::OnUpdate(units::second_t dt) {
       _statename = "SpinUp";
       std::cout << "KSpinUp" << std::endl;
       _pid.SetSetpoint(_goal);
-      units::volt_t pidCalculate = units::volt_t{_pid.Calculate(
-          _config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt,
-          0_V)};
+      units::volt_t pidCalculate =
+          units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt, 0_V)};
       std::cout << "KShooting" << std::endl;
 
       if (_pid.IsStable()) {
@@ -56,9 +54,8 @@ void Shooter::OnUpdate(units::second_t dt) {
       _statename = "Shooting";
 
       _pid.SetSetpoint(_goal);
-      units::volt_t pidCalculate = units::volt_t{_pid.Calculate(
-          _config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt,
-          0_V)};
+      units::volt_t pidCalculate =
+          units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt, 0_V)};
       std::cout << "KShooting" << std::endl;
 
       if (_pid.IsStable()) {

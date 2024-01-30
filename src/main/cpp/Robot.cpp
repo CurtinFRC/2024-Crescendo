@@ -4,9 +4,6 @@
 
 #include "Robot.h"
 
-#include <frc/Timer.h>
-#include <frc/controller/RamseteController.h>
-#include <frc/kinematics/DifferentialDriveKinematics.h>
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
 #include <frc/controller/RamseteController.h>
@@ -61,7 +58,6 @@ void Robot::RobotInit() {
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();
 
-
   alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
   alphaArm->SetDefaultBehaviour(
@@ -97,7 +93,8 @@ void Robot::RobotPeriodic() {
   shooter->OnUpdate(dt);
   sched->Tick();
 
-  robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder")
+  robotmap.swerveTable.swerveDriveTable
+      ->GetEntry("frontLeftEncoder")
 
       .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("frontRightEncoder")
