@@ -361,7 +361,7 @@ std::pair<frc::Pose2d, units::degree_t> Vision::GetAngleToObject(VisionTargetObj
 units::degree_t Vision::LockOn(VisionTargetObjects object, wom::SwerveDrive* swerveDrive) {
   SetMode(VisionModes::kRing);
 
-  units::degree_t angle = -1000_deg;
+  units::degree_t angle;
 
   if (TargetIsVisible(object)) {
     angle = GetAngleToObject(object).second;
