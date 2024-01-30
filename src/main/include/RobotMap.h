@@ -18,8 +18,8 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-#include "Intake.h"
 #include "AlphaArm.h"
+#include "Intake.h"
 #include "Shooter.h"
 #include "Wombat.h"
 
