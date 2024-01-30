@@ -4,18 +4,16 @@
 
 #include "AlphaArm.h"
 //fiddle with these values
-AlphaArm::AlphaArm(AlphaArmConfig config) : _config(config), _pidFRC{frc::PIDController (0, 0, 0, 0_s)} {}
+AlphaArm::AlphaArm(AlphaArmConfig config) : _config(config), _pidWom{_config.path + "/pid", config.pidConfigA}, _table(nt::NetworkTableInstance::GetDefault().GetTable(config.path)){}
 
- /*_pidWom(_config.path + "/pid", config.pidConfig), _velocityPID(config.path + "/velocityPID", config.velocityConfig), _table(nt::NetworkTableInstance::GetDefault().GetTable(config.path))*/ 
-
-AlphaArmConfig AlphaArm::GetConfig(){
-    return _config;
-}
+// AlphaArmConfig AlphaArm::GetConfig(){
+//     return _config;
+// }
 
 void AlphaArm::OnUpdate(units::second_t dt){
-_table->GetEntry("Error").SetDouble(_pidFRC.GetPositionError());
-_table->GetEntry("Acceleration Error").SetDouble(_pidFRC.GetVelocityError());
-_table->GetEntry("Current Pos").SetDouble(_config.alphaArmGearbox.encoder->GetEncoderAngularVelocity().value());
+//_table->GetEntry("Error").SetDouble(_pidWom.GetPositionError());
+//_table->GetEntry("Acceleration Error").SetDouble(_pidWom.GetVelocityError());
+//_table->GetEntry("Current Pos").SetDouble(_config.alphaArmGearbox.encoder->GetEncoderAngularVelocity().value());
 
 
         switch(_state){
@@ -29,7 +27,7 @@ _table->GetEntry("Current Pos").SetDouble(_config.alphaArmGearbox.encoder->GetEn
             _setAlphaArmVoltage = _rawArmVoltage;
             _setWristVoltage = _rawWristVoltage;
             _config.alphaArmGearbox.motorController->SetVoltage(_rawArmVoltage);
-            _config.wristGearbox.motorController->SetVoltage(_rawWristVoltage);
+            //_config.wristGearbox.motorController->SetVoltage(_rawWristVoltage);
 
             break;
             case AlphaArmState::kAmpAngle:
@@ -37,19 +35,19 @@ _table->GetEntry("Current Pos").SetDouble(_config.alphaArmGearbox.encoder->GetEn
             //_pidFRC.SetSetpoint(_goal.value());
             //set value 
             //_pidFRC.SetSetpoint()
-            _pidFRC.SetSetpoint(_goal.convert<units::rad_per_s>().value());
-            units::volt_t{_pidFRC.Calculate(_config.alphaArmGearbox.encoder->GetEncoderAngularVelocity().value(), _goal.value())} = _setAlphaArmVoltage;
+            _pidWom.SetSetpoint(_goal);
+            units::volt_t{_pidWom.Calculate(_config.alphaArmGearbox.encoder->GetEncoderPosition(), _goal)} = _setAlphaArmVoltage;
 
             case AlphaArmState::kSpeakerAngle:
             std::cout << "SpeakerAngle" << std::endl;
-            _pidFRC.SetSetpoint(_goal.convert<units::rad_per_s>().value());
-            units::volt_t{_pidFRC.Calculate(_config.alphaArmGearbox.encoder->GetEncoderAngularVelocity().value(), _goal.value())} = _setAlphaArmVoltage;
+            _pidWom.SetSetpoint(_goal);
+            units::volt_t{_pidWom.Calculate(_config.alphaArmGearbox.encoder->GetEncoderPosition(), _goal)} = _setAlphaArmVoltage;
 
             case AlphaArmState::kStowed:
             //not hitting the floor magic
             std::cout << "Stowed" << std::endl;
-            _pidFRC.SetSetpoint(_goal.convert<units::rad_per_s>().value());
-            units::volt_t{_pidFRC.Calculate(_config.alphaArmGearbox.encoder->GetEncoderAngularVelocity().value(), _goal.value())} = _setAlphaArmVoltage;
+            _pidWom.SetSetpoint(_goal);
+            units::volt_t{_pidWom.Calculate(_config.alphaArmGearbox.encoder->GetEncoderPosition(), _goal)} = _setAlphaArmVoltage;
 
             default:
             std::cout << "oops, wrong state" << std::endl;
@@ -68,7 +66,7 @@ void AlphaArm::SetState(AlphaArmState state) {
   _state = state;
 }
 
-void AlphaArm::setGoal(units::radians_per_second_t goal){
+void AlphaArm::SetGoal(units::radian_t goal){
   _goal = goal;
 }
 
