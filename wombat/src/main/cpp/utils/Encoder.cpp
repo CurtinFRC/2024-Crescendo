@@ -5,6 +5,7 @@
 #include "utils/Encoder.h"
 
 #include <rev/SparkRelativeEncoder.h>
+#include <iostream>
 
 wom::utils::Encoder::Encoder(double encoderTicksPerRotation, int type,
                              units::meter_t wheelRadius, double reduction)
@@ -14,7 +15,9 @@ wom::utils::Encoder::Encoder(double encoderTicksPerRotation, int type,
       _wheelRadius(wheelRadius) {}
 
 double wom::utils::Encoder::GetEncoderTicks() const {
+  
   return GetEncoderRawTicks();
+
 }
 
 double wom::utils::Encoder::GetEncoderTicksPerRotation() const {
@@ -91,10 +94,10 @@ wom::utils::CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax* controller,
                                                    double reduction)
     : wom::utils::Encoder(42, reduction, wheelRadius, 2),
       _encoder(controller->GetEncoder(
-          rev::SparkRelativeEncoder::Type::kQuadrature)) {}
+          rev::SparkRelativeEncoder::Type::kHallSensor)) {}
 
 double wom::utils::CANSparkMaxEncoder::GetEncoderRawTicks() const {
-  return _encoder.GetPosition() * _reduction;
+  return ((_encoder.GetPosition() * 2 * 3.1415) / 200);
 }
 
 double wom::utils::CANSparkMaxEncoder::GetEncoderTickVelocity() const {

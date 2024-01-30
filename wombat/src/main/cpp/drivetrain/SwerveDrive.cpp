@@ -63,7 +63,7 @@ void SwerveModule::OnUpdate(units::second_t dt) {
       _table->GetEntry("/testing/GetEncoderPos").SetDouble(input);
       // _velocityPIDController.SetSetpoint(3);
       driveVoltage = units::volt_t{_velocityPIDController.Calculate(GetSpeed().value())};
-      std::cout << "Turn angle input: " << input << std::endl;
+      // std::cout << "Turn angle input: " << input << std::endl;
       turnVoltage = units::volt_t{_anglePIDController.Calculate(input)};
 
       _table->GetEntry("Input angle").SetDouble(input);
@@ -151,7 +151,7 @@ void SwerveModule::SetPID(units::radian_t angle,
 
   double diff = std::fmod((_anglePIDController.GetSetpoint() - angle.value()),
                           (2 * 3.1415));
-  std::cout << "DIFF value: " << diff << std::endl;
+  // std::cout << "DIFF value: " << diff << std::endl;
   _table->GetEntry("/Differential value:").SetDouble(diff);
   if (std::abs(diff) >= 3.1415) {
     speed *= -1;

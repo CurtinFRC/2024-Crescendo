@@ -13,7 +13,8 @@
 struct AlphaArmConfig {
     wom::Gearbox alphaArmGearbox;
     //wom::Gearbox wristGearbox;
-    wom::DutyCycleEncoder* armEncoder;
+    //wom::DutyCycleEncoder* armEncoder;
+    //wom::CANSparkMaxEncoder* armEncoder;
     wom::utils::PIDConfig<units::radian, units::volt> pidConfigA;
     //wom::utils::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
     std::string path;
@@ -38,8 +39,8 @@ class AlphaArm : public::behaviour::HasBehaviour{
 
     void OnUpdate(units::second_t dt);
     void SetArmRaw(units::volt_t voltage);
-    void setWristRaw(units::volt_t voltage);
     void SetState(AlphaArmState state);
+    void setControllerRaw(units::volt_t);
     //void setGoal(units::radians_per_second_t);
     void SetGoal(units::radian_t);
     double GetArmEncoder();
@@ -60,6 +61,7 @@ class AlphaArm : public::behaviour::HasBehaviour{
     AlphaArmConfig _config;
     AlphaArmState _state = AlphaArmState::kIdle;
     units::radian_t _goal; 
+    // double controllerInput = _codriver.GetLeftBumper();
     //double _goal;
     units::volt_t _setAlphaArmVoltage = 0_V;
     units::volt_t _setWristVoltage = 0_V;
@@ -68,6 +70,6 @@ class AlphaArm : public::behaviour::HasBehaviour{
     units::volt_t _rawWristVoltage = 0_V;
     //units::radiant_t maxAngle = 1_radian_t;
 
-    
-    //wom::PIDController<units::radians_per_second_t, units::volt_t> _pid;
+    units::radian_t _encoderSetpoint = 0_rad;
+    units::volt_t _controlledRawVoltage = 0_V;
 };

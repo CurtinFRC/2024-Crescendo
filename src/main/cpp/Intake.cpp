@@ -61,7 +61,7 @@ void Intake::OnUpdate(units::second_t dt) {
   // _table->GetEntry("Shooter Sensor: ").SetBoolean(_config.shooterSensor->Get());
   // _table->GetEntry("Magazine Sensor: ").SetBoolean(_config.magSensor->Get());
 
-  std::cout << _setVoltage.value() << std::endl;
+  // std::cout << _setVoltage.value() << std::endl;
 
   _config.IntakeMotor.motorController->SetVoltage(_setVoltage);
 }

@@ -32,7 +32,7 @@ void IntakeManualControl::OnTick(units::second_t dt) {
 
     // _intake->setRaw(_codriver.GetLeftBumper() * 10_V);
     // _intake->setRaw(_codriver.GetRightBumper() * -10_V);
-    std::cout << "Raw" << std::endl;
+    // std::cout << "Raw" << std::endl;
   }
   // } else {
   //   if (_codriver.GetYButtonPressed()) {

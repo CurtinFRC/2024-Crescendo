@@ -66,11 +66,9 @@ void Robot::RobotInit() {
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();
 
-  alphaArm = 
-      new AlphaArm(robotmap.alphaArmSystem.config);
+  alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
-  alphaArm->SetDefaultBehaviour(
-      [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
+  alphaArm->SetDefaultBehaviour([this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver);});
 
   //robotmap.alphaArmSystem.armEncoder->Reset();
   
@@ -107,6 +105,7 @@ void Robot::RobotPeriodic() {
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
   //shooter->OnUpdate(dt);
+  alphaArm->OnUpdate(dt);
   sched->Tick();
 
   robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder").SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
@@ -129,9 +128,6 @@ void Robot::AutonomousPeriodic() {
 }
 
 void Robot::TeleopInit() {
-  loop.Clear();
-  wom::BehaviourScheduler *sched = wom::BehaviourScheduler::GetInstance();
-  sched->InterruptAll();
 
   // frontLeft->SetVoltage(4_V);
   // frontRight->SetVoltage(4_V);

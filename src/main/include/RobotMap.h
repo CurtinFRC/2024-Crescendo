@@ -40,9 +40,9 @@ struct RobotMap {
   struct AlphaArmSystem {
     rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
     //rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
-
+    wom::CANSparkMaxEncoder* armEncoder = new wom::CANSparkMaxEncoder(&alphaArmMotor, 0.02_m);
     //frc::DutyCycleEncoder* armEncoder = new frc::DutyCycleEncoder{12};
-    wom::DutyCycleEncoder* armEncoder = new wom::DutyCycleEncoder(12, 0.02_m);
+    //wom::DutyCycleEncoder* armEncoder = new wom::DutyCycleEncoder(12, 0.02_m);
 
     //frc::Encoder wristEncoder{0, 1};
     //frc::Encoder wristEncoder{0, 1, false, frc::Encoder::EncodingType::k2X};
@@ -57,7 +57,7 @@ struct RobotMap {
     
     wom::utils::PIDConfig<units::radian, units::volt> pidConfigA{
      "/path/to/pid/in/nt/tables",
-    18_V / 25_deg, 
+    12_V / 180_deg, 
     0_V / (1_deg * 1_s), 
     0_V / (1_deg / 1_s),
     };
@@ -71,7 +71,7 @@ struct RobotMap {
 
     AlphaArmConfig config {
         alphaArmGearbox, 
-        armEncoder,
+        //armEncoder,
         pidConfigA,
         //velocityConfig
     };
