@@ -350,9 +350,9 @@ std::pair<frc::Pose2d, units::degree_t> Vision::GetAngleToObject(VisionTargetObj
         _limelight->GetOffset()
             .first};  // degrees are how much the robot has to turn for the target to be in the center
 
-    frc::Pose2d new_pose = frc::Pose2d(pose.X(), pose.Y(), offset);
+    pose.RotateBy(offset);
 
-    return std::make_pair(new_pose, offset);
+    return std::make_pair(pose, offset);
   } else {
     return std::make_pair(frc::Pose2d(), 0_deg);
   }
