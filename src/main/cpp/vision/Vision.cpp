@@ -106,8 +106,8 @@ std::pair<units::meter_t, units::degree_t> Vision::GetDistanceToTarget(VisionTar
       // std::cout << "A: " << a.value() << ", B:" << b.value() << std::endl;
       units::meter_t r = units::meter_t{std::sqrt(std::pow(a.value(), 2) + std::pow(b.value(), 2))};
 
-      units::meter_t x = current_pose.X() + r * units::math::cos(theta);
-      units::meter_t y = current_pose.Y() + r * units::math::sin(theta);
+      // units::meter_t x = current_pose.X() + r * units::math::cos(theta);
+      // units::meter_t y = current_pose.Y() + r * units::math::sin(theta);
 
       return std::make_pair(r, theta);
     }
