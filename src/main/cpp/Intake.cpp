@@ -59,7 +59,7 @@ void Intake::OnUpdate(units::second_t dt) {
         _passing = false;
       }
     } break;
-    
+
     default:
       std::cout << "Error: Intake in INVALID STATE." << std::endl;
       break;

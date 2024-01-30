@@ -41,6 +41,6 @@ class Intake : public behaviour::HasBehaviour {
   bool _intaking;
   bool _ejecting;
   bool _passing;
-  
+
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("Intake");
 };
