@@ -159,7 +159,7 @@ class PIDController {
     if (velocityThreshOverride.has_value())
       stableDerivThresh = velocityThreshOverride.value();
 
-    return _iterations > 20 &&
+    return _iterations > 5 &&
            std::abs(_stablePos.value()) <= std::abs(stableThresh.value()) &&
            (stableDerivThresh.value() < 0 ||
             std::abs(_stableVel.value()) <= stableDerivThresh.value());

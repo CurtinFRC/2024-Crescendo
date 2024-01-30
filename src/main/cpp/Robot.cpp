@@ -100,6 +100,7 @@ void Robot::AutonomousPeriodic() {
 void Robot::TeleopInit() {
   loop.Clear();
   wom::BehaviourScheduler *sched = wom::BehaviourScheduler::GetInstance();
+  shooter->OnStart();
   sched->InterruptAll();
 }
 void Robot::TeleopPeriodic() {

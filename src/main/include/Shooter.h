@@ -27,6 +27,8 @@ class Shooter : public behaviour::HasBehaviour {
  public:
   explicit Shooter(ShooterConfig config);
 
+  void OnStart();
+
   void OnUpdate(units::second_t dt);
   void SetState(ShooterState state);
   void SetRaw(units::volt_t voltage);
@@ -42,4 +44,7 @@ class Shooter : public behaviour::HasBehaviour {
   units::volt_t _setVoltage = 0_V;
   wom::PIDController<units::radians_per_second, units::volt> _pid;
   // frc::DigitalInput _shooterSensor{0};
+
+  units::volt_t holdVoltage = 0_V;
+  std::string _statename = "default";
 };

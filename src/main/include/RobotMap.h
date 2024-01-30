@@ -37,9 +37,11 @@ struct RobotMap {
 
     wom::utils::PIDConfig<units::radians_per_second, units::volts> pidConfigS{
           "/armavator/arm/velocityPID/config",
-          9_V / (180_deg / 1_s),
-          0_V / 25_deg,
-          0_V / (90_deg / 1_s / 1_s)
+          0.1_V / (360_deg / 1_s),
+          0.03_V / 25_deg,
+          0.001_V / (90_deg / 1_s / 1_s),
+          5_rad_per_s,
+          10_rad_per_s / 1_s
     };
 
     ShooterConfig config{

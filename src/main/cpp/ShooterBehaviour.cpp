@@ -29,12 +29,18 @@ void ShooterManualControl::OnTick(units::second_t dt) {
       } else if (_tester->GetRightTriggerAxis() > 0.1) {
         _shooter->SetRaw(-12_V * _tester->GetRightTriggerAxis());
       } else {
+
         _shooter->SetRaw(0_V);
       }
     } else {
-      _shooter->SetState(ShooterState::kSpinUp);
-      _shooter->SetPidGoal(20_rad_per_s);
+      if (_tester->GetXButton()) {
+        _shooter->SetPidGoal(150_rad_per_s);
+        _shooter->SetState(ShooterState::kSpinUp);
+      } else if (_tester->GetYButton()) {
+        _shooter->SetPidGoal(300_rad_per_s);
+        _shooter->SetState(ShooterState::kSpinUp);
+      } else {
+        _shooter->SetState(ShooterState::kIdle);
+      }
     }
-  // }
 }
-
