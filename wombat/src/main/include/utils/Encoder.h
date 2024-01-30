@@ -64,6 +64,7 @@ class DigitalEncoder : public Encoder {
 
   double GetPosition() const;
   double GetVelocity() const override;
+
  private:
   frc::Encoder _nativeEncoder;
 };

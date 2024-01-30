@@ -73,40 +73,41 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
   // if (isZero) {
   //   _swerveDrivebase->SetZeroing();
   // } else {
-    double xVelocity = wom::utils::spow2(-wom::utils::deadzone(
-        _driverController->GetLeftY(),
-        driverDeadzone));  // GetLeftY due to x being where y should be on field
-    double yVelocity = wom::utils::spow2(
-        -wom::utils::deadzone(_driverController->GetLeftX(), driverDeadzone));
+  double xVelocity = wom::utils::spow2(-wom::utils::deadzone(
+      _driverController->GetLeftY(),
+      driverDeadzone));  // GetLeftY due to x being where y should be on field
+  double yVelocity = wom::utils::spow2(
+      -wom::utils::deadzone(_driverController->GetLeftX(), driverDeadzone));
 
-    double r_x = wom::utils::spow2(
-        -wom::utils::deadzone(_driverController->GetRightX(), turningDeadzone));
+  double r_x = wom::utils::spow2(
+      -wom::utils::deadzone(_driverController->GetRightX(), turningDeadzone));
 
-    double turnX = _driverController->GetRightX();
-    double turnY = _driverController->GetRightY();
-    double num = std::sqrt(turnX * turnX + turnY * turnY);
-    if (num < turningDeadzone) {
-      turnX = 0;
-      turnY = 0;
-    }
+  double turnX = _driverController->GetRightX();
+  double turnY = _driverController->GetRightY();
+  double num = std::sqrt(turnX * turnX + turnY * turnY);
+  if (num < turningDeadzone) {
+    turnX = 0;
+    turnY = 0;
+  }
 
-    // if (isRotateMatch) {
-    //   units::degree_t currentAngle =
-    //       _swerveDrivebase->GetPose().Rotation().Degrees();
-    //   CalculateRequestedAngle(turnX, turnY, currentAngle);
-    //   _swerveDriveTable->GetEntry("RotateMatch")
-    //       .SetDouble(_requestedAngle.value());
-    //   _swerveDrivebase->RotateMatchJoystick(
-    //       _requestedAngle,
-    //       wom::drivetrain::FieldRelativeSpeeds{// also field relative
-    //                                            xVelocity * maxMovementMagnitude,
-    //                                            yVelocity * maxMovementMagnitude,
-    //                                            r_x * maxRotationMagnitude});
-    // } else {
-      _swerveDrivebase->SetFieldRelativeVelocity(
-          wom::drivetrain::FieldRelativeSpeeds{xVelocity * maxMovementMagnitude,
-                                               yVelocity * maxMovementMagnitude,
-                                               r_x * maxRotationMagnitude});
+  // if (isRotateMatch) {
+  //   units::degree_t currentAngle =
+  //       _swerveDrivebase->GetPose().Rotation().Degrees();
+  //   CalculateRequestedAngle(turnX, turnY, currentAngle);
+  //   _swerveDriveTable->GetEntry("RotateMatch")
+  //       .SetDouble(_requestedAngle.value());
+  //   _swerveDrivebase->RotateMatchJoystick(
+  //       _requestedAngle,
+  //       wom::drivetrain::FieldRelativeSpeeds{// also field relative
+  //                                            xVelocity *
+  //                                            maxMovementMagnitude, yVelocity
+  //                                            * maxMovementMagnitude, r_x *
+  //                                            maxRotationMagnitude});
+  // } else {
+  _swerveDrivebase->SetFieldRelativeVelocity(
+      wom::drivetrain::FieldRelativeSpeeds{xVelocity * maxMovementMagnitude,
+                                           yVelocity * maxMovementMagnitude,
+                                           r_x * maxRotationMagnitude});
   //   }
   // }
   // _swerveDrivebase->SetTuning(100_deg, 1_mps);
@@ -121,7 +122,8 @@ void ManualDrivebase::CalculateRequestedAngle(double joystickX,
                                               double joystickY,
                                               units::degree_t defaultAngle) {
   _requestedAngle = (1_rad * std::atan2(joystickY, -joystickX)) + 90_deg;
-  if (wom::utils::deadzone(joystickX) == 0 && wom::utils::deadzone(joystickY) == 0) {
+  if (wom::utils::deadzone(joystickX) == 0 &&
+      wom::utils::deadzone(joystickY) == 0) {
     _requestedAngle = _swerveDrivebase->GetPose().Rotation().Radians();
   }
 }

@@ -43,16 +43,16 @@ void wom::utils::Encoder::SetReduction(double reduction) {
 }
 
 units::radian_t wom::utils::Encoder::GetEncoderPosition() {
-  //if (_type == 0) {
-  //  units::turn_t n_turns{GetEncoderTicks() / GetEncoderTicksPerRotation()};
-  //  return n_turns;
-  //} else if (_type == 2) {
-  //  units::degree_t pos = GetEncoderTicks() * 1_deg;
-  //  return pos;
-  //} else {
-  //  units::degree_t pos = GetEncoderTicks() * 1_deg;
-  //  return pos - _offset;
-  //}
+  // if (_type == 0) {
+  //   units::turn_t n_turns{GetEncoderTicks() / GetEncoderTicksPerRotation()};
+  //   return n_turns;
+  // } else if (_type == 2) {
+  //   units::degree_t pos = GetEncoderTicks() * 1_deg;
+  //   return pos;
+  // } else {
+  //   units::degree_t pos = GetEncoderTicks() * 1_deg;
+  //   return pos - _offset;
+  // }
   return GetEncoderTicks() * 1_rad;
 }
 
@@ -118,7 +118,7 @@ double wom::utils::CANSparkMaxEncoder::GetPosition() const {
 }
 
 double wom::utils::CANSparkMaxEncoder::GetVelocity() const {
-  return _encoder.GetVelocity() * 3.14159265 * 2 /60;
+  return _encoder.GetVelocity() * 3.14159265 * 2 / 60;
 }
 
 wom::utils::TalonFXEncoder::TalonFXEncoder(

@@ -4,14 +4,14 @@
 
 #include "ShooterBehaviour.h"
 
-ShooterManualControl::ShooterManualControl(Shooter* shooter, frc::XboxController* tester)
+ShooterManualControl::ShooterManualControl(Shooter* shooter,
+                                           frc::XboxController* tester)
     : _shooter(shooter), _tester(tester) {
   Controls(shooter);
 }
 
 void ShooterManualControl::OnTick(units::second_t dt) {
   table->GetEntry("RawControl").SetBoolean(_rawControl);
-
 
   if (_tester->GetAButtonPressed()) {
     if (_rawControl == true) {
@@ -21,26 +21,25 @@ void ShooterManualControl::OnTick(units::second_t dt) {
     }
   }
 
-    if (_rawControl) {
-      _shooter->SetState(ShooterState::kRaw);
-      
-      if (_tester->GetLeftTriggerAxis() > 0.1) {
-        _shooter->SetRaw(12_V * _tester->GetLeftTriggerAxis());
-      } else if (_tester->GetRightTriggerAxis() > 0.1) {
-        _shooter->SetRaw(-12_V * _tester->GetRightTriggerAxis());
-      } else {
+  if (_rawControl) {
+    _shooter->SetState(ShooterState::kRaw);
 
-        _shooter->SetRaw(0_V);
-      }
+    if (_tester->GetLeftTriggerAxis() > 0.1) {
+      _shooter->SetRaw(12_V * _tester->GetLeftTriggerAxis());
+    } else if (_tester->GetRightTriggerAxis() > 0.1) {
+      _shooter->SetRaw(-12_V * _tester->GetRightTriggerAxis());
     } else {
-      if (_tester->GetXButton()) {
-        _shooter->SetPidGoal(150_rad_per_s);
-        _shooter->SetState(ShooterState::kSpinUp);
-      } else if (_tester->GetYButton()) {
-        _shooter->SetPidGoal(300_rad_per_s);
-        _shooter->SetState(ShooterState::kSpinUp);
-      } else {
-        _shooter->SetState(ShooterState::kIdle);
-      }
+      _shooter->SetRaw(0_V);
     }
+  } else {
+    if (_tester->GetXButton()) {
+      _shooter->SetPidGoal(150_rad_per_s);
+      _shooter->SetState(ShooterState::kSpinUp);
+    } else if (_tester->GetYButton()) {
+      _shooter->SetPidGoal(300_rad_per_s);
+      _shooter->SetState(ShooterState::kSpinUp);
+    } else {
+      _shooter->SetState(ShooterState::kIdle);
+    }
+  }
 }

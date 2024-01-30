@@ -12,7 +12,6 @@
 
 #include "Wombat.h"
 
-
 struct ShooterConfig {
   std::string path;
   wom::Gearbox ShooterGearbox;
@@ -37,7 +36,8 @@ class Shooter : public behaviour::HasBehaviour {
 
  private:
   ShooterConfig _config;
-  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Shooter");
+  std::shared_ptr<nt::NetworkTable> table =
+      nt::NetworkTableInstance::GetDefault().GetTable("Shooter");
   ShooterState _state = ShooterState::kRaw;
   units::volt_t _rawVoltage;
   units::radians_per_second_t _goal;

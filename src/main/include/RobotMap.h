@@ -1,6 +1,7 @@
 // Copyright (c) 2023-2024 CurtinFRC
 // Open Source Software, you can modify it according to the terms
 // of the MIT License at the root of this project
+
 #pragma once
 
 #include <frc/Compressor.h>
@@ -10,6 +11,7 @@
 #include <units/angle.h>
 #include <units/length.h>
 
+#include <memory>
 #include <string>
 
 #include <ctre/phoenix6/CANcoder.hpp>
@@ -28,33 +30,29 @@ struct RobotMap {
   Controllers controllers;
 
   struct Shooter {
-    rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};// Port 11
+    rev::CANSparkMax shooterMotor{
+        11, rev::CANSparkMax::MotorType::kBrushless};  // Port 11
     // frc::DigitalInput shooterSensor{2};
 
-    // wom::VoltageController shooterMotorGroup = wom::VoltagedController::Group(shooterMotor);
-    wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
-    wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder, frc::DCMotor::NEO(1)};
+    // wom::VoltageController shooterMotorGroup =
+    // wom::VoltagedController::Group(shooterMotor);
+    wom::CANSparkMaxEncoder* shooterEncoder =
+        new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
+    wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder,
+                                frc::DCMotor::NEO(1)};
 
     wom::utils::PIDConfig<units::radians_per_second, units::volts> pidConfigS{
-          "/armavator/arm/velocityPID/config",
-          0.1_V / (360_deg / 1_s),
-          0.03_V / 25_deg,
-          0.001_V / (90_deg / 1_s / 1_s),
-          5_rad_per_s,
-          10_rad_per_s / 1_s
-    };
+        "/armavator/arm/velocityPID/config",
+        0.1_V / (360_deg / 1_s),
+        0.03_V / 25_deg,
+        0.001_V / (90_deg / 1_s / 1_s),
+        5_rad_per_s,
+        10_rad_per_s / 1_s};
 
-    ShooterConfig config{
-        "shooterGearbox",
-        shooterGearbox,
-        pidConfigS
-    };
-
-    
-
+    ShooterConfig config{"shooterGearbox", shooterGearbox, pidConfigS};
   };
   Shooter shooterSystem;
-  
+
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{18, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder frontRightCancoder{19, "Drivebase"};
@@ -75,7 +73,8 @@ struct RobotMap {
         new ctre::phoenix6::hardware::TalonFX(3, "Drivebase")};  // back right
 
     wpi::array<wom::SwerveModuleConfig, 4> moduleConfigs{
-        wom::SwerveModuleConfig{ //CORRECT
+        wom::SwerveModuleConfig{
+            // CORRECT
             // front left module
             frc::Translation2d(10.761_in, 9.455_in),
             wom::Gearbox{
@@ -86,7 +85,8 @@ struct RobotMap {
                          new wom::CanEncoder(18, 0.0445_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &frontLeftCancoder, 4_in / 2},
-        wom::SwerveModuleConfig{ //CORRECT
+        wom::SwerveModuleConfig{
+            // CORRECT
             // front right module
             frc::Translation2d(10.761_in, -9.455_in),
             wom::Gearbox{
@@ -136,19 +136,17 @@ struct RobotMap {
         wom::SwerveDriveConfig::pose_angle_conf_t::ki_t{0},
         0_deg / 1_deg};*/
     wom::SwerveDriveConfig::pose_position_conf_t posePositionPID{
-        "/drivetrain/pid/pose/position/config",
-        0_mps / 1_m,
-        wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0.15},
-        0_m / 1_m,
+        "/drivetrain/pid/pose/position/config", 0_mps / 1_m,
+        wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0.15}, 0_m / 1_m,
         0_cm};
 
     // the config for the whole swerve drive
     wom::SwerveDriveConfig config{"/drivetrain",
-                                  //anglePID,
+                                  // anglePID,
                                   velocityPID,
                                   moduleConfigs,  // each module
                                   gyro,
-                                  //poseAnglePID,
+                                  // poseAnglePID,
                                   posePositionPID,
                                   60_kg,  // robot mass (estimate rn)
                                   {0.1, 0.1, 0.1},
@@ -168,6 +166,8 @@ struct RobotMap {
   SwerveBase swerveBase;
 
   struct SwerveTable {
-    std::shared_ptr<nt::NetworkTable> swerveDriveTable = nt::NetworkTableInstance::GetDefault().GetTable("swerve");
-  }; SwerveTable swerveTable;
+    std::shared_ptr<nt::NetworkTable> swerveDriveTable =
+        nt::NetworkTableInstance::GetDefault().GetTable("swerve");
+  };
+  SwerveTable swerveTable;
 };
