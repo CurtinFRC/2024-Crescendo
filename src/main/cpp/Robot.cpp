@@ -31,20 +31,20 @@ void Robot::RobotInit() {
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
-  frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
+  // frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
 
-  m_path_chooser.SetDefaultOption("Path1", "paths/output/Path1.wpilib.json");
+  // m_path_chooser.SetDefaultOption("Path1", "paths/output/Path1.wpilib.json");
 
-  m_path_chooser.AddOption("Path1", "paths/output/Path1.wpilib.json");
-  m_path_chooser.AddOption("Path2", "paths/output/Path2.wpilib.json");
+  // m_path_chooser.AddOption("Path1", "paths/output/Path1.wpilib.json");
+  // m_path_chooser.AddOption("Path2", "paths/output/Path2.wpilib.json");
 
-  frc::SmartDashboard::PutData("Path Selector", &m_path_chooser);
+  // frc::SmartDashboard::PutData("Path Selector", &m_path_chooser);
 
-  frc::SmartDashboard::PutData("Field", &m_field);
+  // frc::SmartDashboard::PutData("Field", &m_field);
 
-  simulation_timer = frc::Timer();
+  // simulation_timer = frc::Timer();
 
-  robotmap.swerveBase.gyro->Reset();
+  // robotmap.swerveBase.gyro->Reset();
 
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
@@ -53,6 +53,11 @@ void Robot::RobotInit() {
 
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();
+
+  alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
+  alphaArm->SetDefaultBehaviour(
+      [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
 
   robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
   robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
@@ -93,6 +98,9 @@ void Robot::RobotPeriodic() {
   robotmap.swerveTable.swerveDriveTable->GetEntry("backRightEncoder")
       .SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
+  _swerveDrive->OnUpdate(dt);
+  alphaArm->OnUpdate(dt);
+  shooter->OnStart();
   intake->OnUpdate(dt);
 }
 

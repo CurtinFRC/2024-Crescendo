@@ -15,6 +15,8 @@
 
 #include <string>
 
+#include "AlphaArm.h"
+#include "AlphaArmBehaviour.h"
 #include "Intake.h"
 #include "IntakeBehaviour.h"
 #include "RobotMap.h"
@@ -51,6 +53,8 @@ class Robot : public frc::TimedRobot {
   frc::SendableChooser<std::string> m_path_chooser;
 
   wom::SwerveDrive* _swerveDrive;
+
+  AlphaArm* alphaArm;
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;
