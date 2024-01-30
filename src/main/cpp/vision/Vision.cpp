@@ -90,15 +90,15 @@ std::pair<units::meter_t, units::degree_t> Vision::GetDistanceToTarget(VisionTar
   for (int i = 0; i < tags.size(); i++) {
     if (tags[i].id == static_cast<int>(target)) {
       AprilTag tag = tags[i];
-      //frc::Pose3d pose = _limelight->GetPose();
-      //frc::Pose3d pose = frc::Pose3d(0_m, 0_m, 0_m, frc::Rotation3d(0_deg, 0_deg, 0_deg));
+      // frc::Pose3d pose = _limelight->GetPose();
+      // frc::Pose3d pose = frc::Pose3d(0_m, 0_m, 0_m, frc::Rotation3d(0_deg, 0_deg, 0_deg));
 
       SetMode(VisionModes::kAprilTag);
 
       // Get distance to target
       // Get current position from Limelight
       frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
-      //frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
+      // frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
 
       units::meter_t a = tag.pos.X() - current_pose.X();
       units::meter_t b = tag.pos.Y() - current_pose.Y();
@@ -130,15 +130,15 @@ std::pair<units::meter_t, units::degree_t> Vision::GetDistanceToTarget(int id) {
   for (int i = 0; i < tags.size(); i++) {
     if (tags[i].id == id) {
       AprilTag tag = tags[i];
-      //frc::Pose3d pose = _limelight->GetPose();
-      //frc::Pose3d pose = frc::Pose3d(0_m, 0_m, 0_m, frc::Rotation3d(0_deg, 0_deg, 0_deg));
+      // frc::Pose3d pose = _limelight->GetPose();
+      // frc::Pose3d pose = frc::Pose3d(0_m, 0_m, 0_m, frc::Rotation3d(0_deg, 0_deg, 0_deg));
 
       SetMode(VisionModes::kAprilTag);
 
       // Get distance to target
       // Get current position from Limelight
       frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
-      //frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
+      // frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
 
       units::meter_t a = tag.pos.X() - current_pose.X();
       units::meter_t b = tag.pos.Y() - current_pose.Y();
@@ -169,7 +169,7 @@ frc::Pose2d Vision::AlignToTarget(VisionTarget target, units::meter_t offset, wo
   AprilTag tag = GetTags()[static_cast<int>(target) - 1];
   // Get current position from Limelight
   frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
-  //frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
+  // frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
 
   units::meter_t a = tag.pos.X() - current_pose.X();
   units::meter_t b = tag.pos.Y() - current_pose.Y();
@@ -206,7 +206,7 @@ frc::Pose2d Vision::AlignToTarget(int target, units::meter_t offset, wom::Swerve
   AprilTag tag = GetTags()[target - 1];
   // Get current position from Limelight
   frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
-  //frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
+  // frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
 
   units::meter_t a = tag.pos.X() - current_pose.X();
   units::meter_t b = tag.pos.Y() - current_pose.Y();
@@ -243,7 +243,7 @@ frc::Pose2d Vision::AlignToTarget(VisionTarget target, frc::Translation2d offset
   AprilTag tag = GetTags()[static_cast<int>(target) - 1];
   // Get current position from Limelight
   frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
-  //frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
+  // frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
 
   units::meter_t a = tag.pos.X() - current_pose.X();
   units::meter_t b = tag.pos.Y() - current_pose.Y();
@@ -280,7 +280,7 @@ frc::Pose2d Vision::AlignToTarget(int target, frc::Translation2d offset, wom::Sw
   AprilTag tag = GetTags()[target - 1];
   // Get current position from Limelight
   frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
-  //frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
+  // frc::Pose2d current_pose = frc::Pose2d(0_m, 0_m, 0_deg);
 
   units::meter_t a = tag.pos.X() - current_pose.X();
   units::meter_t b = tag.pos.Y() - current_pose.Y();
@@ -315,14 +315,14 @@ frc::Pose2d Vision::TurnToTarget(int target, wom::SwerveDrive* swerveDrive) {
   units::degree_t angle = GetDistanceToTarget(target).second;
 
   frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
-  //frc::Pose2d current_pose = frc::Pose2d();
+  // frc::Pose2d current_pose = frc::Pose2d();
 
   frc::Pose2d pose = frc::Pose2d(current_pose.X(), current_pose.Y(), angle);
 
-  //std::cout << pose.Rotation().Degrees().value() << std::endl;
+  // std::cout << pose.Rotation().Degrees().value() << std::endl;
 
-  //swerveDrive->SetPose(pose);
-  
+  // swerveDrive->SetPose(pose);
+
   return pose;
 }
 
@@ -337,7 +337,7 @@ frc::Pose2d Vision::TurnToTarget(VisionTarget target, wom::SwerveDrive* swerveDr
 
   std::cout << pose.Rotation().Degrees().value() << std::endl;
 
-  //swerveDrive->SetPose(pose);
+  // swerveDrive->SetPose(pose);
 }
 
 std::pair<frc::Pose2d, units::degree_t> Vision::GetAngleToObject(VisionTargetObjects object) {
@@ -346,8 +346,10 @@ std::pair<frc::Pose2d, units::degree_t> Vision::GetAngleToObject(VisionTargetObj
   if (TargetIsVisible(object)) {
     frc::Pose2d pose = _limelight->GetPose().ToPose2d();
 
-    units::degree_t offset = units::degree_t{_limelight->GetOffset().first}; // degrees are how much the robot has to turn for the target to be in the center 
-   
+    units::degree_t offset = units::degree_t{
+        _limelight->GetOffset()
+            .first};  // degrees are how much the robot has to turn for the target to be in the center
+
     frc::Pose2d new_pose = frc::Pose2d(pose.X(), pose.Y(), offset);
 
     return std::make_pair(new_pose, offset);
@@ -358,7 +360,7 @@ std::pair<frc::Pose2d, units::degree_t> Vision::GetAngleToObject(VisionTargetObj
 
 units::degree_t Vision::LockOn(VisionTargetObjects object, wom::SwerveDrive* swerveDrive) {
   SetMode(VisionModes::kRing);
-  
+
   units::degree_t angle = -1000_deg;
 
   if (TargetIsVisible(object)) {
@@ -373,7 +375,9 @@ bool Vision::IsAtPose(frc::Pose3d pose, units::second_t dt) {
 }
 
 void Vision::SetMode(VisionModes mode) {
-  if (static_cast<int>(mode) == _limelight->GetTargetingData(wom::LimelightTargetingData::kGetpipe)) { return; }
+  if (static_cast<int>(mode) == _limelight->GetTargetingData(wom::LimelightTargetingData::kGetpipe)) {
+    return;
+  }
 
   switch (mode) {
     case VisionModes::kAprilTag: {

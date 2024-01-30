@@ -186,12 +186,12 @@ void Robot::SimulationInit() {
 
     std::cout << x << std::endl;
     std::cout << y << std::endl; */
-  //std::cout << _vision->TurnToTarget(1, _swerveDrive).Rotation().Degrees().value() << std::endl;
+  // std::cout << _vision->TurnToTarget(1, _swerveDrive).Rotation().Degrees().value() << std::endl;
   frc::Pose2d pose = _vision->TurnToTarget(2, _swerveDrive);
-  nt::NetworkTableInstance::GetDefault().GetTable("vision")->PutNumber("rot", pose.Rotation().Degrees().value()); 
-  
+  nt::NetworkTableInstance::GetDefault().GetTable("vision")->PutNumber("rot",
+                                                                       pose.Rotation().Degrees().value());
 }
 
-
 void Robot::SimulationPeriodic() {}
+
 
