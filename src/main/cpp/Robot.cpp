@@ -33,22 +33,20 @@
 =======
 >>>>>>> 0029f49 (fix some formatting)
 #include "behaviour/HasBehaviour.h"
-
-#include <frc/kinematics/DifferentialDriveKinematics.h>
-#include <frc/controller/RamseteController.h>
-#include <frc/Timer.h>
 #include "networktables/NetworkTableInstance.h"
-
 
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 
 >>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
+=======
+>>>>>>> bf9b1b4 (Merged with swerve)
   shooter = new Shooter(robotmap.shooterSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(shooter);
   shooter->SetDefaultBehaviour(
@@ -59,7 +57,6 @@ void Robot::RobotInit() {
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
   // m_chooser.SetDefaultOption("Default Auto", "Default Auto");
-
 
   // frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
 
@@ -173,14 +170,17 @@ void Robot::RobotInit() {
   intake->SetDefaultBehaviour(
       [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
 
-  //_vision = new Vision("limelight", FMAP("fmap.fmap"));
+  // _vision = new Vision("limelight", FMAP("fmap.fmap"));
 
 <<<<<<< HEAD
 >>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
 =======
   _vision = new Vision("limelight", FMAP("fmap.fmap"));
+<<<<<<< HEAD
 
 >>>>>>> c89d969 ([wpiformat] Run wpiformat)
+=======
+>>>>>>> bf9b1b4 (Merged with swerve)
 }
 
 void Robot::RobotPeriodic() {
@@ -222,12 +222,15 @@ void Robot::RobotPeriodic() {
       .SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   // shooter->OnUpdate(dt);
   // intake->OnUpdate(dt);
   // alphaArm->OnUpdate(dt);
 =======
 
 >>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
+=======
+>>>>>>> bf9b1b4 (Merged with swerve)
   _swerveDrive->OnUpdate(dt);
 <<<<<<< HEAD
 =======
@@ -239,8 +242,11 @@ void Robot::RobotPeriodic() {
 =======
 
   // _swerveDrive->OnUpdate(dt);
+<<<<<<< HEAD
 
 >>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
+=======
+>>>>>>> bf9b1b4 (Merged with swerve)
 }
 
 void Robot::AutonomousInit() {
@@ -258,8 +264,6 @@ void Robot::AutonomousPeriodic() {}
 >>>>>>> 0029f49 (fix some formatting)
 
 void Robot::TeleopInit() {
-
-
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
 <<<<<<< HEAD
@@ -281,15 +285,21 @@ void Robot::TeleopInit() {
   // backLeft->SetVoltage(4_V);
   // backRight->SetVoltage(4_V);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   
+=======
+>>>>>>> bf9b1b4 (Merged with swerve)
 
-//  FMAP("fmap.fmap");
+  //  FMAP("fmap.fmap");
 
   // _swerveDrive->OnStart();
   // sched->InterruptAll();
+<<<<<<< HEAD
 
 >>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
+=======
+>>>>>>> bf9b1b4 (Merged with swerve)
 }
 <<<<<<< HEAD
 void Robot::TeleopPeriodic() {}
@@ -335,5 +345,3 @@ void Robot::SimulationInit() {
 }
 
 void Robot::SimulationPeriodic() {}
-
-
