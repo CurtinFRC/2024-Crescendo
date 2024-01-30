@@ -46,10 +46,6 @@ void Robot::RobotInit() {
 
   // robotmap.swerveBase.gyro->Reset();
 
-  // _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
-  // wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
-  // _swerveDrive->SetDefaultBehaviour(
-  //     [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour(
@@ -93,9 +89,7 @@ void Robot::RobotPeriodic() {
   shooter->OnUpdate(dt);
   sched->Tick();
 
-  robotmap.swerveTable.swerveDriveTable
-      ->GetEntry("frontLeftEncoder")
-
+  robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder")
       .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("frontRightEncoder")
       .SetDouble(robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->GetEncoderPosition().value());
@@ -106,6 +100,7 @@ void Robot::RobotPeriodic() {
 
   _swerveDrive->OnUpdate(dt);
   alphaArm->OnUpdate(dt);
+  shooter->OnStart();
   intake->OnUpdate(dt);
 }
 
@@ -118,7 +113,6 @@ void Robot::AutonomousPeriodic() {}
 void Robot::TeleopInit() {
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
-  shooter->OnStart();
   sched->InterruptAll();
 
   // frontLeft->SetVoltage(4_V);

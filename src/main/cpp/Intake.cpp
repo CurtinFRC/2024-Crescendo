@@ -13,43 +13,51 @@ IntakeConfig Intake::GetConfig() {
 void Intake::OnUpdate(units::second_t dt) {
   switch (_state) {
     case IntakeState::kIdle: {
-      // _config.IntakeMotor.motorController->SetVoltage(0_V);
-      // if (_config.intakeSensor->Get()) {
-      //   setState(IntakeState::kHold);
-      // }
+      if (_config.intakeSensor->Get() == false) {
+        setState(IntakeState::kHold);
+      }
       _stringStateName = "Idle";
       _setVoltage = 0_V;
     } break;
+
     case IntakeState::kRaw: {
-      // _config.IntakeMotor.motorController->SetVoltage(_rawVoltage);
       _stringStateName = "Raw";
       _setVoltage = _rawVoltage;
     } break;
+
     case IntakeState::kEject: {
-      // _config.IntakeMotor.motorController->SetVoltage(-5_V);
-      // if (_config.intakeSensor->Get() == 0 && _config.magSensor->Get() == 0) {
-      //   setState(IntakeState::kIdle);
-      // }
       _stringStateName = "Eject";
-      _setVoltage = -5_V;
+      _setVoltage = 7_V;
+      if (_config.intakeSensor->Get() == true) {
+        setState(IntakeState::kIdle);
+        _ejecting = false;
+      }
     } break;
+
     case IntakeState::kHold: {
-      // _config.IntakeMotor.motorController->SetVoltage(0_V);
       _stringStateName = "Hold";
       _setVoltage = 0_V;
-    } break;
-    case IntakeState::kIntake: {
-      // _config.IntakeMotor.motorController->SetVoltage(5_V);
-      _stringStateName = "Intake";
-      _setVoltage = 5_V;
-    } break;
-    case IntakeState::kPass: {
-      // _config.IntakeMotor.motorController->SetVoltage(5_V);
-      // if (_config.shooterSensor->Get()) {
-      //   setState(IntakeState::kIdle);
-      //   _stringStateName = "Pass";
+      // if (_config.intakeSensor->Get() == false) {
+      //   setState(IntakeState::kHold);
       // }
-      _setVoltage = 5_V;
+    } break;
+
+    case IntakeState::kIntake: {
+      _stringStateName = "Intake";
+      _setVoltage = -7_V;
+      if (_config.intakeSensor->Get() == false) {
+        setState(IntakeState::kHold);
+        _intaking = false;
+      }
+    } break;
+
+    case IntakeState::kPass: {
+      _stringStateName = "Pass";
+      _setVoltage = -7_V;
+      if (_config.intakeSensor->Get() == true) {
+        setState(IntakeState::kIdle);
+        _passing = false;
+      }
     } break;
     default:
       std::cout << "Error: Intake in INVALID STATE." << std::endl;
@@ -57,6 +65,8 @@ void Intake::OnUpdate(units::second_t dt) {
   }
   _table->GetEntry("State: ").SetString(_stringStateName);
   _table->GetEntry("Motor Voltage: ").SetDouble(_setVoltage.value());
+  _table->GetEntry("Intake Sensor: ").SetBoolean(_config.intakeSensor->Get());
+  // _table->GetEntry("Shooter Sensor: ").SetBoolean(_config.shooterSensor->Get());
   // _table->GetEntry("Intake Sensor: ").SetBoolean(_config.intakeSensor->Get());
   // _table->GetEntry("Shooter Sensor: ").SetBoolean(_config.shooterSensor->Get());
   // _table->GetEntry("Magazine Sensor: ").SetBoolean(_config.magSensor->Get());
@@ -71,4 +81,7 @@ void Intake::setState(IntakeState state) {
 }
 void Intake::setRaw(units::volt_t voltage) {
   _rawVoltage = voltage;
+}
+IntakeState Intake::getState() {
+  return _state;
 }
