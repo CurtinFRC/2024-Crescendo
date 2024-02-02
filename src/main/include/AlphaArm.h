@@ -70,4 +70,6 @@ class AlphaArm : public::behaviour::HasBehaviour{
 
     units::radian_t _encoderSetpoint = 0_rad;
     units::volt_t _controlledRawVoltage = 0_V;
+
+    std::string _stateName = "Default";
 };

@@ -18,5 +18,5 @@ class AlphaArmManualControl : public behaviour::Behaviour {
  private:
   AlphaArm* _alphaArm;
   frc::XboxController* _codriver;
-  bool _rawControl = true;
+  bool _rawControl = false;
 };

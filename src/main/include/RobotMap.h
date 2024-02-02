@@ -42,41 +42,20 @@ struct RobotMap {
 
   struct AlphaArmSystem {
     rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
-    //rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
     wom::CANSparkMaxEncoder* armEncoder = new wom::CANSparkMaxEncoder(&alphaArmMotor, 0.02_m);
-    //frc::DutyCycleEncoder* armEncoder = new frc::DutyCycleEncoder{12};
-    //wom::DutyCycleEncoder* armEncoder = new wom::DutyCycleEncoder(12, 0.02_m);
-
-    //frc::Encoder wristEncoder{0, 1};
-    //frc::Encoder wristEncoder{0, 1, false, frc::Encoder::EncodingType::k2X};
-    //frc::DutyCycleEncoder armEncoder{12};
-    //_armEncoder = frc::DutyCycleEncoder{12};
     
-    
-    
-    //wom::Gearbox alphaArmGearbox{&alphaArmMotor, armEncoder, frc::DCMotor::NEO(1)};
     wom::Gearbox alphaArmGearbox{&alphaArmMotor, armEncoder, frc::DCMotor::NEO(1)};
-    /*("path", kp_t kp = kp_t{0}, ki_t ki = ki_t{0}, kd, stableerrorthreshold, errorsomething, izone);*/   
     
     wom::utils::PIDConfig<units::radian, units::volt> pidConfigA{
      "/path/to/pid/in/nt/tables",
-    12_V / 180_deg, 
+    15_V / 180_deg, 
     0_V / (1_deg * 1_s), 
     0_V / (1_deg / 1_s),
     };
 
-    // wom::utils::PIDConfig<units::radians_per_second, units::volt> velocityConfig{
-
-    // };
-
-        
-    //wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
-
     AlphaArmConfig config {
         alphaArmGearbox, 
-        //armEncoder,
         pidConfigA,
-        //velocityConfig
     };
 
   };

@@ -86,10 +86,10 @@ void Robot::RobotInit() {
   robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(1.309_rad);
   robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(-0.3511_rad);
 
-  // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0.5948_rad);
-  // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(2.6156_rad);
-  // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(-1.7417_rad);
-  // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(2.8931_rad);
+  // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
+  // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
+  // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
+  // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
 
   // robotmap.swerveBase.moduleConfigs[0].driveMotor.motorController->SetInverted(true);
   // robotmap.swerveBase.moduleConfigs[1].driveMotor.motorController->SetInverted(true);

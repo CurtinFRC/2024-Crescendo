@@ -10,19 +10,23 @@ void AlphaArm::OnUpdate(units::second_t dt){
   _table->GetEntry("Error").SetDouble(_pidWom.GetError().value());
   _table->GetEntry("Current Pos").SetDouble(-_config.alphaArmGearbox.encoder->GetEncoderPosition().value());
   _table->GetEntry("Setpoint").SetDouble(_pidWom.GetSetpoint().value());
+  _table->GetEntry("State ").SetString(_stateName);
         switch(_state){
           case AlphaArmState::kIdle:
+            _stateName = "Idle";
             
             _setAlphaArmVoltage = 0_V;
 
           break;
           case AlphaArmState::kRaw:
+            _stateName = "Raw";
           
             _setAlphaArmVoltage = _rawArmVoltage;
 
           break;
           case AlphaArmState::kAmpAngle:
-            std::cout << "AmpAngle" << std::endl;
+            _stateName = "Amp Angle";
+
             // _pidWom.SetSetpoint(_goal);
             // _setAlphaArmVoltage = _pidWom.Calculate(_config.alphaArmGearbox.encoder->GetEncoderPosition(), dt, 0_V);
 
@@ -30,7 +34,7 @@ void AlphaArm::OnUpdate(units::second_t dt){
             if (_controlledRawVoltage.value() == 0) {
               if (_encoderSetpoint.value() != 0) {
                 _pidWom.SetSetpoint(_encoderSetpoint);
-                _setAlphaArmVoltage = -_pidWom.Calculate(-_config.alphaArmGearbox.encoder->GetEncoderPosition(), dt, 0_V);
+                _setAlphaArmVoltage = -_pidWom.Calculate(-_config.alphaArmGearbox.encoder->GetEncoderPosition(), dt, 0.1_V);
                 _table->GetEntry("Demand").SetDouble(_setAlphaArmVoltage.value());
               }
             } else {
@@ -40,16 +44,17 @@ void AlphaArm::OnUpdate(units::second_t dt){
             }
             break;
           case AlphaArmState::kSpeakerAngle:
-            std::cout << "SpeakerAngle" << std::endl;
+            _stateName = "Speaker Angle";
             //_pidWom.SetSetpoint(_goal);
            // _setAlphaArmVoltage = _pidWom.Calculate(_config.alphaArmGearbox.encoder->GetEncoderPosition(), dt, 0_V);
               break;
           case AlphaArmState::kStowed:
-            std::cout << "Stowed" << std::endl;
+            _stateName = "Stowed";
             //_pidWom.SetSetpoint(_goal);
             //_setAlphaArmVoltage = _pidWom.Calculate(_config.alphaArmGearbox.encoder->GetEncoderPosition(), dt, 0_V);
           break;
           default:
+            _stateName = "Error";
             std::cout << "oops, wrong state" << std::endl;
           break;
         }

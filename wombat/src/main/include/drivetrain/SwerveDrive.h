@@ -87,6 +87,8 @@ class SwerveModule {
   void SetTurnOffsetReverse();
   void TurnOffset();
 
+  double closestAngle(double a, double b);
+
   // double GetCancoderPosition(); // from liam's
 
   void SetAccelerationLimit(units::meters_per_second_squared_t limit);

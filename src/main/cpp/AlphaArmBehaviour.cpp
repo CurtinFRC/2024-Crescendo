@@ -12,6 +12,7 @@ AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxContro
 }
 
 void AlphaArmManualControl::OnTick(units::second_t dt) {
+
   if (_codriver->GetStartButtonPressed()) {
     if (_rawControl == true) {
       _rawControl = false;

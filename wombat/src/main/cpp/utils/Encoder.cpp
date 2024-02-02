@@ -155,6 +155,8 @@ wom::utils::CanEncoder::CanEncoder(int deviceNumber, units::meter_t wheelRadius,
                                    std::string name)
     : wom::utils::Encoder(ticksPerRotation, 2, wheelRadius, reduction) {
   _canEncoder = new ctre::phoenix6::hardware::CANcoder(deviceNumber, name);
+  // _canEncoder->ConfigAbsoluteEncoderRange(0, 1);
+
 }
 
 double wom::utils::CanEncoder::GetEncoderRawTicks() const {
