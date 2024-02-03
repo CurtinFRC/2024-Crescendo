@@ -32,9 +32,9 @@ These commands can be used in a variety of combinations, feel free to experiment
 Build
 ---
 `./gradlew build`
-Build will compile and get the code ready without deploying it. It will also run all automated tests, which is great for testing your code before it ever gets run on a robot (which also means you can build whenever).
+Build will compile your code without deploying it. It will also run all automated tests, which is great for testing code before it runs on a robot.
 
-`./gradlew :Wombat:build`
+`./gradlew :wombat:build`
 Will compile and build the Wombat library. Also runs all of Wombat's inbuilt tests.
 
 Deploy
