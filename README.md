@@ -4,27 +4,14 @@ Our code for the 2024 FRC game, CRESCENDO, using GradleRIO, Wombat, and probably
 
 Setup
 ===
-
 First install WPILib and if running Windows the FRC game tools. Instructions can be found [here](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/index.html).
 
-Linux
----
 Fork this repository then open up a terminal and run :
 ```bash
 git clone https://github.com/*yourusernamehere*/2024-Crescendo.git
 cd 2024-Crescendo
 ```
 Now look in [CONTRIBUTING.md](./CONTRIBUTING.md) before continuing!
-
-Windows
----
-Fork this repository then open up a terminal and run :
-```powershell
-git clone https:\\github.com\*yourusernamehere*\2024-Crescendo.git
-cd 2024-Crescendo
-```
-Now look in [CONTRIBUTING.md](./CONTRIBUTING.md) before continuing!
-
 Quick Commands
 ===
 These commands can be used in a variety of combinations, feel free to experiment!
