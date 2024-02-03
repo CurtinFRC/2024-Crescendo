@@ -30,7 +30,7 @@ void IntakeManualControl::OnTick(units::second_t dt) {
     }
 
   } else {
-    if (_codriver.GetRightBumper()) {
+    if (_codriver.GetRightBumperPressed()) {
       if (_intake->getState() == IntakeState::kIntake) {
         _intake->setState(IntakeState::kIdle);
       } else {

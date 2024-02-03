@@ -145,6 +145,7 @@ void Robot::TeleopInit() {
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
   shooter->OnStart();
+  alphaArm->OnStart();
   sched->InterruptAll();
 
   // frontLeft->SetVoltage(4_V);

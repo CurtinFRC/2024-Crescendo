@@ -37,6 +37,7 @@ class AlphaArm : public::behaviour::HasBehaviour{
     public:
      explicit AlphaArm(AlphaArmConfig config);
 
+    void OnStart();
     void OnUpdate(units::second_t dt);
     void SetArmRaw(units::volt_t voltage);
     void SetState(AlphaArmState state);
@@ -70,6 +71,8 @@ class AlphaArm : public::behaviour::HasBehaviour{
 
     units::radian_t _encoderSetpoint = 0_rad;
     units::volt_t _controlledRawVoltage = 0_V;
+  units::radian_t _startingPos = 0_rad;
 
     std::string _stateName = "Default";
+    bool started = false;
 };

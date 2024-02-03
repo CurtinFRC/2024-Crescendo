@@ -1,6 +1,6 @@
-// // Copyright (c) 2023-2024 CurtinFRC
-// // Open Source Software, you can modify it according to the terms
-// // of the MIT License at the root of this project
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
 
 #pragma once
 
@@ -20,7 +20,6 @@ class ShooterManualControl : public behaviour::Behaviour {
   Shooter* _shooter;
   frc::XboxController* _codriver;
 
-  bool _rawControl = true;
+  bool _rawControl = false;
   std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Shooter Behaviour");
-  
 };
