@@ -6,7 +6,7 @@
 
 Shooter::Shooter(ShooterConfig config)
     : _config(config)
-// ,
+// ,  
 // _pid{frc::PIDController (1, 0, 0, 0.005_s)}
 {}  // config.path + "/pid", config.pidConfig
 void Shooter::OnUpdate(units::second_t dt) {
