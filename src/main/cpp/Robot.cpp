@@ -52,10 +52,6 @@ void Robot::RobotInit() {
 
   // robotmap.swerveBase.gyro->Reset();
 
-  // _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
-  // wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
-  // _swerveDrive->SetDefaultBehaviour(
-  //     [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour(
@@ -110,6 +106,7 @@ void Robot::RobotPeriodic() {
 
   _swerveDrive->OnUpdate(dt);
   alphaArm->OnUpdate(dt);
+  shooter->OnStart();
   intake->OnUpdate(dt);
 
 }
