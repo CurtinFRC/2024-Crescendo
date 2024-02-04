@@ -254,6 +254,6 @@ std::shared_ptr<behaviour::Behaviour> autos::AutoTest(wom::drivetrain::SwerveDri
   return behaviour::make<ArmToSetPoint>(&_alphaArm, 0 * 1_deg, 0.2);
 //     <<make<DriveToLocation>(_driveBase, raw, distance)
 //     <<make<AutoShoot>(_shooter, 8_V)
-//     <<make<AutoIntake>(_intake, 8_V)
+  behaviour::make<AutoIntake>(&_intake, 8_V);
 } // This auto is a test for auto to see if all things work.
 

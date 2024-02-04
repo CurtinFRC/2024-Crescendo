@@ -28,7 +28,6 @@ class ArmToSetPoint : public behaviour::Behaviour {
   explicit ArmToSetPoint(AlphaArm* alphaArm, units::degree_t armAngle, float armSpeed);
   void OnTick(units::second_t dt);
 
-
  private:
   AlphaArm* _alphaArm;
   // double _armCurrentDegree;

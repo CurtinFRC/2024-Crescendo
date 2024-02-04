@@ -44,12 +44,14 @@ void IntakeManualControl::OnTick(units::second_t dt) {
   // }
 }
 
-// IntakeAutoControl::IntakeAutoControl(Intake* intake) : _intake(intake) {}
+AutoIntake::AutoIntake(Intake* intake, units::volt_t intakeVolt) : _intake(intake) {
+  Controls(intake);
+}
 
-// void IntakeAutoControl::OnTick(units::second_t dt) {
-//   if (_intake->GetConfig().intakeSensor->Get() == 1) {
-//     _intake->setState(IntakeState::kPass);
-//   } else if (_intake->GetConfig().magSensor->Get() == 0) {
-//     _intake->setState(IntakeState::kIdle);
-//   }
-// }
+void AutoIntake::OnTick(units::second_t dt) {
+  // if (_intake->GetConfig().intakeSensor->Get() == 1) {
+  //   _intake->setState(IntakeState::kPass);
+  // } else if (_intake->GetConfig().magSensor->Get() == 0) {
+  //   _intake->setState(IntakeState::kIdle);
+  // }
+}
