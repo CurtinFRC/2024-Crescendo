@@ -20,6 +20,8 @@
 
 #include "behaviour/HasBehaviour.h"
 
+#include "Auto.h"
+
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
@@ -29,9 +31,13 @@ void Robot::RobotInit() {
       [this]() { return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver); });
 
   sched = wom::BehaviourScheduler::GetInstance();
-  m_chooser.SetDefaultOption("Default Auto", "Default Auto");
+  m_chooser.SetDefaultOption("kTaxi", "kTaxi");
 
-  // frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
+  for (auto &option : autoOptions) {
+    m_chooser.AddOption(option, option);
+  }
+
+  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
   // m_path_chooser.SetDefaultOption("Path1", "paths/output/Path1.wpilib.json");
 
@@ -42,7 +48,7 @@ void Robot::RobotInit() {
 
   // frc::SmartDashboard::PutData("Field", &m_field);
 
-  // simulation_timer = frc::Timer();
+  timer = frc::Timer();
 
   // robotmap.swerveBase.gyro->Reset();
 
@@ -105,11 +111,28 @@ void Robot::RobotPeriodic() {
   _swerveDrive->OnUpdate(dt);
   alphaArm->OnUpdate(dt);
   intake->OnUpdate(dt);
+
 }
 
 void Robot::AutonomousInit() {
   loop.Clear();
   sched->InterruptAll();
+
+  m_autoSelected = m_chooser.GetSelected();
+  fmt::print("Auto selected: {}\n", m_autoSelected);
+  if (m_autoSelected == "Taxi") {
+    sched->Schedule(autos::Taxi(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
+  } else if (m_autoSelected == "Auto Test") {
+    sched->Schedule(autos::AutoTest(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
+  } else if (m_autoSelected == "Quadruple Close") {
+    sched->Schedule(autos::QuadrupleClose(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
+  } else if (m_autoSelected == "Quadruple Far") {
+    sched->Schedule(autos::QuadrupleFar(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
+  } else if (m_autoSelected == "Quadruple Close Double Far") {
+    sched->Schedule(autos::QuadrupleCloseDoubleFar(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
+  } else if (m_autoSelected == "Quadruple Close Single Far") {
+    sched->Schedule(autos::QuadrupleCloseSingleFar(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
+  }
 }
 void Robot::AutonomousPeriodic() {}
 
