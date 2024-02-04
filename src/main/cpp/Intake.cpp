@@ -4,10 +4,14 @@
 
 #include "Intake.h"
 
-Intake::Intake(IntakeConfig config) : _config(config) {}
+Intake::Intake(IntakeConfig config) : _config(config), _pid(config.path + "/pid", config.pidConfig) {}
 
 IntakeConfig Intake::GetConfig() {
   return _config;
+}
+
+void Shooter::OnStart() {
+  _pid.Reset();
 }
 
 void Intake::OnUpdate(units::second_t dt) {
@@ -67,6 +71,8 @@ void Intake::OnUpdate(units::second_t dt) {
   _table->GetEntry("State: ").SetString(_stringStateName);
   _table->GetEntry("Motor Voltage: ").SetDouble(_setVoltage.value());
   _table->GetEntry("Intake Sensor: ").SetBoolean(_config.intakeSensor->Get());
+  _table->GetEntry("Error").SetDouble(_pid.GetError().value());
+  _table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint().value());
   // _table->GetEntry("Shooter Sensor: ").SetBoolean(_config.shooterSensor->Get());
 
   std::cout << _setVoltage.value() << std::endl;
@@ -82,4 +88,7 @@ void Intake::setRaw(units::volt_t voltage) {
 }
 IntakeState Intake::getState() {
   return _state;
+}
+void Intake::SetPidGoal(units::radians_per_second_t goal) {
+  _goal = goal;
 }
