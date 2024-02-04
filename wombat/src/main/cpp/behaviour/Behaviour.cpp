@@ -10,9 +10,7 @@ using namespace behaviour;
 
 // Behaviour
 Behaviour::Behaviour(std::string name, units::time::second_t period)
-    : _bhvr_name(name),
-      _bhvr_period(period),
-      _bhvr_state(BehaviourState::INITIALISED) {}
+    : _bhvr_name(name), _bhvr_period(period), _bhvr_state(BehaviourState::INITIALISED) {}
 Behaviour::~Behaviour() {
   if (!IsFinished())
     Interrupt();
@@ -82,8 +80,7 @@ bool Behaviour::Tick() {
 
     if (dt > 2 * _bhvr_period) {
       std::cerr << "Behaviour missed deadline. Reduce Period. Dt=" << dt.value()
-                << " Dt(deadline)=" << (2 * _bhvr_period).value()
-                << ". Bhvr: " << GetName() << std::endl;
+                << " Dt(deadline)=" << (2 * _bhvr_period).value() << ". Bhvr: " << GetName() << std::endl;
     }
 
     if (_bhvr_timeout.value() > 0 && _bhvr_timer > _bhvr_timeout)
@@ -100,8 +97,7 @@ bool Behaviour::IsRunning() const {
 }
 
 bool Behaviour::IsFinished() const {
-  return _bhvr_state != BehaviourState::INITIALISED &&
-         _bhvr_state != BehaviourState::RUNNING;
+  return _bhvr_state != BehaviourState::INITIALISED && _bhvr_state != BehaviourState::RUNNING;
 }
 
 void Behaviour::Stop(BehaviourState new_state) {
@@ -173,8 +169,7 @@ void ConcurrentBehaviour::Add(Behaviour::ptr behaviour) {
 }
 
 std::string ConcurrentBehaviour::GetName() const {
-  std::string msg =
-      (_reducer == ConcurrentBehaviourReducer::ALL ? "ALL { " : "RACE {");
+  std::string msg = (_reducer == ConcurrentBehaviourReducer::ALL ? "ALL { " : "RACE {");
   for (auto b : _children)
     msg += b->GetName() + ", ";
   msg += "}";
@@ -190,8 +185,8 @@ void ConcurrentBehaviour::OnStart() {
         using namespace std::chrono_literals;
 
         b->Tick();
-        std::this_thread::sleep_for(std::chrono::milliseconds(
-            static_cast<int64_t>(b->GetPeriod().value() * 1000)));
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(static_cast<int64_t>(b->GetPeriod().value() * 1000)));
       }
 
       if (IsFinished() && !b->IsFinished())
@@ -273,10 +268,8 @@ void WaitFor::OnTick(units::time::second_t dt) {
 }
 
 // WaitTime
-WaitTime::WaitTime(units::time::second_t time)
-    : WaitTime([time]() { return time; }) {}
-WaitTime::WaitTime(std::function<units::time::second_t()> time_fn)
-    : _time_fn(time_fn) {}
+WaitTime::WaitTime(units::time::second_t time) : WaitTime([time]() { return time; }) {}
+WaitTime::WaitTime(std::function<units::time::second_t()> time_fn) : _time_fn(time_fn) {}
 
 void WaitTime::OnStart() {
   _time = _time_fn();

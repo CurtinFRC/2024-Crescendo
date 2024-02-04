@@ -6,7 +6,8 @@
 
 #include <frc/XboxController.h>
 
-IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver) : _intake(intake), _codriver(codriver) {
+IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver)
+    : _intake(intake), _codriver(codriver) {
   Controls(intake);
 }
 
@@ -24,7 +25,7 @@ void IntakeManualControl::OnTick(units::second_t dt) {
       _intake->setState(IntakeState::kRaw);
     }
   }
-  
+
   if (_rawControl) {
     if (_codriver.GetRightTriggerAxis() > 0.1) {
       _intake->setRaw(_codriver.GetRightTriggerAxis() * 10_V);

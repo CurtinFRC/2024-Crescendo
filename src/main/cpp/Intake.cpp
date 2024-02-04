@@ -63,7 +63,6 @@ void Intake::OnUpdate(units::second_t dt) {
         _passing = false;
       }
     } break;
-    
     default:
       std::cout << "Error: Intake in INVALID STATE." << std::endl;
       break;
@@ -74,6 +73,9 @@ void Intake::OnUpdate(units::second_t dt) {
   _table->GetEntry("Error").SetDouble(_pid.GetError().value());
   _table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint().value());
   // _table->GetEntry("Shooter Sensor: ").SetBoolean(_config.shooterSensor->Get());
+  // _table->GetEntry("Intake Sensor: ").SetBoolean(_config.intakeSensor->Get());
+  // _table->GetEntry("Shooter Sensor: ").SetBoolean(_config.shooterSensor->Get());
+  // _table->GetEntry("Magazine Sensor: ").SetBoolean(_config.magSensor->Get());
 
   std::cout << _setVoltage.value() << std::endl;
 

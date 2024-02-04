@@ -37,16 +37,14 @@ class ManualDrivebase : public behaviour::Behaviour {
    * A pointer to the controller that the driver has been allocated (the
    * allocated memory address that stores the "driver controller" object)
    */
-  ManualDrivebase(wom::drivetrain::SwerveDrive* swerveDrivebase,
-                  frc::XboxController* driverController);
+  ManualDrivebase(wom::drivetrain::SwerveDrive* swerveDrivebase, frc::XboxController* driverController);
 
   void OnTick(units::second_t deltaTime) override;
   /**
    * @brief This function handles all of the logic behind the tangent function,
    * to be able to calculate an angle between 0 andd 360 degrees, inclusively
    */
-  void CalculateRequestedAngle(double joystickX, double joystickY,
-                               units::degree_t defaultAngle);
+  void CalculateRequestedAngle(double joystickX, double joystickY, units::degree_t defaultAngle);
   void OnStart() override;
   void ResetMode();
 
@@ -72,8 +70,8 @@ class ManualDrivebase : public behaviour::Behaviour {
   const double turningDeadzone = 0.2;
 
   // Variables for solution to Anti-tip
-  double prevJoystickX, prevJoystickY, prevPrevJoystickX, prevPrevJoystickY,
-      usingJoystickXPos, usingJoystickYPos;
+  double prevJoystickX, prevJoystickY, prevPrevJoystickX, prevPrevJoystickY, usingJoystickXPos,
+      usingJoystickYPos;
   // The speed that the joystick must travel to activate averaging over previous
   // 3 joystick positions
   const double smoothingThreshold = 1;
@@ -126,8 +124,8 @@ class GoToPose : public behaviour::Behaviour {
 
 class FollowTrajectory : public behaviour::Behaviour {
  public:
-  FollowTrajectory(wom::drivetrain::SwerveDrive* swerve,
-                   wom::utils::Pathplanner* pathplanner, std::string path);
+  FollowTrajectory(wom::drivetrain::SwerveDrive* swerve, wom::utils::Pathplanner* pathplanner,
+                   std::string path);
 
   void OnTick(units::second_t dt) override;
 
@@ -184,8 +182,7 @@ class TempSimSwerveDrive {
 
 class AutoSwerveDrive {
  public:
-  AutoSwerveDrive(wom::drivetrain::SwerveDrive* swerve, frc::Timer* timer,
-                  frc::Field2d* field);
+  AutoSwerveDrive(wom::drivetrain::SwerveDrive* swerve, frc::Timer* timer, frc::Field2d* field);
 
   void OnUpdate();
 

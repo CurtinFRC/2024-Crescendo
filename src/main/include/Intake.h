@@ -47,5 +47,6 @@ class Intake : public behaviour::HasBehaviour {
   bool _passing;
   wom::PIDController<units::radians_per_second, units::volt> _pid;
   
+
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("Intake");
 };
