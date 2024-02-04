@@ -119,7 +119,7 @@ void Robot::AutonomousInit() {
   sched->InterruptAll();
 
   m_autoSelected = m_chooser.GetSelected();
-  fmt::print("Auto selected: {}\n", m_autoSelected);
+  
   if (m_autoSelected == "Taxi") {
     sched->Schedule(autos::Taxi(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
   } else if (m_autoSelected == "Auto Test") {
@@ -134,7 +134,9 @@ void Robot::AutonomousInit() {
     sched->Schedule(autos::QuadrupleCloseSingleFar(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
   }
 }
-void Robot::AutonomousPeriodic() {}
+void Robot::AutonomousPeriodic() {
+  fmt::print("Auto selected: {}\n", m_autoSelected);
+}
 
 void Robot::TeleopInit() {
   loop.Clear();
