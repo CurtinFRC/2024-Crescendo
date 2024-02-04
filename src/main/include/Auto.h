@@ -1,11 +1,10 @@
-
 #pragma once
 
 #include "Wombat.h"
 
 #include "AlphaArmBehaviour.h"
-#include "Intake.h"
-#include "Shooter.h"
+#include "IntakeBehaviour.h"
+#include "ShooterBehaviour.h"
 
 namespace autos {
   std::shared_ptr<behaviour::Behaviour> AutoTest(wom::drivetrain::SwerveDrive _swerveDrive, Shooter _shooter, Intake _intake, AlphaArm _alphaArm);
