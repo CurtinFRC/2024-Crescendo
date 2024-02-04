@@ -37,3 +37,14 @@ void ShooterManualControl::OnTick(units::second_t dt) {
   }
 }
 
+AutoShoot::AutoShoot(Shooter* shooter, units::volt_t shooterVolt) : _shooter(shooter) {
+  Controls(shooter);
+}
+
+void AutoShoot::OnTick(units::second_t dt) {
+  // if (_intake->GetConfig().intakeSensor->Get() == 1) {
+  //   _intake->setState(IntakeState::kPass);
+  // } else if (_intake->GetConfig().magSensor->Get() == 0) {
+  //   _intake->setState(IntakeState::kIdle);
+  // }
+}

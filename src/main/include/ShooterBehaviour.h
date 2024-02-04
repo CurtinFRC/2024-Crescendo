@@ -22,3 +22,12 @@ class ShooterManualControl : public behaviour::Behaviour {
 
   bool _rawControl = true;
 };
+
+class AutoShoot : public behaviour::Behaviour {
+ public:
+  explicit AutoShoot(Shooter* shooter, units::volt_t shooterVolt);
+  void OnTick(units::second_t dt) override;
+
+ private:
+  Shooter* _shooter;
+};

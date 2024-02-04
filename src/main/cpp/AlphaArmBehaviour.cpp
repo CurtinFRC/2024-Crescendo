@@ -6,9 +6,7 @@
 
 #include <frc/XboxController.h>
 
-
-AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxController* codriver)
-    : _alphaArm(alphaArm), _codriver(codriver) {
+AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxController* codriver) : _alphaArm(alphaArm), _codriver(codriver) {
   Controls(alphaArm);
 }
 
