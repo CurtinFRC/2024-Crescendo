@@ -30,7 +30,7 @@
 namespace wom {
 namespace drivetrain {
 
-enum class SwerveModuleState { kZeroing, kIdle, kPID };
+enum class SwerveModuleState { kIdle, kPID };
 
 struct SwerveModuleConfig {
   frc::Translation2d position;
@@ -67,7 +67,6 @@ class SwerveModule {
   void SetIdle();
   void SetPID(units::radian_t angle, units::meters_per_second_t speed, units::second_t dt);
   void SetZero();
-  void SetVoltageLimit(units::volt_t driveModuleVoltageLimit);
 
   // double GetCancoderPosition(); // from liam's
 
@@ -86,7 +85,6 @@ class SwerveModule {
  private:
   SwerveModuleConfig _config;
   SwerveModuleState _state;
-  units::volt_t _driveModuleVoltageLimit = 10_V;
 
   bool _hasZeroedEncoder = false;
   bool _hasZeroed = false;
@@ -134,7 +132,6 @@ enum class SwerveDriveState {
   kIndividualTuning,
   kTuning,
   kXWheels,
-  kModuleTurn,
   kFRVelocityRotationLock
 };
 

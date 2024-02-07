@@ -9,6 +9,7 @@
 
 #include <iostream>
 
+#include "frc/RobotController.h"
 #include "utils/Util.h"
 
 namespace wom {
@@ -65,13 +66,11 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   // driveVoltage = units::math::min(driveVoltage, 10_V);
   turnVoltage = units::math::min(turnVoltage, 7_V);
 
-  driveVoltage = units::math::min(units::math::max(driveVoltage, -_driveModuleVoltageLimit),
-                                  _driveModuleVoltageLimit);  // was originally 10_V
-  std::cout << "drive-voltage: " << driveVoltage.value() << std::endl;
+  driveVoltage = units::math::min(units::math::max(driveVoltage, -frc::RobotController::GetBatteryVoltage() - 0.5_V),
+                                  frc::RobotController::GetBatteryVoltage() - 0.5_V);
   units::volt_t turnVoltageMax = 7_V - (driveVoltage * (7_V / 10_V));
   turnVoltage = units::math::min(units::math::max(turnVoltage, -turnVoltageMax), turnVoltageMax);
   // turnVoltage = units::math::min(units::math::max(turnVoltage, -7_V), 7_V);
-  // std::cout << "turn-voltage-max: " << turnVoltageMax.value() << std::endl;
 
   _config.driveMotor.motorController->SetVoltage(driveVoltage);
   _config.turnMotor.motorController->SetVoltage(turnVoltage);
@@ -94,10 +93,6 @@ void SwerveDrive::SetAccelerationLimit(units::meters_per_second_squared_t limit)
   for (int motorNumber = 0; motorNumber < 4; motorNumber++) {
     _modules[motorNumber].SetAccelerationLimit(limit);
   }
-}
-
-void SwerveModule::SetVoltageLimit(units::volt_t driveModuleVoltageLimit) {
-  _driveModuleVoltageLimit = driveModuleVoltageLimit;
 }
 
 void SwerveModule::SetIdle() {
@@ -279,10 +274,6 @@ void SwerveDrive::SetVoltageLimit(units::volt_t driveVoltageLimit) {
   }
 }
 
-// double SwerveDrive::GetModuleCANPosition(int mod) {
-//   return _modules[mod].GetCancoderPosition();
-// }
-
 void SwerveDrive::OnStart() {
   _xPIDController.Reset();
   _yPIDController.Reset();
@@ -302,9 +293,6 @@ void SwerveDrive::OnResetMode() {
 }
 
 void SwerveDrive::RotateMatchJoystick(units::radian_t joystickAngle, FieldRelativeSpeeds speeds) {
-  // _state = SwerveDriveState::kFRVelocityRotationLock;
-  // _anglePIDController.SetSetpoint(joystickAngle);
-  // _target_fr_speeds = speeds;
   _state = SwerveDriveState::kFieldRelativeVelocity;
   isRotateToMatchJoystick = true;
   _anglePIDController.SetSetpoint(joystickAngle);
