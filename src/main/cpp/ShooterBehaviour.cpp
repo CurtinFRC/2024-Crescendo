@@ -12,7 +12,6 @@ ShooterManualControl::ShooterManualControl(Shooter* shooter, frc::XboxController
 void ShooterManualControl::OnTick(units::second_t dt) {
   _shooter->table->GetEntry("RawControl").SetBoolean(_rawControl);
 
-
   if (_codriver->GetAButtonReleased()) {
     if (_rawControl) {
       _rawControl = false;
@@ -22,10 +21,10 @@ void ShooterManualControl::OnTick(units::second_t dt) {
   }
 
   if (!_rawControl) {
-      if (_codriver->GetYButton()) {
-        _shooter->SetState(ShooterState::kSpinUp);
-        _shooter->SetPidGoal(10_rad_per_s);
-      }
+    if (_codriver->GetYButton()) {
+      _shooter->SetState(ShooterState::kSpinUp);
+      _shooter->SetPidGoal(10_rad_per_s);
+    }
   } else {
     if (_codriver->GetRightTriggerAxis() > 0.1) {
       _shooter->SetRaw(_codriver->GetRightTriggerAxis() * 12_V);

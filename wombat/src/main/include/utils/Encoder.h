@@ -20,8 +20,7 @@ namespace wom {
 namespace utils {
 class Encoder {
  public:
-  Encoder(double encoderTicksPerRotation, int type, units::meter_t wheelRadius,
-          double reduction = 1.0);
+  Encoder(double encoderTicksPerRotation, int type, units::meter_t wheelRadius, double reduction = 1.0);
 
   virtual double GetEncoderRawTicks() const = 0;
   virtual double GetEncoderTickVelocity() const = 0;  // ticks/s
@@ -54,24 +53,23 @@ class Encoder {
 
 class DigitalEncoder : public Encoder {
  public:
-  DigitalEncoder(int channelA, int channelB, double ticksPerRotation,
-                 units::meter_t wheelRadius, double reduction = 1)
-      : Encoder(ticksPerRotation, reduction, wheelRadius, 0),
-        _nativeEncoder(channelA, channelB) {}
+  DigitalEncoder(int channelA, int channelB, double ticksPerRotation, units::meter_t wheelRadius,
+                 double reduction = 1)
+      : Encoder(ticksPerRotation, reduction, wheelRadius, 0), _nativeEncoder(channelA, channelB) {}
 
   double GetEncoderRawTicks() const override;
   double GetEncoderTickVelocity() const override;
 
   double GetPosition() const;
   double GetVelocity() const override;
+
  private:
   frc::Encoder _nativeEncoder;
 };
 
 class CANSparkMaxEncoder : public Encoder {
  public:
-  explicit CANSparkMaxEncoder(rev::CANSparkMax* controller,
-                              units::meter_t wheelRadius, double reduction = 1);
+  explicit CANSparkMaxEncoder(rev::CANSparkMax* controller, units::meter_t wheelRadius, double reduction = 1);
 
   double GetEncoderRawTicks() const override;
   double GetEncoderTickVelocity() const override;
@@ -86,8 +84,8 @@ class CANSparkMaxEncoder : public Encoder {
 
 class TalonFXEncoder : public Encoder {
  public:
-  TalonFXEncoder(ctre::phoenix6::hardware::TalonFX* controller,
-                 units::meter_t wheelRadius, double reduction = 1);
+  TalonFXEncoder(ctre::phoenix6::hardware::TalonFX* controller, units::meter_t wheelRadius,
+                 double reduction = 1);
 
   double GetEncoderRawTicks() const override;
   double GetEncoderTickVelocity() const override;
@@ -99,8 +97,8 @@ class TalonFXEncoder : public Encoder {
 
 class DutyCycleEncoder : public Encoder {
  public:
-  DutyCycleEncoder(int channel, units::meter_t wheelRadius,
-                   double ticksPerRotation = 1, double reduction = 1);
+  DutyCycleEncoder(int channel, units::meter_t wheelRadius, double ticksPerRotation = 1,
+                   double reduction = 1);
 
   double GetEncoderRawTicks() const override;
   double GetEncoderTickVelocity() const override;
@@ -112,9 +110,8 @@ class DutyCycleEncoder : public Encoder {
 
 class CanEncoder : public Encoder {
  public:
-  CanEncoder(int deviceNumber, units::meter_t wheelRadius,
-             double ticksPerRotation = 4095, double reduction = 6.75,
-             std::string name = "Drivebase");
+  CanEncoder(int deviceNumber, units::meter_t wheelRadius, double ticksPerRotation = 4095,
+             double reduction = 6.75, std::string name = "Drivebase");
 
   double GetEncoderRawTicks() const override;
   double GetEncoderTickVelocity() const override;

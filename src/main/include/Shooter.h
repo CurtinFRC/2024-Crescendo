@@ -17,6 +17,7 @@ struct ShooterConfig {
   wom::Gearbox ShooterGearbox;
   // wom::PIDConfig<units::radians_per_second, units::volt> pidConfig;
   // frc::DigitalInput* shooterSensor;
+  wom::PIDConfig<units::radians_per_second, units::volt> pidConfig;
 };
 
 enum class ShooterState { kIdle, kShooting, kSpinUp, kReverse, kRaw };
@@ -24,6 +25,8 @@ enum class ShooterState { kIdle, kShooting, kSpinUp, kReverse, kRaw };
 class Shooter : public behaviour::HasBehaviour {
  public:
   explicit Shooter(ShooterConfig config);
+
+  void OnStart();
 
   void OnUpdate(units::second_t dt);
   void SetState(ShooterState state);
@@ -38,6 +41,9 @@ class Shooter : public behaviour::HasBehaviour {
   units::volt_t _rawVoltage;
   units::radians_per_second_t _goal;
   units::volt_t _setVoltage = 0_V;
-  // frc::PIDController _pid;
+  wom::PIDController<units::radians_per_second, units::volt> _pid;
   // frc::DigitalInput _shooterSensor{0};
+
+  units::volt_t holdVoltage = 0_V;
+  std::string _statename = "default";
 };
