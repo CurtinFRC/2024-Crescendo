@@ -66,8 +66,9 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   // driveVoltage = units::math::min(driveVoltage, 10_V);
   turnVoltage = units::math::min(turnVoltage, 7_V);
 
-  driveVoltage = units::math::min(units::math::max(driveVoltage, -frc::RobotController::GetBatteryVoltage() - 0.5_V),
-                                  frc::RobotController::GetBatteryVoltage() - 0.5_V);
+  driveVoltage =
+      units::math::min(units::math::max(driveVoltage, -frc::RobotController::GetBatteryVoltage() - 0.5_V),
+                       frc::RobotController::GetBatteryVoltage() - 0.5_V);
   units::volt_t turnVoltageMax = 7_V - (driveVoltage * (7_V / 10_V));
   turnVoltage = units::math::min(units::math::max(turnVoltage, -turnVoltageMax), turnVoltageMax);
   // turnVoltage = units::math::min(units::math::max(turnVoltage, -7_V), 7_V);
