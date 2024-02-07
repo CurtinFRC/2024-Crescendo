@@ -44,7 +44,6 @@ void IntakeManualControl::OnTick(units::second_t dt) {
   //   }
   // }
 
-
 // IntakeAutoControl::IntakeAutoControl(Intake* intake) : _intake(intake) {}
 
 void IntakeAutoControl::OnTick(units::second_t dt) {
