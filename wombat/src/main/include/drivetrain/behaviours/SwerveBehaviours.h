@@ -199,6 +199,39 @@ class AutoSwerveDrive {
 
   std::string m_path;
 };
+
+/**
+ * @brief Behaviour Class to hangle the swerve drivebase going to and potentially maintaining the position
+ */
+class DrivebasePoseBehaviour : public behaviour::Behaviour {
+ public:
+  /**
+   * @param swerveDrivebase
+   * A pointer to the swerve drivebase
+   * @param pose
+   * A variable containing an X coordinate, a Y coordinate, and a rotation, for the drivebase to go to
+   * @param hold
+   * An optional variable (defaulting false), to say whether this position should be maintained
+   */
+  DrivebasePoseBehaviour(SwerveDrive* swerveDrivebase, frc::Pose2d pose, units::volt_t voltageLimit = 10_V,
+                         bool hold = false);
+
+  /**
+   * @brief
+   *
+   * @param deltaTime change in time since the last iteration
+   */
+  void OnTick(units::second_t deltaTime) override;
+
+ private:
+  SwerveDrive* _swerveDrivebase;
+  frc::Pose2d _pose;
+  bool _hold;
+  units::volt_t _voltageLimit;
+
+  std::shared_ptr<nt::NetworkTable> _swerveDriveTable =
+      nt::NetworkTableInstance::GetDefault().GetTable("swerve");
+};
 }  // namespace behaviours
 }  // namespace drivetrain
 }  // namespace wom
