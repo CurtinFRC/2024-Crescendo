@@ -17,6 +17,7 @@
 #include <networktables/NetworkTableInstance.h>
 
 #include <string>
+#include <vector>
 
 #include "AlphaArm.h"
 #include "AlphaArmBehaviour.h"

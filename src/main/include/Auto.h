@@ -2,6 +2,8 @@
 
 #include "Wombat.h"
 
+#include <memory>
+
 #include "AlphaArmBehaviour.h"
 #include "IntakeBehaviour.h"
 #include "ShooterBehaviour.h"
