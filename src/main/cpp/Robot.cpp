@@ -18,9 +18,8 @@
 #include <units/velocity.h>
 #include <units/voltage.h>
 
-#include "behaviour/HasBehaviour.h"
-
 #include "Auto.h"
+#include "behaviour/HasBehaviour.h"
 
 static units::second_t lastPeriodic;
 
@@ -33,7 +32,7 @@ void Robot::RobotInit() {
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("kTaxi", "kTaxi");
 
-  for (auto &option : autoOptions) {
+  for (auto& option : autoOptions) {
     m_chooser.AddOption(option, option);
   }
 
@@ -108,7 +107,6 @@ void Robot::RobotPeriodic() {
   alphaArm->OnUpdate(dt);
   shooter->OnStart();
   intake->OnUpdate(dt);
-
 }
 
 void Robot::AutonomousInit() {
@@ -116,19 +114,19 @@ void Robot::AutonomousInit() {
   sched->InterruptAll();
 
   m_autoSelected = m_chooser.GetSelected();
-  
+
   if (m_autoSelected == "Taxi") {
-    sched->Schedule(autos::Taxi(_swerveDrive, shooter, intake,  alphaArm));
+    sched->Schedule(autos::Taxi(_swerveDrive, shooter, intake, alphaArm));
   } else if (m_autoSelected == "Auto Test") {
-    sched->Schedule(autos::AutoTest(_swerveDrive, shooter, intake,  alphaArm));
+    sched->Schedule(autos::AutoTest(_swerveDrive, shooter, intake, alphaArm));
   } else if (m_autoSelected == "Quadruple Close") {
-    sched->Schedule(autos::QuadrupleClose(_swerveDrive, shooter, intake,  alphaArm));
+    sched->Schedule(autos::QuadrupleClose(_swerveDrive, shooter, intake, alphaArm));
   } else if (m_autoSelected == "Quadruple Far") {
-    sched->Schedule(autos::QuadrupleFar(_swerveDrive, shooter, intake,  alphaArm));
+    sched->Schedule(autos::QuadrupleFar(_swerveDrive, shooter, intake, alphaArm));
   } else if (m_autoSelected == "Quadruple Close Double Far") {
-    sched->Schedule(autos::QuadrupleCloseDoubleFar(_swerveDrive, shooter, intake,  alphaArm));
+    sched->Schedule(autos::QuadrupleCloseDoubleFar(_swerveDrive, shooter, intake, alphaArm));
   } else if (m_autoSelected == "Quadruple Close Single Far") {
-    sched->Schedule(autos::QuadrupleCloseSingleFar(_swerveDrive, shooter, intake,  alphaArm));
+    sched->Schedule(autos::QuadrupleCloseSingleFar(_swerveDrive, shooter, intake, alphaArm));
   }
 }
 void Robot::AutonomousPeriodic() {

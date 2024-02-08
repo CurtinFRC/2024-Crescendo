@@ -1,4 +1,6 @@
 // Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
 
 // Open Source Software, you can modify it according to the terms
 // of the MIT License at the root of this project

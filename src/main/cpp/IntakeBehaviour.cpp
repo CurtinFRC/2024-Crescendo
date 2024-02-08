@@ -97,4 +97,4 @@ void AutoIntake::OnTick(units::second_t dt) {
   // } else if (_intake->GetConfig().magSensor->Get() == 0) {
   //   _intake->setState(IntakeState::kIdle);
   // }
-} 
+}

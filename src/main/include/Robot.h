@@ -67,12 +67,7 @@ class Robot : public frc::TimedRobot {
 
   std::string defaultAuto = "kTaxi";
   std::vector<std::string> autoOptions = {
-    kTaxi,
-    kAutoTest,
-    kQuadrupleClose,
-    kQuadrupleFar,
-    kQuadrupleCloseDoubleFar,
-    kQuadrupleCloseSingleFar,
+      kTaxi, kAutoTest, kQuadrupleClose, kQuadrupleFar, kQuadrupleCloseDoubleFar, kQuadrupleCloseSingleFar,
   };
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
