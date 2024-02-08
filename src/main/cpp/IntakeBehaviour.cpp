@@ -17,30 +17,30 @@ void IntakeManualControl::OnTick(units::second_t dt) {
       _rawControl = false;
       _intaking = false;
       _ejecting = false;
-      _intake->setState(IntakeState::kIdle);
+      _intake->SetState(IntakeState::kIdle);
     } else {
       _rawControl = true;
       _intaking = false;
       _ejecting = false;
-      _intake->setState(IntakeState::kRaw);
+      _intake->SetState(IntakeState::kRaw);
     }
   }
 
   if (_rawControl) {
     if (_codriver.GetRightTriggerAxis() > 0.1) {
-      _intake->setRaw(_codriver.GetRightTriggerAxis() * 10_V);
+      _intake->SetRaw(_codriver.GetRightTriggerAxis() * 10_V);
     } else if (_codriver.GetLeftTriggerAxis() > 0.1) {
-      _intake->setRaw(_codriver.GetLeftTriggerAxis() * -10_V);
+      _intake->SetRaw(_codriver.GetLeftTriggerAxis() * -10_V);
     } else {
-      _intake->setRaw(0_V);
+      _intake->SetRaw(0_V);
     }
-    _intake->setState(IntakeState::kRaw);
+    _intake->SetState(IntakeState::kRaw);
 
   } else {
     if (_codriver.GetRightTriggerAxis() > 0.1) {
       if (_intaking) {
         _intaking = false;
-        _intake->setState(IntakeState::kIdle);
+        _intake->SetState(IntakeState::kIdle);
       } else {
         _intaking = true;
         _ejecting = false;
@@ -50,7 +50,7 @@ void IntakeManualControl::OnTick(units::second_t dt) {
     if (_codriver.GetLeftTriggerAxis() > 0.1) {
       if (_ejecting) {
         _ejecting = false;
-        _intake->setState(IntakeState::kIdle);
+        _intake->SetState(IntakeState::kIdle);
       } else {
         _ejecting = true;
         _intaking = false;
@@ -60,7 +60,7 @@ void IntakeManualControl::OnTick(units::second_t dt) {
     if (_codriver.GetAButtonPressed()) {
       if (_passing) {
         _passing = false;
-        _intake->setState(IntakeState::kIdle);
+        _intake->SetState(IntakeState::kIdle);
       } else {
         _passing = true;
         _intaking = false;
@@ -68,20 +68,20 @@ void IntakeManualControl::OnTick(units::second_t dt) {
     }
 
     if (_intaking) {
-      if (_intake->getState() == IntakeState::kIdle) {
-        _intake->setState(IntakeState::kIntake);
+      if (_intake->GetState() == IntakeState::kIdle) {
+        _intake->SetState(IntakeState::kIntake);
       }
     }
 
     if (_passing) {
-      if (_intake->getState() == IntakeState::kHold) {
-        _intake->setState(IntakeState::kPass);
+      if (_intake->GetState() == IntakeState::kHold) {
+        _intake->SetState(IntakeState::kPass);
       }
     }
 
     if (_ejecting) {
-      if (_intake->getState() == IntakeState::kIdle || _intake->getState() == IntakeState::kHold) {
-        _intake->setState(IntakeState::kEject);
+      if (_intake->GetState() == IntakeState::kIdle || _intake->GetState() == IntakeState::kHold) {
+        _intake->SetState(IntakeState::kEject);
       }
     }
   }

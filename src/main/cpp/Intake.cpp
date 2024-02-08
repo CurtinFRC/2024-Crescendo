@@ -10,59 +10,104 @@ IntakeConfig Intake::GetConfig() {
   return _config;
 }
 
-void Shooter::OnStart() {
+void Intake::OnStart() {
   _pid.Reset();
 }
 
 void Intake::OnUpdate(units::second_t dt) {
+  //TODO you need to print the state to network tables
+
   switch (_state) {
-    case IntakeState::kIdle: {
-      if (_config.intakeSensor->Get() == false) {
-        setState(IntakeState::kHold);
+    case IntakeState::kIdle: 
+    {
+      if (_config.intakeSensor->Get() == false) { 
+        SetState(IntakeState::kHold);
       }
       _stringStateName = "Idle";
+      _pid.Reset();
       _setVoltage = 0_V;
-    } break;
+    } 
+    break;
 
-    case IntakeState::kRaw: {
+    case IntakeState::kRaw: 
+    {
       _stringStateName = "Raw";
+      _pid.Reset();
       _setVoltage = _rawVoltage;
-    } break;
+    } 
+    break;
 
-    case IntakeState::kEject: {
+    case IntakeState::kEject: 
+    {
       _stringStateName = "Eject";
       _setVoltage = 7_V;
+      _pid.Reset();
       if (_config.intakeSensor->Get() == true) {
-        setState(IntakeState::kIdle);
+        SetState(IntakeState::kIdle);
         _ejecting = false;
       }
-    } break;
+    } 
+    break;
 
-    case IntakeState::kHold: {
+    case IntakeState::kHold: 
+    {
       _stringStateName = "Hold";
       _setVoltage = 0_V;
-      // if (_config.intakeSensor->Get() == false) {
-      //   setState(IntakeState::kHold);
-      // }
-    } break;
+    } 
+    break;
 
-    case IntakeState::kIntake: {
+    case IntakeState::kIntake: 
+    {
       _stringStateName = "Intake";
-      _setVoltage = -7_V;
+      _setVoltage = -7_V; 
       if (_config.intakeSensor->Get() == false) {
-        setState(IntakeState::kHold);
+        SetState(IntakeState::kHold);
         _intaking = false;
       }
-    } break;
+    } 
+    break;
 
-    case IntakeState::kPass: {
+    case IntakeState::kPass: 
+    {
       _stringStateName = "Pass";
       _setVoltage = -7_V;
       if (_config.intakeSensor->Get() == true) {
-        setState(IntakeState::kIdle);
+        SetState(IntakeState::kIdle);
         _passing = false;
       }
-    } break;
+      _pid.SetSetpoint(_goal);
+      units::volt_t pidCalculate =
+          units::volt_t{_pid.Calculate(_config.IntakeGearbox.encoder->GetEncoderAngularVelocity(), dt, 0_V)};
+      if (_pid.IsStable()) {
+        holdVoltage = pidCalculate;
+        std::cout << "STABLE" << std::endl;
+      }
+
+      if (holdVoltage.value() == 0) {
+        _setVoltage = pidCalculate;
+      } else {
+        _setVoltage = holdVoltage;
+      }
+    } //TODO, logic is a bit ugly, make it nicer
+    break;
+
+    case IntakeState::kPID:
+    {
+    _pid.SetSetpoint(_goal);
+      units::volt_t pidCalculate =
+          units::volt_t{_pid.Calculate(_config.IntakeGearbox.encoder->GetEncoderAngularVelocity(), dt, 0_V)};
+    if (_pid.IsStable()) {
+        holdVoltage = pidCalculate;
+        std::cout << "STABLE" << std::endl;
+      }
+    if (holdVoltage.value() == 0) {
+      _setVoltage = pidCalculate;
+    } else {
+      _setVoltage = holdVoltage;
+    }
+    }
+
+
     default:
       std::cout << "Error: Intake in INVALID STATE." << std::endl;
       break;
@@ -76,19 +121,17 @@ void Intake::OnUpdate(units::second_t dt) {
   // _table->GetEntry("Intake Sensor: ").SetBoolean(_config.intakeSensor->Get());
   // _table->GetEntry("Shooter Sensor: ").SetBoolean(_config.shooterSensor->Get());
   // _table->GetEntry("Magazine Sensor: ").SetBoolean(_config.magSensor->Get());
-
-  std::cout << _setVoltage.value() << std::endl;
-
-  _config.IntakeMotor.motorController->SetVoltage(_setVoltage);
+ 
+  _config.IntakeGearbox.motorController->SetVoltage(_setVoltage);
 }
 
-void Intake::setState(IntakeState state) {
+void Intake::SetState(IntakeState state) {
   _state = state;
 }
-void Intake::setRaw(units::volt_t voltage) {
+void Intake::SetRaw(units::volt_t voltage) {
   _rawVoltage = voltage;
 }
-IntakeState Intake::getState() {
+IntakeState Intake::GetState() { //TODO Should be capital
   return _state;
 }
 void Intake::SetPidGoal(units::radians_per_second_t goal) {

@@ -32,14 +32,21 @@ struct RobotMap {
 
   struct IntakeSystem {
     rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
-    // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
+    wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
     frc::DigitalInput intakeSensor{4};
     // frc::DigitalInput magSensor{0};
     // frc::DigitalInput shooterSensor{0};
 
-    wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::CIM(1)};
+    wom::Gearbox IntakeGearbox{&intakeMotor, &intakeEncoder, frc::DCMotor::CIM(1)};
 
-    IntakeConfig config{IntakeGearbox, &intakeSensor /*, &magSensor, &shooterSensor*/};
+    IntakeConfig config{"path", IntakeGearbox, &intakeSensor, wom::PIDConfig<units::radians_per_second, units::volts>(
+          "/intake/PID/config",
+          9_V / (180_deg / 1_s),
+          0_V / 25_deg,
+          0_V / (90_deg / 1_s / 1_s)
+        ),/*, &magSensor, &shooterSensor*/};
+
+
   };
   IntakeSystem intakeSystem;
 
