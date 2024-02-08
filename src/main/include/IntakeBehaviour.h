@@ -29,7 +29,7 @@ class IntakeManualControl : public behaviour::Behaviour {
 
 class AutoIntake : public behaviour::Behaviour {
  public:
-  explicit AutoIntake(Intake* intake, units::volt_t intakeVolt);
+  explicit AutoIntake(Intake* intake);
   void OnTick(units::second_t dt) override;
 
  private:

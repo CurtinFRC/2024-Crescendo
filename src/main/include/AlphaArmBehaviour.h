@@ -25,7 +25,7 @@ class AlphaArmManualControl : public behaviour::Behaviour {
 
 class ArmToSetPoint : public behaviour::Behaviour {
  public:
-  explicit ArmToSetPoint(AlphaArm* alphaArm, units::degree_t armAngle, float armSpeed);
+  explicit ArmToSetPoint(AlphaArm* alphaArm, units::degree_t armAngle);
   void OnTick(units::second_t dt);
 
  private:

@@ -28,7 +28,7 @@ class ShooterManualControl : public behaviour::Behaviour {
 
 class AutoShoot : public behaviour::Behaviour {
  public:
-  explicit AutoShoot(Shooter* shooter, units::volt_t shooterVolt);
+  explicit AutoShoot(Shooter* shooter);
   void OnTick(units::second_t dt) override;
 
  private:

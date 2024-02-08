@@ -223,3 +223,25 @@ void wom::drivetrain::behaviours::AutoSwerveDrive::OnUpdate() {
 void wom::drivetrain::behaviours::AutoSwerveDrive::SetPath(std::string path) {
   _simSwerveDrive->SetPath(path);
 }
+
+// Drivebase Pose Control behaviour
+wom::drivetrain::behaviours::DrivebasePoseBehaviour::DrivebasePoseBehaviour(SwerveDrive* swerveDrivebase,
+                                                                            frc::Pose2d pose,
+                                                                            units::volt_t voltageLimit,
+                                                                            bool hold)
+    : _swerveDrivebase(swerveDrivebase), _pose(pose), _hold(hold), _voltageLimit(voltageLimit) {
+  Controls(swerveDrivebase);
+}
+
+// used in autonomous for going to set drive poses
+void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t deltaTime) {
+  double currentAngle = _swerveDrivebase->GetPose().Rotation().Degrees().value();
+  units::degree_t adjustedAngle =
+      1_deg * (currentAngle - std::fmod(currentAngle, 360) + _pose.Rotation().Degrees().value());
+  _swerveDrivebase->SetVoltageLimit(_voltageLimit);
+  _swerveDrivebase->SetPose(frc::Pose2d{_pose.X(), _pose.Y(), adjustedAngle});
+
+  if (_swerveDrivebase->IsAtSetPose() && !_hold) {
+    SetDone();
+  }
+}

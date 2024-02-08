@@ -37,7 +37,7 @@ void ShooterManualControl::OnTick(units::second_t dt) {
   }
 }
 
-AutoShoot::AutoShoot(Shooter* shooter, units::volt_t shooterVolt) : _shooter(shooter) {
+AutoShoot::AutoShoot(Shooter* shooter) : _shooter(shooter) {
   Controls(shooter);
 }
 

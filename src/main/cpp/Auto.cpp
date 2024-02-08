@@ -1,31 +1,31 @@
 #include "Auto.h"
 
-std::shared_ptr<behaviour::Behaviour> autos::Taxi(wom::drivetrain::SwerveDrive* _driveBase, frc::Timer* timer, frc::Field2d* field, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
-  return behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
+std::shared_ptr<behaviour::Behaviour> autos::Taxi(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
+  return behaviour::make<ArmToSetPoint>(_alphaArm, 0_deg);
+    behaviour::make<AutoShoot>(_shooter); 
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
 }
 // Shoots starting note then moves out of starting position.
 
-std::shared_ptr<behaviour::Behaviour> autos::QuadrupleClose(wom::drivetrain::SwerveDrive* _driveBase, frc::Timer* timer, frc::Field2d* field, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
-  return behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
+std::shared_ptr<behaviour::Behaviour> autos::QuadrupleClose(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
+  return behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
 
      /*
       4N Close
@@ -39,37 +39,37 @@ std::shared_ptr<behaviour::Behaviour> autos::QuadrupleClose(wom::drivetrain::Swe
     */
 }
 
-std::shared_ptr<behaviour::Behaviour> autos::QuadrupleFar(wom::drivetrain::SwerveDrive* _driveBase, frc::Timer* timer, frc::Field2d* field, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
-  return behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);   // do this if possible
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
+std::shared_ptr<behaviour::Behaviour> autos::QuadrupleFar(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
+  return behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
 
     /*
       4N Far
@@ -90,55 +90,55 @@ std::shared_ptr<behaviour::Behaviour> autos::QuadrupleFar(wom::drivetrain::Swerv
     */
 }
 
-std::shared_ptr<behaviour::Behaviour> autos::QuadrupleCloseDoubleFar(wom::drivetrain::SwerveDrive* _driveBase, frc::Timer* timer, frc::Field2d* field, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
-  return behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
+std::shared_ptr<behaviour::Behaviour> autos::QuadrupleCloseDoubleFar(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
+  return behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
     
     //   4N Close 2N Far
     // 1. Shoot note
@@ -162,34 +162,34 @@ std::shared_ptr<behaviour::Behaviour> autos::QuadrupleCloseDoubleFar(wom::drivet
     
 }
 
-std::shared_ptr<behaviour::Behaviour> autos::QuadrupleCloseSingleFar(wom::drivetrain::SwerveDrive* _driveBase, frc::Timer* timer, frc::Field2d* field, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
-  return behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoIntake>(_intake, 8_V); 
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
+std::shared_ptr<behaviour::Behaviour> autos::QuadrupleCloseSingleFar(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
+  return behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoIntake>(_intake); 
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
 }
     
     // 4N Close 1N Far
@@ -232,9 +232,9 @@ std::shared_ptr<behaviour::Behaviour> autos::QuadrupleCloseSingleFar(wom::drivet
 //     */
 // }
 
-std::shared_ptr<behaviour::Behaviour> autos::AutoTest(wom::drivetrain::SwerveDrive* _driveBase, frc::Timer* timer, frc::Field2d* field, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
-  return behaviour::make<ArmToSetPoint>(_alphaArm, 0 * 1_deg, 0.2);
-    behaviour::make<wom::drivetrain::behaviours::AutoSwerveDrive>(_driveBase, timer, field);
-    behaviour::make<AutoShoot>(_shooter, 8_V);
-    behaviour::make<AutoIntake>(_intake, 8_V);
+std::shared_ptr<behaviour::Behaviour> autos::AutoTest(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
+  return behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
+    behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
+    behaviour::make<AutoShoot>(_shooter);
+    behaviour::make<AutoIntake>(_intake);
 } // This auto is a test for auto to see if all things work. 

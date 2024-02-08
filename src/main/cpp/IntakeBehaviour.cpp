@@ -87,7 +87,7 @@ void IntakeManualControl::OnTick(units::second_t dt) {
   }
 }
 
-AutoIntake::AutoIntake(Intake* intake, units::volt_t intakeVolt) : _intake(intake) {
+AutoIntake::AutoIntake(Intake* intake) : _intake(intake) {
   Controls(intake);
 }
 

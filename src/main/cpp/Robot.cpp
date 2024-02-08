@@ -57,8 +57,8 @@ void Robot::RobotInit() {
   _swerveDrive->SetDefaultBehaviour(
       [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
-  // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
-  // m_driveSim = wom::TempSimSwerveDrive();
+  // m_driveSim = new wom::TempSim_swerveDrive(&simulation_timer, &m_field);
+  // m_driveSim = wom::TempSim_swerveDrive();
 
   alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
@@ -118,17 +118,17 @@ void Robot::AutonomousInit() {
   m_autoSelected = m_chooser.GetSelected();
   
   if (m_autoSelected == "Taxi") {
-    sched->Schedule(autos::Taxi(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
+    sched->Schedule(autos::Taxi(_swerveDrive, shooter, intake,  alphaArm));
   } else if (m_autoSelected == "Auto Test") {
-    sched->Schedule(autos::AutoTest(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
+    sched->Schedule(autos::AutoTest(_swerveDrive, shooter, intake,  alphaArm));
   } else if (m_autoSelected == "Quadruple Close") {
-    sched->Schedule(autos::QuadrupleClose(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
+    sched->Schedule(autos::QuadrupleClose(_swerveDrive, shooter, intake,  alphaArm));
   } else if (m_autoSelected == "Quadruple Far") {
-    sched->Schedule(autos::QuadrupleFar(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
+    sched->Schedule(autos::QuadrupleFar(_swerveDrive, shooter, intake,  alphaArm));
   } else if (m_autoSelected == "Quadruple Close Double Far") {
-    sched->Schedule(autos::QuadrupleCloseDoubleFar(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
+    sched->Schedule(autos::QuadrupleCloseDoubleFar(_swerveDrive, shooter, intake,  alphaArm));
   } else if (m_autoSelected == "Quadruple Close Single Far") {
-    sched->Schedule(autos::QuadrupleCloseSingleFar(_swerveDrive, &timer, &field, shooter, intake, alphaArm));
+    sched->Schedule(autos::QuadrupleCloseSingleFar(_swerveDrive, shooter, intake,  alphaArm));
   }
 }
 void Robot::AutonomousPeriodic() {
