@@ -55,19 +55,16 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
     maxMovementMagnitude = defaultDriveSpeed;
     maxRotationMagnitude = defaultRotateSpeed;
     _swerveDrivebase->SetAccelerationLimit(6_mps_sq);
-    _swerveDrivebase->SetVoltageLimit(10_V);
   }
   if (_driverController->GetRightBumperPressed()) {
     maxMovementMagnitude = highSensitivityDriveSpeed;
     maxRotationMagnitude = highSensitivityRotateSpeed;
     _swerveDrivebase->SetAccelerationLimit(12_mps_sq);
-    _swerveDrivebase->SetVoltageLimit(14_V);
 
   } else if (_driverController->GetRightBumperReleased() && !_driverController->GetLeftBumper()) {
     maxMovementMagnitude = defaultDriveSpeed;
     maxRotationMagnitude = defaultRotateSpeed;
     _swerveDrivebase->SetAccelerationLimit(6_mps_sq);
-    _swerveDrivebase->SetVoltageLimit(10_V);
   }
 
   if (_driverController->GetAButtonReleased()) {
@@ -227,10 +224,8 @@ void wom::drivetrain::behaviours::AutoSwerveDrive::SetPath(std::string path) {
 
 // Drivebase Pose Control behaviour
 wom::drivetrain::behaviours::DrivebasePoseBehaviour::DrivebasePoseBehaviour(SwerveDrive* swerveDrivebase,
-                                                                            frc::Pose2d pose,
-                                                                            units::volt_t voltageLimit,
-                                                                            bool hold)
-    : _swerveDrivebase(swerveDrivebase), _pose(pose), _hold(hold), _voltageLimit(voltageLimit) {
+                                                                            frc::Pose2d pose, bool hold)
+    : _swerveDrivebase(swerveDrivebase), _pose(pose), _hold(hold) {
   Controls(swerveDrivebase);
 }
 
@@ -239,7 +234,6 @@ void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t
   double currentAngle = _swerveDrivebase->GetPose().Rotation().Degrees().value();
   units::degree_t adjustedAngle =
       1_deg * (currentAngle - std::fmod(currentAngle, 360) + _pose.Rotation().Degrees().value());
-  _swerveDrivebase->SetVoltageLimit(_voltageLimit);
   _swerveDrivebase->SetPose(frc::Pose2d{_pose.X(), _pose.Y(), adjustedAngle});
 
   if (_swerveDrivebase->IsAtSetPose() && !_hold) {

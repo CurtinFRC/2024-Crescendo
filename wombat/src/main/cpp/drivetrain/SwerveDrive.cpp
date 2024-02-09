@@ -269,12 +269,6 @@ void SwerveDrive::SetZeroing() {
   _state = SwerveDriveState::kZeroing;
 }
 
-void SwerveDrive::SetVoltageLimit(units::volt_t driveVoltageLimit) {
-  for (auto mod : _modules) {
-    mod.SetVoltageLimit(driveVoltageLimit);
-  }
-}
-
 void SwerveDrive::OnStart() {
   _xPIDController.Reset();
   _yPIDController.Reset();

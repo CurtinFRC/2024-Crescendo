@@ -213,8 +213,7 @@ class DrivebasePoseBehaviour : public behaviour::Behaviour {
    * @param hold
    * An optional variable (defaulting false), to say whether this position should be maintained
    */
-  DrivebasePoseBehaviour(SwerveDrive* swerveDrivebase, frc::Pose2d pose, units::volt_t voltageLimit = 10_V,
-                         bool hold = false);
+  DrivebasePoseBehaviour(SwerveDrive* swerveDrivebase, frc::Pose2d pose, bool hold = false);
 
   /**
    * @brief
@@ -227,7 +226,6 @@ class DrivebasePoseBehaviour : public behaviour::Behaviour {
   SwerveDrive* _swerveDrivebase;
   frc::Pose2d _pose;
   bool _hold;
-  units::volt_t _voltageLimit;
 
   std::shared_ptr<nt::NetworkTable> _swerveDriveTable =
       nt::NetworkTableInstance::GetDefault().GetTable("swerve");
