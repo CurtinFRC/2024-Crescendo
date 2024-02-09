@@ -1,3 +1,7 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #include "behaviour/TriggerXboxController.h"
 
 using namespace behaviour;
@@ -85,11 +89,13 @@ Trigger* TriggerXboxController::LeftStickButton() {
 }
 
 Trigger* TriggerXboxController::LeftStickButtonReleased() {
-  return new Trigger([this]() { return m_hid.GetLeftStickButtonReleased(); }, "Left Stick button released trigger");
+  return new Trigger([this]() { return m_hid.GetLeftStickButtonReleased(); },
+                     "Left Stick button released trigger");
 }
 
 Trigger* TriggerXboxController::LeftStickButtonPressed() {
-  return new Trigger([this]() { return m_hid.GetLeftStickButtonPressed(); }, "Left Stick button pressed trigger");
+  return new Trigger([this]() { return m_hid.GetLeftStickButtonPressed(); },
+                     "Left Stick button pressed trigger");
 }
 
 Trigger* TriggerXboxController::RightStickButton() {
@@ -97,11 +103,13 @@ Trigger* TriggerXboxController::RightStickButton() {
 }
 
 Trigger* TriggerXboxController::RightStickButtonReleased() {
-  return new Trigger([this]() { return m_hid.GetRightStickButtonReleased(); }, "Right Stick button released trigger");
+  return new Trigger([this]() { return m_hid.GetRightStickButtonReleased(); },
+                     "Right Stick button released trigger");
 }
 
 Trigger* TriggerXboxController::RightStickButtonPressed() {
-  return new Trigger([this]() { return m_hid.GetRightStickButtonPressed(); }, "Right Stick button pressed trigger");
+  return new Trigger([this]() { return m_hid.GetRightStickButtonPressed(); },
+                     "Right Stick button pressed trigger");
 }
 
 Trigger* TriggerXboxController::LeftBumper() {
