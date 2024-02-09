@@ -13,14 +13,14 @@
 
 namespace behaviour {
 /**
- * @breif A class which binds behaviours to boolean conditions. Most commonly used through a wrapper around
+ * @brief A class which binds behaviours to boolean conditions. Most commonly used through a wrapper around
  * a controller.
  *
  * Trigger is an API within the Behaviour scheduling to run different Behaviours based off boolean conditions.
  * It is instantiated with a condition that is evaluated on every Tick of the BehaviourScheduler causing the
  * OnTick method to run, checking the condition and running the relevant behaviour. Using the Trigger API
  * provides a variety of advantages to passing controllers into functions. By creating a Trigger using each
- * controller as a trigger based controller we can easily figure out the control scheme of the entire robot.
+ * controller as a trigger based controller, we can easily figure out the control scheme of the entire robot.
  * We are also prevented from keybindings scheduling more than one Behaviour using the trigger controller
  * wrappers.
  */
@@ -71,8 +71,8 @@ class Trigger {
   std::string GetName();
 
   /**
-   * A method that is run every tick, checks whether or not the condition is true or false and runs the
-   * relevant behaviour.
+   * A method that is run every tick. Checks whether or not the condition is true or false and runs the
+   * associated behaviour.
    */
   void OnTick();
 

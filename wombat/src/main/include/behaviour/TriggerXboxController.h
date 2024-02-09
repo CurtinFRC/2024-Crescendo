@@ -10,7 +10,7 @@
 
 namespace behaviour {
 /**
- * @breif A wrapper over frc::XboxController that creates a Trigger for each button.
+ * @brief A wrapper over frc::XboxController that creates a Trigger for each button.
  *
  * This class provides a wrapper over the frc::XboxController that will create a Trigger for each button and
  * different button action. This allows you to easily bind behaviours to a controller with certainty as to

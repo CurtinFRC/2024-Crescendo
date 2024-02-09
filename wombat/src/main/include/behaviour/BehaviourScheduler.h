@@ -55,7 +55,7 @@ class BehaviourScheduler {
   void InterruptAll();
 
   /**
-   * Add a Trigger be evaluated and ran every Tick.
+   * Add a Trigger to be evaluated and ran every Tick.
    *
    * @param trigger The trigger to be evaluated.
    */
