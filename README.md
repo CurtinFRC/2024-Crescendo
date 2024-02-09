@@ -11,7 +11,7 @@ Fork this repository then open up a terminal and run :
 git clone https://github.com/*yourusernamehere*/2024-Crescendo.git
 cd 2024-Crescendo
 ```
-Now look in [CONTRIBUTING.md](./CONTRIBUTING.md) before continuing!
+
 Quick Commands
 ===
 These commands can be used in a variety of combinations, feel free to experiment!
