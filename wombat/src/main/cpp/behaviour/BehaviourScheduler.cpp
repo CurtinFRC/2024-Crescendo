@@ -4,6 +4,8 @@
 
 #include "behaviour/BehaviourScheduler.h"
 
+#include "behaviour/Trigger.h"
+
 using namespace behaviour;
 
 BehaviourScheduler::BehaviourScheduler() {}
@@ -73,6 +75,10 @@ void BehaviourScheduler::Tick() {
       Schedule(sys->_default_behaviour_producer());
     }
   }
+
+  for (Trigger* trigger : m_triggers) {
+    trigger->OnTick();
+  }
 }
 
 void BehaviourScheduler::InterruptAll() {
@@ -82,4 +88,12 @@ void BehaviourScheduler::InterruptAll() {
       sys->_active_behaviour->Interrupt();
     }
   }
+}
+
+void BehaviourScheduler::AddTrigger(Trigger* trigger) {
+  if (std::find(m_triggers.begin(), m_triggers.end(), trigger) != m_triggers.end()) {
+    throw std::invalid_argument("Cannot reuse Triggers!");
+    return;
+  }
+  m_triggers.emplace_back(trigger);
 }

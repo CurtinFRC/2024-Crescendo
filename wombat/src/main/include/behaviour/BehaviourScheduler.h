@@ -9,6 +9,7 @@
 
 #include "Behaviour.h"
 #include "HasBehaviour.h"
+#include "behaviour/Trigger.h"
 
 namespace behaviour {
 
@@ -53,9 +54,17 @@ class BehaviourScheduler {
    */
   void InterruptAll();
 
+  /**
+   * Add a Trigger be evaluated and ran every Tick.
+   *
+   * @param trigger The trigger to be evaluated.
+   */
+  void AddTrigger(Trigger* trigger);
+
  private:
   std::vector<HasBehaviour*> _systems;
   std::recursive_mutex _active_mtx;
   std::vector<std::thread> _threads;
+  std::vector<Trigger*> m_triggers;
 };
 }  // namespace behaviour
