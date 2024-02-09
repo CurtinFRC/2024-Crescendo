@@ -91,9 +91,11 @@ void BehaviourScheduler::InterruptAll() {
 }
 
 void BehaviourScheduler::AddTrigger(Trigger* trigger) {
-  if (std::find(m_triggers.begin(), m_triggers.end(), trigger) != m_triggers.end()) {
-    throw std::invalid_argument("Cannot reuse Triggers!");
-    return;
+  for (Trigger* i : m_triggers) {
+    if (i->GetName() == trigger->GetName()) {
+      throw std::invalid_argument("Cannot reuse Behaviours!");
+      return;
+    }
   }
   m_triggers.emplace_back(trigger);
 }

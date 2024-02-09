@@ -32,6 +32,10 @@ Trigger::Trigger(std::function<bool()> condition, std::string name, Behaviour* t
   behaviour::BehaviourScheduler::GetInstance()->AddTrigger(this);
 }
 
+std::string Trigger::GetName() {
+  return k_name;
+}
+
 void Trigger::OnTick() {
   if (m_condition()) {
     if (m_true_behaviour != nullptr) {

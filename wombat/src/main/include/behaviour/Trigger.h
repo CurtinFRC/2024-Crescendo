@@ -66,20 +66,15 @@ class Trigger {
   Trigger& operator=(Trigger&&) = default;
 
   /**
-   * A method that runs once when the behaviour for true or false starts.
+   * Returns the trigger's name.
    */
-  void OnStart();
+  std::string GetName();
 
   /**
    * A method that is run every tick, checks whether or not the condition is true or false and runs the
    * relevant behaviour.
    */
   void OnTick();
-
-  /**
-   * A method that runs once when the behaviour for true or false stops.
-   */
-  void OnStop();
 
   /**
    * Sets the true behaviour to the provided behaviour.
