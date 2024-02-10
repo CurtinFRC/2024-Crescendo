@@ -9,6 +9,7 @@
 #include <units/voltage.h>
 #include <units/angle.h>
 
+#include "units/current.h"
 #include "utils/Util.h"
 
 #include <iostream>
@@ -17,9 +18,6 @@
 
 #include <wpi/sendable/SendableBuilder.h>
 #include <wpi/sendable/SendableRegistry.h>
-
-#include "frc/MathUtil.h"
-#include "wpimath/MathShared.h"
 
 using namespace wom;
 
@@ -39,7 +37,7 @@ SwerveModule::SwerveModule(std::string path, SwerveModuleConfig config,
                            //SwerveModule::angle_pid_conf_t anglePID,
                            SwerveModule::velocity_pid_conf_t velocityPID)
     : //_anglePIDController(path + "/pid/angle", anglePID),
-      _anglePIDController{frc::PIDController(5, 0, 0, 0.005_s)},
+      _anglePIDController{frc::PIDController(1, 0, 0, 0.005_s)},
       _config(config),
       _velocityPIDController(frc::PIDController(1.2, 0, 0, 0.005_s)),
       _table(nt::NetworkTableInstance::GetDefault().GetTable(path)) {
@@ -106,6 +104,9 @@ void SwerveModule::OnUpdate(units::second_t dt) {
 
   units::newton_meter_t torqueLimit =
       50_kg / 4 * _config.wheelRadius * _currentAccelerationLimit;
+
+  //units::newton_meter_t torque_limit_drive = _config.driveMotor.motor.Torque(units::ampere_t{80});
+  //units::newton_meter_t torque_limit_turn = _config.turnMotor.motor.Torque(units::ampere_t{40});
   // units::volt_t voltageMax = _config.driveMotor.motor.Voltage(
   //     torqueLimit, _config.driveMotor.encoder->GetEncoderAngularVelocity());
   // units::volt_t voltageMin = _config.driveMotor.motor.Voltage(
@@ -113,6 +114,9 @@ void SwerveModule::OnUpdate(units::second_t dt) {
 
   // driveVoltage =
   //     units::math::max(units::math::min(driveVoltage, voltageMax), voltageMin);
+  
+  //units::volt_t max_voltage_drive = _config.driveMotor.motor.Voltage(torque_limit_drive, _config.driveMotor.encoder->GetEncoderAngularVelocity());
+  //units::volt_t max_voltage_turn = _config.turnMotor.motor.Voltage(torque_limit_turn, _config.turnMotor.encoder->GetEncoderAngularVelocity());
 
   driveVoltage = units::math::min(driveVoltage, 7_V);
   turnVoltage = units::math::min(turnVoltage, 4_V);
@@ -120,16 +124,14 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   // driveVoltage = units::math::min(
   //     units::math::max(driveVoltage, -_driveModuleVoltageLimit),
   //     _driveModuleVoltageLimit);  // was originally 10_V
-  units::volt_t turnVoltageMax = 7_V - (driveVoltage * (7_V / 10_V));
-  turnVoltage = units::math::min(units::math::max(turnVoltage, -turnVoltageMax),
-                                 turnVoltageMax);
+  turnVoltage = units::math::min(units::math::max(turnVoltage, -_angleModuleVoltageLimit),
+                                 _angleModuleVoltageLimit);
   // turnVoltage = units::math::min(units::math::max(turnVoltage, -7_V), 7_V);
 
   _table->GetEntry("TurnVoltage").SetDouble(turnVoltage.value());
   _table->GetEntry("TurnSetpoint").SetDouble(_anglePIDController.GetSetpoint());
   _table->GetEntry("Demand").SetDouble(_config.turnMotor.encoder->GetEncoderPosition().value());
   _table->GetEntry("Error").SetDouble(_anglePIDController.GetPositionError());
-
   _config.driveMotor.motorController->SetVoltage(driveVoltage);
   _config.turnMotor.motorController->SetVoltage(turnVoltage);
 
@@ -168,6 +170,7 @@ void SwerveDrive::SetAccelerationLimit(
 
 void SwerveModule::SetVoltageLimit(units::volt_t driveModuleVoltageLimit) {
   _driveModuleVoltageLimit = driveModuleVoltageLimit;
+  _angleModuleVoltageLimit = driveModuleVoltageLimit - 4_V;
 }
 
 void SwerveModule::SetIdle() {
@@ -308,7 +311,7 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
               frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}},
               frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}}},
           initialPose, _config.stateStdDevs, _config.visionMeasurementStdDevs),
-      _anglePIDController{frc::PIDController(1, 0, 0)},
+      _anglePIDController{frc::PIDController(4, 0, 0)},
       _xPIDController(config.path + "/pid/x", _config.posePositionPID),
       _yPIDController(config.path + "/pid/y", _config.posePositionPID),
       _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)) {
@@ -346,8 +349,20 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       }
       break;
     case SwerveDriveState::kPose: {
-      _target_fr_speeds.vx = _xPIDController.Calculate(GetPose().X(), dt);
-      _target_fr_speeds.vy = _yPIDController.Calculate(GetPose().Y(), dt);
+      _table->GetEntry("/demand/x").SetDouble(_xPIDController.Calculate(GetPose().X(), dt).value());
+      _table->GetEntry("/demand/y").SetDouble(_yPIDController.Calculate(GetPose().Y(), dt).value());
+      _table->GetEntry("/demand/angle").SetDouble(_anglePIDController.Calculate(GetPose().Rotation().Radians().value()));
+
+      _table->GetEntry("/error/x").SetDouble(_xPIDController.GetError().value());
+      _table->GetEntry("/error/y").SetDouble(_yPIDController.GetError().value());
+      _table->GetEntry("/error/angle").SetDouble(_anglePIDController.GetPositionError());
+
+      _table->GetEntry("/setpoint/x").SetDouble(_xPIDController.GetSetpoint().value());
+      _table->GetEntry("/setpoint/y").SetDouble(_yPIDController.GetSetpoint().value());
+      _table->GetEntry("/setpoint/angle").SetDouble(_anglePIDController.GetSetpoint());
+
+      _target_fr_speeds.vx = 0_mps;//_xPIDController.Calculate(GetPose().X(), dt);
+      _target_fr_speeds.vy = 0_mps;//_yPIDController.Calculate(GetPose().Y(), dt);
       _target_fr_speeds.omega = units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
     }
       [[fallthrough]];
@@ -525,8 +540,8 @@ void SwerveDrive::SetFieldRelativeVelocity(FieldRelativeSpeeds speeds) {
 void SwerveDrive::SetPose(frc::Pose2d pose) {
   _state = SwerveDriveState::kPose;
   _anglePIDController.SetSetpoint(pose.Rotation().Radians().value());
-  _xPIDController.SetSetpoint(pose.X());
-  _yPIDController.SetSetpoint(pose.Y());
+  //_xPIDController.SetSetpoint(pose.X());
+  //_yPIDController.SetSetpoint(pose.Y());
 }
 
 bool SwerveDrive::IsAtSetPose() {

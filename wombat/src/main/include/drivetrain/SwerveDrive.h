@@ -108,6 +108,7 @@ class SwerveModule {
   SwerveModuleConfig _config;
   SwerveModuleState _state;
   units::volt_t _driveModuleVoltageLimit = 10_V;
+  units::volt_t _angleModuleVoltageLimit = 6_V;
 
   bool _hasZeroedEncoder = false;
   bool _hasZeroed = false;

@@ -12,6 +12,7 @@
 #include <units/charge.h>
 #include <units/moment_of_inertia.h>
 
+#include "frc/RobotController.h"
 #include "utils/Pathplanner.h"
 #include "utils/Util.h"
 
@@ -253,10 +254,14 @@ wom::drivetrain::behaviours::DrivebasePoseBehaviour::DrivebasePoseBehaviour(Swer
 
 // used in autonomous for going to set drive poses
 void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t deltaTime) {
+  if (_voltageLimit >= (frc::RobotController::GetBatteryVoltage() - 0.5_V)) {
+    _voltageLimit = frc::RobotController::GetBatteryVoltage() - 1_V;
+  }
   double currentAngle = _swerveDrivebase->GetPose().Rotation().Degrees().value();
   units::degree_t adjustedAngle =
       1_deg * (currentAngle - std::fmod(currentAngle, 360) + _pose.Rotation().Degrees().value());
   _swerveDrivebase->SetVoltageLimit(_voltageLimit);
+  
   _swerveDrivebase->SetPose(frc::Pose2d{_pose.X(), _pose.Y(), adjustedAngle});
 
   if (_swerveDrivebase->IsAtSetPose() && !_hold) {

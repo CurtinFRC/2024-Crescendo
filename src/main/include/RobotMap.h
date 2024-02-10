@@ -184,10 +184,11 @@ struct RobotMap {
         0_deg / 1_deg};*/
     wom::SwerveDriveConfig::pose_position_conf_t posePositionPID{
         "/drivetrain/pid/pose/position/config",
-        0_mps / 1_m,
-        wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0.15},
-        0_m / 1_m,
-        0_cm};
+        1_mps / 1_m,
+        wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0},//wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0.15},
+        0,//0_m / 1_m,
+        0.1_m,
+        0.1_m / 1_s};
 
     // the config for the whole swerve drive
     wom::SwerveDriveConfig config{"/drivetrain",

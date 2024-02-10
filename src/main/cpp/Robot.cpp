@@ -153,9 +153,16 @@ void Robot::TeleopInit() {
   // backLeft->SetVoltage(4_V);
   // backRight->SetVoltage(4_V);
 }
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+  if (robotmap.controllers.driver.GetXButtonPressed()) {
+    sched->Schedule(wom::make<wom::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d(0_m, 0_m, frc::Rotation2d(3_rad))));
+  }
+}
 
-void Robot::DisabledInit() {}
+void Robot::DisabledInit() {
+  loop.Clear();
+  sched->InterruptAll();
+}
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}
