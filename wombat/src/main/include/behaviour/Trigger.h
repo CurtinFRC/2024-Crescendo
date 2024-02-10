@@ -8,6 +8,7 @@
 
 #include <functional>
 #include <string>
+#include <utility>
 
 #include "behaviour/Behaviour.h"
 
@@ -99,16 +100,16 @@ class Trigger {
   /**
    * Returns a Trigger* from a logical OR with m_condition and the provided condition.
    *
-   * @param rhs The right hand condition of the logical OR operation.
+   * @param rhs A std::pair of the right hand condition of the logical OR operation and the name for the new trigger.
    */
-  Trigger* operator||(std::function<bool()> rhs);
+  Trigger* operator||(std::pair<std::function<bool()>, std::string> rhs);
 
   /**
    * Returns a Trigger* from a logical AND with m_condition and the provided condition.
    *
-   * @param rhs The right hand condition of the logical AND operation.
+   * @param rhs A std::pair of the right hand condition of the logical AND operation and the name for the new trigger.
    */
-  Trigger* operator&&(std::function<bool()> rhs);
+  Trigger* operator&&(std::pair<std::function<bool()>, std::string> rhs);
 
  private:
   std::string k_name;
