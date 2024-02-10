@@ -12,6 +12,7 @@
 #include "behaviour/Behaviour.h"
 
 namespace behaviour {
+
 /**
  * @brief A class which binds behaviours to boolean conditions. Most commonly used through a wrapper around
  * a controller.
@@ -115,4 +116,5 @@ class Trigger {
   Behaviour::ptr m_true_behaviour = nullptr;
   Behaviour::ptr m_false_behaviour = nullptr;
 };
+
 }  // namespace behaviour

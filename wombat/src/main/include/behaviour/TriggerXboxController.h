@@ -9,6 +9,7 @@
 #include "behaviour/Trigger.h"
 
 namespace behaviour {
+
 /**
  * @brief A wrapper over frc::XboxController that creates a Trigger for each button.
  *
@@ -227,4 +228,5 @@ class TriggerXboxController {
  private:
   frc::XboxController m_hid;
 };
+
 }  // namespace behaviour
