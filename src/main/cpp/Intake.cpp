@@ -15,7 +15,6 @@ void Intake::OnStart() {
 }
 
 void Intake::OnUpdate(units::second_t dt) {
-  //TODO you need to print the state to network tables
 
   switch (_state) {
     case IntakeState::kIdle: 
@@ -43,8 +42,7 @@ void Intake::OnUpdate(units::second_t dt) {
       _setVoltage = 7_V;
       _pid.Reset();
       if (_config.intakeSensor->Get() == true) {
-        SetState(IntakeState::kIdle);
-        _ejecting = false;
+        SetState(IntakeState::kIdle); 
       }
     } 
     break;
@@ -52,7 +50,12 @@ void Intake::OnUpdate(units::second_t dt) {
     case IntakeState::kHold: 
     {
       _stringStateName = "Hold";
-      _setVoltage = 0_V;
+      //& add a check for if sensor is empty 
+
+      if (_config.intakeSensor->Get() == true) {
+        _setVoltage = 0_V;
+      }
+
     } 
     break;
 
@@ -62,7 +65,6 @@ void Intake::OnUpdate(units::second_t dt) {
       _setVoltage = -7_V; 
       if (_config.intakeSensor->Get() == false) {
         SetState(IntakeState::kHold);
-        _intaking = false;
       }
     } 
     break;
@@ -73,7 +75,6 @@ void Intake::OnUpdate(units::second_t dt) {
       _setVoltage = -7_V;
       if (_config.intakeSensor->Get() == true) {
         SetState(IntakeState::kIdle);
-        _passing = false;
       }
       _pid.SetSetpoint(_goal);
       units::volt_t pidCalculate =
@@ -88,7 +89,7 @@ void Intake::OnUpdate(units::second_t dt) {
       } else {
         _setVoltage = holdVoltage;
       }
-    } //TODO, logic is a bit ugly, make it nicer
+    } //&, logic is a bit ugly, make it nicer
     break;
 
     case IntakeState::kPID:
@@ -131,7 +132,7 @@ void Intake::SetState(IntakeState state) {
 void Intake::SetRaw(units::volt_t voltage) {
   _rawVoltage = voltage;
 }
-IntakeState Intake::GetState() { //TODO Should be capital
+IntakeState Intake::GetState() {
   return _state;
 }
 void Intake::SetPidGoal(units::radians_per_second_t goal) {
