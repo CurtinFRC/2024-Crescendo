@@ -39,13 +39,17 @@ std::string Trigger::GetName() {
 void Trigger::OnTick() {
   if (m_condition()) {
     if (m_true_behaviour != nullptr) {
-      BehaviourScheduler::GetInstance()->Schedule(m_false_behaviour);
+      if (m_true_behaviour->IsFinished()) {
+        BehaviourScheduler::GetInstance()->Schedule(m_true_behaviour);
+      }
       return;
     }
     std::cerr << "WARNING: No OnTrue behaviour specified for Trigger " << k_name << std::endl;
   }
   if (m_false_behaviour != nullptr) {
-    BehaviourScheduler::GetInstance()->Schedule(m_false_behaviour);
+    if (m_false_behaviour->IsFinished()) {
+      BehaviourScheduler::GetInstance()->Schedule(m_false_behaviour);
+    }
     return;
   }
   std::cerr << "WARNING: No OnFalse behaviour specified for Trigger " << k_name << std::endl;
