@@ -42,9 +42,9 @@ class Robot : public frc::TimedRobot {
   RobotMap robotmap;
   wom::BehaviourScheduler* sched;
   frc::EventLoop loop;
-  Shooter* shooter;
+  // Shooter* shooter;
 
-  Intake* intake;
+  // Intake* intake;
   frc::SendableChooser<std::string> m_chooser;
 
   frc::Field2d m_field;
@@ -54,7 +54,7 @@ class Robot : public frc::TimedRobot {
   frc::SendableChooser<std::string> m_path_chooser;
 
   wom::SwerveDrive* _swerveDrive;
-  AlphaArm* alphaArm;
+  // AlphaArm* alphaArm;
 
   ctre::phoenix6::hardware::TalonFX *frontLeft;
   // AlphaArm *alphaArm;

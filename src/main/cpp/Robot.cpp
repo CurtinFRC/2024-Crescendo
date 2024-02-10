@@ -44,10 +44,10 @@ void Robot::RobotInit() {
   // m_path_chooser.AddOption("Path1", "paths/output/Path1.wpilib.json");
   // m_path_chooser.AddOption("Path2", "paths/output/Path2.wpilib.json");
 
-  shooter = new Shooter(robotmap.shooterSystem.config);
-  wom::BehaviourScheduler::GetInstance()->Register(shooter);
-  shooter->SetDefaultBehaviour(
-      [this]() { return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver); });
+  // shooter = new Shooter(robotmap.shooterSystem.config);
+  // wom::BehaviourScheduler::GetInstance()->Register(shooter);
+  // shooter->SetDefaultBehaviour(
+  //     [this]() { return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver); });
 
 
   // frc::SmartDashboard::PutData("Path Selector", &m_path_chooser);
@@ -68,23 +68,23 @@ void Robot::RobotInit() {
   });
 
 
-  alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
-  wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
-  alphaArm->SetDefaultBehaviour(
-      [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
+  // alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
+  // wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
+  // alphaArm->SetDefaultBehaviour(
+  //     [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
   
-  // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
-  // m_driveSim = wom::TempSimSwerveDrive();
+  // // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
+  // // m_driveSim = wom::TempSimSwerveDrive();
 
-    intake = new Intake(robotmap.intakeSystem.config);
-  wom::BehaviourScheduler::GetInstance()->Register(intake);
-  intake->SetDefaultBehaviour(
-      [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
+  //   intake = new Intake(robotmap.intakeSystem.config);
+  // wom::BehaviourScheduler::GetInstance()->Register(intake);
+  // intake->SetDefaultBehaviour(
+  //     [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
 
-  robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(-2.551_rad);
-  robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(-0.5308_rad);
-  robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(1.309_rad);
-  robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(-0.3511_rad);
+  robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0.588_rad);
+  robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(2.647_rad);
+  robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(2.979_rad);
+  robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(4.388_rad);
 
   // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
@@ -94,8 +94,8 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.moduleConfigs[0].driveMotor.motorController->SetInverted(true);
   // robotmap.swerveBase.moduleConfigs[1].driveMotor.motorController->SetInverted(true);
 
-  // robotmap.swerveBase.moduleConfigs[0].turnMotor.motorController->SetInverted(true);
-  // robotmap.swerveBase.moduleConfigs[1].turnMotor.motorController->SetInverted(true);
+  // robotmap.swerveBase.moduleConfigs[0].driveMotor.motorController->SetInverted(true);
+  // robotmap.swerveBase.moduleConfigs[2].driveMotor.motorController->SetInverted(true);
 
   //robotmap.alphaArmSystem.armEncoder->Reset();
   
@@ -124,9 +124,9 @@ void Robot::RobotPeriodic() {
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 2 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 3 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
-  shooter->OnUpdate(dt);
-  intake->OnUpdate(dt);
-  alphaArm->OnUpdate(dt);
+  // shooter->OnUpdate(dt);
+  // intake->OnUpdate(dt);
+  // alphaArm->OnUpdate(dt);
   _swerveDrive->OnUpdate(dt);
   
 }
@@ -144,8 +144,8 @@ void Robot::AutonomousPeriodic() {
 void Robot::TeleopInit() {
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
-  shooter->OnStart();
-  alphaArm->OnStart();
+  // shooter->OnStart();
+  // alphaArm->OnStart();
   sched->InterruptAll();
 
   // frontLeft->SetVoltage(4_V);
