@@ -42,7 +42,11 @@ Runs a simulation of your code at highest optimisation.
 
 **Debug**
 `./gradlew :simulateNativeDebug`
+<<<<<<< HEAD
+Runs a debug simulation of your code.
+=======
 Runs a debug simulation of your code, including a variety of debugging tools similar to glass but at lower optimisation.
+>>>>>>> 0d1300dafb5ad6f45b5d78b3668778de3bced1e8
 
 Documentation
 =============

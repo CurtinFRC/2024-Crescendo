@@ -9,6 +9,7 @@
 #include <units/base.h>
 #include <units/time.h>
 
+#include <cmath>
 #include <memory>
 #include <optional>
 #include <string>
@@ -103,13 +104,16 @@ class PIDController {
   void Reset() { _integralSum = sum_t{0}; }
 
   out_t Calculate(in_t pv, units::second_t dt, out_t feedforward = out_t{0}) {
+    // pv = units::math::fabs(pv);
     bool is_negative;
     if (pv.value() < 0) {
       is_negative = true;
       pv = units::math::fabs(pv);
     }
     auto error = do_wrap(_setpoint - pv);
+    error = units::math::fabs(error);
     _integralSum += error * dt;
+    _integralSum = units::math::fabs(_integralSum);
     if (config.izone.value() > 0 && (error > config.izone || error < -config.izone))
       _integralSum = sum_t{0};
 
@@ -122,15 +126,6 @@ class PIDController {
     _stableVel = _velFilter.Calculate(deriv);
 
     auto out = config.kp * error + config.ki * _integralSum + config.kd * deriv + feedforward;
-    // std::cout << "Out value" << out.value() << std::endl;
-
-    _table->GetEntry("pv").SetDouble(pv.value());
-    _table->GetEntry("dt").SetDouble(dt.value());
-    _table->GetEntry("setpoint").SetDouble(_setpoint.value());
-    _table->GetEntry("error").SetDouble(error.value());
-    _table->GetEntry("integralSum").SetDouble(_integralSum.value());
-    _table->GetEntry("stable").SetBoolean(IsStable());
-    _table->GetEntry("demand").SetDouble(out.value());
 
     _last_pv = pv;
     _last_error = error;
