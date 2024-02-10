@@ -8,7 +8,8 @@
 
 using namespace behaviour;
 
-void HasBehaviour::SetDefaultBehaviour(std::function<std::shared_ptr<Behaviour>(void)> fn) {
+void HasBehaviour::SetDefaultBehaviour(
+    std::function<std::shared_ptr<Behaviour>(void)> fn) {
   _default_behaviour_producer = fn;
 }
 
