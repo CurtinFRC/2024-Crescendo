@@ -26,12 +26,16 @@
 #include "Intake.h"
 #include "Shooter.h"
 #include "Wombat.h"
+#include "behaviour/TriggerXboxController.h"
+#include "utils/Encoder.h"
+#include "utils/PID.h"
 
 struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
     frc::XboxController codriver = frc::XboxController(1);
     frc::XboxController testController = frc::XboxController(2);
+    wom::TriggerXboxController* triggerDriver = new wom::TriggerXboxController(0);
   };
   Controllers controllers;
 
