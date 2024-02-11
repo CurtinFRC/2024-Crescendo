@@ -8,16 +8,18 @@
 
 #include "Intake.h"
 #include "Wombat.h"
+#include "LED.h"
 
 class IntakeManualControl : public behaviour::Behaviour {
  public:
-  explicit IntakeManualControl(Intake* intake, frc::XboxController& codriver);
+  explicit IntakeManualControl(Intake* intake, frc::XboxController& codriver, LED* led);
 
   void OnTick(units::second_t dt) override;
 
  private:
   Intake* _intake;
   frc::XboxController& _codriver;
+  LED* _led;
 
   units::volt_t _rawVoltage;
   units::volt_t _setVoltage;
@@ -31,4 +33,5 @@ class IntakeAutoControl : public behaviour::Behaviour {
 
  private:
   Intake* _intake;
+  LED* _led;
 };

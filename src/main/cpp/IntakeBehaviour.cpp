@@ -6,8 +6,8 @@
 
 #include <frc/XboxController.h>
 
-IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver)
-    : _intake(intake), _codriver(codriver) {
+IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver, LED* led)
+    : _intake(intake), _codriver(codriver), _led(led){
   Controls(intake);
 }
 
@@ -27,30 +27,37 @@ void IntakeManualControl::OnTick(units::second_t dt) {
       _intake->setRaw(-8_V);
     } else {
       _intake->setRaw(0_V);
+      
     }
 
   } else {
     if (_codriver.GetRightBumperPressed()) {
       if (_intake->getState() == IntakeState::kIntake) {
         _intake->setState(IntakeState::kIdle);
+        _led->SetState(LEDState::kIdle);
       } else {
         _intake->setState(IntakeState::kIntake);
+        _led->SetState(LEDState::kIntaking);
       }
     }
 
     if (_codriver.GetLeftBumper()) {
       if (_intake->getState() == IntakeState::kEject) {
         _intake->setState(IntakeState::kIdle);
+        _led->SetState(LEDState::kIdle);
       } else {
         _intake->setState(IntakeState::kEject);
+        _led->SetState(LEDState::kIdle);
       }
     }
 
     if (_codriver.GetAButtonPressed()) {
       if (_intake->getState() == IntakeState::kPass) {
         _intake->setState(IntakeState::kIdle);
+        _led->SetState(LEDState::kIdle);
       } else {
         _intake->setState(IntakeState::kPass);
+        _led->SetState(LEDState::kIntaking);
       }
     }
   }
