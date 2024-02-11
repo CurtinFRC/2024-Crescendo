@@ -22,6 +22,7 @@
 #include "RobotMap.h"
 #include "Shooter.h"
 #include "ShooterBehaviour.h"
+#include "RobotMap.h"
 #include "Wombat.h"
 
 class Robot : public frc::TimedRobot {
@@ -55,7 +56,7 @@ class Robot : public frc::TimedRobot {
   wom::SwerveDrive* _swerveDrive;
   // AlphaArm* alphaArm;
 
-  ctre::phoenix6::hardware::TalonFX* frontLeft;
+  ctre::phoenix6::hardware::TalonFX *frontLeft;
   // AlphaArm *alphaArm;
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;

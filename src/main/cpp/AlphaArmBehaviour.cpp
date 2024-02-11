@@ -12,6 +12,7 @@ AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxContro
 }
 
 void AlphaArmManualControl::OnTick(units::second_t dt) {
+
   if (_codriver->GetStartButtonPressed()) {
     if (_rawControl == true) {
       _rawControl = false;
@@ -22,7 +23,7 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
 
   if (_rawControl) {
     _alphaArm->SetState(AlphaArmState::kRaw);
-    _alphaArm->SetArmRaw(_codriver->GetRightY() * 12_V);
+    _alphaArm->SetArmRaw(_codriver->GetRightY() * 12_V);  
   } else {
     _alphaArm->SetState(AlphaArmState::kAmpAngle);
     _alphaArm->setControllerRaw(wom::deadzone(_codriver->GetRightY()) * 12_V);
