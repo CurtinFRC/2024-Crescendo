@@ -81,15 +81,15 @@ void Robot::RobotInit() {
   // intake->SetDefaultBehaviour(
   //     [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
 
-  robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0.588_rad);
-  robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(2.647_rad);
-  robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(2.979_rad);
-  robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(4.388_rad);
+  robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(3.628_rad);
+  robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(5.851_rad);
+  robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(6.137_rad);
+  robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(1.300_rad);
 
-  // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
-  // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
-  // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
-  // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
+  //robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
+  //robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
+  //robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
+  //robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
 
   // robotmap.swerveBase.moduleConfigs[0].driveMotor.motorController->SetInverted(true);
   // robotmap.swerveBase.moduleConfigs[1].driveMotor.motorController->SetInverted(true);
@@ -147,15 +147,17 @@ void Robot::TeleopInit() {
   // shooter->OnStart();
   // alphaArm->OnStart();
   sched->InterruptAll();
-
+  
+  _swerveDrive->ResetPose(frc::Pose2d());
   // frontLeft->SetVoltage(4_V);
   // frontRight->SetVoltage(4_V);
   // backLeft->SetVoltage(4_V);
   // backRight->SetVoltage(4_V);
 }
+
 void Robot::TeleopPeriodic() {
   if (robotmap.controllers.driver.GetXButtonPressed()) {
-    sched->Schedule(wom::make<wom::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d(0_m, 0_m, frc::Rotation2d(3_rad))));
+    sched->Schedule(wom::make<wom::FollowTrajectory>(_swerveDrive, &robotmap.pathplanner, "output/Path1.wpilib.json"));
   }
 }
 

@@ -12,7 +12,7 @@
 #include <frc/DutyCycleEncoder.h>
 #include <units/angle.h>
 #include <units/length.h>
-#include "utils/PID.h"
+//#include "utils/PID.h"
 #include "utils/Encoder.h"
 
 #include <string>
@@ -20,6 +20,8 @@
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
+
+#include "Wombat.h"
 
 #include "AlphaArm.h"
 #include "AlphaArmBehaviour.h"
@@ -174,21 +176,21 @@ struct RobotMap {
         "/drivetrain/pid/angle/config", 90_V / 360_deg, 0.0_V / (100_deg * 1_s),
         0_V / (100_deg / 1_s)};*/
     wom::SwerveModule::velocity_pid_conf_t velocityPID{
-        "/drivetrain/pid/velocity/config",
-        //  12_V / 4_mps // webers per metre
+          "/drivetrain/pid/velocity/config",
+          12_V / 4_mps // webers per metre
     };
     /*wom::SwerveDriveConfig::pose_angle_conf_t poseAnglePID{
         "/drivetrain/pid/pose/angle/config",
         0_deg / 1_s / 45_deg,
         wom::SwerveDriveConfig::pose_angle_conf_t::ki_t{0},
         0_deg / 1_deg};*/
-    wom::SwerveDriveConfig::pose_position_conf_t posePositionPID{
-        "/drivetrain/pid/pose/position/config",
-        1_mps / 1_m,
-        wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0},//wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0.15},
-        0,//0_m / 1_m,
-        0.1_m,
-        0.1_m / 1_s};
+    //wom::SwerveDriveConfig::pose_position_conf_t posePositionPID{
+      //  "/drivetrain/pid/pose/position/config",
+      //  20_mps / 1_m,
+      //  wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0},//wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0.15},
+      //  0,//0_m / 1_m,
+      //  0.1_m,
+      //  0.1_m / 1_s};
 
     // the config for the whole swerve drive
     wom::SwerveDriveConfig config{"/drivetrain",
@@ -197,7 +199,7 @@ struct RobotMap {
                                   moduleConfigs,  // each module
                                   gyro,
                                   //poseAnglePID,
-                                  posePositionPID,
+                                  //posePositionPID,
                                   60_kg,  // robot mass (estimate rn)
                                   {0.1, 0.1, 0.1},
                                   {0.9, 0.9, 0.9}};
@@ -220,7 +222,8 @@ struct RobotMap {
         nt::NetworkTableInstance::GetDefault().GetTable("swerve");
   };
   SwerveTable swerveTable;
-
+  
+  wom::Pathplanner pathplanner;
   // struct AlphaArmSystem {
   //   rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
   //   rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};

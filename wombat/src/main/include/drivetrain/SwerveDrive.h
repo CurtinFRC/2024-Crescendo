@@ -142,7 +142,7 @@ struct SwerveDriveConfig {
   ctre::phoenix6::hardware::Pigeon2* gyro;
 
   //pose_angle_conf_t poseAnglePID;
-  pose_position_conf_t posePositionPID;
+  //pose_position_conf_t posePositionPID;
 
   units::kilogram_t mass;
 
@@ -245,8 +245,11 @@ class SwerveDrive : public behaviour::HasBehaviour {
   /*utils::PIDController<units::radian, units::radians_per_second>
       _anglePIDController;*/
   frc::PIDController _anglePIDController;
-  utils::PIDController<units::meter, units::meters_per_second> _xPIDController;
-  utils::PIDController<units::meter, units::meters_per_second> _yPIDController;
+  frc::PIDController _xPIDController;
+  frc::PIDController _yPIDController;
+
+  //utils::PIDController<units::meter, units::meters_per_second> _xPIDController;
+  //utils::PIDController<units::meter, units::meters_per_second> _yPIDController;
 
   std::shared_ptr<nt::NetworkTable> _table;
 
