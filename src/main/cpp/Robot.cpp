@@ -30,6 +30,7 @@
 #include <frc/controller/RamseteController.h>
 #include <frc/Timer.h>
 #include "behaviour/HasBehaviour.h"
+#include "vision/Limelight.h"
 
 static units::second_t lastPeriodic;
 
@@ -60,7 +61,7 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.gyro->Reset();
 
   _swerveDrive =
-      new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+      new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d(), new wom::Limelight("limelight"));
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour([this]() {
     return wom::make<wom::ManualDrivebase>(_swerveDrive,
@@ -72,7 +73,7 @@ void Robot::RobotInit() {
   // wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
   // alphaArm->SetDefaultBehaviour(
   //     [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
-  
+
   // // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // // m_driveSim = wom::TempSimSwerveDrive();
 
@@ -98,8 +99,8 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.moduleConfigs[2].driveMotor.motorController->SetInverted(true);
 
   //robotmap.alphaArmSystem.armEncoder->Reset();
-  
-      
+
+
   // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
@@ -128,7 +129,7 @@ void Robot::RobotPeriodic() {
   // intake->OnUpdate(dt);
   // alphaArm->OnUpdate(dt);
   _swerveDrive->OnUpdate(dt);
-  
+
 }
 
 void Robot::AutonomousInit() {

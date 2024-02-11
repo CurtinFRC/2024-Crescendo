@@ -9,11 +9,9 @@
 #include <units/voltage.h>
 #include <units/angle.h>
 
-#include "units/current.h"
 #include "utils/Util.h"
 
 #include <iostream>
-#include <algorithm>
 #include <cmath>
 
 #include <wpi/sendable/SendableBuilder.h>
@@ -81,11 +79,11 @@ void SwerveModule::OnUpdate(units::second_t dt) {
       double input = _config.turnMotor.encoder->GetEncoderPosition().value();
       _table->GetEntry("/testing/GetEncoderPos").SetDouble(input);
       // _velocityPIDController.SetSetpoint(3);
-      
+
 
       driveVoltage = units::volt_t{_velocityPIDController.Calculate(GetSpeed().value())};
       // if (_turnOffset == TurnOffsetValues::forward) {
-        
+
       // } else if (_turnOffset == TurnOffsetValues::reverse) {
       //   input = input - (3.1415/2);
       //   driveVoltage = -driveVoltage;
@@ -114,7 +112,7 @@ void SwerveModule::OnUpdate(units::second_t dt) {
 
   // driveVoltage =
   //     units::math::max(units::math::min(driveVoltage, voltageMax), voltageMin);
-  
+
   //units::volt_t max_voltage_drive = _config.driveMotor.motor.Voltage(torque_limit_drive, _config.driveMotor.encoder->GetEncoderAngularVelocity());
   //units::volt_t max_voltage_turn = _config.turnMotor.motor.Voltage(torque_limit_turn, _config.turnMotor.encoder->GetEncoderAngularVelocity());
 
@@ -199,13 +197,13 @@ void SwerveModule::SetPID(units::radian_t angle,
   //   _anglePIDController.SetSetpoint(angle.value());
   //   _velocityPIDController.SetSetpoint(speed.value());
   // }
-  
+
   // if (diff > (3.14159 / 2)) {
   //   speed *= -1;
   //   _anglePIDController.SetSetpoint((3.14159 - (angle.value() - _config.turnMotor.encoder->GetEncoderPosition().value())));
   //   _velocityPIDController.SetSetpoint(speed.value());
   // } else {
-    
+
 
 
   // double setValue = 3.141592 - (angle.value() - _config.turnMotor.encoder->GetEncoderPosition().value());
@@ -226,7 +224,7 @@ void SwerveModule::SetPID(units::radian_t angle,
     _velocityPIDController.SetSetpoint(speed.value());
   // }
 
-  
+
 
   // double currentAngle = _config.turnMotor.encoder->GetEncoderPosition().value();
   // double setpointAngle = closestAngle(currentAngle, _anglePIDController.GetSetpoint());
@@ -337,6 +335,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
   _table->GetEntry("/gryo/z").SetDouble(_config.gyro->GetRotation3d().Z().value());
   _table->GetEntry("/gryo/y").SetDouble(_config.gyro->GetRotation3d().Y().value());
   _table->GetEntry("/gryo/x").SetDouble(_config.gyro->GetRotation3d().X().value());
+  AddVisionMeasurement(_vision->GetPose().ToPose2d(), wom::utils::now());
   switch (_state) {
     case SwerveDriveState::kZeroing:
       for (auto mod = _modules.begin(); mod < _modules.end(); mod++) {
