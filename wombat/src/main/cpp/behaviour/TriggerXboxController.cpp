@@ -4,6 +4,8 @@
 
 #include "behaviour/TriggerXboxController.h"
 
+#include "utils/Util.h"
+
 using namespace behaviour;
 
 TriggerXboxController::TriggerXboxController(int port) : m_hid{port} {}
@@ -134,6 +136,30 @@ Trigger* TriggerXboxController::RightBumperReleased() {
 
 Trigger* TriggerXboxController::RightBumperPressed() {
   return new Trigger([this]() { return m_hid.GetRightBumperPressed(); }, "Right bumper pressed trigger");
+}
+
+Trigger* TriggerXboxController::RightTriggerThreshold(double threshold) {
+  return new Trigger([this]() { return GetRightTriggerAxis() > 0.05; }, "Right Trigger threshold trigger");
+}
+
+Trigger* TriggerXboxController::LeftTriggerThreshold(double threshold) {
+  return new Trigger([this]() { return GetLeftTriggerAxis() > 0.05; }, "Left Trigger threshold trigger");
+}
+
+Trigger* TriggerXboxController::RightJoystickXThreshold(double threshold) {
+  return new Trigger([this]() { return GetRightX() > 0.05; }, "Right Joystick X threshold trigger");
+}
+
+Trigger* TriggerXboxController::RightJoystickYThreshold(double threshold) {
+  return new Trigger([this]() { return GetRightY() > 0.05; }, "Right Joystick Y threshold trigger");
+}
+
+Trigger* TriggerXboxController::LeftJoystickXThreshold(double threshold) {
+  return new Trigger([this]() { return GetRightX() > 0.05; }, "Left Joystick X threshold trigger");
+}
+
+Trigger* TriggerXboxController::LeftJoystickYThreshold(double threshold) {
+  return new Trigger([this]() { return GetRightY() > 0.05; }, "Left Joystick Y threshold trigger");
 }
 
 double TriggerXboxController::GetRightTriggerAxis() {

@@ -182,6 +182,48 @@ class TriggerXboxController {
   Trigger* StartButtonReleased();
 
   /**
+   * Creates a new Trigger binded to the Right Trigger being over the threshold.
+   *
+   * @param threshold The deadzone for the Trigger.
+   */
+  Trigger* RightTriggerThreshold(double threshold);
+
+  /**
+   * Creates a new Trigger binded to the Left Trigger being over the threshold.
+   *
+   * @param threshold The deadzone for the Trigger.
+   */
+  Trigger* LeftTriggerThreshold(double threshold);
+
+  /**
+   * Creates a new Trigger binded to the Left Joystick being over the threshold on the X axis.
+   *
+   * @param threshold The deadzone for the Trigger.
+   */
+  Trigger* LeftJoystickXThreshold(double threshold);
+
+  /**
+   * Creates a new Trigger binded to the Left Joystick being over the threshold on the Y axis.
+   *
+   * @param threshold The deadzone for the Trigger.
+   */
+  Trigger* LeftJoystickYThreshold(double threshold);
+
+  /**
+   * Creates a new Trigger binded to the Right Joystick being over the threshold on the Y axis.
+   *
+   * @param threshold The deadzone for the Trigger.
+   */
+  Trigger* RightJoystickXThreshold(double threshold);
+
+  /**
+   * Creates a new Trigger binded to the Right Joystick being over the threshold on the X axis.
+   *
+   * @param threshold The deadzone for the Trigger.
+   */
+  Trigger* RightJoystickYThreshold(double threshold);
+
+  /**
    * Get the right trigger (RT) axis value of the controller. Note that this
    * axis is bound to the range of [0, 1] as opposed to the usual [-1, 1].
    *
