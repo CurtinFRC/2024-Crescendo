@@ -6,13 +6,14 @@
 
 #include <frc/XboxController.h>
 
-#include "Robot.h"
+#include <memory>
+
 #include "Shooter.h"
 #include "Wombat.h"
 
 class ShooterManualControl : public behaviour::Behaviour {
  public:
-  ShooterManualControl(Shooter* shooter, frc::XboxController* codriver); 
+  ShooterManualControl(Shooter* shooter, frc::XboxController* codriver);
 
   void OnTick(units::second_t dt) override;
 
@@ -21,5 +22,6 @@ class ShooterManualControl : public behaviour::Behaviour {
   frc::XboxController* _codriver;
 
   bool _rawControl = false;
-  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Shooter Behaviour");
+  std::shared_ptr<nt::NetworkTable> table =
+      nt::NetworkTableInstance::GetDefault().GetTable("Shooter Behaviour");
 };
