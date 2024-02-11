@@ -72,7 +72,17 @@ Trigger* Trigger::operator||(std::pair<std::function<bool()>, std::string> rhs) 
                      rhs.second);
 }
 
+Trigger* Trigger::operator||(std::function<bool()> rhs) {
+  return new Trigger([condition = m_condition, rhs = std::move(rhs)]() { return condition() || rhs(); },
+                     "Logical or of " + k_name);
+}
+
 Trigger* Trigger::operator&&(std::pair<std::function<bool()>, std::string> rhs) {
   return new Trigger([condition = m_condition, rhs = std::move(rhs)]() { return condition() && rhs.first(); },
                      rhs.second);
+}
+
+Trigger* Trigger::operator&&(std::function<bool()> rhs) {
+  return new Trigger([condition = m_condition, rhs = std::move(rhs)]() { return condition() && rhs(); },
+                     "Logical and of " + k_name);
 }
