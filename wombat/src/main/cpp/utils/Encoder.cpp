@@ -150,7 +150,7 @@ wom::utils::CanEncoder::CanEncoder(int deviceNumber, units::meter_t wheelRadius,
 }
 
 double wom::utils::CanEncoder::GetEncoderRawTicks() const {
-  return (_canEncoder->GetAbsolutePosition().GetValue().value() * 2 * 3.14) - _offset.value();
+  return _canEncoder->GetPosition().GetValue().value() * 2 * 3.14;
 }
 
 double wom::utils::CanEncoder::GetEncoderTickVelocity() const {

@@ -8,21 +8,12 @@
 #include <units/angle.h>
 #include <units/math.h>
 #include <units/voltage.h>
-<<<<<<< HEAD
-#include <wpi/sendable/SendableBuilder.h>
-#include <wpi/sendable/SendableRegistry.h>
-=======
->>>>>>> 0029f49 (fix some formatting)
 
 #include <algorithm>
 #include <cmath>
 #include <iostream>
 
-<<<<<<< HEAD
-#include "frc/MathUtil.h"
-=======
 #include "units/mass.h"
->>>>>>> befb502 (More vision)
 #include "utils/Util.h"
 #include "wpimath/MathShared.h"
 
@@ -41,25 +32,17 @@ SwerveModule::SwerveModule(std::string path, SwerveModuleConfig config,
                            // SwerveModule::angle_pid_conf_t anglePID,
                            SwerveModule::velocity_pid_conf_t velocityPID)
     :  // _anglePIDController(path + "/pid/angle", anglePID),
-<<<<<<< HEAD
-      _anglePIDController{frc::PIDController(5, 0, 0, 0.005_s)},
-=======
       _anglePIDController{frc::PIDController(4, 0, 0, 0.005_s)},
->>>>>>> 0029f49 (fix some formatting)
       _config(config),
       _velocityPIDController(frc::PIDController(1.2, 0, 0, 0.005_s)),
       _table(nt::NetworkTableInstance::GetDefault().GetTable(path)) {
-  // _anglePIDController.SetTolerance(360);
-  _anglePIDController.EnableContinuousInput(0, (2 * 3.141592));
-  // _anglePIDController.EnableContinuousInput(-3.141592, (3.141592));
-  // _anglePIDController.EnableContinuousInput(0, (3.1415 * 2));
-  // _anglePIDController.EnableContinuousInput(0, (3.1415));
-  // _anglePIDController.SetWrap(0, 3.1415);
+  // _anglePIDController.(2 * 3.1415);
+  _anglePIDController.EnableContinuousInput(0, (2 * 3.1415));
 }
 
 void SwerveModule::OnStart() {
   // _offset = offset;
-  // _config.canEncoder->SetPosition(units::turn_t{0});
+  _config.canEncoder->SetPosition(units::turn_t{0});
   _anglePIDController.Reset();
   // _anglePIDController.EnableContinuousInput(-3.141592, 3.141592);
   // _anglePIDController.EnableContinuousInput(-3.141592, (3.141592));
@@ -81,31 +64,18 @@ void SwerveModule::OnUpdate(units::second_t dt) {
       auto feedforward = _config.driveMotor.motor.Voltage(
           0_Nm,
           units::radians_per_second_t{_velocityPIDController.GetSetpoint() / _config.wheelRadius.value()});
-<<<<<<< HEAD
-      // units::radian_t input = units::math::fmod(_config.turnMotor.encoder->GetEncoderPosition(), (2_rad
-      // * 3.1415));
-      double input = _config.turnMotor.encoder->GetEncoderPosition().value();
-=======
       // std::cout << "GetSpeed()" << GetSpeed().value() << std::endl;
       //  units::radian_t input = units::math::fmod(_config.turnMotor.encoder->GetEncoderPosition(), (2_rad
       //  * 3.1415));
       double input = -_config.turnMotor.encoder->GetEncoderPosition().value();
->>>>>>> 0029f49 (fix some formatting)
       _table->GetEntry("/testing/GetEncoderPos").SetDouble(input);
       // _velocityPIDController.SetSetpoint(3);
-
       driveVoltage = units::volt_t{_velocityPIDController.Calculate(GetSpeed().value())};
-      // if (_turnOffset == TurnOffsetValues::forward) {
+      std::cout << "Turn angle input: " << input << std::endl;
+      turnVoltage = units::volt_t{_anglePIDController.Calculate(input)};
 
-      // } else if (_turnOffset == TurnOffsetValues::reverse) {
-      //   input = input - (3.1415/2);
-      //   driveVoltage = -driveVoltage;
-      // }
-      double demand = _anglePIDController.Calculate(input);
-      // if ((_anglePIDController.GetSetpoint() - input) > (3.14159/2)) {
-      //   demand *= -1;
-      // }
-      turnVoltage = units::volt_t{demand};
+      _table->GetEntry("Input angle").SetDouble(input);
+      _table->GetEntry("Setpoint angle").SetDouble(_anglePIDController.GetSetpoint());
     } break;
     case wom::drivetrain::SwerveModuleState::kZeroing: {
     } break;
@@ -136,6 +106,10 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   _table->GetEntry("TurnVoltage").SetDouble(turnVoltage.value());
   _table->GetEntry("TurnSetpoint").SetDouble(_anglePIDController.GetSetpoint());
   _table->GetEntry("Demand").SetDouble(_config.turnMotor.encoder->GetEncoderPosition().value());
+  _table->GetEntry("Error").SetDouble(_anglePIDController.GetPositionError());
+
+  _table->GetEntry("TurnVoltage").SetDouble(turnVoltage.value());
+  _table->GetEntry("TurnSetpoint").SetDouble(_anglePIDController.GetSetpoint());
   _table->GetEntry("Error").SetDouble(_anglePIDController.GetPositionError());
 
   _config.driveMotor.motorController->SetVoltage(driveVoltage);
@@ -197,21 +171,7 @@ void SwerveModule::SetPID(units::radian_t angle, units::meters_per_second_t spee
   // @liam start added
   // std::cout << "angle Setpoint: " << _anglePIDController.GetSetpoint() <<
   // std::endl; std::cout << "angle value: " << angle.value() << std::endl;
->>>>>>> 57d11c0 (Shooter pid (#117))
 
-<<<<<<< HEAD
-  // double diff = std::abs(_config.turnMotor.encoder->GetEncoderPosition().value() - angle.value());
-  // _table->GetEntry("diff").SetDouble(diff);
-  // if (std::abs(diff) > (3.14159/2)) {
-  //   speed *= -1;
-  //   angle = 3.14159_rad - units::radian_t{diff};
-  //   _anglePIDController.SetSetpoint(angle.value());
-  //   _velocityPIDController.SetSetpoint(speed.value());
-  // } else {
-  //   _anglePIDController.SetSetpoint(angle.value());
-  //   _velocityPIDController.SetSetpoint(speed.value());
-  // }
-=======
   double diff = std::fmod((_anglePIDController.GetSetpoint() - angle.value()), (2 * 3.1415));
   std::cout << "DIFF value: " << diff << std::endl;
   _table->GetEntry("/Differential value:").SetDouble(diff);
@@ -222,45 +182,8 @@ void SwerveModule::SetPID(units::radian_t angle, units::meters_per_second_t spee
   // @liam end added
 >>>>>>> 0029f49 (fix some formatting)
 
-  // if (diff > (3.14159 / 2)) {
-  //   speed *= -1;
-  //   _anglePIDController.SetSetpoint((3.14159 - (angle.value() -
-  //   _config.turnMotor.encoder->GetEncoderPosition().value())));
-  //   _velocityPIDController.SetSetpoint(speed.value());
-  // } else {
-
-  // double setValue = 3.141592 - (angle.value() - _config.turnMotor.encoder->GetEncoderPosition().value());
-
-  // if (diff > (3.141592/2)) {
-  //   if (setValue < 0 ) {
-  //     _anglePIDController.SetSetpoint(0);
-  //     _velocityPIDController.SetSetpoint(-speed.value());
-  //   } else if ( setValue < (2 * 3)) {
-  //     _anglePIDController.SetSetpoint(2 * 3.141592  );
-  //     _velocityPIDController.SetSetpoint(-speed.value());
-  //   } else {
-  //     _anglePIDController.SetSetpoint(setValue);
-  //     _velocityPIDController.SetSetpoint(-speed.value());
-  //   }
-  // } else {
   _anglePIDController.SetSetpoint(angle.value());
   _velocityPIDController.SetSetpoint(speed.value());
-  // }
-
-  // double currentAngle = _config.turnMotor.encoder->GetEncoderPosition().value();
-  // double setpointAngle = closestAngle(currentAngle, _anglePIDController.GetSetpoint());
-  // double setpointAngleFlipped = closestAngle(currentAngle, _anglePIDController.GetSetpoint() + 3.1415);
-  // _table->GetEntry("/Setpoint angle: ").SetDouble(setpointAngle);
-  // _table->GetEntry("/Setpoint angle flipped: ").SetDouble(setpointAngleFlipped);
-  // if (std::abs(setpointAngle) <= std::abs(setpointAngleFlipped)) {
-  //   // _anglePIDController.SetGain(1.0);
-  //   _anglePIDController.SetSetpoint(currentAngle + setpointAngle);
-  //   _velocityPIDController.SetSetpoint(speed.value());
-  // } else {
-  //   // _anglePIDController.SetGain(-1.0);
-  //   _velocityPIDController.SetSetpoint(-speed.value());
-  //   _anglePIDController.SetSetpoint(currentAngle + setpointAngleFlipped);
-  // }
 }
 
 // double SwerveModule::closestAngle(double a, double b) {
@@ -288,10 +211,7 @@ void SwerveModule::ModuleVectorHandler(frc::ChassisSpeeds speeds) {
 units::meters_per_second_t SwerveModule::GetSpeed() const {
   units::meters_per_second_t returnVal{_config.driveMotor.encoder->GetVelocityValue() *
                                        _config.wheelRadius.value()};
-<<<<<<< HEAD
-=======
   // std::cout << returnVal.value() << std::endl;
->>>>>>> 0029f49 (fix some formatting)
   return returnVal;
 }
 
@@ -352,13 +272,7 @@ frc::ChassisSpeeds FieldRelativeSpeeds::ToChassisSpeeds(const units::radian_t ro
 }
 
 void SwerveDrive::OnUpdate(units::second_t dt) {
-<<<<<<< HEAD
-  _table->GetEntry("/gryo/z").SetDouble(_config.gyro->GetRotation3d().Z().value());
-  _table->GetEntry("/gryo/y").SetDouble(_config.gyro->GetRotation3d().Y().value());
-  _table->GetEntry("/gryo/x").SetDouble(_config.gyro->GetRotation3d().X().value());
-=======
   // std::cout << _config.gyro->GetYaw().GetValue().value() << std::endl;
->>>>>>> 0029f49 (fix some formatting)
   switch (_state) {
     case SwerveDriveState::kZeroing:
       for (auto mod = _modules.begin(); mod < _modules.end(); mod++) {

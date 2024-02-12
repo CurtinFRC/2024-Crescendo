@@ -4,11 +4,7 @@
 
 #include "AlphaArm.h"
 
-// fiddle with these values
-AlphaArm::AlphaArm(AlphaArmConfig config)
-    : _config(config),
-      _pidWom(_config.path + "/pid",
-              config.pidConfigA) /*_table(nt::NetworkTableInstance::GetDefault().GetTable(config.path)*/ {}
+AlphaArm::AlphaArm(AlphaArmConfig config) : _config(config) {}
 
 AlphaArmConfig AlphaArm::GetConfig() {
   return _config;
@@ -67,8 +63,4 @@ void AlphaArm::SetArmRaw(units::volt_t voltage) {
 
 void AlphaArm::setWristRaw(units::volt_t voltage) {
   _rawWristVoltage = voltage;
-}
-
-void AlphaArm::setControllerRaw(units::volt_t voltage) {
-  _controlledRawVoltage = voltage;
 }

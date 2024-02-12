@@ -21,13 +21,10 @@ class IntakeManualControl : public behaviour::Behaviour {
 
   units::volt_t _rawVoltage;
   units::volt_t _setVoltage;
-<<<<<<< HEAD
-=======
   bool _rawControl = true;
   bool _intaking = false;
   bool _ejecting = false;
   bool _passing = false;
->>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
 };
 
 class IntakeAutoControl : public behaviour::Behaviour {

@@ -259,7 +259,6 @@ class SwerveDrive : public behaviour::HasBehaviour {
   double backRightEncoderOffset = -119.619140625;
 
   units::degree_t _lockedAngle;
->>>>>>> befb502 (More vision)
 };
 }  // namespace drivetrain
 }  // namespace wom

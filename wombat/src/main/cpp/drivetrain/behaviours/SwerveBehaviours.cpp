@@ -28,7 +28,7 @@ ManualDrivebase::ManualDrivebase(wom::drivetrain::SwerveDrive* swerveDrivebase,
 
 void ManualDrivebase::OnStart() {
   _swerveDrivebase->OnStart();
-  _swerveDrivebase->SetAccelerationLimit(10_mps_sq);
+  _swerveDrivebase->SetAccelerationLimit(6_mps_sq);
 }
 
 void ManualDrivebase::OnTick(units::second_t deltaTime) {
@@ -37,9 +37,10 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
   //   isRotateMatch = !isRotateMatch;
   // }
 
-  if (_driverController->GetYButton()) {
-    _swerveDrivebase->ResetPose(frc::Pose2d());
-  }
+  // if (_driverController->GetYButton()) {
+  //   std::cout << "RESETING POSE" << std::endl;
+  //   _swerveDrivebase->ResetPose(frc::Pose2d());
+  // }
 
   // if (_driverController->GetLeftBumperPressed()) {
   //   maxMovementMagnitude = lowSensitivityDriveSpeed;
@@ -107,19 +108,10 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
   //                                            r_x * maxRotationMagnitude});
   // } else {
   _swerveDrivebase->SetFieldRelativeVelocity(wom::drivetrain::FieldRelativeSpeeds{
-<<<<<<< HEAD
-      xVelocity * -maxMovementMagnitude, yVelocity * -maxMovementMagnitude, r_x * maxRotationMagnitude});
-
-  //  _swerveDrivebase->SetVelocity(
-  //       frc::ChassisSpeeds{xVelocity * maxMovementMagnitude,
-  //                          yVelocity * maxMovementMagnitude,
-  //                          r_x * maxRotationMagnitude});
-=======
       xVelocity * maxMovementMagnitude, yVelocity * maxMovementMagnitude, r_x * maxRotationMagnitude});
->>>>>>> 0029f49 (fix some formatting)
   //   }
   // }
-  // _swerveDrivebase->SetIndividualTuning(2, 0_deg, 0_mps);
+  // _swerveDrivebase->SetTuning(100_deg, 1_mps);
 }
 
 void ManualDrivebase::ResetMode() {

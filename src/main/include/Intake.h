@@ -38,12 +38,9 @@ class Intake : public behaviour::HasBehaviour {
   units::volt_t _rawVoltage = 0_V;
   std::string _stringStateName = "error";
   units::volt_t _setVoltage = 0_V;
-<<<<<<< HEAD
-=======
   bool _intaking;
   bool _ejecting;
   bool _passing;
->>>>>>> c30477a (Intake - Manual/Auto fixes (#114))
 
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("Intake");
 };

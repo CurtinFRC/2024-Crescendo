@@ -4,26 +4,12 @@
 
 #include "Shooter.h"
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 57d11c0 (Shooter pid (#117))
 Shooter::Shooter(ShooterConfig config) : _config(config), _pid(config.path + "/pid", config.pidConfig) {}
 
 void Shooter::OnStart() {
   _pid.Reset();
 }
 
-<<<<<<< HEAD
-=======
-Shooter::Shooter(ShooterConfig config)
-    : _config(config)
-// ,
-// _pid{frc::PIDController (1, 0, 0, 0.005_s)}
-{}  // config.path + "/pid", config.pidConfig
->>>>>>> 0029f49 (fix some formatting)
-=======
->>>>>>> 57d11c0 (Shooter pid (#117))
 void Shooter::OnUpdate(units::second_t dt) {
   // _pid.SetTolerance(0.5, 4);
   table->GetEntry("Error").SetDouble(_pid.GetError().value());
@@ -107,24 +93,9 @@ void Shooter::OnUpdate(units::second_t dt) {
       std::cout << "Error shooter in invalid state" << std::endl;
     } break;
   }
-<<<<<<< HEAD
-  // table->GetEntry("Motor OutPut").SetDouble(_setVoltage.value());
-  table->GetEntry("Encoder Output")
-      .SetDouble(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value());
-
-=======
   std::cout << "Voltage:" << _setVoltage.value() << std::endl;
->>>>>>> 0029f49 (fix some formatting)
   _config.ShooterGearbox.motorController->SetVoltage(_setVoltage);
 }
-
-//       // if (_pid.AtSetpoint()) {
-//       //   SetState(ShooterState::kShooting);
-//       // }
-//       // table->GetEntry("PID Setpoint:").SetDouble(_pid.GetSetpoint());
-//       std::cout << "KShooting" << std::endl;
-//       _pid.SetSetpoint(20);
-//       // _pid.SetSetpoint(_goal.value());
 
 void Shooter::SetState(ShooterState state) {
   _state = state;
