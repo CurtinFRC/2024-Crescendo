@@ -31,7 +31,7 @@ struct RobotMap {
   Controllers controllers;
 
   struct IntakeSystem {
-    rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
+    rev::CANSparkMax intakeMotor{15, rev::CANSparkMax::MotorType::kBrushed};
     // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
     frc::DigitalInput intakeSensor{4};
     // frc::DigitalInput magSensor{0};
@@ -44,7 +44,7 @@ struct RobotMap {
   IntakeSystem intakeSystem;
 
   struct Shooter {
-    rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};  // Port 11
+    rev::CANSparkMax shooterMotor{1, rev::CANSparkMax::MotorType::kBrushless};  // Port 11
     // frc::DigitalInput shooterSensor{2};
 
     // wom::VoltageController shooterMotorGroup =
@@ -169,8 +169,8 @@ struct RobotMap {
   SwerveTable swerveTable;
 
   struct AlphaArmSystem {
-    rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
-    rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax alphaArmMotor{6, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax wristMotor{11, rev::CANSparkMax::MotorType::kBrushless};
 
     wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
     wom::Gearbox wristGearbox{&wristMotor, nullptr, frc::DCMotor::NEO(1)};
