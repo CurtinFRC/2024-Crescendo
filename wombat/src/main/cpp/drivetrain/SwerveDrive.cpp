@@ -20,6 +20,7 @@
 #include "units/current.h"
 #include "units/velocity.h"
 #include "utils/Util.h"
+#include "vision/Limelight.h"
 #include "wpimath/MathShared.h"
 
 using namespace wom;
@@ -107,6 +108,11 @@ void SwerveModule::OnUpdate(units::second_t dt) {
 
   // driveVoltage =
   //     units::math::max(units::math::min(driveVoltage, voltageMax), voltageMin);
+
+  // units::volt_t max_voltage_drive = _config.driveMotor.motor.Voltage(torque_limit_drive,
+  // _config.driveMotor.encoder->GetEncoderAngularVelocity()); units::volt_t max_voltage_turn =
+  // _config.turnMotor.motor.Voltage(torque_limit_turn,
+  // _config.turnMotor.encoder->GetEncoderAngularVelocity());
 
   // units::volt_t max_voltage_drive = _config.driveMotor.motor.Voltage(torque_limit_drive,
   // _config.driveMotor.encoder->GetEncoderAngularVelocity()); units::volt_t max_voltage_turn =
@@ -281,7 +287,7 @@ void SwerveDriveConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
   table->GetEntry("mass").SetDouble(mass.value());
 }
 
-SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
+SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose, wom::vision::Limelight* vision)
     : _config(config),
       // _kinematics(_config.modules[1].position, _config.modules[0].position,
       //             _config.modules[2].position, _config.modules[3].position),
@@ -298,7 +304,8 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
       _anglePIDController{frc::PIDController(8, 0.1, 0)},
       _xPIDController{frc::PIDController(4, 0, 0)},
       _yPIDController{frc::PIDController(4, 0, 0)},
-      _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)) {
+      _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)),
+      _vision(vision) {
   _anglePIDController.SetTolerance(360);
   _anglePIDController.EnableContinuousInput(-3.14159, 3.14159);
 
@@ -320,6 +327,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
   _table->GetEntry("/gryo/z").SetDouble(_config.gyro->GetRotation3d().Z().value());
   _table->GetEntry("/gryo/y").SetDouble(_config.gyro->GetRotation3d().Y().value());
   _table->GetEntry("/gryo/x").SetDouble(_config.gyro->GetRotation3d().X().value());
+  AddVisionMeasurement(_vision->GetPose().ToPose2d(), wom::utils::now());
   switch (_state) {
     case SwerveDriveState::kZeroing:
       for (auto mod = _modules.begin(); mod < _modules.end(); mod++) {

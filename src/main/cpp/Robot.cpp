@@ -30,6 +30,7 @@
 #include <frc/controller/RamseteController.h>
 #include <frc/Timer.h>
 #include "behaviour/HasBehaviour.h"
+#include "vision/Limelight.h"
 
 static units::second_t lastPeriodic;
 
@@ -58,7 +59,8 @@ void Robot::RobotInit() {
 
   // robotmap.swerveBase.gyro->Reset();
 
-  _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+  _swerveDrive =
+      new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d(), new wom::Limelight("limelight"));
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour(
       [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
@@ -92,6 +94,7 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.moduleConfigs[0].driveMotor.motorController->SetInverted(true);
   // robotmap.swerveBase.moduleConfigs[2].driveMotor.motorController->SetInverted(true);
 
+  // robotmap.alphaArmSystem.armEncoder->Reset();
   // robotmap.alphaArmSystem.armEncoder->Reset();
 
   // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);

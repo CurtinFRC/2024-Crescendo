@@ -32,6 +32,7 @@
 #include "behaviour/HasBehaviour.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
+#include "vision/Limelight.h"
 
 namespace wom {
 namespace drivetrain {
@@ -178,7 +179,7 @@ struct FieldRelativeSpeeds {
 
 class SwerveDrive : public behaviour::HasBehaviour {
  public:
-  SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose);
+  SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose, wom::vision::Limelight* vision);
 
   void OnUpdate(units::second_t dt);
   void OnStart();
@@ -220,6 +221,7 @@ class SwerveDrive : public behaviour::HasBehaviour {
 
  private:
   SwerveDriveConfig _config;
+  wom::vision::Limelight* _vision;
   SwerveDriveState _state = SwerveDriveState::kIdle;
   std::vector<SwerveModule> _modules;
 
