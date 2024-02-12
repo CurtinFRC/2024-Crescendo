@@ -56,7 +56,6 @@ struct PIDConfig {
 
  private:
   std::vector<std::shared_ptr<NTBound>> _nt_bindings;
-  
 
  public:
   void RegisterNT() {
@@ -127,7 +126,6 @@ class PIDController {
     _stableVel = _velFilter.Calculate(deriv);
 
     auto out = config.kp * error + config.ki * _integralSum + config.kd * deriv + feedforward;
-
 
     _last_pv = pv;
     _last_error = error;
