@@ -23,7 +23,6 @@
 #include "Shooter.h"
 #include "ShooterBehaviour.h"
 #include "Wombat.h"
-#include "vision/Vision.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -37,16 +36,14 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void DisabledInit() override;
   void DisabledPeriodic() override;
-  void SimulationInit() override;
-  void SimulationPeriodic() override;
 
  private:
   RobotMap robotmap;
   wom::BehaviourScheduler* sched;
   frc::EventLoop loop;
-  Shooter* shooter;
+  // Shooter* shooter;
 
-  Intake* intake;
+  // Intake* intake;
   frc::SendableChooser<std::string> m_chooser;
 
   frc::Field2d m_field;
@@ -56,18 +53,13 @@ class Robot : public frc::TimedRobot {
   frc::SendableChooser<std::string> m_path_chooser;
 
   wom::SwerveDrive* _swerveDrive;
+  // AlphaArm* alphaArm;
 
-  AlphaArm* alphaArm;
+  ctre::phoenix6::hardware::TalonFX* frontLeft;
+  // AlphaArm *alphaArm;
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;
   // ctre::phoenix6::hardware::TalonFX *backLeft;
   // ctre::phoenix6::hardware::TalonFX *backRight;
-
-  Vision* _vision;
 };
-=======
-
-  Vision* _vision;
-};
->>>>>>> c83ac05 ([robot/vision] Started work on limelight vision)
