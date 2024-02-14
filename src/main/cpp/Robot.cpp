@@ -29,13 +29,19 @@
 #include <frc/kinematics/DifferentialDriveKinematics.h>
 #include <frc/controller/RamseteController.h>
 #include <frc/Timer.h>
+#include "ArmBehaviours.h"
 #include "behaviour/HasBehaviour.h"
+#include "drivetrain/behaviours/SwerveBehaviours.h"
+#include "frc/geometry/Pose2d.h"
+#include "vision/Vision.h"
 
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
+
+  vision = new Vision("limelight", FMAP("fmap.fmap"));
 
   // frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
 
@@ -60,8 +66,14 @@ void Robot::RobotInit() {
 
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
-  _swerveDrive->SetDefaultBehaviour(
-      [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
+
+  _arm = new wom::Arm(robotmap.arm.config);
+  wom::BehaviourScheduler::GetInstance()->Register(_arm);
+
+  _arm->SetDefaultBehaviour(
+      [this]() { return wom::make<ArmManualControl>(_arm, &robotmap.controllers.codriver); });
+  //_swerveDrive->SetDefaultBehaviour(
+  //    [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
   // alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   // wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
@@ -124,6 +136,7 @@ void Robot::RobotPeriodic() {
   // intake->OnUpdate(dt);
   // alphaArm->OnUpdate(dt);
   _swerveDrive->OnUpdate(dt);
+  _arm->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {
@@ -148,7 +161,21 @@ void Robot::TeleopInit() {
   // backLeft->SetVoltage(4_V);
   // backRight->SetVoltage(4_V);
 }
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+  if (robotmap.controllers.driver.GetXButtonPressed() &&
+      vision->TargetIsVisible(VisionTargetObjects::kNote)) {
+    units::degree_t turn = vision->LockOn(VisionTargetObjects::kNote);
+
+    frc::Pose2d current_pose = _swerveDrive->GetPose();
+
+    std::cout << "angle: " << turn.value() << std::endl;
+    current_pose.RotateBy(turn);
+
+    wom::make<wom::DrivebasePoseBehaviour>(_swerveDrive, current_pose);
+  } else {
+    wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver);
+  }
+}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}

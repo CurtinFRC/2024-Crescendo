@@ -3,6 +3,7 @@
 // of the MIT License at the root of this project
 
 #pragma once
+
 #include <frc/Encoder.h>
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
@@ -23,6 +24,8 @@
 #include "Shooter.h"
 #include "ShooterBehaviour.h"
 #include "Wombat.h"
+#include "subsystems/Arm.h"
+#include "vision/Vision.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -55,6 +58,8 @@ class Robot : public frc::TimedRobot {
   wom::SwerveDrive* _swerveDrive;
   // AlphaArm* alphaArm;
 
+  wom::Arm* _arm;
+
   ctre::phoenix6::hardware::TalonFX* frontLeft;
   // AlphaArm *alphaArm;
 
@@ -62,4 +67,5 @@ class Robot : public frc::TimedRobot {
   // ctre::phoenix6::hardware::TalonFX *frontRight;
   // ctre::phoenix6::hardware::TalonFX *backLeft;
   // ctre::phoenix6::hardware::TalonFX *backRight;
+  Vision* vision;
 };
