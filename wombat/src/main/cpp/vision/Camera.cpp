@@ -9,13 +9,15 @@
 
 #include "frc/geometry/Transform3d.h"
 
+namespace wom {
+namespace vision {
 PhotonVision::PhotonVision() : _name("photonvision") {
   Initialize();
-};
+}
 
 PhotonVision::PhotonVision(std::string name) : _name(name) {
   Initialize();
-};
+}
 
 void PhotonVision::Initialize() {
   _camera = new photonlib::PhotonCamera(_name);
@@ -46,7 +48,7 @@ std::vector<photonTarget> PhotonVision::GetTargets() {
 
   for (size_t i = 0; i < res.size(); i++) {
     targets.push_back(res[i]);
-  };
+  }
 
   return targets;
 }
@@ -100,3 +102,6 @@ void PhotonVision::SetMode(PhotonVisionModes mode) {
 
   SetPipelineIndex(static_cast<int>(mode));
 }
+
+}  // namespace vision
+}  // namespace wom

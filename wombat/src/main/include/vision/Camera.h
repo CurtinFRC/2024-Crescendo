@@ -7,6 +7,7 @@
 #include <photonlib/PhotonCamera.h>
 
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "frc/geometry/Transform2d.h"
@@ -14,6 +15,9 @@
 #include "photonlib/PhotonPipelineResult.h"
 #include "photonlib/PhotonTrackedTarget.h"
 #include "wpi/SmallVector.h"
+
+namespace wom {
+namespace vision {
 
 enum class PhotonVisionModes { kNormal = 0, kObject = 1 };
 
@@ -59,3 +63,5 @@ class PhotonVision {
 
   photonlib::PhotonCamera* _camera;
 };
+}  // namespace vision
+}  // namespace wom
