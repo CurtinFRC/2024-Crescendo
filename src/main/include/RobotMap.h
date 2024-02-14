@@ -158,13 +158,20 @@ struct RobotMap {
         0_V / (100_deg / 1_s)};*/
     wom::SwerveModule::velocity_pid_conf_t velocityPID{
         "/drivetrain/pid/velocity/config",
-        //  12_V / 4_mps // webers per metre
+        12_V / 4_mps  // webers per metre
     };
     /*wom::SwerveDriveConfig::pose_angle_conf_t poseAnglePID{
         "/drivetrain/pid/pose/angle/config",
         0_deg / 1_s / 45_deg,
         wom::SwerveDriveConfig::pose_angle_conf_t::ki_t{0},
         0_deg / 1_deg};*/
+    // wom::SwerveDriveConfig::pose_position_conf_t posePositionPID{
+    //   "/drivetrain/pid/pose/position/config",
+    //   20_mps / 1_m,
+    //   wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0},//wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0.15},
+    //   0,//0_m / 1_m,
+    //   0.1_m,
+    //   0.1_m / 1_s};
     wom::SwerveDriveConfig::pose_position_conf_t posePositionPID{
         "/drivetrain/pid/pose/position/config", 0_mps / 1_m,
         wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0.15}, 0_m / 1_m, 0_cm};
@@ -176,7 +183,9 @@ struct RobotMap {
                                   moduleConfigs,  // each module
                                   gyro,
                                   // poseAnglePID,
-                                  posePositionPID,
+                                  // posePositionPID,
+                                  //  poseAnglePID,
+                                  // posePositionPID,
                                   60_kg,  // robot mass (estimate rn)
                                   {0.1, 0.1, 0.1},
                                   {0.9, 0.9, 0.9}};
@@ -200,6 +209,7 @@ struct RobotMap {
   };
   SwerveTable swerveTable;
 
+  wom::Pathplanner pathplanner;
   // struct AlphaArmSystem {
   //   rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
   //   rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};

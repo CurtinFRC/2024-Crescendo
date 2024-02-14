@@ -32,6 +32,7 @@
 #include "behaviour/HasBehaviour.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
+#include "vision/Limelight.h"
 
 namespace wom {
 namespace drivetrain {
@@ -101,6 +102,7 @@ class SwerveModule {
   SwerveModuleConfig _config;
   SwerveModuleState _state;
   units::volt_t _driveModuleVoltageLimit = 10_V;
+  units::volt_t _angleModuleVoltageLimit = 6_V;
 
   bool _hasZeroedEncoder = false;
   bool _hasZeroed = false;
@@ -132,7 +134,8 @@ struct SwerveDriveConfig {
   ctre::phoenix6::hardware::Pigeon2* gyro;
 
   // pose_angle_conf_t poseAnglePID;
-  pose_position_conf_t posePositionPID;
+  // pose_position_conf_t posePositionPID;
+  //  pose_angle_conf_t poseAnglePID;
 
   units::kilogram_t mass;
 
@@ -176,7 +179,7 @@ struct FieldRelativeSpeeds {
 
 class SwerveDrive : public behaviour::HasBehaviour {
  public:
-  SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose);
+  SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose, wom::vision::Limelight* vision);
 
   void OnUpdate(units::second_t dt);
   void OnStart();
@@ -218,6 +221,7 @@ class SwerveDrive : public behaviour::HasBehaviour {
 
  private:
   SwerveDriveConfig _config;
+  wom::vision::Limelight* _vision;
   SwerveDriveState _state = SwerveDriveState::kIdle;
   std::vector<SwerveModule> _modules;
 
@@ -233,8 +237,11 @@ class SwerveDrive : public behaviour::HasBehaviour {
   /*utils::PIDController<units::radian, units::radians_per_second>
       _anglePIDController;*/
   frc::PIDController _anglePIDController;
-  utils::PIDController<units::meter, units::meters_per_second> _xPIDController;
-  utils::PIDController<units::meter, units::meters_per_second> _yPIDController;
+  frc::PIDController _xPIDController;
+  frc::PIDController _yPIDController;
+
+  // utils::PIDController<units::meter, units::meters_per_second> _xPIDController;
+  // utils::PIDController<units::meter, units::meters_per_second> _yPIDController;
 
   std::shared_ptr<nt::NetworkTable> _table;
 

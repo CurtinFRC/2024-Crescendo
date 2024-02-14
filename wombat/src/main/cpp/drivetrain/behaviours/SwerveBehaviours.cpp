@@ -12,6 +12,8 @@
 #include <units/charge.h>
 #include <units/moment_of_inertia.h>
 
+#include "drivetrain/SwerveDrive.h"
+#include "frc/RobotController.h"
 #include "utils/Pathplanner.h"
 #include "utils/Util.h"
 
@@ -146,27 +148,25 @@ void XDrivebase::OnTick(units::second_t deltaTime) {
 
 //   _swerve->OnUpdate(dt, _swerve->GetLimelight(), desiredPose);
 // }
+//
 
-// wom::drivetrain::behaviours::FollowTrajectory::FollowTrajectory(wom::drivetrain::Swerve
-// *swerve, wom::utils::Pathplanner *pathplanner, std::string path)
-//     : _swerve(swerve), _pathplanner(pathplanner), _path(path) {}
+wom::drivetrain::behaviours::FollowTrajectory::FollowTrajectory(wom::drivetrain::SwerveDrive* swerve,
+                                                                wom::utils::Pathplanner* pathplanner,
+                                                                std::string path)
+    : _swerve(swerve), _pathplanner(pathplanner), _path(path) {}
 
-// void wom::drivetrain::behaviours::FollowTrajectory::OnTick(units::second_t
-// dt) {
-//   _swerve->SetState(wom::drivetrain::SwerveState::kTrajectory);
-//   frc::Pose3d currentPose = _swerve->GetLimelight()->GetPose();
-//   frc::Pose3d desiredPose =
-//   frc::Pose3d(_trajectory.Sample(m_timer.Get()).pose);
+void wom::drivetrain::behaviours::FollowTrajectory::OnTick(units::second_t dt) {
+  frc::Pose3d desiredPose = frc::Pose3d(_trajectory.Sample(m_timer.Get()).pose);
 
-//   _swerve->OnUpdate(dt, _swerve->GetLimelight(), desiredPose);
-// }
+  _swerve->SetPose(desiredPose.ToPose2d());
+}
 
-// void wom::drivetrain::behaviours::FollowTrajectory::OnStart() {
-//   _trajectory = _pathplanner->getTrajectory(_path);
+void wom::drivetrain::behaviours::FollowTrajectory::OnStart() {
+  _trajectory = _pathplanner->getTrajectory(_path);
 
-//   m_timer.Reset();
-//   m_timer.Start();
-// }
+  m_timer.Reset();
+  m_timer.Start();
+}
 
 wom::drivetrain::behaviours::TempSimSwerveDrive::TempSimSwerveDrive(frc::Timer* timer, frc::Field2d* field)
     : m_timer(timer), m_field(field) {}
@@ -239,13 +239,19 @@ wom::drivetrain::behaviours::DrivebasePoseBehaviour::DrivebasePoseBehaviour(Swer
 
 // used in autonomous for going to set drive poses
 void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t deltaTime) {
+  if (_voltageLimit >= (frc::RobotController::GetBatteryVoltage() - 0.5_V)) {
+    _voltageLimit = frc::RobotController::GetBatteryVoltage() - 1_V;
+  }
   double currentAngle = _swerveDrivebase->GetPose().Rotation().Degrees().value();
   units::degree_t adjustedAngle =
       1_deg * (currentAngle - std::fmod(currentAngle, 360) + _pose.Rotation().Degrees().value());
   _swerveDrivebase->SetVoltageLimit(_voltageLimit);
+
   _swerveDrivebase->SetPose(frc::Pose2d{_pose.X(), _pose.Y(), adjustedAngle});
 
   if (_swerveDrivebase->IsAtSetPose() && !_hold) {
+    std::cout << "Exited..." << std::endl;
+
     SetDone();
   }
 }
