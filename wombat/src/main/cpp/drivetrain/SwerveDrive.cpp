@@ -189,57 +189,15 @@ void SwerveModule::SetZero(units::second_t dt) {
 void SwerveModule::SetPID(units::radian_t angle, units::meters_per_second_t speed, units::second_t dt) {
   _state = SwerveModuleState::kPID;
 
-  // double diff = std::abs(_config.turnMotor.encoder->GetEncoderPosition().value() - angle.value());
-  // _table->GetEntry("diff").SetDouble(diff);
-  // if (std::abs(diff) > (3.14159/2)) {
-  //   speed *= -1;
-  //   angle = 3.14159_rad - units::radian_t{diff};
-  //   _anglePIDController.SetSetpoint(angle.value());
-  //   _velocityPIDController.SetSetpoint(speed.value());
-  // } else {
-  //   _anglePIDController.SetSetpoint(angle.value());
-  //   _velocityPIDController.SetSetpoint(speed.value());
-  // }
+  double diff = std::abs(_config.turnMotor.encoder->GetEncoderPosition().value() - angle.value());
 
-  // if (diff > (3.14159 / 2)) {
-  //   speed *= -1;
-  //   _anglePIDController.SetSetpoint((3.14159 - (angle.value() -
-  //   _config.turnMotor.encoder->GetEncoderPosition().value())));
-  //   _velocityPIDController.SetSetpoint(speed.value());
-  // } else {
+  if (diff > (3.14159/2)) {
+     speed *= -1;
+     angle -= 3.14159_rad;
+  }
 
-  // double setValue = 3.141592 - (angle.value() - _config.turnMotor.encoder->GetEncoderPosition().value());
-
-  // if (diff > (3.141592/2)) {
-  //   if (setValue < 0 ) {
-  //     _anglePIDController.SetSetpoint(0);
-  //     _velocityPIDController.SetSetpoint(-speed.value());
-  //   } else if ( setValue < (2 * 3)) {
-  //     _anglePIDController.SetSetpoint(2 * 3.141592  );
-  //     _velocityPIDController.SetSetpoint(-speed.value());
-  //   } else {
-  //     _anglePIDController.SetSetpoint(setValue);
-  //     _velocityPIDController.SetSetpoint(-speed.value());
-  //   }
-  // } else {
   _anglePIDController.SetSetpoint(angle.value());
   _velocityPIDController.SetSetpoint(speed.value());
-  // }
-
-  // double currentAngle = _config.turnMotor.encoder->GetEncoderPosition().value();
-  // double setpointAngle = closestAngle(currentAngle, _anglePIDController.GetSetpoint());
-  // double setpointAngleFlipped = closestAngle(currentAngle, _anglePIDController.GetSetpoint() + 3.1415);
-  // _table->GetEntry("/Setpoint angle: ").SetDouble(setpointAngle);
-  // _table->GetEntry("/Setpoint angle flipped: ").SetDouble(setpointAngleFlipped);
-  // if (std::abs(setpointAngle) <= std::abs(setpointAngleFlipped)) {
-  //   // _anglePIDController.SetGain(1.0);
-  //   _anglePIDController.SetSetpoint(currentAngle + setpointAngle);
-  //   _velocityPIDController.SetSetpoint(speed.value());
-  // } else {
-  //   // _anglePIDController.SetGain(-1.0);
-  //   _velocityPIDController.SetSetpoint(-speed.value());
-  //   _anglePIDController.SetSetpoint(currentAngle + setpointAngleFlipped);
-  // }
 }
 
 // double SwerveModule::closestAngle(double a, double b) {
