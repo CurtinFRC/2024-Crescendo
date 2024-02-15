@@ -190,8 +190,8 @@ void SwerveModule::SetPID(units::radian_t angle, units::meters_per_second_t spee
   _state = SwerveModuleState::kPID;
 
   double diff = std::abs(_config.turnMotor.encoder->GetEncoderPosition().value() - angle.value());
-
-  if (diff > (3.14159/2)) {
+  _table->GetEntry("diff").SetDouble(diff);
+  if (diff > (3.14/2)) {
      speed *= -1;
      angle -= 3.14159_rad;
   }
@@ -513,7 +513,7 @@ frc::Pose2d SwerveDrive::GetPose() {
 }
 
 void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp) {
-  _poseEstimator.AddVisionMeasurement(pose, timestamp);
+  // _poseEstimator.AddVisionMeasurement(pose, timestamp);
 }
 }  // namespace drivetrain
 }  // namespace wom

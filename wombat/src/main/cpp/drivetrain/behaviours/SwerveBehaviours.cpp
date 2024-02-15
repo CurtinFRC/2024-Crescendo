@@ -105,6 +105,12 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
   _swerveDrivebase->SetFieldRelativeVelocity(wom::drivetrain::FieldRelativeSpeeds{
       xVelocity * -maxMovementMagnitude, yVelocity * -maxMovementMagnitude, r_x * maxRotationMagnitude});
 
+  _swerveDriveTable->GetEntry("Joystick X diff").SetDouble(std::abs(lastJoystickX - _driverController->GetLeftX()));
+  _swerveDriveTable->GetEntry("Joystick Y diff").SetDouble(std::abs(lastJoystickY - _driverController->GetLeftY()));
+
+  lastJoystickX = _driverController->GetLeftX();
+  lastJoystickY = _driverController->GetLeftY();
+
   //  _swerveDrivebase->SetVelocity(
   //       frc::ChassisSpeeds{xVelocity * maxMovementMagnitude,
   //                          yVelocity * maxMovementMagnitude,

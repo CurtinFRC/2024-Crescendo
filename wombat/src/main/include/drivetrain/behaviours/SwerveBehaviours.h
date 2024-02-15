@@ -49,6 +49,8 @@ class ManualDrivebase : public behaviour::Behaviour {
   void ResetMode();
 
  private:
+  double lastJoystickX = 0;
+  double lastJoystickY = 0;
   std::shared_ptr<nt::NetworkTable> _swerveDriveTable =
       nt::NetworkTableInstance::GetDefault().GetTable("swerve");
   wom::drivetrain::SwerveDrive* _swerveDrivebase;
