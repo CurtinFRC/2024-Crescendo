@@ -33,5 +33,6 @@ class IntakeAutoControl : public behaviour::Behaviour {
 
  private:
   Intake* _intake;
+
   LED* _led;
 };
