@@ -17,8 +17,7 @@ struct IntakeConfig {
   std::string path;
   wom::Gearbox IntakeGearbox;
   frc::DigitalInput* intakeSensor;
-  // frc::DigitalInput* magSensor;
-  // frc::DigitalInput* shooterSensor;
+
   wom::PIDConfig<units::radians_per_second, units::volt> pidConfig;
 };
 
@@ -45,9 +44,8 @@ class Intake : public behaviour::HasBehaviour {
   std::string _stringStateName = "error";
   units::volt_t _setVoltage = 0_V;
   units::volt_t holdVoltage = 0_V;
-  // bool _intaking; //&NEEDS DEFAULTS
-  // bool _ejecting;
-  // bool _passing;
+  units::volt_t passVoltage = 0_V;
+
   units::radians_per_second_t _goal;
   wom::PIDController<units::radians_per_second, units::volt> _pid;
   

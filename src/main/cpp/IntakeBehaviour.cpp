@@ -6,8 +6,7 @@
 
 #include <frc/XboxController.h>
 
-IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver)
-    : _intake(intake), _codriver(codriver) {
+IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver) : _intake(intake), _codriver(codriver) {
   Controls(intake);
 }
 
@@ -27,12 +26,15 @@ void IntakeManualControl::OnTick(units::second_t dt) {
 
 
   if (_codriver.GetBButtonReleased()) {
-    if (_intake->GetState() == IntakeState::kRaw) {
-      _intake->SetState(IntakeState::kIdle);
+
+    if (_rawControl) {
+      _rawControl = false;
     } else {
-      _intake->SetState(IntakeState::kIdle); // this is not a toggle button
+      _rawControl = true;
     }
-  } else if (_rawControl) {
+  } 
+  
+  if (_rawControl) {
     if (_codriver.GetRightTriggerAxis() > 0.1) {
       _intake->SetRaw(_codriver.GetRightTriggerAxis() * 10_V);
     } else if (_codriver.GetLeftTriggerAxis() > 0.1) {
@@ -41,40 +43,29 @@ void IntakeManualControl::OnTick(units::second_t dt) {
       _intake->SetRaw(0_V);
     }
     _intake->SetState(IntakeState::kRaw);
-    
+
   } else {
-    if (_codriver.GetRightTriggerAxis() > 0.1) {
+    
+    if (_intake->GetState() == IntakeState::kHold) {
+      if (_codriver.GetAButtonReleased()) {
+        _intake->SetState(IntakeState::kEject);
+      } else if (_codriver.GetYButtonReleased()) {
+        _intake->SetState(IntakeState::kPass);
+      } else {
+        _intake->SetState(IntakeState::kIdle);
+      }
+    } else if (_intake->GetState() == IntakeState::kIdle) {
+      if (_codriver.GetRightTriggerAxis() > 0.1) {
         _intake->SetState(IntakeState::kIntake);
-    } else if (_codriver.GetLeftTriggerAxis() > 0.1) {
-        _intake->SetState(IntakeState::kIntake);
-    } else if (_codriver.GetAButtonPressed()) {
-      _intake->SetState(IntakeState::kPass);
-    } else {
-    _intake->SetState(IntakeState::kIdle);  
-  }
-
-      // if (_intaking) {
-    //   if (_intake->GetState() == IntakeState::kIdle) {
-    //     _intake->SetState(IntakeState::kIntake);
-    //   }
-    // }
-
-    // if (_passing) {
-    //   if (_intake->GetState() == IntakeState::kHold) {
-    //     _intake->SetState(IntakeState::kPass);
-    //   }
-    // }
-
-    // if (_ejecting) {
-    //   if (_intake->GetState() == IntakeState::kIdle || _intake->GetState() == IntakeState::kHold) {
-    //     _intake->SetState(IntakeState::kEject);
-    //   }
-    // }
+      } else {
+        _intake->SetState(IntakeState::kIdle);
+      }
+    }
   }
 }
 
-IntakeAutoControl::IntakeAutoControl(Intake* intake) : _intake(intake) {
+AutoIntake::AutoIntake(Intake* intake) : _intake(intake) {
   Controls(intake);
 }
 
-void IntakeAutoControl::OnTick(units::second_t dt) {}
+void AutoIntake::OnTick(units::second_t dt) {}
