@@ -22,7 +22,7 @@ PhotonVision::PhotonVision(std::string name) : _name(name) {
 void PhotonVision::Initialize() {
   _camera = new photonlib::PhotonCamera(_name);
 
-  SetMode(PhotonVisionModes::kObject);
+  SetMode(_mode);
 }
 
 photonlib::PhotonPipelineResult PhotonVision::GetResult() {
@@ -41,10 +41,10 @@ bool PhotonVision::HasTarget() {
   return GetResult().HasTargets();
 }
 
-std::vector<photonTarget> PhotonVision::GetTargets() {
-  const std::span<const photonTarget> res = GetResult().GetTargets();
+std::vector<PhotonTarget> PhotonVision::GetTargets() {
+  const std::span<const PhotonTarget> res = GetResult().GetTargets();
 
-  std::vector<photonTarget> targets;
+  std::vector<PhotonTarget> targets;
 
   for (size_t i = 0; i < res.size(); i++) {
     targets.push_back(res[i]);
@@ -53,43 +53,43 @@ std::vector<photonTarget> PhotonVision::GetTargets() {
   return targets;
 }
 
-photonTarget PhotonVision::GetTarget() {
+PhotonTarget PhotonVision::GetTarget() {
   return GetResult().GetBestTarget();
 }
 
-double PhotonVision::GetTargetYaw(photonTarget target) {
+double PhotonVision::GetTargetYaw(PhotonTarget target) {
   return target.GetYaw();
 }
 
-double PhotonVision::GetTargetPitch(photonTarget target) {
+double PhotonVision::GetTargetPitch(PhotonTarget target) {
   return target.GetPitch();
 }
 
-double PhotonVision::GetTargetArea(photonTarget target) {
+double PhotonVision::GetTargetArea(PhotonTarget target) {
   return target.GetArea();
 }
 
-double PhotonVision::GetTargetSkew(photonTarget target) {
+double PhotonVision::GetTargetSkew(PhotonTarget target) {
   return target.GetSkew();
 }
 
-frc::Transform3d PhotonVision::GetCameraToTarget(photonTarget target) {
+frc::Transform3d PhotonVision::GetCameraToTarget(PhotonTarget target) {
   return target.GetBestCameraToTarget();
 }
 
-std::vector<std::pair<double, double>> PhotonVision::GetTargetCorners(photonTarget target) {
+std::vector<std::pair<double, double>> PhotonVision::GetTargetCorners(PhotonTarget target) {
   return target.GetDetectedCorners();
 }
 
-int PhotonVision::GetTargetId(photonTarget target) {
+int PhotonVision::GetTargetId(PhotonTarget target) {
   return target.GetFiducialId();
 }
 
-frc::Transform3d PhotonVision::BestCameraToTarget(photonTarget target) {
+frc::Transform3d PhotonVision::BestCameraToTarget(PhotonTarget target) {
   return target.GetBestCameraToTarget();
 }
 
-frc::Transform3d PhotonVision::AlternateCameraToTarget(photonTarget target) {
+frc::Transform3d PhotonVision::AlternateCameraToTarget(PhotonTarget target) {
   return target.GetAlternateCameraToTarget();
 }
 

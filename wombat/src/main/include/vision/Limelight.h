@@ -99,8 +99,10 @@ class Limelight {
   void OnStart();
 
   bool IsAtSetPoseVision(frc::Pose3d pose, units::second_t dt);
+  bool IsAtSetPoseVision(frc::Pose2d pose, units::second_t dt);
 
   units::meters_per_second_t GetSpeed(frc::Pose3d pose1, frc::Pose3d pose2, units::second_t dt);
+  units::meters_per_second_t GetSpeed(frc::Pose2d pose1, frc::Pose2d pose2, units::second_t dt);
 
   frc::Pose3d GetPose();
 

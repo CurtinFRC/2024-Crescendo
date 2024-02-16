@@ -337,7 +337,7 @@ frc::Pose2d Vision::TurnToTarget(VisionTarget target, wom::SwerveDrive* swerveDr
 
   std::cout << pose.Rotation().Degrees().value() << std::endl;
 
-  // swerveDrive->SetPose(pose);
+  swerveDrive->SetPose(pose);
 }
 
 std::pair<frc::Pose2d, units::degree_t> Vision::GetAngleToObject(VisionTargetObjects object) {
@@ -371,6 +371,10 @@ units::degree_t Vision::LockOn(VisionTargetObjects object) {
 }
 
 bool Vision::IsAtPose(frc::Pose3d pose, units::second_t dt) {
+  return _limelight->IsAtSetPoseVision(pose, dt);
+}
+
+bool Vision::IsAtPose(frc::Pose2d pose, units::second_t dt) {
   return _limelight->IsAtSetPoseVision(pose, dt);
 }
 

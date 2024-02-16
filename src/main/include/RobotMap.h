@@ -95,61 +95,61 @@ struct RobotMap {
 
   //   };
   //   Shooter shooterSystem;
-
-  struct Arm {
-    // creates the motor used for the arm as well as the port it is plugged in
-    rev::CANSparkMax leftArmMotor{21, rev::CANSparkMax::MotorType::kBrushless};   // 11
-    rev::CANSparkMax rightArmMotor{26, rev::CANSparkMax::MotorType::kBrushless};  // 12
-
-    // rev::CANSparkMax leftPretendArmMotor{28, rev::CANSparkMax::MotorType::kBrushless};
-    // rev::CANSparkMax rightPretendArmMotor{29, rev::CANSparkMax::MotorType::kBrushless};
-
-    // wom::DigitalEncoder encoder{0, 1, 2048};
-    // sets the type sof encoder that is used up
-    wom::CANSparkMaxEncoder* leftEncoder = new wom::CANSparkMaxEncoder(&leftArmMotor, 10_cm);
-    wom::CANSparkMaxEncoder* rightEncoder = new wom::CANSparkMaxEncoder(&rightArmMotor, 10_cm);
-
-    // wom::DutyCycleEncoder *encoder = new wom::DutyCycleEncoder(3, 10_cm);
-
-    // wom::CANSparkMaxEncoder leftEncoder{&leftArmMotor, 100};
-    // wom::CANSparkMaxEncoder rightEncoder{&rightArmMotor, 100};
-
-    // rev::SparkMaxAbsoluteEncoder leftOtherArmEncoder{leftArmMotor,
-    // rev::CANSparkMax::SparkMaxAbsoluteEncoder::Type::kDutyCycle}; wom::CANSparkMaxEncoder
-    // leftOtherArmEncoder = leftArmMotor.GetEncoder(); wom::CANSparkMaxEncoder rightOtherArmEncoder =
-    // rightArmMotor.GetEncoder();
-
-    // creates an instance of the arm gearbox
-    wom::Gearbox leftGearbox{&leftArmMotor, leftEncoder,
-                             // nullptr,
-                             frc::DCMotor::NEO(1).WithReduction(100)};
-
-    wom::Gearbox rightGearbox{&rightArmMotor, rightEncoder,
-                              // nullptr,
-                              frc::DCMotor::NEO(1).WithReduction(100)};
-
-    // creates arm config information
-    wom::ArmConfig config{
-        "/armavator/arm", leftGearbox, rightGearbox,
-        // nullptr,
-        leftEncoder,
-        wom::PIDConfig<units::radian, units::volts>("/armavator/arm/pid/config",
-                                                    18_V / 25_deg,        // prev 13_V/25_deg
-                                                    0_V / (1_deg * 1_s),  // 0.1_V / (1_deg * 1_s)
-                                                    0_V / (1_deg / 1_s),  // 0_V / (1_deg / 1_s)
-                                                    5_deg, 2_deg / 1_s, 10_deg),
-        wom::PIDConfig<units::radians_per_second, units::volts>("/armavator/arm/velocityPID/config",
-                                                                9_V / (180_deg / 1_s), 0_V / 25_deg,
-                                                                0_V / (90_deg / 1_s / 1_s)),
-        1_kg, 0.5_kg, 1.15_m, -90_deg, 270_deg, 0_deg};
-
-    Arm() {
-      // inverts the motor so that it goes in the right direction while using RAW controlls
-      leftArmMotor.SetInverted(true);
-      rightArmMotor.SetInverted(false);
-    }
-  };
-  Arm arm;
+  //
+  // struct Arm {
+  //   // creates the motor used for the arm as well as the port it is plugged in
+  //   rev::CANSparkMax leftArmMotor{21, rev::CANSparkMax::MotorType::kBrushless};   // 11
+  //   rev::CANSparkMax rightArmMotor{26, rev::CANSparkMax::MotorType::kBrushless};  // 12
+  //
+  //   // rev::CANSparkMax leftPretendArmMotor{28, rev::CANSparkMax::MotorType::kBrushless};
+  //   // rev::CANSparkMax rightPretendArmMotor{29, rev::CANSparkMax::MotorType::kBrushless};
+  //
+  //   // wom::DigitalEncoder encoder{0, 1, 2048};
+  //   // sets the type sof encoder that is used up
+  //   wom::CANSparkMaxEncoder* leftEncoder = new wom::CANSparkMaxEncoder(&leftArmMotor, 10_cm);
+  //   wom::CANSparkMaxEncoder* rightEncoder = new wom::CANSparkMaxEncoder(&rightArmMotor, 10_cm);
+  //
+  //   // wom::DutyCycleEncoder *encoder = new wom::DutyCycleEncoder(3, 10_cm);
+  //
+  //   // wom::CANSparkMaxEncoder leftEncoder{&leftArmMotor, 100};
+  //   // wom::CANSparkMaxEncoder rightEncoder{&rightArmMotor, 100};
+  //
+  //   // rev::SparkMaxAbsoluteEncoder leftOtherArmEncoder{leftArmMotor,
+  //   // rev::CANSparkMax::SparkMaxAbsoluteEncoder::Type::kDutyCycle}; wom::CANSparkMaxEncoder
+  //   // leftOtherArmEncoder = leftArmMotor.GetEncoder(); wom::CANSparkMaxEncoder rightOtherArmEncoder =
+  //   // rightArmMotor.GetEncoder();
+  //
+  //   // creates an instance of the arm gearbox
+  //   wom::Gearbox leftGearbox{&leftArmMotor, leftEncoder,
+  //                            // nullptr,
+  //                            frc::DCMotor::NEO(1).WithReduction(100)};
+  //
+  //   wom::Gearbox rightGearbox{&rightArmMotor, rightEncoder,
+  //                             // nullptr,
+  //                             frc::DCMotor::NEO(1).WithReduction(100)};
+  //
+  //   // creates arm config information
+  //   wom::ArmConfig config{
+  //       "/armavator/arm", leftGearbox, rightGearbox,
+  //       // nullptr,
+  //       leftEncoder,
+  //       wom::PIDConfig<units::radian, units::volts>("/armavator/arm/pid/config",
+  //                                                   18_V / 25_deg,        // prev 13_V/25_deg
+  //                                                   0_V / (1_deg * 1_s),  // 0.1_V / (1_deg * 1_s)
+  //                                                   0_V / (1_deg / 1_s),  // 0_V / (1_deg / 1_s)
+  //                                                   5_deg, 2_deg / 1_s, 10_deg),
+  //       wom::PIDConfig<units::radians_per_second, units::volts>("/armavator/arm/velocityPID/config",
+  //                                                               9_V / (180_deg / 1_s), 0_V / 25_deg,
+  //                                                               0_V / (90_deg / 1_s / 1_s)),
+  //       1_kg, 0.5_kg, 1.15_m, -90_deg, 270_deg, 0_deg};
+  //
+  //   Arm() {
+  //     // inverts the motor so that it goes in the right direction while using RAW controlls
+  //     leftArmMotor.SetInverted(true);
+  //     rightArmMotor.SetInverted(false);
+  //   }
+  // };
+  // Arm arm;
 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{16, "Drivebase"};

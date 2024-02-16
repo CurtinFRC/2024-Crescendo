@@ -14,14 +14,15 @@
 #include "frc/geometry/Transform3d.h"
 #include "photonlib/PhotonPipelineResult.h"
 #include "photonlib/PhotonTrackedTarget.h"
+#include "units/angle.h"
 #include "wpi/SmallVector.h"
 
 namespace wom {
 namespace vision {
 
-enum class PhotonVisionModes { kNormal = 0, kObject = 1 };
+enum class PhotonVisionModes { kNormal = 0, kNotes = 1 };
 
-using photonTarget = photonlib::PhotonTrackedTarget;
+using PhotonTarget = photonlib::PhotonTrackedTarget;
 
 using PhotonVisionLEDMode = photonlib::LEDMode;
 
@@ -36,20 +37,20 @@ class PhotonVision {
   void SetPipelineIndex(int index);
 
   bool HasTarget();
-  std::vector<photonTarget> GetTargets();
-  photonTarget GetTarget();
+  std::vector<PhotonTarget> GetTargets();
+  PhotonTarget GetTarget();
 
-  double GetTargetYaw(photonTarget target);
-  double GetTargetPitch(photonTarget target);
-  double GetTargetArea(photonTarget target);
-  double GetTargetSkew(photonTarget target);
+  double GetTargetYaw(PhotonTarget target);
+  double GetTargetPitch(PhotonTarget target);
+  double GetTargetArea(PhotonTarget target);
+  double GetTargetSkew(PhotonTarget target);
 
-  frc::Transform3d GetCameraToTarget(photonTarget target);
-  std::vector<std::pair<double, double>> GetTargetCorners(photonTarget target);
+  frc::Transform3d GetCameraToTarget(PhotonTarget target);
+  std::vector<std::pair<double, double>> GetTargetCorners(PhotonTarget target);
 
-  int GetTargetId(photonTarget target);
-  frc::Transform3d BestCameraToTarget(photonTarget target);
-  frc::Transform3d AlternateCameraToTarget(photonTarget target);
+  int GetTargetId(PhotonTarget target);
+  frc::Transform3d BestCameraToTarget(PhotonTarget target);
+  frc::Transform3d AlternateCameraToTarget(PhotonTarget target);
 
   PhotonVisionModes GetMode();
   void SetMode(PhotonVisionModes mode);
@@ -59,7 +60,7 @@ class PhotonVision {
 
   std::string _name;
 
-  PhotonVisionModes _mode = PhotonVisionModes::kObject;
+  PhotonVisionModes _mode = PhotonVisionModes::kNotes;
 
   photonlib::PhotonCamera* _camera;
 };

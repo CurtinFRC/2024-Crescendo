@@ -101,6 +101,7 @@ class Vision {
   std::vector<AprilTag> GetTags();
 
   bool IsAtPose(frc::Pose3d pose, units::second_t dt);
+  bool IsAtPose(frc::Pose2d pose, units::second_t dt);
 
   bool TargetIsVisible(VisionTargetObjects target);
 

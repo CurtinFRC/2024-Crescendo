@@ -31,7 +31,6 @@
 #include <frc/Timer.h>
 #include "ArmBehaviours.h"
 #include "behaviour/HasBehaviour.h"
-#include "drivetrain/behaviours/SwerveBehaviours.h"
 #include "frc/geometry/Pose2d.h"
 #include "vision/Vision.h"
 
@@ -67,13 +66,13 @@ void Robot::RobotInit() {
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
 
-  _arm = new wom::Arm(robotmap.arm.config);
-  wom::BehaviourScheduler::GetInstance()->Register(_arm);
-
-  _arm->SetDefaultBehaviour(
-      [this]() { return wom::make<ArmManualControl>(_arm, &robotmap.controllers.codriver); });
-  // _swerveDrive->SetDefaultBehaviour(
-  //    [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
+  // _arm = new wom::Arm(robotmap.arm.config);
+  // wom::BehaviourScheduler::GetInstance()->Register(_arm);
+  //
+  // _arm->SetDefaultBehaviour(
+  //     [this]() { return wom::make<ArmManualControl>(_arm, &robotmap.controllers.codriver); });
+  _swerveDrive->SetDefaultBehaviour(
+      [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
   // alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   // wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
@@ -131,12 +130,12 @@ void Robot::RobotPeriodic() {
       .SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 3 offset: ")
       .SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
-
-  // shooter->OnUpdate(dt);
-  // intake->OnUpdate(dt);
-  // alphaArm->OnUpdate(dt);
+  //
+  // // shooter->OnUpdate(dt);
+  // // intake->OnUpdate(dt);
+  // // alphaArm->OnUpdate(dt);
   _swerveDrive->OnUpdate(dt);
-  _arm->OnUpdate(dt);
+  // _arm->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {
@@ -160,20 +159,25 @@ void Robot::TeleopInit() {
   // frontRight->SetVoltage(4_V);
   // backLeft->SetVoltage(4_V);
   // backRight->SetVoltage(4_V);
+  //
 }
 void Robot::TeleopPeriodic() {
-  if (robotmap.controllers.driver.GetXButtonPressed() &&
-      vision->TargetIsVisible(VisionTargetObjects::kNote)) {
-    units::degree_t turn = vision->LockOn(VisionTargetObjects::kNote);
+  // if (robotmap.controllers.driver.GetXButtonPressed() &&
+  //     vision->TargetIsVisible(VisionTargetObjects::kNote)) {
+  //   units::degree_t turn = vision->LockOn(VisionTargetObjects::kNote);
+  //
+  //   frc::Pose2d current_pose = _swerveDrive->GetPose();
+  //
+  //   std::cout << "angle: " << turn.value() << std::endl;
+  //   current_pose.RotateBy(turn);
+  //
+  //   wom::make<wom::DrivebasePoseBehaviour>(_swerveDrive, current_pose);
+  // } else {
+  //   wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver);
+  // }
 
-    frc::Pose2d current_pose = _swerveDrive->GetPose();
-
-    std::cout << "angle: " << turn.value() << std::endl;
-    current_pose.RotateBy(turn);
-
-    wom::make<wom::DrivebasePoseBehaviour>(_swerveDrive, current_pose);
-  } else {
-    wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver);
+  if (robotmap.controllers.driver.GetXButtonPressed()) {
+    vision->TurnToTarget(VisionTarget::kBlueSpeakerCenter, _swerveDrive);
   }
 }
 
