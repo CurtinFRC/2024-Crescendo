@@ -16,7 +16,12 @@
 #include <units/moment_of_inertia.h>
 #include <units/time.h>
 #include <units/velocity.h>
+#include <wpi/SymbolExports.h>
+#include <wpi/sendable/Sendable.h>
+#include <wpi/sendable/SendableHelper.h>
 
+#include <functional>
+#include <limits>
 #include <memory>
 #include <string>
 #include <vector>
@@ -32,6 +37,7 @@ namespace wom {
 namespace drivetrain {
 
 enum class SwerveModuleState { kZeroing, kIdle, kPID };
+enum class TurnOffsetValues { reverse, forward, none };
 
 struct SwerveModuleConfig {
   frc::Translation2d position;
@@ -70,6 +76,12 @@ class SwerveModule {
   void SetZero();
   void SetVoltageLimit(units::volt_t driveModuleVoltageLimit);
 
+  void SetTurnOffsetForward();
+  void SetTurnOffsetReverse();
+  void TurnOffset();
+
+  double closestAngle(double a, double b);
+
   // double GetCancoderPosition(); // from liam's
 
   void SetAccelerationLimit(units::meters_per_second_squared_t limit);
@@ -101,6 +113,8 @@ class SwerveModule {
 
   double _offset;
   units::meters_per_second_squared_t _currentAccelerationLimit = 6_mps / 1_s;
+
+  TurnOffsetValues _turnOffset = TurnOffsetValues::none;
 };
 
 struct SwerveDriveConfig {
@@ -231,10 +245,10 @@ class SwerveDrive : public behaviour::HasBehaviour {
   units::radian_t _angle;
   units::meters_per_second_t _speed;
 
-  double frontLeftEncoderOffset = -143.26171875;
-  double frontRightEncoderOffset = 167.87109375;
-  double backLeftEncoderOffset = -316.669921875;
-  double backRightEncoderOffset = -119.619140625;
+  // double frontLeftEncoderOffset = -143.26171875;
+  // double frontRightEncoderOffset = 167.87109375;
+  // double backLeftEncoderOffset = -316.669921875;
+  // double backRightEncoderOffset = -119.619140625;
 };
 }  // namespace drivetrain
 }  // namespace wom

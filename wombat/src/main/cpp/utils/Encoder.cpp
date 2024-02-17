@@ -22,17 +22,17 @@ double wom::utils::Encoder::GetEncoderTicksPerRotation() const {
 }
 
 void wom::utils::Encoder::ZeroEncoder() {
-  _offset = GetEncoderRawTicks() * 1_rad;
+  // _offtt = GetEncoderRawTicks() * 1_rad;
 }
 
 void wom::utils::Encoder::SetEncoderPosition(units::degree_t position) {
   // units::radian_t offset_turns = position - GetEncoderPosition();
-  units::degree_t offset = position - (GetEncoderRawTicks() * 360 * 1_deg);
-  _offset = offset;
+  // units::degree_t offset = position - (GetEncoderRawTicks() * 360 * 1_deg);
+  // _offset = offset;
   // _offset = -offset_turns;
 }
 
-void wom::utils::Encoder::SetEncoderOffset(units::radian_t offset) {
+void wom::utils::Encoder::SetEncoderOffset(units::radian_t offset) {  // HERE!
   _offset = offset;
   // units::turn_t offset_turns = offset;
   // _offset = offset_turns.value() * GetEncoderTicksPerRotation();
@@ -88,10 +88,10 @@ double wom::utils::DigitalEncoder::GetEncoderTickVelocity() const {
 wom::utils::CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax* controller, units::meter_t wheelRadius,
                                                    double reduction)
     : wom::utils::Encoder(42, reduction, wheelRadius, 2),
-      _encoder(controller->GetEncoder(rev::SparkRelativeEncoder::Type::kQuadrature)) {}
+      _encoder(controller->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)) {}
 
 double wom::utils::CANSparkMaxEncoder::GetEncoderRawTicks() const {
-  return _encoder.GetPosition() * _reduction;
+  return ((_encoder.GetPosition() * 2 * 3.1415) / 200);
 }
 
 double wom::utils::CANSparkMaxEncoder::GetEncoderTickVelocity() const {
@@ -146,6 +146,7 @@ wom::utils::CanEncoder::CanEncoder(int deviceNumber, units::meter_t wheelRadius,
                                    double reduction, std::string name)
     : wom::utils::Encoder(ticksPerRotation, 2, wheelRadius, reduction) {
   _canEncoder = new ctre::phoenix6::hardware::CANcoder(deviceNumber, name);
+  // _canEncoder->ConfigAbsoluteEncoderRange(0, 1);
 }
 
 double wom::utils::CanEncoder::GetEncoderRawTicks() const {

@@ -104,6 +104,7 @@ class PIDController {
   void Reset() { _integralSum = sum_t{0}; }
 
   out_t Calculate(in_t pv, units::second_t dt, out_t feedforward = out_t{0}) {
+    // pv = units::math::fabs(pv);
     bool is_negative;
     if (pv.value() < 0) {
       is_negative = true;

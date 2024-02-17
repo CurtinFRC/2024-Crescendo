@@ -27,6 +27,8 @@
 #include "Shooter.h"
 #include "ShooterBehaviour.h"
 #include "Wombat.h"
+#include "subsystems/Arm.h"
+#include "vision/Vision.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -45,6 +47,7 @@ class Robot : public frc::TimedRobot {
   RobotMap robotmap;
   wom::BehaviourScheduler* sched;
   frc::EventLoop loop;
+  // Shooter* shooter;
 
   frc::Field2d field;
   frc::Timer timer;
@@ -55,6 +58,8 @@ class Robot : public frc::TimedRobot {
   AlphaArm* alphaArm;
   Intake* intake;
   Shooter* shooter;
+
+  Vision* _vision;
 
   frc::SendableChooser<std::string> m_chooser;
   const std::string kTaxi = "kTaxi";
@@ -69,9 +74,5 @@ class Robot : public frc::TimedRobot {
   std::vector<std::string> autoOptions = {
       kTaxi, kAutoTest, kQuadrupleClose, kQuadrupleFar, kQuadrupleCloseDoubleFar, kQuadrupleCloseSingleFar,
   };
-
-  // ctre::phoenix6::hardware::TalonFX *frontLeft;
-  // ctre::phoenix6::hardware::TalonFX *frontRight;
-  // ctre::phoenix6::hardware::TalonFX *backLeft;
-  // ctre::phoenix6::hardware::TalonFX *backRight;
+  // Intake* intake;
 };

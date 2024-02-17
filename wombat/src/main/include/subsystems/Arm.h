@@ -14,6 +14,7 @@
 #include <string>
 
 #include "behaviour/HasBehaviour.h"
+#include "utils/Encoder.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
 
@@ -24,7 +25,7 @@ struct ArmConfig {
 
   wom::utils::Gearbox leftGearbox;
   wom::utils::Gearbox rightGearbox;
-  wom::utils::CANSparkMaxEncoder armEncoder;
+  wom::utils::CANSparkMaxEncoder* armEncoder;
   wom::utils::PIDConfig<units::radian, units::volt> pidConfig;
   wom::utils::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
 
@@ -57,6 +58,7 @@ class Arm : public behaviour::HasBehaviour {
   void SetArmSpeedLimit(double limit);  // units, what are they??
 
   ArmConfig& GetConfig();
+  ArmState GetState();
 
   units::radian_t GetAngle() const;
   units::radians_per_second_t MaxSpeed() const;

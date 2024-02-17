@@ -98,3 +98,8 @@ void AutoIntake::OnTick(units::second_t dt) {
   //   _intake->setState(IntakeState::kIdle);
   // }
 }
+IntakeAutoControl::IntakeAutoControl(Intake* intake) : _intake(intake) {
+  Controls(intake);
+}
+
+void IntakeAutoControl::OnTick(units::second_t dt) {}

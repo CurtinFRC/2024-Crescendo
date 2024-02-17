@@ -27,9 +27,10 @@ class IntakeManualControl : public behaviour::Behaviour {
   bool _passing = false;
 };
 
-class AutoIntake : public behaviour::Behaviour {
+class IntakeAutoControl : public behaviour::Behaviour {
  public:
-  explicit AutoIntake(Intake* intake);
+  explicit IntakeAutoControl(Intake* intake);
+
   void OnTick(units::second_t dt) override;
 
  private:
