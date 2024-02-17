@@ -344,9 +344,11 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
             double diff = std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value() -
                                    new_target_states[i].angle.Radians().value());
             _table->GetEntry("diff").SetDouble(diff);
-            if (diff > (3.14 / 2)) {
+            if ((std::ceil(diff * 100.0) / 100.0) > (3.14 / 2)) {
               new_target_states[i].speed *= -1;
               new_target_states[i].angle = frc::Rotation2d{new_target_states[i].angle.Radians() - 3.14_rad};
+            } else {
+              m_controllerChange = false;
             }
           }
           _modules[i].SetPID(new_target_states[i].angle.Radians(), new_target_states[i].speed, dt);
@@ -355,9 +357,11 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
             double diff = std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value() -
                                    new_target_states[i].angle.Radians().value());
             _table->GetEntry("diff").SetDouble(diff);
-            if (diff > (3.14 / 2)) {
+            if ((std::ceil(diff * 100.0) / 100.0) > (3.14 / 2)) {
               target_states[i].speed *= -1;
               target_states[i].angle = frc::Rotation2d{target_states[i].angle.Radians() - 3.14_rad};
+            } else {
+              m_controllerChange = false;
             }
           }
           _modules[i].SetPID(target_states[i].angle.Radians(), target_states[i].speed, dt);

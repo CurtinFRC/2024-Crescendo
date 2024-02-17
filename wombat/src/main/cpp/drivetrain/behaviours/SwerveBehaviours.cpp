@@ -110,10 +110,8 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
   _swerveDriveTable->GetEntry("Joystick Y diff")
       .SetDouble(std::abs(lastJoystickY - _driverController->GetLeftY()));
 
-  if (lastJoystickY != _driverController->GetLeftY() || lastJoystickX != _driverController->GetLeftX()) {
+  if (std::abs(lastJoystickY - _driverController->GetLeftY()) > 0.1 || std::abs(lastJoystickX - _driverController->GetLeftX()) > 0.1) {
     _swerveDrivebase->m_controllerChange = true;
-  } else {
-    _swerveDrivebase->m_controllerChange = false;
   }
 
   lastJoystickX = _driverController->GetLeftX();
