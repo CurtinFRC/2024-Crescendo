@@ -57,7 +57,7 @@ units::radian_t wom::utils::Encoder::GetEncoderPosition() {
 }
 
 double wom::utils::Encoder::GetEncoderDistance() {
-  return GetEncoderTicks() * (2 * 3.141592) * _wheelRadius.value();
+  return GetEncoderTicks() * (2 * 3.1415) * _wheelRadius.value();
 }
 
 units::radians_per_second_t wom::utils::Encoder::GetEncoderAngularVelocity() {
@@ -115,7 +115,7 @@ double wom::utils::CANSparkMaxEncoder::GetPosition() const {
 }
 
 double wom::utils::CANSparkMaxEncoder::GetVelocity() const {
-  return _encoder.GetVelocity() * 3.14159265 * 2 / 60;
+  return _encoder.GetVelocity();
 }
 
 wom::utils::TalonFXEncoder::TalonFXEncoder(ctre::phoenix6::hardware::TalonFX* controller,
@@ -150,7 +150,7 @@ wom::utils::CanEncoder::CanEncoder(int deviceNumber, units::meter_t wheelRadius,
 }
 
 double wom::utils::CanEncoder::GetEncoderRawTicks() const {
-  return _canEncoder->GetPosition().GetValue().value() * 2 * 3.14;
+  return (_canEncoder->GetAbsolutePosition().GetValue().value() * 2 * 3.14) - _offset.value();
 }
 
 double wom::utils::CanEncoder::GetEncoderTickVelocity() const {

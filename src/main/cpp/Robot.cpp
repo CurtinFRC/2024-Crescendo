@@ -215,10 +215,11 @@ void Robot::AutonomousInit() {
 void Robot::AutonomousPeriodic() {
   fmt::print("Auto selected: {}\n", m_autoSelected);
 }
-void Robot::AutonomousPeriodic() {
+
+// void Robot::AutonomousPeriodic() {
   // m_driveSim->OnUpdate();
-  wom::make<AlignToAprilTag>(_vision, VisionTarget::kRedChain3, _swerveDrive);
-}
+  // wom::make<AlignToAprilTag>(_vision, VisionTarget::kRedChain3, _swerveDrive);
+// }
 
 void Robot::TeleopInit() {
   loop.Clear();
@@ -233,7 +234,7 @@ void Robot::TeleopInit() {
   // backRight->SetVoltage(4_V);
 }
 
-void Robot::TeleopPeriodic() {}
+// void Robot::TeleopPeriodic() {}
 void Robot::TeleopPeriodic() {
   // if (robotmap.controllers.driver.GetXButtonPressed() &&
   //     vision->TargetIsVisible(VisionTargetObjects::kNote)) {
