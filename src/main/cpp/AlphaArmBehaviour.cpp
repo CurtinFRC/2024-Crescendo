@@ -33,3 +33,13 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
     }
   }
 }
+
+ArmToSetPoint::ArmToSetPoint(AlphaArm* alphaArm, units::degree_t armAngle) : _alphaArm(alphaArm) {
+  Controls(alphaArm);
+}
+// // ArmSpeed is a float from 0-1, 1 being instantly and 0 being don't move at all.
+
+void ArmToSetPoint::OnTick(units::second_t dt) {
+  // _armCurrentDegree = _alphaArm->GetConfig().alphaArmGearbox.encoder.GetEncoderPosition();
+  // _alphaArm->GetConfig().alphaArmGearbox.encoder.SetEncoderPosition(armAngle * armSpeed);
+}
