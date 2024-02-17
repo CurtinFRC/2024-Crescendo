@@ -105,8 +105,16 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
   _swerveDrivebase->SetFieldRelativeVelocity(wom::drivetrain::FieldRelativeSpeeds{
       xVelocity * -maxMovementMagnitude, yVelocity * -maxMovementMagnitude, r_x * maxRotationMagnitude});
 
-  _swerveDriveTable->GetEntry("Joystick X diff").SetDouble(std::abs(lastJoystickX - _driverController->GetLeftX()));
-  _swerveDriveTable->GetEntry("Joystick Y diff").SetDouble(std::abs(lastJoystickY - _driverController->GetLeftY()));
+  _swerveDriveTable->GetEntry("Joystick X diff")
+      .SetDouble(std::abs(lastJoystickX - _driverController->GetLeftX()));
+  _swerveDriveTable->GetEntry("Joystick Y diff")
+      .SetDouble(std::abs(lastJoystickY - _driverController->GetLeftY()));
+
+  if (lastJoystickY != _driverController->GetLeftY() || lastJoystickX != _driverController->GetLeftX()) {
+    _swerveDrivebase->m_controllerChange = true;
+  } else {
+    _swerveDrivebase->m_controllerChange = false;
+  }
 
   lastJoystickX = _driverController->GetLeftX();
   lastJoystickY = _driverController->GetLeftY();
@@ -159,7 +167,7 @@ void XDrivebase::OnTick(units::second_t deltaTime) {
 wom::drivetrain::behaviours::FollowTrajectory::FollowTrajectory(wom::drivetrain::SwerveDrive* swerve,
                                                                 wom::utils::Pathplanner* pathplanner,
                                                                 std::string path)
-    : _swerve(swerve), _pathplanner(pathplanner), _path(path) {}
+    : _pathplanner(pathplanner), _path(path), _swerve(swerve) {}
 
 void wom::drivetrain::behaviours::FollowTrajectory::OnTick(units::second_t dt) {
   frc::Pose3d desiredPose = frc::Pose3d(_trajectory.Sample(m_timer.Get()).pose);

@@ -154,7 +154,6 @@ enum class SwerveDriveState {
   kIndividualTuning,
   kTuning,
   kXWheels,
-  kModuleTurn,
   kFRVelocityRotationLock
 };
 
@@ -218,6 +217,7 @@ class SwerveDrive : public behaviour::HasBehaviour {
   void AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp);
 
   SwerveDriveConfig& GetConfig() { return _config; }
+  bool m_controllerChange = false;
 
  private:
   SwerveDriveConfig _config;

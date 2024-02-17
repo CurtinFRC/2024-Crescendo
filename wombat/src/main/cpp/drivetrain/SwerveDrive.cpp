@@ -11,17 +11,13 @@
 #include <wpi/sendable/SendableBuilder.h>
 #include <wpi/sendable/SendableRegistry.h>
 
-#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
 
-#include "frc/MathUtil.h"
-#include "units/current.h"
 #include "units/velocity.h"
 #include "utils/Util.h"
 #include "vision/Limelight.h"
-#include "wpimath/MathShared.h"
 
 using namespace wom;
 
@@ -189,13 +185,6 @@ void SwerveModule::SetZero(units::second_t dt) {
 void SwerveModule::SetPID(units::radian_t angle, units::meters_per_second_t speed, units::second_t dt) {
   _state = SwerveModuleState::kPID;
 
-  double diff = std::abs(_config.turnMotor.encoder->GetEncoderPosition().value() - angle.value());
-  _table->GetEntry("diff").SetDouble(diff);
-  if (diff > (3.14/2)) {
-     speed *= -1;
-     angle -= 3.14159_rad;
-  }
-
   _anglePIDController.SetSetpoint(angle.value());
   _velocityPIDController.SetSetpoint(speed.value());
 }
@@ -250,6 +239,7 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose, wom:
       // _kinematics(_config.modules[1].position, _config.modules[0].position,
       //             _config.modules[2].position, _config.modules[3].position),
 
+      _vision(vision),
       _kinematics(_config.modules[3].position /*1*/, _config.modules[0].position /*0*/,
                   _config.modules[1].position /*2*/, _config.modules[2].position /*3*/),
       _poseEstimator(
@@ -262,8 +252,7 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose, wom:
       _anglePIDController{frc::PIDController(8, 0.1, 0)},
       _xPIDController{frc::PIDController(4, 0, 0)},
       _yPIDController{frc::PIDController(4, 0, 0)},
-      _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)),
-      _vision(vision) {
+      _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)) {
   _anglePIDController.SetTolerance(360);
   _anglePIDController.EnableContinuousInput(-3.14159, 3.14159);
 
@@ -351,8 +340,26 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       auto new_target_states = _kinematics.ToSwerveModuleStates(new_target_speed);
       for (size_t i = 0; i < _modules.size(); i++) {
         if (i == 3) {
+          if (m_controllerChange) {
+            double diff = std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value() -
+                                   new_target_states[i].angle.Radians().value());
+            _table->GetEntry("diff").SetDouble(diff);
+            if (diff > (3.14 / 2)) {
+              new_target_states[i].speed *= -1;
+              new_target_states[i].angle = frc::Rotation2d{new_target_states[i].angle.Radians() - 3.14_rad};
+            }
+          }
           _modules[i].SetPID(new_target_states[i].angle.Radians(), new_target_states[i].speed, dt);
         } else {
+          if (m_controllerChange) {
+            double diff = std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value() -
+                                   new_target_states[i].angle.Radians().value());
+            _table->GetEntry("diff").SetDouble(diff);
+            if (diff > (3.14 / 2)) {
+              target_states[i].speed *= -1;
+              target_states[i].angle = frc::Rotation2d{target_states[i].angle.Radians() - 3.14_rad};
+            }
+          }
           _modules[i].SetPID(target_states[i].angle.Radians(), target_states[i].speed, dt);
           // target_states[i].angle.Radians().value() << std::endl;
         }
