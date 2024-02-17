@@ -67,5 +67,5 @@ class Robot : public frc::TimedRobot {
   // ctre::phoenix6::hardware::TalonFX *frontRight;
   // ctre::phoenix6::hardware::TalonFX *backLeft;
   // ctre::phoenix6::hardware::TalonFX *backRight;
-  Vision* vision;
+  Vision* _vision;
 };

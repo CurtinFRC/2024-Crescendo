@@ -33,6 +33,7 @@
 #include "behaviour/HasBehaviour.h"
 #include "frc/geometry/Pose2d.h"
 #include "vision/Vision.h"
+#include "vision/VisionBehaviours.h"
 
 static units::second_t lastPeriodic;
 
@@ -40,7 +41,7 @@ void Robot::RobotInit() {
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
-  vision = new Vision("limelight", FMAP("fmap.fmap"));
+  _vision = new Vision("limelight", FMAP("fmap.fmap"));
 
   // frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
 
@@ -73,6 +74,7 @@ void Robot::RobotInit() {
   //     [this]() { return wom::make<ArmManualControl>(_arm, &robotmap.controllers.codriver); });
   _swerveDrive->SetDefaultBehaviour(
       [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
+
 
   // alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   // wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
@@ -146,6 +148,7 @@ void Robot::AutonomousInit() {
 }
 void Robot::AutonomousPeriodic() {
   // m_driveSim->OnUpdate();
+  wom::make<AlignToAprilTag>(_vision, VisionTarget::kRedChain3, _swerveDrive);
 }
 
 void Robot::TeleopInit() {
@@ -177,7 +180,7 @@ void Robot::TeleopPeriodic() {
   // }
 
   if (robotmap.controllers.driver.GetXButtonPressed()) {
-    vision->TurnToTarget(VisionTarget::kBlueSpeakerCenter, _swerveDrive);
+    _vision->TurnToTarget(VisionTarget::kBlueSpeakerCenter, _swerveDrive);
   }
 }
 

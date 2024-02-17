@@ -16,6 +16,7 @@
 #include "utils/RobotStartup.h"
 #include "utils/Util.h"
 #include "vision/Limelight.h"
+#include "vision/Camera.h"
 
 namespace wom {
 using namespace wom;
