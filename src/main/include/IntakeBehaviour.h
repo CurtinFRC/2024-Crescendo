@@ -7,8 +7,8 @@
 #include <frc/XboxController.h>
 
 #include "Intake.h"
-#include "Wombat.h"
 #include "LED.h"
+#include "Wombat.h"
 
 class IntakeManualControl : public behaviour::Behaviour {
  public:

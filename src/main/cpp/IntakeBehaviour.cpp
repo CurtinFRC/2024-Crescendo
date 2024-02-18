@@ -7,7 +7,7 @@
 #include <frc/XboxController.h>
 
 IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver, LED* led)
-    : _intake(intake), _codriver(codriver), _led(led){
+    : _intake(intake), _codriver(codriver), _led(led) {
   Controls(intake);
 }
 
@@ -27,7 +27,6 @@ void IntakeManualControl::OnTick(units::second_t dt) {
       _intake->setRaw(-8_V);
     } else {
       _intake->setRaw(0_V);
-      
     }
 
   } else {

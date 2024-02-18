@@ -59,13 +59,11 @@ void Robot::RobotInit() {
 
   // robotmap.swerveBase.gyro->Reset();
 
-
   _swerveDrive =
       new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d(), new wom::Limelight("limelight"));
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour(
       [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
-
 
   // alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   // wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
@@ -79,7 +77,6 @@ void Robot::RobotInit() {
   // wom::BehaviourScheduler::GetInstance()->Register(intake);
   // intake->SetDefaultBehaviour(
   //     [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
-
 
   robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(3.628_rad);
   robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(5.851_rad);
@@ -118,7 +115,6 @@ void Robot::RobotPeriodic() {
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
   sched->Tick();
-
 
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 0 offset: ")
       .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());

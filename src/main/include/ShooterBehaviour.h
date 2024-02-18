@@ -8,15 +8,13 @@
 
 #include <memory>
 
+#include "LED.h"
 #include "Shooter.h"
 #include "Wombat.h"
-#include "LED.h"
 
 class ShooterManualControl : public behaviour::Behaviour {
  public:
-
-  ShooterManualControl(Shooter* shooter, frc::XboxController* codriver, LED* led); 
-
+  ShooterManualControl(Shooter* shooter, frc::XboxController* codriver, LED* led);
 
   void OnTick(units::second_t dt) override;
 

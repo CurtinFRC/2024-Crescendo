@@ -38,7 +38,7 @@ void ShooterManualControl::OnTick(units::second_t dt) {
       _shooter->SetPidGoal(300_rad_per_s);
       _shooter->SetState(ShooterState::kSpinUp);
       _led->SetState(LEDState::kAiming);
-    }  else if (_codriver->GetLeftTriggerAxis() > 0.1) {
+    } else if (_codriver->GetLeftTriggerAxis() > 0.1) {
       _shooter->SetState(ShooterState::kRaw);
       _led->SetState(LEDState::kIdle);
       _shooter->SetRaw(12_V * _codriver->GetLeftTriggerAxis());
