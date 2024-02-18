@@ -30,6 +30,7 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 
 #include "behaviour/HasBehaviour.h"
+#include "frc/kinematics/ChassisSpeeds.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
 
@@ -215,6 +216,9 @@ class SwerveDrive : public behaviour::HasBehaviour {
   void AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp);
 
   SwerveDriveConfig& GetConfig() { return _config; }
+
+  FieldRelativeSpeeds GetFieldRelativeSpeeds();
+  frc::ChassisSpeeds GetChassisSpeeds();
 
  private:
   SwerveDriveConfig _config;

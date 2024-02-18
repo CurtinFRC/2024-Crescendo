@@ -209,7 +209,7 @@ void wom::drivetrain::behaviours::TempSimSwerveDrive::SetPath(std::string path) 
   current_trajectory_state_table =
       nt::NetworkTableInstance::GetDefault().GetTable("current_trajectory_state");
 
-  current_trajectory = m_pathplanner.getTrajectory(path);
+  // current_trajectory = m_pathplanner.getTrajectory(path);
   m_driveSim.SetPose(current_trajectory.Sample(0_s).pose);
   m_timer->Reset();
   m_timer->Start();

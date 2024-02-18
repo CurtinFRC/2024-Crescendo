@@ -217,8 +217,8 @@ void Robot::AutonomousPeriodic() {
 }
 
 // void Robot::AutonomousPeriodic() {
-  // m_driveSim->OnUpdate();
-  // wom::make<AlignToAprilTag>(_vision, VisionTarget::kRedChain3, _swerveDrive);
+// m_driveSim->OnUpdate();
+// wom::make<AlignToAprilTag>(_vision, VisionTarget::kRedChain3, _swerveDrive);
 // }
 
 void Robot::TeleopInit() {

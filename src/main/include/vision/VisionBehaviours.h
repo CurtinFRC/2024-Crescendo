@@ -11,16 +11,12 @@
 #include "units/time.h"
 #include "vision/Vision.h"
 
-#include "Wombat.h"
-
-enum class VisionType {
-  kLimelight = 0,
-  kGenericCamera = 1
-};
+enum class VisionType { kLimelight = 0, kGenericCamera = 1 };
 
 class AlignToAprilTag : public behaviour::Behaviour {
  public:
-  explicit AlignToAprilTag(Vision* vision, VisionTarget target, wom::SwerveDrive* swerveDrive, units::meter_t offset = 0_m);
+  explicit AlignToAprilTag(Vision* vision, VisionTarget target, wom::SwerveDrive* swerveDrive,
+                           units::meter_t offset = 0_m);
 
   void OnTick(units::second_t dt);
 
@@ -32,30 +28,29 @@ class AlignToAprilTag : public behaviour::Behaviour {
 };
 
 class TurnToAprilTag : public behaviour::Behaviour {
-  public:
-    explicit TurnToAprilTag(Vision* vision, VisionTarget target, wom::SwerveDrive* swerveDrive);
-  
-    void OnTick(units::second_t dt);
+ public:
+  explicit TurnToAprilTag(Vision* vision, VisionTarget target, wom::SwerveDrive* swerveDrive);
 
-  private:
-    Vision* _vision;
+  void OnTick(units::second_t dt);
+
+ private:
+  Vision* _vision;
   wom::SwerveDrive* _swerveDrive;
   VisionTarget _target;
 };
 
 class LockOnToTarget : public behaviour::Behaviour {
-  public:
-    explicit LockOnToTarget(Vision* vision, VisionTargetObjects target, wom::SwerveDrive* swerveDrive);
-    explicit LockOnToTarget(wom::PhotonVision* camera, Vision* limelight, wom::SwerveDrive* swerveDrive);
+ public:
+  explicit LockOnToTarget(Vision* vision, VisionTargetObjects target, wom::SwerveDrive* swerveDrive);
+  explicit LockOnToTarget(wom::PhotonVision* camera, Vision* limelight, wom::SwerveDrive* swerveDrive);
 
-    void OnTick(units::second_t dt);
+  void OnTick(units::second_t dt);
 
-  private:
-    Vision* _vision;
-    wom::PhotonVision* _camera;
+ private:
+  Vision* _vision;
+  wom::PhotonVision* _camera;
 
-    VisionTargetObjects _target;
+  VisionTargetObjects _target;
   wom::SwerveDrive* _swerveDrive;
-  VisionType _type; 
+  VisionType _type;
 };
-

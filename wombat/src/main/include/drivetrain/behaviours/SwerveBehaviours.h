@@ -17,7 +17,7 @@
 
 #include "behaviour/Behaviour.h"
 #include "drivetrain/SwerveDrive.h"
-#include "utils/Pathplanner.h"
+// #include "utils/Pathplanner.h"
 
 namespace wom {
 namespace drivetrain {
@@ -122,22 +122,22 @@ class GoToPose : public behaviour::Behaviour {
   frc::Pose3d _pose;
 };
 
-class FollowTrajectory : public behaviour::Behaviour {
- public:
-  FollowTrajectory(wom::drivetrain::SwerveDrive* swerve, wom::utils::Pathplanner* pathplanner,
-                   std::string path);
-
-  void OnTick(units::second_t dt) override;
-
-  void OnStart() override;
-
- private:
-  wom::utils::Pathplanner* _pathplanner;
-  std::string _path;
-  wom::drivetrain::SwerveDrive* _swerve;
-  frc::Trajectory _trajectory;
-  frc::Timer m_timer;
-};
+// class FollowTrajectory : public behaviour::Behaviour {
+//  public:
+//   FollowTrajectory(wom::drivetrain::SwerveDrive* swerve, wom::utils::Pathplanner* pathplanner,
+//                    std::string path);
+//
+//   void OnTick(units::second_t dt) override;
+//
+//   void OnStart() override;
+//
+//  private:
+//   wom::utils::Pathplanner* _pathplanner;
+//   std::string _path;
+//   wom::drivetrain::SwerveDrive* _swerve;
+//   frc::Trajectory _trajectory;
+//   frc::Timer m_timer;
+// };
 
 class TempSimSwerveDrive {
  public:
@@ -166,7 +166,7 @@ class TempSimSwerveDrive {
       // l and r position: 0.005 m
       {0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005}};
 
-  wom::utils::Pathplanner m_pathplanner;
+  // wom::utils::Pathplanner m_pathplanner;
 
   frc::Trajectory current_trajectory;
 

@@ -331,7 +331,7 @@ frc::Pose2d Vision::TurnToTarget(VisionTarget target, wom::SwerveDrive* swerveDr
 
   units::degree_t angle = GetDistanceToTarget(target).second;
 
-  //frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
+  // frc::Pose2d current_pose = _limelight->GetPose().ToPose2d();
 
   frc::Pose2d current_pose = swerveDrive->GetPose();
 

@@ -4,13 +4,14 @@
 
 #include "Auto.h"
 
+#include "drivetrain/behaviours/SwerveBehaviours.h"
+#include "utils/Pathplanner.h"
+
 std::shared_ptr<behaviour::Behaviour> autos::Taxi(wom::drivetrain::SwerveDrive* _swerveDrive,
                                                   Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
   return behaviour::make<ArmToSetPoint>(_alphaArm, 0_deg);
   behaviour::make<AutoShoot>(_shooter);
   behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
-  behaviour::make<wom::drivetrain::behaviours::DrivebasePoseBehaviour>(
-      _swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 0_V, false);
 }
 // Shoots starting note then moves out of starting position.
 

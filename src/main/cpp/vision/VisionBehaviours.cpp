@@ -8,7 +8,8 @@
 #include "units/angle.h"
 #include "vision/Vision.h"
 
-AlignToAprilTag::AlignToAprilTag(Vision* vision, VisionTarget target, wom::SwerveDrive* swerveDrive, units::meter_t offset)
+AlignToAprilTag::AlignToAprilTag(Vision* vision, VisionTarget target, wom::SwerveDrive* swerveDrive,
+                                 units::meter_t offset)
     : _vision(vision), _swerveDrive(swerveDrive), _target(target), _offset(offset) {}
 
 void AlignToAprilTag::OnTick(units::second_t dt) {
@@ -31,23 +32,25 @@ void TurnToAprilTag::OnTick(units::second_t dt) {
 }
 
 LockOnToTarget::LockOnToTarget(Vision* vision, VisionTargetObjects target, wom::SwerveDrive* swerveDrive)
-    : _vision(vision), _target(target), _camera(nullptr), _swerveDrive(swerveDrive), _type(VisionType::kLimelight) {}
+    : _vision(vision),
+      _target(target),
+      _camera(nullptr),
+      _swerveDrive(swerveDrive),
+      _type(VisionType::kLimelight) {}
 
-LockOnToTarget::LockOnToTarget(wom::PhotonVision* vision, Vision* limelight, wom::SwerveDrive* swerveDrive) 
-  : _camera(vision), _swerveDrive(swerveDrive), _vision(limelight), _type(VisionType::kGenericCamera) {}
+LockOnToTarget::LockOnToTarget(wom::PhotonVision* vision, Vision* limelight, wom::SwerveDrive* swerveDrive)
+    : _camera(vision), _swerveDrive(swerveDrive), _vision(limelight), _type(VisionType::kGenericCamera) {}
 
 void LockOnToTarget::OnTick(units::second_t dt) {
   units::degree_t angle;
 
   switch (_type) {
-    case VisionType::kLimelight:
-      {
-        angle = _vision->LockOn(_target);
-      }
-    case VisionType::kGenericCamera:
-      {
-        angle = units::degree_t{_camera->GetTargetPitch(_camera->GetTarget())};
-      }
+    case VisionType::kLimelight: {
+      angle = _vision->LockOn(_target);
+    }
+    case VisionType::kGenericCamera: {
+      angle = units::degree_t{_camera->GetTargetPitch(_camera->GetTarget())};
+    }
   }
 
   frc::Pose2d pose = frc::Pose2d(_swerveDrive->GetPose().X(), _swerveDrive->GetPose().Y(), angle);
@@ -58,4 +61,3 @@ void LockOnToTarget::OnTick(units::second_t dt) {
     SetDone();
   }
 }
-

@@ -16,6 +16,7 @@
 #include <iostream>
 
 #include "frc/MathUtil.h"
+#include "frc/kinematics/ChassisSpeeds.h"
 #include "utils/Util.h"
 #include "wpimath/MathShared.h"
 
@@ -513,5 +514,14 @@ frc::Pose2d SwerveDrive::GetPose() {
 void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp) {
   _poseEstimator.AddVisionMeasurement(pose, timestamp);
 }
+
+FieldRelativeSpeeds SwerveDrive::GetFieldRelativeSpeeds() {
+  return _target_fr_speeds;
+}
+
+frc::ChassisSpeeds SwerveDrive::GetChassisSpeeds() {
+  return _target_speed;
+}
+
 }  // namespace drivetrain
 }  // namespace wom
