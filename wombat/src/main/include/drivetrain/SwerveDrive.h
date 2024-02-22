@@ -163,17 +163,20 @@ struct FieldRelativeSpeeds {
    * alliance)
    */
   units::meters_per_second_t vx{0};
+
   /**
    * Represents the velocity in the y dimension (to your left when standing
    * behind alliance wall)
    */
   units::meters_per_second_t vy{0};
+
   /**
    * The angular velocity of the robot (CCW is +)
    */
   units::radians_per_second_t omega{0};
 
   frc::ChassisSpeeds ToChassisSpeeds(const units::radian_t robotHeading);
+  frc::ChassisSpeeds ToChassisSpeeds(const frc::Rotation2d robotHeading);
 };
 
 class SwerveDrive : public behaviour::HasBehaviour {
