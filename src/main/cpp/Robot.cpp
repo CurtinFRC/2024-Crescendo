@@ -159,6 +159,8 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
+  
+  robotmap.builder = autos::InitCommands(_swerveDrive, shooter, intake, alphaArm);
 
   lastPeriodic = wom::now();
 }
@@ -199,7 +201,7 @@ void Robot::AutonomousInit() {
   m_autoSelected = m_chooser.GetSelected();
 
   if (m_autoSelected == "Taxi") {
-    sched->Schedule(autos::Taxi(autos::InitCommands(_swerveDrive, shooter, intake, alphaArm)));
+    sched->Schedule(autos::Taxi(robotmap.builder));
   } else if (m_autoSelected == "Auto Test") {
     sched->Schedule(autos::AutoTest(_swerveDrive, shooter, intake, alphaArm));
   } else if (m_autoSelected == "Quadruple Close") {

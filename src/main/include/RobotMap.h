@@ -32,6 +32,7 @@
 #include "Wombat.h"
 #include "utils/Encoder.h"
 #include "utils/PID.h"
+#include "utils/Pathplanner.h"
 
 struct RobotMap {
   struct Controllers {
@@ -315,4 +316,5 @@ struct RobotMap {
   //   AlphaArmConfig config{alphaArmGearbox, wristGearbox};
   // };
   // AlphaArmSystem alphaArmSystem;
+  wom::SwerveAutoBuilder* builder;
 };
