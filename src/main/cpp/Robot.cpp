@@ -199,7 +199,7 @@ void Robot::AutonomousInit() {
   m_autoSelected = m_chooser.GetSelected();
 
   if (m_autoSelected == "Taxi") {
-    sched->Schedule(autos::Taxi(_swerveDrive, shooter, intake, alphaArm));
+    sched->Schedule(autos::Taxi(autos::InitCommands(_swerveDrive, shooter, intake, alphaArm)));
   } else if (m_autoSelected == "Auto Test") {
     sched->Schedule(autos::AutoTest(_swerveDrive, shooter, intake, alphaArm));
   } else if (m_autoSelected == "Quadruple Close") {
