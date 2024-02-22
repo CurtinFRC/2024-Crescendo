@@ -205,7 +205,7 @@ class SwerveDrive : public behaviour::HasBehaviour {
   void SetZero();
   void SetVoltageLimit(units::volt_t driveVoltageLimit);
   void OnResetMode();
-  // double GetModuleCANPosition(int mod);  // from liam's
+  // double GetModuleCANPosition(int mod);
 
   void SetXWheelState();
 
