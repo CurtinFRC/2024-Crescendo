@@ -29,8 +29,14 @@ void IntakeManualControl::OnTick(units::second_t dt) {
 
     if (_rawControl) {
       _rawControl = false;
+      _intaking = false;
+      _ejecting = false;
+      _intake->SetState(IntakeState::kIdle);
     } else {
       _rawControl = true;
+      _intaking = false;
+      _ejecting = false;
+      _intake->SetState(IntakeState::kRaw);
     }
   } 
   

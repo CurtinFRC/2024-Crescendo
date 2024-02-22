@@ -36,3 +36,15 @@ void ShooterManualControl::OnTick(units::second_t dt) {
     _shooter->SetState(ShooterState::kRaw);
   }
 }
+
+AutoShoot::AutoShoot(Shooter* shooter) : _shooter(shooter) {
+  Controls(shooter);
+}
+
+void AutoShoot::OnTick(units::second_t dt) {
+  // if (_intake->GetConfig().intakeSensor->Get() == 1) {
+  //   _intake->setState(IntakeState::kPass);
+  // } else if (_intake->GetConfig().magSensor->Get() == 0) {
+  //   _intake->setState(IntakeState::kIdle);
+  // }
+}

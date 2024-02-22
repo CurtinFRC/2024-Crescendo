@@ -25,3 +25,12 @@ class ShooterManualControl : public behaviour::Behaviour {
       nt::NetworkTableInstance::GetDefault().GetTable("Shooter Behaviour");
   frc::XboxController* _codriver;
 };
+
+class AutoShoot : public behaviour::Behaviour {
+ public:
+  explicit AutoShoot(Shooter* shooter);
+  void OnTick(units::second_t dt) override;
+
+ private:
+  Shooter* _shooter;
+};

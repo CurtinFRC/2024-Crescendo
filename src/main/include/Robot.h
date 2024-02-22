@@ -12,8 +12,12 @@
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <networktables/DoubleTopic.h>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableInstance.h>
 
 #include <string>
+#include <vector>
 
 #include "AlphaArm.h"
 #include "AlphaArmBehaviour.h"
@@ -23,6 +27,8 @@
 #include "Shooter.h"
 #include "ShooterBehaviour.h"
 #include "Wombat.h"
+#include "subsystems/Arm.h"
+#include "vision/Vision.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -41,23 +47,38 @@ class Robot : public frc::TimedRobot {
   RobotMap robotmap;
   wom::BehaviourScheduler* sched;
   frc::EventLoop loop;
-  Shooter* shooter;
+  // Shooter* shooter;
 
-  Intake* intake;
   frc::SendableChooser<std::string> m_chooser;
 
   frc::Field2d m_field;
 
   frc::Timer simulation_timer;
 
+  frc::Field2d field;
+  frc::Timer timer;
   frc::SendableChooser<std::string> m_path_chooser;
 
-  wom::SwerveDrive* _swerveDrive;
+  // wom::SwerveDrive* _swerveDrive;
 
-  AlphaArm* alphaArm;
+  // AlphaArm* alphaArm;
+  Intake* intake;
+  // Shooter* shooter;
 
-  // ctre::phoenix6::hardware::TalonFX *frontLeft;
-  // ctre::phoenix6::hardware::TalonFX *frontRight;
-  // ctre::phoenix6::hardware::TalonFX *backLeft;
-  // ctre::phoenix6::hardware::TalonFX *backRight;
+  // Vision* _vision;
+
+  // frc::SendableChooser<std::string> m_chooser;
+  // const std::string kTaxi = "kTaxi";
+  // const std::string kAutoTest = "kAutoTest";
+  // const std::string kQuadrupleClose = "kQuadrupleClose";
+  // const std::string kQuadrupleFar = "kQuadrupleFar";
+  // const std::string kQuadrupleCloseDoubleFar = "kQuadrupleCloseDoubleFar";
+  // const std::string kQuadrupleCloseSingleFar = "kQuadrupleCloseSingleFar";
+  // std::string m_autoSelected;
+
+  // std::string defaultAuto = "kTaxi";
+  // std::vector<std::string> autoOptions = {
+  //     kTaxi, kAutoTest, kQuadrupleClose, kQuadrupleFar, kQuadrupleCloseDoubleFar, kQuadrupleCloseSingleFar,
+  // };
+  // Intake* intake;
 };
