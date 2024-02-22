@@ -41,6 +41,7 @@ class AlphaArm : public behaviour::HasBehaviour {
   void SetState(AlphaArmState state);
   void SetControllerRaw(units::volt_t voltage); 
   void SetGoal(double goal);
+  void OnStart();
   AlphaArmConfig GetConfig(); //{ return _config; }
   frc::PIDController GetPID();
 
@@ -53,6 +54,7 @@ class AlphaArm : public behaviour::HasBehaviour {
   //frc::DutyCycleEncoder armEncoder{4};
   frc::PIDController _pidArm;
   frc::PIDController _pidArmStates;
+  frc::PIDController _pidIntakeState;
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("AlphaArm");
   units::volt_t _setAlphaArmVoltage = 0_V;
 

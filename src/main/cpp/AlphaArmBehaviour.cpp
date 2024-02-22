@@ -15,6 +15,7 @@ AlphaArmConfig AlphaArm::GetConfig() {
   return *_config;
 }
 
+
 void AlphaArmManualControl::OnTick(units::second_t dt) {
   // std::cout << "HELLO" << std::endl;
 
@@ -22,7 +23,7 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
   _table->GetEntry("Goal Value").SetBoolean(_gotValue);
   
 
-  if (_codriver->GetStartButtonPressed()) {
+  if (_codriver->GetRightBumperPressed()) {
     if (_rawControl == true) {
       _rawControl = false;
     } else {
@@ -46,23 +47,42 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
   //       _gotValue = true;
   //     } 
   //     _alphaArm->SetState(AlphaArmState::kHoldAngle);
-
   //   }
   // }
-  if(_codriver->GetYButtonPressed()){
+
+  if(_codriver->GetLeftTriggerAxis() > 0.1){
+    _alphaArm->SetState(AlphaArmState::kSpeakerAngle);
+  } else if (_codriver->GetLeftBumper()){
+    _alphaArm->SetState(AlphaArmState::kAmpAngle);
+  } else if(_codriver->GetYButton()){
+    _alphaArm->SetState(AlphaArmState::kStowed);
+  } else {
     _alphaArm->SetState(AlphaArmState::kIntakeAngle);
   }
-  if(_codriver->GetBButtonPressed()){
-    _alphaArm->SetState(AlphaArmState::kAmpAngle);
 
   }
-  if(_codriver->GetAButtonPressed()){
-    _alphaArm->SetState(AlphaArmState::kSpeakerAngle);
-  }
-  if(_codriver->GetXButtonPressed()){
-    _alphaArm->SetState(AlphaArmState::kStowed);
-  }
-}
+
+  // }
+  // if(_codriver->GetLeftBumper() == true){
+  //   _alphaArm->SetState(AlphaArmState::kAmpAngle);
+  // }
+  // if(_codriver->GetLeftTriggerAxis() > 0.1){
+  //   _alphaArm->SetState(AlphaArmState::kSpeakerAngle);
+  // }
+  // if(_codriver->GetYButton() == true){
+  //   _alphaArm->SetState(AlphaArmState::kStowed);
+  // }  
+
+  //  if(_codriver->GetYButton() == true){
+  //   _alphaArm->SetState(AlphaArmState::kStowed);
+  // }  
+
+
+  // else {
+  //   _alphaArm->SetState(AlphaArmState::kRaw);
+  // }
+  
+
 
 //   if (!_rawControl){
 //     if(_codriver->GetBButtonPressed()){
