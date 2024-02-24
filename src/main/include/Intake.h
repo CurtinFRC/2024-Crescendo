@@ -22,6 +22,7 @@ struct IntakeConfig {
 };
 
 enum class IntakeState { kIdle, kRaw, kHold, kEject, kIntake, kPass, kPID};
+enum class IntakeBehaviourState { kIntaking, kEjecting, kIdleing, kRawControl, kPassing};
 
 class Intake : public behaviour::HasBehaviour {
  public:
@@ -30,15 +31,18 @@ class Intake : public behaviour::HasBehaviour {
   void OnUpdate(units::second_t dt);
 
   void SetState(IntakeState state);
+  void SetBehaviourState(IntakeBehaviourState behaviourState);
   void SetRaw(units::volt_t voltage);
   void SetPidGoal(units::radians_per_second_t goal);
   void OnStart();
   IntakeState GetState();
+  IntakeBehaviourState GetBehaviourState();
   IntakeConfig GetConfig();
 
  private:
   IntakeConfig _config;
   IntakeState _state = IntakeState::kIdle;
+  IntakeBehaviourState _behaviourState = IntakeBehaviourState::kIdleing;
 
   units::volt_t _rawVoltage = 0_V;
   std::string _stringStateName = "error";

@@ -19,16 +19,10 @@
 #include <string>
 #include <vector>
 
-#include "AlphaArm.h"
-#include "AlphaArmBehaviour.h"
 #include "Intake.h"
 #include "IntakeBehaviour.h"
 #include "RobotMap.h"
-#include "Shooter.h"
-#include "ShooterBehaviour.h"
 #include "Wombat.h"
-#include "subsystems/Arm.h"
-#include "vision/Vision.h"
 
 class Robot : public frc::TimedRobot {
  public:

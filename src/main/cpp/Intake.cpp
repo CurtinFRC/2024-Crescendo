@@ -130,10 +130,41 @@ void Intake::OnUpdate(units::second_t dt) {
  
   _config.IntakeGearbox.motorController->SetVoltage(_setVoltage);
 
+  switch (_behaviourState) {
+    case IntakeBehaviourState::kIdleing:
+    break;
+    case IntakeBehaviourState::kIntaking:
+    {
+      if (Intake::GetState() == IntakeState::kIdle) {
+        Intake::SetState(IntakeState::kIntake);
+      }
+    }
+    break;
+    case IntakeBehaviourState::kPassing:
+    {
+      if (Intake::GetState() == IntakeState::kIdle) {
+        Intake::SetState(IntakeState::kPass);
+      }
+    }
+    break;
+    case IntakeBehaviourState::kEjecting:
+    {
+      if (Intake::GetState() == IntakeState::kIdle) {
+        Intake::SetState(IntakeState::kIntake);
+      }
+    }
+    break;
+    case IntakeBehaviourState::kRawControl:
+    break;
+  }
+
 }
 
 void Intake::SetState(IntakeState state) {
   _state = state;
+}
+void Intake::SetBehaviourState(IntakeState behaviourState) {
+  _behaviourState = behaviourState;
 }
 void Intake::SetRaw(units::volt_t voltage) {
   _rawVoltage = voltage;
@@ -141,6 +172,10 @@ void Intake::SetRaw(units::volt_t voltage) {
 IntakeState Intake::GetState() {
   return _state;
 }
+IntakeBehaviourState Intake::GetBehaviourState() {
+  return _behaviourState;
+}
 void Intake::SetPidGoal(units::radians_per_second_t goal) {
   _goal = goal;
 }
+

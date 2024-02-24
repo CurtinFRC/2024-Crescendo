@@ -21,16 +21,12 @@
 #include <units/velocity.h>
 #include <units/voltage.h>
 
-#include "Auto.h"
 #include "behaviour/HasBehaviour.h"
 #include <frc/kinematics/DifferentialDriveKinematics.h>
 #include <frc/controller/RamseteController.h>
 #include <frc/Timer.h>
-#include "ArmBehaviours.h"
 #include "behaviour/HasBehaviour.h"
 #include "frc/geometry/Pose2d.h"
-#include "vision/Vision.h"
-#include "vision/VisionBehaviours.h"
 
 static units::second_t lastPeriodic;
 

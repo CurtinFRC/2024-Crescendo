@@ -25,10 +25,7 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-#include "AlphaArm.h"
-#include "AlphaArmBehaviour.h"
 #include "Intake.h"
-#include "Shooter.h"
 #include "Wombat.h"
 #include "utils/Encoder.h"
 #include "utils/PID.h"
