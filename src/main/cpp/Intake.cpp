@@ -163,7 +163,7 @@ void Intake::OnUpdate(units::second_t dt) {
 void Intake::SetState(IntakeState state) {
   _state = state;
 }
-void Intake::SetBehaviourState(IntakeState behaviourState) {
+void Intake::SetBehaviourState(IntakeBehaviourState behaviourState) {
   _behaviourState = behaviourState;
 }
 void Intake::SetRaw(units::volt_t voltage) {

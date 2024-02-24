@@ -9,7 +9,6 @@
 #include "Intake.h"
 #include "Wombat.h"
 
-enum class IntakeBehaviourState { kIntaking, kPassing, kEjecting, kIdleing};
 
 class IntakeManualControl : public behaviour::Behaviour {
  public:
@@ -17,13 +16,10 @@ class IntakeManualControl : public behaviour::Behaviour {
 
   void SetBehaviourState(IntakeBehaviourState behaviourState);
   void OnTick(units::second_t dt) override;
-  IntakeBehaviourState GetBehaviourState();
 
  private:
   Intake* _intake;
   frc::XboxController& _codriver;
-
-  IntakeBehaviourState _behaviourState = IntakeBehaviourState::kIdleing;
 
   units::volt_t _rawVoltage;
   units::volt_t _setVoltage;
