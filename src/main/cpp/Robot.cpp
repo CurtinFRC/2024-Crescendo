@@ -21,15 +21,15 @@ static units::second_t lastPeriodic;
 void Robot::RobotInit() {
   lastPeriodic = wom::now();
 
-  mag = new Mag(robotmap.magSystem.config);
+  mag = new Mag(robotmap.MagSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(mag);
   mag->SetDefaultBehaviour(
-      [this]() { return wom::make<MagManualControl>(mag, &robotmap.controllers.coDriver); });
+      [this]() { return wom::make<MagManualControl>(mag, &robotmap.Controllers.coDriver); });
 }
 
 void Robot::RobotPeriodic() {
   auto dt = wom::now() - lastPeriodic;
-  lastPeriodic = wom::now();
+  lastPeriodic = wom::now(); 
 
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
@@ -65,10 +65,24 @@ void Robot::TeleopInit() {
   _swerveDrive->SetDefaultBehaviour(
       [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
+  lastPeriodic = wom::now();
+
+  climber = new Climber(robotmap.climberSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(climber);
+  climber->SetDefaultBehaviour(
+      [this]() { return wom::make<ClimberManualControl>(climber, &robotmap.controllers.coDriver); });
   // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSimSwerveDrive();
-  // _swerveDrive->OnStart();
-  // sched->InterruptAll();
+}
+
+void Robot::RobotPeriodic() {
+  auto dt = wom::now() - lastPeriodic;
+  lastPeriodic = wom::now();
+
+  loop.Poll();
+  wom::BehaviourScheduler::GetInstance()->Tick();
+
+  _swerveDrive->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {
@@ -82,6 +96,10 @@ void Robot::AutonomousPeriodic() {
   // m_driveSim->OnUpdate();
 }
 
+void Robot::TeleopInit() {
+  // _swerveDrive->OnStart();
+  // sched->InterruptAll();
+}
 void Robot::TeleopPeriodic() {}
 
 void Robot::DisabledInit() {}

@@ -8,6 +8,7 @@
 #include <frc/DigitalInput.h>
 #include <frc/DoubleSolenoid.h>
 #include <frc/XboxController.h>
+#include <frc/motorcontrol/MotorControllerGroup.h>
 #include <frc/system/plant/DCMotor.h>
 #include <units/angle.h>
 #include <units/length.h>
@@ -18,7 +19,6 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-#include "Mag.h"
 #include "Wombat.h"
 
 struct RobotMap {
@@ -27,7 +27,19 @@ struct RobotMap {
     frc::XboxController coDriver = frc::XboxController(1);
     frc::XboxController testController = frc::XboxController(2);
   };
-  Controllers controllers;
+  struct ClimberSystem {
+    rev::CANSparkMax climberMotor{99, rev::CANSparkMax::MotorType::kBrushed};
+    wom::CANSparkMaxEncoder climberEncoder{&climberMotor, 0.1_m};
+    frc::DigitalInput climberSensor{99};
+  };
+  struct MagSystem {
+    rev::CANSparkMax magMotor{99, rev::CANSparkMax::MotorType::kBrushed};
+    wom::CANSparkMaxEncoder magEncoder{&magEncoder, 0.1_m};
+    frc::DigitalInput magSensor{99};
+  }
+
+    
+  Controllers; Controllers;
 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{19};
@@ -131,23 +143,4 @@ struct RobotMap {
     //}
   };
   SwerveBase swerveBase;
-
-  struct Mag {
-    rev::CANSparkMax* magMotor = new rev::CANSparkMax{99, rev::CANSparkMax::MotorType::kBrushless};
-    // wom::VoltageController magMotorGroup = wom::VoltageController::Group(magMotor);
-    wom::CANSparkMaxEncoder magEncoder{magMotor, 0.1_m};
-    frc::DigitalInput intakeSensor{0};
-    frc::DigitalInput magSensor{1};
-    frc::DigitalInput shooterSensor{1};
-
-    wom::Gearbox magGearbox{magMotor, &magEncoder, frc::DCMotor::NEO(1)};
-
-    MagConfig config{
-        magGearbox,
-        &intakeSensor,
-        &magSensor,
-        &shooterSensor,
-    };
-  };
-  Mag magSystem;
 };

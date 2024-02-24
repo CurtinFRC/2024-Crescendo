@@ -13,9 +13,13 @@
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <networktables/DoubleTopic.h>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableInstance.h>
 
 #include <string>
 
+#include "Behaviours/ClimberBehaviour.h"
 #include "RobotMap.h"
 #include "Wombat.h"
 #include "behaviours/MagBehaviour.h"
@@ -47,5 +51,6 @@ class Robot : public frc::TimedRobot {
   frc::SendableChooser<std::string> m_path_chooser;
 
   wom::SwerveDrive* _swerveDrive;
+  Climber* climber;
   Mag* mag;
 };
