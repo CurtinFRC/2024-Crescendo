@@ -18,10 +18,8 @@ class AlphaArmManualControl : public behaviour::Behaviour {
  private:
   AlphaArm* _alphaArm;
   frc::XboxController* _codriver;
-  // units::volt_t _rightStick = ((_codriver->GetRightY()>0.05 || _codriver->GetRightY() < -0.05
-  // )?_codriver->GetRightY():0) * 2_V;
   units::volt_t _setAlphaArmVoltage = 0_V;
-  bool _rawControl; //needs a default
+  bool _rawControl;
   bool _gotValue = false;
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("AlphaArmSubsystem");
 

@@ -5,16 +5,11 @@
 #include "AlphaArm.h"
 
 
-AlphaArm::AlphaArm(AlphaArmConfig *config) : _config(config), _pidArm{frc::PIDController(1.2, 0.4, 0)}, _pidArmStates{frc::PIDController(6.5, 0.1, 0)}, _pidIntakeState{frc::PIDController(0, 0, 0)} 
+AlphaArm::AlphaArm(AlphaArmConfig *config) : _config(config), _pidArm{frc::PIDController(1.2, 0.4, 0)}, _pidArmStates{frc::PIDController(6.5, 0.1, 0)}, _pidIntakeState{frc::PIDController(1, 0, 0)} 
 {
-  // _alphaArmPID = wom::utils::PIDController(config.alphaArmPID);
+ 
 }
 
-// AlphaArmConfig AlphaArm::GetConfig() {
-//   return _config;
-// }
-
- 
 void AlphaArm::OnStart(){
   _pidArmStates.Reset();
 }
@@ -48,7 +43,7 @@ void AlphaArm::OnUpdate(units::second_t dt) {
 
     case AlphaArmState::kIntakeAngle:
     std::cout << "Intake Angle" << std::endl;
-       _pidArmStates.SetSetpoint(-0.48);
+       _pidIntakeState.SetSetpoint(-0.48);
        _setAlphaArmVoltage = units::volt_t{_pidArmStates.Calculate(-_config->alphaArmEncoder.GetEncoderPosition().value())};
     break;
 
@@ -70,7 +65,6 @@ void AlphaArm::OnUpdate(units::second_t dt) {
   }
    _config->alphaArmGearbox.motorController->SetVoltage(_setAlphaArmVoltage);
    _config->alphaArmGearbox2.motorController->SetVoltage(_setAlphaArmVoltage);
-    //std::cout << "Encoder Value: " << _config.alphaArmGearbox.encoder->GetEncoderPosition().value() << std::endl;
     std::cout << "Encoder Value: " << _config->alphaArmEncoder.GetEncoderPosition().value() << std::endl;
     _table->GetEntry("PID Error").SetDouble(_pidArm.GetPositionError());
     _table->GetEntry("SetPoint").SetDouble(_pidArm.GetSetpoint());
@@ -79,10 +73,8 @@ void AlphaArm::OnUpdate(units::second_t dt) {
     _table->GetEntry("PID Error State").SetDouble(_pidArmStates.GetPositionError());
     _table->GetEntry("SetPoint State").SetDouble(_pidArmStates.GetSetpoint());
 
-// //std::cout << "Encoder Position: " << armEncoder.GetAbsolutePosition() << std::endl;
-//   //std::cout << "Encoder Value: " << _config.alphaArmEncoder->GetEncoderPosition().value() << std::endl;
+
      std::cout << "Voltage:" << _setAlphaArmVoltage.value() << std::endl;
-//  }
 }
 
 void AlphaArm::SetState(AlphaArmState state) {

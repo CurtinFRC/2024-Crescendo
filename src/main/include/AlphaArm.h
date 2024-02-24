@@ -13,11 +13,10 @@
 #include <frc/controller/PIDController.h>
 
 struct AlphaArmConfig {
-  wom::Gearbox alphaArmGearbox; //up+down
+  wom::Gearbox alphaArmGearbox;
   wom::Gearbox alphaArmGearbox2;
   wom::DutyCycleEncoder alphaArmEncoder;
-  //frc::PIDController pidArmConfig;
-  //wom::PIDConfig<units::degree, units::volts> alphaArmPID;
+
   std::string path;
   // Vision *vision;
 };
