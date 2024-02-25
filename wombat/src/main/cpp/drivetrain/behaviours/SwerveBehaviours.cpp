@@ -81,18 +81,12 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
 
   double r_x = wom::utils::spow2(-wom::utils::deadzone(_driverController->GetRightX(), turningDeadzone));
 
-  if (std::abs(wom::utils::deadzone(lastJoystickRightX - _driverController->GetRightX(), 0.35)) == 3.14159) {
-    r_x -= 0.5;
-    r_x = std::abs(r_x);
-  }
-
   double turnX = _driverController->GetRightX();
-  // double turnY = _driverController->GetRightY();
-  // double num = std::sqrt(turnX * turnX + turnY * turnY);
-  double num = turnX;
+  double turnY = _driverController->GetRightY();
+  double num = std::sqrt(turnX * turnX + turnY * turnY);
   if (num < turningDeadzone) {
     turnX = 0;
-    // turnY = 0;
+    turnY = 0;
   }
 
   // if (isRotateMatch) {
@@ -108,15 +102,6 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
   //                                            yVelocity * maxMovementMagnitude,
   //                                            r_x * maxRotationMagnitude});
   // } else {
-
- if (std::abs(lastJoystickY - _driverController->GetLeftY()) > 0.1 || std::abs(lastJoystickX - _driverController->GetLeftX()) > 0.1 || std::abs(lastJoystickRightX - _driverController->GetRightX()) > 0.1) {
-    _swerveDrivebase->m_controllerChange = true;
-  }
-
-  lastJoystickX = _driverController->GetLeftX();
-  lastJoystickY = _driverController->GetLeftY();
-  lastJoystickRightX = _driverController->GetRightX();
-
   _swerveDrivebase->SetFieldRelativeVelocity(wom::drivetrain::FieldRelativeSpeeds{
       xVelocity * -maxMovementMagnitude, yVelocity * -maxMovementMagnitude, r_x * maxRotationMagnitude});
 
@@ -124,6 +109,13 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
       .SetDouble(std::abs(lastJoystickX - _driverController->GetLeftX()));
   _swerveDriveTable->GetEntry("Joystick Y diff")
       .SetDouble(std::abs(lastJoystickY - _driverController->GetLeftY()));
+
+  if (std::abs(lastJoystickY - _driverController->GetLeftY()) > 0.1 || std::abs(lastJoystickX - _driverController->GetLeftX()) > 0.1) {
+    _swerveDrivebase->m_controllerChange = true;
+  }
+
+  lastJoystickX = _driverController->GetLeftX();
+  lastJoystickY = _driverController->GetLeftY();
 
   //  _swerveDrivebase->SetVelocity(
   //       frc::ChassisSpeeds{xVelocity * maxMovementMagnitude,
