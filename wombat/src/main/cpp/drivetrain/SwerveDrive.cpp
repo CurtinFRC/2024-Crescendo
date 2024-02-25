@@ -270,10 +270,6 @@ frc::ChassisSpeeds FieldRelativeSpeeds::ToChassisSpeeds(const units::radian_t ro
   return frc::ChassisSpeeds::FromFieldRelativeSpeeds(vx, vy, omega, frc::Rotation2d{robotHeading});
 }
 
-frc::ChassisSpeeds FieldRelativeSpeeds::ToChassisSpeeds(const frc::Rotation2d robotHeading) {
-  return frc::ChassisSpeeds::FromFieldRelativeSpeeds(vx, vy, omega, robotHeading);
-}
-
 void SwerveDrive::OnUpdate(units::second_t dt) {
   _table->GetEntry("/gryo/z").SetDouble(_config.gyro->GetRotation3d().Z().value());
   _table->GetEntry("/gryo/y").SetDouble(_config.gyro->GetRotation3d().Y().value());
