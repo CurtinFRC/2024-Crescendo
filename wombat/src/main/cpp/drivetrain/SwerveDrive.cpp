@@ -353,8 +353,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
             if ((std::ceil(diff * 100.0) / 100.0) > (3.14 / 2)) {
               _table->GetEntry("DIFF RANGE").SetBoolean(true);
               new_target_states[i].speed *= -1;
-              units::radian_t val = units::math::fabs(new_target_states[i].angle.Radians()); 
-              new_target_states[i].angle = frc::Rotation2d{val - 3.14_rad};
+              new_target_states[i].angle = frc::Rotation2d{new_target_states[i].angle.Radians() - 3.14_rad};
             } else {
               m_controllerChange = false;
               _table->GetEntry("DIFF RANGE").SetBoolean(false);
@@ -363,15 +362,13 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
           _modules[i].SetPID(new_target_states[i].angle.Radians(), new_target_states[i].speed, dt);
         } else {
           if (m_controllerChange) {
-            double diff = std::abs(std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value()) +
-                                               target_states[i].angle.Radians().value());
+            double diff = std::abs(std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value()) -
+                                   new_target_states[i].angle.Radians().value());
             _table->GetEntry("diff").SetDouble(diff);
             if ((std::ceil(diff * 100.0) / 100.0) > (3.14 / 2)) {
-              std::cout << "IN DIFF" << std::endl;
               _table->GetEntry("DIFF RANGE").SetBoolean(true);
               target_states[i].speed *= -1;
-              units::radian_t val = units::math::fabs(target_states[i].angle.Radians());
-              target_states[i].angle = frc::Rotation2d{val + 3.14_rad};
+              target_states[i].angle = frc::Rotation2d{target_states[i].angle.Radians() - 3.14_rad};
             } else {
               _table->GetEntry("DIFF RANGE").SetBoolean(false);
               m_controllerChange = false;
