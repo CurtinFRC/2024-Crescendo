@@ -4,7 +4,7 @@
 
 #include "Intake.h"
 
-Intake::Intake(IntakeConfig config) : _config(config), _pid(config.path + "/pid", config.pidConfig) {}
+Intake::Intake(IntakeConfig config) : _config(config), _pid(frc::PIDController (0.0125, 0, 0, 0.05_s)), _pidPosition(frc::PIDController (0.0125, 0, 0, 0.05_s)) {}
 
 IntakeConfig Intake::GetConfig() {
   return _config;
@@ -38,57 +38,57 @@ void Intake::OnUpdate(units::second_t dt) {
 
     case IntakeState::kEject: 
     {
-      _stringStateName = "Eject";
-      _setVoltage = 7_V;
-      _pid.Reset();
       if (_config.intakeSensor->Get() == true) {
         SetState(IntakeState::kIdle); 
       }
+      _stringStateName = "Eject";
+      _setVoltage = -4_V;
+      _pid.Reset();
     } 
     break;
 
     case IntakeState::kHold: 
     {
-      _stringStateName = "Hold";
-
       if (_config.intakeSensor->Get() == true) {
         SetState(IntakeState::kIdle);
       }
-      
-      _pid.SetSetpoint(0_rad_per_s);
+      _pid.SetSetpoint(0);
       units::volt_t pidCalculate =
-          units::volt_t{_pid.Calculate(_config.IntakeGearbox.encoder->GetEncoderAngularVelocity(), dt, 0_V)};
+          units::volt_t{_pid.Calculate(_config.IntakeGearbox.encoder->GetEncoderAngularVelocity().value())};
+      // units::volt_t pidCalculate =
+      //     units::volt_t{_pidPosition.Calculate(_config.IntakeGearbox.encoder->GetEncoderPosition().value())};
       _setVoltage = pidCalculate;
+      _stringStateName = "Hold";
     }
     break;
 
     case IntakeState::kIntake: 
     {
-      _stringStateName = "Intake";
-      _setVoltage = -7_V; 
       if (_config.intakeSensor->Get() == false) {
-
         SetState(IntakeState::kHold);
       }
+      _stringStateName = "Intake";
+      _setVoltage = 4_V; 
     } 
     break;
 
     case IntakeState::kPass: 
     {
-      _stringStateName = "Pass";
-      _setVoltage = -7_V;
       if (_config.intakeSensor->Get() == true) {
         SetState(IntakeState::kIdle);
       }
+      _stringStateName = "Pass";
+      _setVoltage = 4_V;
     }
     break;
   }
   _table->GetEntry("State: ").SetString(_stringStateName);
   _table->GetEntry("Motor Voltage: ").SetDouble(_setVoltage.value());
   _table->GetEntry("Intake Sensor: ").SetBoolean(_config.intakeSensor->Get());
-  _table->GetEntry("Error: ").SetDouble(_pid.GetError().value());
-  _table->GetEntry("SetPoint: ").SetDouble(_pid.GetSetpoint().value());
+  _table->GetEntry("Error: ").SetDouble(_pid.GetPositionError());
+  _table->GetEntry("SetPoint: ").SetDouble(_pid.GetSetpoint());
   _table->GetEntry("Encoder: ").SetDouble(_config.IntakeGearbox.encoder->GetEncoderAngularVelocity().value());
+  // _table->GetEntry("Encoder: ").SetDouble(_config.IntakeGearbox.encoder->GetEncoderPosition().value());
  
   _config.IntakeGearbox.motorController->SetVoltage(_setVoltage);
 }

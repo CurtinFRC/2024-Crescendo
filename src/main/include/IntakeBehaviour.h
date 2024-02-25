@@ -9,28 +9,18 @@
 #include "Intake.h"
 #include "Wombat.h"
 
-enum class IntakeBehaviourState { kIntaking, kEjecting, kIdleing, kRawControl, kPassing};
+enum class IntakeBehaviourState { kIntaking, kEjecting, kPassing, kIdleing};
 
 class IntakeManualControl : public behaviour::Behaviour {
  public:
   explicit IntakeManualControl(Intake* intake, frc::XboxController& codriver);
 
-  void SetBehaviourState(IntakeBehaviourState behaviourState);
   void OnTick(units::second_t dt) override;
-
-  IntakeBehaviourState GetBehaviourState();
 
  private:
   Intake* _intake;
   frc::XboxController& _codriver;
-  IntakeBehaviourState _behaviourState = IntakeBehaviourState::kIdleing;
-
-  units::volt_t _rawVoltage;
-  units::volt_t _setVoltage;
-  bool _rawControl = true;
-  bool _intaking = false;
-  bool _ejecting = false;
-  bool _passing = false;
+  bool _rawControl = false;
 };
 
 class AutoIntake : public behaviour::Behaviour {
@@ -40,5 +30,5 @@ class AutoIntake : public behaviour::Behaviour {
 
  private:
   Intake* _intake;
-  IntakeBehaviourState _behaviourState = IntakeBehaviourState::kIdleing;
+  
 };

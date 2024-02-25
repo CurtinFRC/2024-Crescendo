@@ -43,7 +43,8 @@ class Intake : public behaviour::HasBehaviour {
   std::string _stringStateName = "error";
   units::volt_t _setVoltage = 0_V;
 
-  wom::PIDController<units::radians_per_second, units::volt> _pid;
+  frc::PIDController _pid;
+  frc::PIDController _pidPosition;
   
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("Intake");
 };

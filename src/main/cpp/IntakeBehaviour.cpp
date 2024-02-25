@@ -12,84 +12,47 @@ IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& co
 
 void IntakeManualControl::OnTick(units::second_t dt) {
 
-  switch (_behaviourState) {
-    case IntakeBehaviourState::kIdleing:
-    {
-      if (_intake->GetState() != IntakeState::kIdle) {
-        _intake->SetState(IntakeState::kIdle);
-      }
-    }
-    break;
-    case IntakeBehaviourState::kIntaking:
-    {
-      if (_intake->GetState() == IntakeState::kIdle) {
-        _intake->SetState(IntakeState::kIntake);
-      }
-    }
-    break;
-    case IntakeBehaviourState::kPassing:
-    {
-      if (_intake->GetState() == IntakeState::kIdle) {
-        _intake->SetState(IntakeState::kPass);
-      }
-    }
-    break;
-    case IntakeBehaviourState::kEjecting:
-    {
-      if (_intake->GetState() == IntakeState::kIdle) {
-        _intake->SetState(IntakeState::kIntake);
-      }
-    }
-    break;
-    case IntakeBehaviourState::kRawControl:
-    {
-      if (_intake->GetState() != IntakeState::kRaw)
-      _intake->SetState(IntakeState::kRaw);
-    }
-    break;
-  }
-
-  if (_codriver.GetBButtonReleased()) {
+  if (_codriver.GetBackButtonReleased()) {
     if (_rawControl) {
-      IntakeManualControl::SetBehaviourState(IntakeBehaviourState::kIdleing);
+      _rawControl = false;
+      _intake->SetState(IntakeState::kIdle);
     } else {
-      IntakeManualControl::SetBehaviourState(IntakeBehaviourState::kRawControl);
+      _rawControl = true;
+      _intake->SetState(IntakeState::kRaw);
     }
   } 
   
-  if (IntakeManualControl::GetBehaviourState() == IntakeBehaviourState::kRawControl) {
+  if (_rawControl) {
+    _intake->SetState(IntakeState::kRaw);
     if (_codriver.GetLeftTriggerAxis() > 0.1) {
-      _intake->SetRaw(_codriver.GetRightTriggerAxis() * 10_V);
-    } else if (_codriver.GetRightTriggerAxis() > 0.1) {
-      _intake->SetRaw(_codriver.GetLeftTriggerAxis() * -10_V);
+      _intake->SetRaw(_codriver.GetLeftTriggerAxis() * 10_V);
+    }
+    else if (_codriver.GetRightTriggerAxis() > 0.1) {
+      _intake->SetRaw(_codriver.GetRightTriggerAxis() * -10_V);
     } else {
       _intake->SetRaw(0_V);
     }
-
   } else {
-    if (_codriver.GetRightTriggerAxis() > 0.1) {
-      if (IntakeManualControl::GetBehaviourState() == IntakeBehaviourState::kIntaking) {
-        IntakeManualControl::SetBehaviourState(IntakeBehaviourState::kIdleing);
+    if (_codriver.GetXButtonReleased()) {
+      if (_intake->GetState() == IntakeState::kIdle) {
+        _intake->SetState(IntakeState::kIntake);
       } else {
-        IntakeManualControl::SetBehaviourState(IntakeBehaviourState::kIntaking);
+        _intake->SetState(IntakeState::kIdle);
       }
-    }
-
-    if (_codriver.GetLeftTriggerAxis() > 0.1) {
-      if (IntakeManualControl::GetBehaviourState() == IntakeBehaviourState::kEjecting) {
-        IntakeManualControl::SetBehaviourState(IntakeBehaviourState::kIdleing);
+    } else if (_codriver.GetAButtonReleased()) {
+      if (_intake->GetState() == IntakeState::kHold) {
+        _intake->SetState(IntakeState::kPass);
       } else {
-        IntakeManualControl::SetBehaviourState(IntakeBehaviourState::kEjecting);
+        _intake->SetState(IntakeState::kIdle);
+      }
+    } else if (_codriver.GetBButtonReleased()) {
+      if (_intake->GetState() == IntakeState::kHold) {
+        _intake->SetState(IntakeState::kEject);
+      } else {
+        _intake->SetState(IntakeState::kIdle);
       }
     }
   }
-}
-
-IntakeBehaviourState IntakeManualControl::IntakeManualControl::GetBehaviourState() {
-  return _behaviourState;
-}
-void IntakeManualControl::IntakeManualControl::SetBehaviourState(IntakeBehaviourState behaviourState) {
-  _behaviourState = behaviourState;
 }
 
 AutoIntake::AutoIntake(Intake* intake) : _intake(intake) {
