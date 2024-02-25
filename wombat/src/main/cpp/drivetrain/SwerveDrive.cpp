@@ -40,7 +40,7 @@ SwerveModule::SwerveModule(std::string path, SwerveModuleConfig config,
       _table(nt::NetworkTableInstance::GetDefault().GetTable(path)) {
   // _anglePIDController.SetTolerance(360);
   // _anglePIDController.EnableContinuousInput(0, (2 * 3.141592));
-  _anglePIDController.EnableContinuousInput(-3.14159, 3.14159);
+  _anglePIDController.EnableContinuousInput(-3.14, 3.14);
   // _anglePIDController.EnableContinuousInput(-3.141592, (3.141592));
   // _anglePIDController.EnableContinuousInput(0, (3.1415 * 2));
   // _anglePIDController.EnableContinuousInput(0, (3.1415));
@@ -51,7 +51,7 @@ void SwerveModule::OnStart() {
   // _offset = offset;
   // _config.canEncoder->SetPosition(units::turn_t{0});
   _anglePIDController.Reset();
-  _anglePIDController.EnableContinuousInput(-3.14159, 3.14159);
+  _anglePIDController.EnableContinuousInput(-3.14, 3.14);
   // _anglePIDController.EnableContinuousInput(-3.141592, (3.141592));
   // _anglePIDController.EnableContinuousInput(0, (2 * 3.141592));
 
@@ -255,7 +255,7 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose, wom:
       _yPIDController{frc::PIDController(4, 0, 0)},
       _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)) {
   _anglePIDController.SetTolerance(360);
-  _anglePIDController.EnableContinuousInput(-3.14159, 3.14159);
+  _anglePIDController.EnableContinuousInput(-3.14, 3.14);
 
   int i = 1;
   for (auto cfg : _config.modules) {
@@ -326,13 +326,13 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       _table->GetEntry("Swerve module VY").SetDouble(_target_speed.vy.value());
       _table->GetEntry("Swerve module Omega").SetDouble(_target_speed.omega.value());
       // if (_target_speed.omega.value() > 0) {
-      //   // _modules[0].SetTurnOffsetForward();
+      //   _modules[0].SetTurnOffsetForward();
       //   _modules[1].SetTurnOffsetForward();
       // } else if (_target_speed.omega.value() < 0) {
-      //   // _modules[0].SetTurnOffsetReverse();
+      //   _modules[0].SetTurnOffsetReverse();
       //   _modules[1].SetTurnOffsetReverse();
       // } else {
-      //   // _modules[0].TurnOffset();
+      //   _modules[0].TurnOffset();
       //   _modules[1].TurnOffset();
       // }
 
@@ -340,12 +340,41 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
         _angle = _target_speed.omega * 1_s;
       }
 
+      if (_target_speed.vx == 0_mps) {
+        _target_speed.vx == 0.1_mps;
+      }
+
+      if (_target_speed.vy == 0_mps) {
+        _target_speed.vy == 0.1_mps;
+      }
+
+      bool turnDesired = false;
+      frc::ChassisSpeeds _target_speed_omega = _target_speed;
+
+      if (std::abs(_target_speed.omega.value()) != 0) {
+        turnDesired = true;
+        std::cerr << "I HATE MY LIFE" << std::endl;
+        _target_speed = frc::ChassisSpeeds{_target_speed.vx, _target_speed.vy, 0_rad_per_s};
+      }
+
       auto target_states = _kinematics.ToSwerveModuleStates(_target_speed);
       _table->GetEntry("CONTROLLER CHANGE").SetBoolean(m_controllerChange);
       frc::ChassisSpeeds new_target_speed{_target_speed.vx, _target_speed.vy, -_target_speed.omega};
       auto new_target_states = _kinematics.ToSwerveModuleStates(new_target_speed);
+      auto target_states_omega = _kinematics.ToSwerveModuleStates(_target_speed_omega);
+      auto new_target_states_omega = _kinematics.ToSwerveModuleStates(frc::ChassisSpeeds{_target_speed_omega.vx, _target_speed_omega.vy, -_target_speed_omega.omega});
       for (size_t i = 0; i < _modules.size(); i++) {
         if (i == 3) {
+          if (turnDesired) {
+            new_target_states[i].speed = -_kinematics.ToSwerveModuleStates(_target_speed_omega)[i].speed;
+          } else {
+            if (std::abs(_target_speed.vy.value()) > 0.1) {
+              new_target_states[i].angle = frc::Rotation2d{new_target_states[i].angle.Radians() + new_target_states_omega[i].angle.Radians()};
+            } else {
+              new_target_states[i].angle = frc::Rotation2d{new_target_states[i].angle.Radians() + new_target_states_omega[i].angle.Radians()};
+            }
+          }
+
           if (m_controllerChange) {
             double diff = std::abs(std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value()) -
                                    new_target_states[i].angle.Radians().value());
@@ -362,8 +391,14 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
           }
           _modules[i].SetPID(new_target_states[i].angle.Radians(), new_target_states[i].speed, dt);
         } else {
+          if (turnDesired) {
+            target_states[i].speed = _kinematics.ToSwerveModuleStates(_target_speed_omega)[i].speed;
+          } else {
+            target_states[i].angle = frc::Rotation2d{target_states[i].angle.Radians() + target_states_omega[i].angle.Radians()};
+          }
+
           if (m_controllerChange) {
-            double diff = std::abs(std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value()) +
+            double diff = std::abs(std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value()) -
                                                target_states[i].angle.Radians().value());
             _table->GetEntry("diff").SetDouble(diff);
             if ((std::ceil(diff * 100.0) / 100.0) > (3.14 / 2)) {
@@ -371,7 +406,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
               _table->GetEntry("DIFF RANGE").SetBoolean(true);
               target_states[i].speed *= -1;
               units::radian_t val = units::math::fabs(target_states[i].angle.Radians());
-              target_states[i].angle = frc::Rotation2d{val + 3.14_rad};
+              target_states[i].angle = frc::Rotation2d{val - 3.14_rad};
             } else {
               _table->GetEntry("DIFF RANGE").SetBoolean(false);
               m_controllerChange = false;
