@@ -70,23 +70,23 @@ void Robot::RobotInit() {
   // alphaArm->SetDefaultBehaviour(
   //     [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
 
-  // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
-  // m_driveSim = wom::TempSimSwerveDrive();
+  // // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
+  // // m_driveSim = wom::TempSimSwerveDrive();
 
   //   intake = new Intake(robotmap.intakeSystem.config);
   // wom::BehaviourScheduler::GetInstance()->Register(intake);
   // intake->SetDefaultBehaviour(
   //     [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
 
-  robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(3.618_rad);
-  robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(5.850_rad);
-  robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(6.120_rad);
-  robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(4.426_rad);
+  // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(3.628_rad);
+  // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(5.851_rad);
+  // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(6.137_rad);
+  // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(1.300_rad);
 
-  // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
-  // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
-  // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
-  // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
+  robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
+  robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
+  robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
+  robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
 
   // robotmap.swerveBase.moduleConfigs[0].driveMotor.motorController->SetInverted(true);
   // robotmap.swerveBase.moduleConfigs[1].driveMotor.motorController->SetInverted(true);

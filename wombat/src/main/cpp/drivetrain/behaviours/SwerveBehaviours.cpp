@@ -81,14 +81,21 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
 
   double r_x = wom::utils::spow2(-wom::utils::deadzone(_driverController->GetRightX(), turningDeadzone));
 
-  double turnX = _driverController->GetRightX();
-  double turnY = _driverController->GetRightY();
-  double num = std::sqrt(turnX * turnX + turnY * turnY);
-  if (num < turningDeadzone) {
-    turnX = 0;
-    turnY = 0;
+  if (std::abs(wom::utils::deadzone(lastJoystickRightX - _driverController->GetRightX(), 0.35)) == 3.14159) {
+    r_x -= 0.5;
+    r_x = std::abs(r_x);
   }
 
+  double turnX = _driverController->GetRightX();
+  // double turnY = _driverController->GetRightY();
+  // double num = std::sqrt(turnX * turnX + turnY * turnY);
+  double num = turnX;
+  if (num < turningDeadzone) {
+    turnX = 0;
+    // turnY = 0;
+  }
+
+  // if (isRotateMatch) {
   //   units::degree_t currentAngle =
   //       _swerveDrivebase->GetPose().Rotation().Degrees();
   //   CalculateRequestedAngle(turnX, turnY, currentAngle);
