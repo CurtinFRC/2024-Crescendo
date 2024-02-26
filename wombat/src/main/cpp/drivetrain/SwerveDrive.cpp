@@ -1,7 +1,6 @@
 // Copyright (c) 2023-2024 CurtinFRC
 // Open Source Software, you can modify it according to the terms
 // of the MIT License at the root of this project
-
 #include "drivetrain/SwerveDrive.h"
 
 #include <networktables/NetworkTableInstance.h>
@@ -171,7 +170,7 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose, wom:
       _xPIDController{frc::PIDController(4, 0, 0)},
       _yPIDController{frc::PIDController(4, 0, 0)},
       _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)) {
-  _anglePIDController.SetTolerance(360);
+  // _anglePIDController.SetTolerance(360);
   _anglePIDController.EnableContinuousInput(-3.141592653589793238, 3.141592653589793238);
 
   int i = 1;
@@ -240,14 +239,16 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       }
 
       auto target_states = _kinematics.ToSwerveModuleStates(_target_speed);
-      frc::ChassisSpeeds new_target_speed{_target_speed.vx, _target_speed.vy, -_target_speed.omega};
+      frc::ChassisSpeeds new_target_speed{_target_speed.vx, _target_speed.vy, _target_speed.omega};
+      // frc::ChassisSpeeds new_target_speed{_target_speed.vx, _target_speed.vy, -_target_speed.omega};
       auto new_target_states = _kinematics.ToSwerveModuleStates(new_target_speed);
       for (size_t i = 0; i < _modules.size(); i++) {
           if (m_controllerChange) {
             double diff = std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value() -
                                    new_target_states[i].angle.Radians().value());
             _table->GetEntry("diff").SetDouble(diff);
-            if ((std::ceil(diff * 100.0) / 100.0) > (3.141592653589793238 / 2)) {
+            // if ((std::ceil(diff * 100.0) / 100.0) > (3.141592653589793238 / 2)) {
+            if (diff > (3.141592653589793238 / 2)) {
               new_target_states[i].speed *= -1;
               new_target_states[i].angle = frc::Rotation2d{new_target_states[i].angle.Radians() - 3.141592653589793238_rad};
             } else {
@@ -262,11 +263,14 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
               speed = -speed;
             }
           }
-          if (units::math::abs(prevAngle[i] - angle) < 0.1_rad) {
+          if (units::math::abs(prevAngle[i] - angle) < 0.5_rad) {
             angle = prevAngle[i];
+          } else {
+            if (!(units::math::abs(prevAngle[i] - angle) > (3.14159_rad / 2))) {
+              prevAngle[i] = angle;
+            }
           }
           _modules[i].SetPID(angle, speed, dt);
-          prevAngle[i] = angle;
       }
     } break;
     case SwerveDriveState::kIndividualTuning:
@@ -395,8 +399,7 @@ bool SwerveDrive::IsAtSetPose() {
          std::abs(_xPIDController.GetPositionError()) < 0.017 &&
          std::abs(_xPIDController.GetVelocityError()) < 0.017 &&
          std::abs(_yPIDController.GetPositionError()) < 0.017 &&
-         std::abs(_yPIDController.GetVelocityError()) <
-             0.017 /*true && _xPIDController.IsStable() && _yPIDController.IsStable(0.05_m)*/;
+         std::abs(_yPIDController.GetVelocityError()) < 0.017;
 }
 
 void SwerveDrive::ResetPose(frc::Pose2d pose) {
