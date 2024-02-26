@@ -1,26 +1,63 @@
 {
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto Modes": "String Chooser",
+      "/SmartDashboard/Field": "Field2d"
+    },
+    "windows": {
+      "/SmartDashboard/Auto Modes": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field": {
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables": {
     "transitory": {
-      "drivetrain": {
-        "open": true,
-        "pid": {
-          "open": true
+      "SmartDashboard": {
+        "Auto Modes": {
+          "open": true,
+          "string[]##v_/SmartDashboard/Auto Modes/options": {
+            "open": true
+          }
         }
       },
-      "vision": {
-        "open": true
+      "pathplanner": {
+        "open": true,
+        "poses": {
+          "-1543444640": {
+            "open": true
+          },
+          "-1543444641": {
+            "open": true
+          },
+          "-1543444642": {
+            "open": true
+          },
+          "-1543444643": {
+            "open": true
+          },
+          "-1543444656": {
+            "open": true
+          },
+          "open": true
+        }
       }
     }
   },
   "NetworkTables Info": {
-    "Clients": {
-      "open": true
-    },
     "visible": true
   }
 }

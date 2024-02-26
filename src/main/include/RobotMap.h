@@ -43,8 +43,8 @@ struct RobotMap {
   Controllers controllers;
 
   struct AlphaArmSystem {
-    rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
-    rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax alphaArmMotor{21, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax wristMotor{26, rev::CANSparkMax::MotorType::kBrushless};
     wom::CANSparkMaxEncoder* alphaArmEncoder = new wom::CANSparkMaxEncoder(&alphaArmMotor, 0.1_m);
     wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
     wom::Gearbox wristGearbox{&wristMotor, alphaArmEncoder, frc::DCMotor::NEO(1)};
@@ -54,20 +54,20 @@ struct RobotMap {
   AlphaArmSystem alphaArmSystem;
 
   struct IntakeSystem {
-    rev::CANSparkMax intakeMotor{2, rev::CANSparkMax::MotorType::kBrushed};
+    rev::CANSparkMax intakeMotor{31, rev::CANSparkMax::MotorType::kBrushless};
     // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
     frc::DigitalInput intakeSensor{4};
     // frc::DigitalInput magSensor{0};
     // frc::DigitalInput shooterSensor{0};
 
-    wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::CIM(1)};
+    wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::NEO(1)};
 
     IntakeConfig config{IntakeGearbox, &intakeSensor /*, &magSensor, &shooterSensor*/};
   };
   IntakeSystem intakeSystem;
 
   struct Shooter {
-    rev::CANSparkMax shooterMotor{11, rev::CANSparkMax::MotorType::kBrushless};  // Port 11
+    rev::CANSparkMax shooterMotor{35, rev::CANSparkMax::MotorType::kBrushless};  // Port 11
     // frc::DigitalInput shooterSensor{2};
 
     // wom::VoltageController shooterMotorGroup =
@@ -317,4 +317,5 @@ struct RobotMap {
   // };
   // AlphaArmSystem alphaArmSystem;
   wom::SwerveAutoBuilder* builder;
+  wom::SimSwerve* simSwerve;
 };

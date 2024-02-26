@@ -12,13 +12,13 @@
 #include "Wombat.h"
 #include "utils/Pathplanner.h"
 
-
 namespace autos {
 
 // wom::Commands* _commands = nullptr;
 // wom::SwerveAutoBuilder* builder = nullptr;
 
-wom::utils::SwerveAutoBuilder* InitCommands(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm);
+wom::utils::SwerveAutoBuilder* InitCommands(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter,
+                                            Intake* _intake, AlphaArm* _alphaArm);
 
 std::shared_ptr<behaviour::Behaviour> AutoTest(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter,
                                                Intake* _intake, AlphaArm* _alphaArm);

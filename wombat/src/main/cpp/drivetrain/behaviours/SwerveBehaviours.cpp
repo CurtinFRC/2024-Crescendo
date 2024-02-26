@@ -241,6 +241,7 @@ wom::drivetrain::behaviours::DrivebasePoseBehaviour::DrivebasePoseBehaviour(Swer
 
 // used in autonomous for going to set drive poses
 void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t deltaTime) {
+  _swerveDriveTable->GetEntry("enabled").SetBoolean(true);
   double currentAngle = _swerveDrivebase->GetPose().Rotation().Degrees().value();
   units::degree_t adjustedAngle =
       1_deg * (currentAngle - std::fmod(currentAngle, 360) + _pose.Rotation().Degrees().value());
@@ -248,6 +249,7 @@ void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t
   _swerveDrivebase->SetPose(frc::Pose2d{_pose.X(), _pose.Y(), adjustedAngle});
 
   if (_swerveDrivebase->IsAtSetPose() && !_hold) {
+    _swerveDriveTable->GetEntry("enabled").SetBoolean(false);
     SetDone();
   }
 }

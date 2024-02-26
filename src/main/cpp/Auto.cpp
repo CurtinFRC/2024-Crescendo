@@ -3,6 +3,7 @@
 // of the MIT License at the root of this project
 
 #include "Auto.h"
+
 #include <utility>
 
 #include "AlphaArmBehaviour.h"
@@ -14,25 +15,18 @@
 #include "utils/Pathplanner.h"
 
 // Shoots starting note then moves out of starting position.
-wom::SwerveAutoBuilder* autos::InitCommands(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm) {
-    wom::Commands c = *new wom::Commands(
-    {{"ArmToSetPoint", [_alphaArm]() {
-            return wom::make<ArmToSetPoint>(_alphaArm, 20_deg);
-        }},
-                                         {"AutoShoot", [_shooter]() {
-            return wom::make<AutoShoot>(_shooter);
-        }},
-                                         {"AutoIntake", [_intake]() {
-            return wom::make<AutoIntake>(_intake);
-        }}
-    });
+wom::SwerveAutoBuilder* autos::InitCommands(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter,
+                                            Intake* _intake, AlphaArm* _alphaArm) {
+  wom::Commands c = *new wom::Commands(
+      {{"ArmToSetPoint", [_alphaArm]() { return wom::make<ArmToSetPoint>(_alphaArm, 20_deg); }},
+       {"AutoShoot", [_shooter]() { return wom::make<AutoShoot>(_shooter); }},
+       {"AutoIntake", [_intake]() { return wom::make<AutoIntake>(_intake); }}});
 
-    return new wom::utils::SwerveAutoBuilder(
-        _swerveDrive, "", c);
+  return new wom::utils::SwerveAutoBuilder(_swerveDrive, "Taxi", c);
 }
 
 std::shared_ptr<behaviour::Behaviour> autos::Taxi(wom::SwerveAutoBuilder* builder) {
-  return builder->GetAutoRoutine("taxi");
+  return builder->GetAutoRoutine("Taxi");
   // return behaviour::make<ArmToSetPoint>(_alphaArm, 0_deg);
   // behaviour::make<AutoShoot>(_shooter);
   // behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);

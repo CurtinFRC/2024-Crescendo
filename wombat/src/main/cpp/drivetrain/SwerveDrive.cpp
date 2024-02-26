@@ -120,7 +120,7 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   _table->GetEntry("Demand").SetDouble(_config.turnMotor.encoder->GetEncoderPosition().value());
   _table->GetEntry("Error").SetDouble(_anglePIDController.GetPositionError());
 
-  _config.driveMotor.motorController->SetVoltage(driveVoltage);
+  _config.driveMotor.motorController->SetVoltage(driveVoltage * -1);
   _config.turnMotor.motorController->SetVoltage(turnVoltage);
 
   _table->GetEntry("speed").SetDouble(GetSpeed().value());
@@ -495,7 +495,7 @@ void SwerveDrive::SetPose(frc::Pose2d pose) {
 }
 
 bool SwerveDrive::IsAtSetPose() {
-  return /*_anglePIDController.IsStable()*/ true && _xPIDController.IsStable() &&
+  return /*_anglePIDController.IsStable()*/ true && _xPIDController.IsStable(0.05_m) &&
          _yPIDController.IsStable(0.05_m);
 }
 
@@ -508,6 +508,7 @@ void SwerveDrive::ResetPose(frc::Pose2d pose) {
 }
 
 frc::Pose2d SwerveDrive::GetPose() {
+  // return frc::Pose2d();
   return _poseEstimator.GetEstimatedPosition();
 }
 

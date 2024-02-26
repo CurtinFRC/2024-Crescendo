@@ -12,18 +12,59 @@
 #include <any>
 #include <functional>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <typeindex>
 #include <vector>
-#include <stdexcept>
 
 #include "behaviour/Behaviour.h"
 #include "drivetrain/SwerveDrive.h"
+#include "frc/Timer.h"
 #include "pathplanner/lib/path/PathPlannerPath.h"
+#include "units/time.h"
 #include "wpi/json_fwd.h"
 
 namespace wom {
 namespace utils {
+
+struct BezierPoint {
+    struct {
+        double x;
+        double y;
+    } anchor;
+
+    struct {
+        double x;
+        double y;
+    } prevControl;
+
+    struct {
+        double x;
+        double y;
+    } nextControl;
+
+    bool isLocked;
+    std::string linkedName;
+
+    BezierPoint(double anchorX, double anchorY, wpi::json prevControlX, wpi::json prevControlY,
+                wpi::json nextControlX, wpi::json nextControlY, bool isLocked, wpi::json linkedName);
+
+    // Function to calculate the angle of the point relative to the x-axis
+    double calculateAngle() const;
+};
+
+// Function to calculate the distance between two points
+double distance(const BezierPoint& p1, const BezierPoint& p2);
+
+// Function to interpolate points at regular intervals
+std::vector<BezierPoint> interpolateAtIntervals(const BezierPoint& p1, const BezierPoint& p2, double interval);
+
+// Function to create a list of BezierPoints from JSON data
+std::vector<BezierPoint> createBezierPointsFromJson(const wpi::json& jsonData);
+
+// Function to create a list of interpolated BezierPoints
+std::vector<BezierPoint> interpolateBezierPoints(const std::vector<BezierPoint>& bezierPoints, double interval);
+
 
 // template <typename Ret, typename... Args>
 // class ConcreteCommand;
@@ -31,30 +72,30 @@ namespace utils {
 // template <typename Ret, typename... Args>
 // class CommandBase {
 // public:
-  // virtual ~CommandBase() = default;
-    // virtual std::shared_ptr<behaviour::Behaviour> Execute(Args...) const = 0;
-    // virtual bool IsValid(std::vector<std::type_index> argTypes) const = 0;
-    // virtual std::string GetName() const = 0;
+// virtual ~CommandBase() = default;
+// virtual std::shared_ptr<behaviour::Behaviour> Execute(Args...) const = 0;
+// virtual bool IsValid(std::vector<std::type_index> argTypes) const = 0;
+// virtual std::string GetName() const = 0;
 // };
 
 // template <typename Ret, typename... Args>
 // class Command : public CommandBase<Ret, Args...>{
 // public:
-    // using FunctionType = std::function<Ret(Args...)>;
+// using FunctionType = std::function<Ret(Args...)>;
 //
-    // Command(std::string name, FunctionType func);
+// Command(std::string name, FunctionType func);
 
-  // std::shared_ptr<behaviour::Behaviour> Execute(Args... args) const;
-    // Ret Execute(Args... args) const;
+// std::shared_ptr<behaviour::Behaviour> Execute(Args... args) const;
+// Ret Execute(Args... args) const;
 
-    // std::string GetName() const override;
+// std::string GetName() const override;
 
-    // bool IsValid(std::vector<std::type_index> argTypes) const;
+// bool IsValid(std::vector<std::type_index> argTypes) const;
 
 // private:
-    // std::string name_;
-    // FunctionType function_;
-    // std::vector<std::type_index> argumentTypes_;
+// std::string name_;
+// FunctionType function_;
+// std::vector<std::type_index> argumentTypes_;
 // };
 // template <typename BehaviorType>
 //     class Command {
@@ -102,7 +143,7 @@ namespace utils {
 //
 //     template <typename T>
 //     static std::type_index GetTypeIndex();
-//     
+//
 //   template <typename... Args>
 //   std::vector<std::type_index> GetTypeIndices() {
 //     return {GetTypeIndex<Args>()...};
@@ -130,50 +171,49 @@ namespace utils {
 //         std::string name_;
 //     };
 
-    class Commands {
-    public:
+class Commands {
+ public:
+  // template <typename... CommandTypes>
+  // Commands(CommandTypes&&... commands)
+  // : commands_{std::make_shared<Command<BehaviorType,
+  // CommandTypes>>(std::forward<CommandTypes>(commands))...} {}
 
-        // template <typename... CommandTypes>
-        // Commands(CommandTypes&&... commands)
-            // : commands_{std::make_shared<Command<BehaviorType, CommandTypes>>(std::forward<CommandTypes>(commands))...} {}
-
-        Commands(std::vector<std::pair<std::string, std::function<std::shared_ptr<behaviour::Behaviour>()>>> commands) : commands_(std::move(commands)) {};
+  Commands(
+      std::vector<std::pair<std::string, std::function<std::shared_ptr<behaviour::Behaviour>()>>> commands)
+      : commands_(std::move(commands)){};
 
   std::shared_ptr<behaviour::Behaviour> Execute(std::string command) {
-    auto it = std::find_if(commands_.begin(), commands_.end(), [&command](const auto& cmd) {
-        return cmd.first == command;
-    });
+    auto it = std::find_if(commands_.begin(), commands_.end(),
+                           [&command](const auto& cmd) { return cmd.first == command; });
 
     if (it != commands_.end()) {
-        return (it->second)();
+      return (it->second)();
     } else {
-        throw std::invalid_argument("Command not found");
+      throw std::invalid_argument("Command not found");
     }
   }
 
-        // bool IsValid(std::string command) const {
-            // auto it = std::find_if(commands_.begin(), commands_.end(), [&command](const auto& cmd) {
-                // return cmd->f == command;
-            // });
+  // bool IsValid(std::string command) const {
+  // auto it = std::find_if(commands_.begin(), commands_.end(), [&command](const auto& cmd) {
+  // return cmd->f == command;
+  // });
 
-            // return it != commands_.end();
-        // }
+  // return it != commands_.end();
+  // }
 
-  std::shared_ptr<behaviour::Behaviour> Run(std::string commandString) {
-          return Execute(commandString);
-  }
+  std::shared_ptr<behaviour::Behaviour> Run(std::string commandString) { return Execute(commandString); }
 
-    private:
-        std::vector<std::pair<std::string, std::function<std::shared_ptr<behaviour::Behaviour>()>>> commands_ = {};
-    };
+ private:
+  std::vector<std::pair<std::string, std::function<std::shared_ptr<behaviour::Behaviour>()>>> commands_ = {};
+};
 
 // template <typename Ret, typename... Args>
 // class ConcreteCommand : public CommandBase<Ret, Args...> {
 // public:
-  // using CommandType = Command<Ret, Args...>;
+// using CommandType = Command<Ret, Args...>;
 
-    // ConcreteCommand(std::string name, typename CommandType::FunctionType func)
-        // : command_(std::move(name), std::move(func)) {}
+// ConcreteCommand(std::string name, typename CommandType::FunctionType func)
+// : command_(std::move(name), std::move(func)) {}
 //
 //     void Execute(std::vector<std::any> args) const override {
 //         // Convert args to the expected types and call Execute
@@ -208,11 +248,15 @@ class PathWeaver {
 
 class FollowPath : public behaviour::Behaviour {
  public:
-  FollowPath(drivetrain::SwerveDrive* swerve, std::string path, bool flip = false);
+  FollowPath(drivetrain::SwerveDrive* swerve, std::string path, bool flip = false, std::string _name = "<Follow Path>");
 
   void OnTick(units::time::second_t dt) override;
 
+  void CalcTimer();
  private:
+  units::second_t _time;
+  frc::Timer _timer;
+
   std::string _pathName;
   std::shared_ptr<pathplanner::PathPlannerPath> _path;
   std::vector<frc::Pose2d> _poses;
@@ -224,10 +268,11 @@ class FollowPath : public behaviour::Behaviour {
 
 class AutoBuilder {
  public:
-  AutoBuilder(drivetrain::SwerveDrive* swerve, std::function<bool()> shouldFlipPath, std::string autoRoutine, Commands commands);
+  AutoBuilder(drivetrain::SwerveDrive* swerve, std::function<bool()> shouldFlipPath, std::string autoRoutine,
+              Commands commands);
 
   void Invert();
-  void SetAuto(std::string_view path);
+  void SetAuto(std::string path);
 
   std::shared_ptr<behaviour::Behaviour> GetAutoPath();
   std::shared_ptr<behaviour::Behaviour> GetAutoPath(std::string path);
@@ -246,15 +291,19 @@ class AutoBuilder {
   wpi::json* _currentPath;
   wpi::json* _startingPose;
   wpi::json* _commands;
+
+  behaviour::Behaviour::ptr pathplan;
+
+  std::vector<std::pair<std::string, std::string>> commands;
 };
 
 class SwerveAutoBuilder {
  public:
   SwerveAutoBuilder(drivetrain::SwerveDrive* swerve, std::string name, Commands commands);
-  
+
   void SetAuto(std::string path);
   std::shared_ptr<behaviour::Behaviour> GetAutoRoutine();
-  std::shared_ptr<behaviour::Behaviour> GetAutoRoutine(std::string path);  
+  std::shared_ptr<behaviour::Behaviour> GetAutoRoutine(std::string path);
 
  private:
   AutoBuilder* _builder;
