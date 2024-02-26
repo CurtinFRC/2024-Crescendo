@@ -8,21 +8,18 @@
 
 #include <memory>
 
-#include "LED.h"
 #include "Shooter.h"
 #include "Wombat.h"
 
 class ShooterManualControl : public behaviour::Behaviour {
  public:
-  ShooterManualControl(Shooter* shooter, frc::XboxController* codriver, LED* led);
+  ShooterManualControl(Shooter* shooter, frc::XboxController* codriver);
 
   void OnTick(units::second_t dt) override;
 
  private:
   Shooter* _shooter;
   frc::XboxController* _codriver;
-
-  LED* _led;
 
   bool _rawControl = false;
   std::shared_ptr<nt::NetworkTable> table =

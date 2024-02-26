@@ -19,7 +19,6 @@
 #include "AlphaArmBehaviour.h"
 #include "Intake.h"
 #include "IntakeBehaviour.h"
-#include "LED.h"
 #include "RobotMap.h"
 #include "Shooter.h"
 #include "ShooterBehaviour.h"
@@ -58,8 +57,6 @@ class Robot : public frc::TimedRobot {
 
   ctre::phoenix6::hardware::TalonFX* frontLeft;
   // AlphaArm *alphaArm;
-
-  LED* _led;
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;
