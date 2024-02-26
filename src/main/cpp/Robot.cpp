@@ -102,6 +102,8 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
 
+  _led = new LED();
+
   lastPeriodic = wom::now();
 }
 
@@ -126,6 +128,9 @@ void Robot::RobotPeriodic() {
   // shooter->OnUpdate(dt);
   // intake->OnUpdate(dt);
   // alphaArm->OnUpdate(dt);
+
+  _led->OnUpdate(dt);
+
   _swerveDrive->OnUpdate(dt);
 }
 
