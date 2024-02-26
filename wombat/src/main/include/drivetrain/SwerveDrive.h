@@ -248,6 +248,7 @@ class SwerveDrive : public behaviour::HasBehaviour {
   bool _isFieldRelative = true;
   bool isRotateToMatchJoystick = false;
 
+  units::radian_t prevAngle[4];
   int _mod;
   units::radian_t _angle;
   units::meters_per_second_t _speed;

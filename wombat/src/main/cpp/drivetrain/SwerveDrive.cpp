@@ -352,13 +352,18 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
             }
           }
           auto speed = new_target_states[i].speed;
+          auto angle = new_target_states[i].angle.Radians();
           if (i == 3) {
             speed = -speed;
             if (_target_speed.omega.value() == 0) {
               speed = -speed;
             }
           }
-          _modules[i].SetPID(new_target_states[i].angle.Radians(), speed, dt);
+          if (units::math::abs(prevAngle[i] - angle) < 0.1_rad) {
+            angle = prevAngle[i];
+          }
+          _modules[i].SetPID(angle, speed, dt);
+          prevAngle[i] = angle;
         // } else {
         //   if (m_controllerChange) {
         //     double diff = std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value() -

@@ -66,7 +66,7 @@ class ManualDrivebase : public behaviour::Behaviour {
 
   units::degree_t _requestedAngle;
   bool isRotateMatch = false;
-
+  double lastJoystickRightX = 0;
   // Deadzones
   const double driverDeadzone = 0.08;
   const double turningDeadzone = 0.2;
