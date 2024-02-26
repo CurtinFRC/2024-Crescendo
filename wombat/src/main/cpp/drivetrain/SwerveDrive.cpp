@@ -39,20 +39,20 @@ SwerveModule::SwerveModule(std::string path, SwerveModuleConfig config,
       _velocityPIDController(frc::PIDController(1.2, 0, 0, 0.005_s)),
       _table(nt::NetworkTableInstance::GetDefault().GetTable(path)) {
   // _anglePIDController.SetTolerance(360);
-  _anglePIDController.EnableContinuousInput(0, (2 * 3.141592));
-  // _anglePIDController.EnableContinuousInput(-3.141592, (3.141592));
-  // _anglePIDController.EnableContinuousInput(0, (3.1415 * 2));
-  // _anglePIDController.EnableContinuousInput(0, (3.1415));
-  // _anglePIDController.SetWrap(0, 3.1415);
+  // _anglePIDController.EnableContinuousInput(0, (2 * 3.1415926535897932381592));
+  _anglePIDController.EnableContinuousInput(-3.141592653589793238, 3.141592653589793238);
+  // _anglePIDController.EnableContinuousInput(0, (3.14159265358979323815 * 2));
+  // _anglePIDController.EnableContinuousInput(0, (3.14159265358979323815));
+  // _anglePIDController.SetWrap(0, 3.14159265358979323815);
 }
 
 void SwerveModule::OnStart() {
   // _offset = offset;
   // _config.canEncoder->SetPosition(units::turn_t{0});
   _anglePIDController.Reset();
-  // _anglePIDController.EnableContinuousInput(-3.141592, 3.141592);
-  // _anglePIDController.EnableContinuousInput(-3.141592, (3.141592));
-  _anglePIDController.EnableContinuousInput(0, (2 * 3.141592));
+  // _anglePIDController.EnableContinuousInput(-3.1415926535897932381592, 3.1415926535897932381592);
+  // _anglePIDController.EnableContinuousInput(-3.1415926535897932381592, (3.1415926535897932381592));
+  // _anglePIDController.EnableContinuousInput(0, (2 * 3.1415926535897932381592));
 
   _velocityPIDController.Reset();
 }
@@ -71,7 +71,7 @@ void SwerveModule::OnUpdate(units::second_t dt) {
           0_Nm,
           units::radians_per_second_t{_velocityPIDController.GetSetpoint() / _config.wheelRadius.value()});
       // units::radian_t input = units::math::fmod(_config.turnMotor.encoder->GetEncoderPosition(), (2_rad
-      // * 3.1415));
+      // * 3.14159265358979323815));
       double input = _config.turnMotor.encoder->GetEncoderPosition().value();
       _table->GetEntry("/testing/GetEncoderPos").SetDouble(input);
       // _velocityPIDController.SetSetpoint(3);
@@ -80,11 +80,11 @@ void SwerveModule::OnUpdate(units::second_t dt) {
       // if (_turnOffset == TurnOffsetValues::forward) {
 
       // } else if (_turnOffset == TurnOffsetValues::reverse) {
-      //   input = input - (3.1415/2);
+      //   input = input - (3.14159265358979323815/2);
       //   driveVoltage = -driveVoltage;
       // }
       double demand = _anglePIDController.Calculate(input);
-      // if ((_anglePIDController.GetSetpoint() - input) > (3.14159/2)) {
+      // if ((_anglePIDController.GetSetpoint() - input) > (3.141592653589793238159/2)) {
       //   demand *= -1;
       // }
       turnVoltage = units::volt_t{demand};
@@ -190,9 +190,9 @@ void SwerveModule::SetPID(units::radian_t angle, units::meters_per_second_t spee
 }
 
 // double SwerveModule::closestAngle(double a, double b) {
-//   double dir = std::fmod(b, (3.1415 * 2)) - std::fmod(a, (2 * 3.1415));
-//   if (std::abs(dir) > 3.1415) {
-//     dir = -(((dir < 0) ? -1 : (dir > 0)) * 3.1415) + dir;
+//   double dir = std::fmod(b, (3.14159265358979323815 * 2)) - std::fmod(a, (2 * 3.14159265358979323815));
+//   if (std::abs(dir) > 3.14159265358979323815) {
+//     dir = -(((dir < 0) ? -1 : (dir > 0)) * 3.14159265358979323815) + dir;
 //   }
 //   return dir;
 // }
@@ -254,7 +254,7 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose, wom:
       _yPIDController{frc::PIDController(4, 0, 0)},
       _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)) {
   _anglePIDController.SetTolerance(360);
-  _anglePIDController.EnableContinuousInput(-3.14159, 3.14159);
+  _anglePIDController.EnableContinuousInput(-3.141592653589793238, 3.141592653589793238);
 
   int i = 1;
   for (auto cfg : _config.modules) {
@@ -339,34 +339,41 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       frc::ChassisSpeeds new_target_speed{_target_speed.vx, _target_speed.vy, -_target_speed.omega};
       auto new_target_states = _kinematics.ToSwerveModuleStates(new_target_speed);
       for (size_t i = 0; i < _modules.size(); i++) {
-        if (i == 3) {
+        // if (i == 3 || i == 0 || i == 1 || i == 2) {
           if (m_controllerChange) {
             double diff = std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value() -
                                    new_target_states[i].angle.Radians().value());
             _table->GetEntry("diff").SetDouble(diff);
-            if ((std::ceil(diff * 100.0) / 100.0) > (3.14 / 2)) {
+            if ((std::ceil(diff * 100.0) / 100.0) > (3.141592653589793238 / 2)) {
               new_target_states[i].speed *= -1;
-              new_target_states[i].angle = frc::Rotation2d{new_target_states[i].angle.Radians() - 3.14_rad};
+              new_target_states[i].angle = frc::Rotation2d{new_target_states[i].angle.Radians() - 3.141592653589793238_rad};
             } else {
               m_controllerChange = false;
             }
           }
-          _modules[i].SetPID(new_target_states[i].angle.Radians(), new_target_states[i].speed, dt);
-        } else {
-          if (m_controllerChange) {
-            double diff = std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value() -
-                                   new_target_states[i].angle.Radians().value());
-            _table->GetEntry("diff").SetDouble(diff);
-            if ((std::ceil(diff * 100.0) / 100.0) > (3.14 / 2)) {
-              target_states[i].speed *= -1;
-              target_states[i].angle = frc::Rotation2d{target_states[i].angle.Radians() - 3.14_rad};
-            } else {
-              m_controllerChange = false;
+          auto speed = new_target_states[i].speed;
+          if (i == 3) {
+            speed = -speed;
+            if (_target_speed.omega.value() == 0) {
+              speed = -speed;
             }
           }
-          _modules[i].SetPID(target_states[i].angle.Radians(), target_states[i].speed, dt);
-          // target_states[i].angle.Radians().value() << std::endl;
-        }
+          _modules[i].SetPID(new_target_states[i].angle.Radians(), speed, dt);
+        // } else {
+        //   if (m_controllerChange) {
+        //     double diff = std::abs(_config.modules[i].turnMotor.encoder->GetEncoderPosition().value() -
+        //                            new_target_states[i].angle.Radians().value());
+        //     _table->GetEntry("diff").SetDouble(diff);
+        //     if ((std::ceil(diff * 100.0) / 100.0) > (3.141592653589793238 / 2)) {
+        //       target_states[i].speed *= -1;
+        //       target_states[i].angle = frc::Rotation2d{target_states[i].angle.Radians() - 3.141592653589793238_rad};
+        //     } else {
+        //       m_controllerChange = false;
+        //     }
+        //   }
+        //   _modules[i].SetPID(target_states[i].angle.Radians(), target_states[i].speed, dt);
+        //   // target_states[i].angle.Radians().value() << std::endl;
+        // }
 
         // if (i == 2) {
         //   _modules[i].SetPID(new_target_states[i].angle.Radians(),
