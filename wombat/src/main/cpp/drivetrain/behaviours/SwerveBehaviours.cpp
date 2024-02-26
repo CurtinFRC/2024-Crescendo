@@ -4,7 +4,6 @@
 
 #include "drivetrain/behaviours/SwerveBehaviours.h"
 
-#include <frc/PS4Controller.h>
 #include <frc/Timer.h>
 #include <frc/XboxController.h>
 #include <frc/smartdashboard/Field2d.h>
@@ -34,46 +33,10 @@ void ManualDrivebase::OnStart() {
 }
 
 void ManualDrivebase::OnTick(units::second_t deltaTime) {
-  // if (_driverController->GetXButtonPressed()) {
-  //   ResetMode();
-  //   isRotateMatch = !isRotateMatch;
-  // }
-
   if (_driverController->GetYButton()) {
     _swerveDrivebase->ResetPose(frc::Pose2d());
   }
 
-  // if (_driverController->GetLeftBumperPressed()) {
-  //   maxMovementMagnitude = lowSensitivityDriveSpeed;
-  //   maxRotationMagnitude = lowSensitivityRotateSpeed;
-  // } else if (_driverController->GetLeftBumperReleased() &&
-  //            !_driverController->GetRightBumper()) {
-  //   maxMovementMagnitude = defaultDriveSpeed;
-  //   maxRotationMagnitude = defaultRotateSpeed;
-  //   _swerveDrivebase->SetAccelerationLimit(6_mps_sq);
-  //   _swerveDrivebase->SetVoltageLimit(10_V);
-  // }
-  // if (_driverController->GetRightBumperPressed()) {
-  //   maxMovementMagnitude = highSensitivityDriveSpeed;
-  //   maxRotationMagnitude = highSensitivityRotateSpeed;
-  //   _swerveDrivebase->SetAccelerationLimit(12_mps_sq);
-  //   _swerveDrivebase->SetVoltageLimit(14_V);
-
-  // } else if (_driverController->GetRightBumperReleased() &&
-  //            !_driverController->GetLeftBumper()) {
-  //   maxMovementMagnitude = defaultDriveSpeed;
-  //   maxRotationMagnitude = defaultRotateSpeed;
-  //   _swerveDrivebase->SetAccelerationLimit(6_mps_sq);
-  //   _swerveDrivebase->SetVoltageLimit(10_V);
-  // }
-
-  // if (_driverController->GetAButtonReleased()) {
-  //   isZero = !isZero;
-  // }
-
-  // if (isZero) {
-  //   _swerveDrivebase->SetZeroing();
-  // } else {
   double xVelocity = wom::utils::spow2(
       -wom::utils::deadzone(_driverController->GetLeftY(),
                             driverDeadzone));  // GetLeftY due to x being where y should be on field
@@ -89,19 +52,6 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
     turnY = 0;
   }
 
-  // if (isRotateMatch) {
-  //   units::degree_t currentAngle =
-  //       _swerveDrivebase->GetPose().Rotation().Degrees();
-  //   CalculateRequestedAngle(turnX, turnY, currentAngle);
-  //   _swerveDriveTable->GetEntry("RotateMatch")
-  //       .SetDouble(_requestedAngle.value());
-  //   _swerveDrivebase->RotateMatchJoystick(
-  //       _requestedAngle,
-  //       wom::drivetrain::FieldRelativeSpeeds{// also field relative
-  //                                            xVelocity * maxMovementMagnitude,
-  //                                            yVelocity * maxMovementMagnitude,
-  //                                            r_x * maxRotationMagnitude});
-  // } else {
   _swerveDrivebase->SetFieldRelativeVelocity(wom::drivetrain::FieldRelativeSpeeds{
       xVelocity * -maxMovementMagnitude, yVelocity * -maxMovementMagnitude, r_x * maxRotationMagnitude});
 
@@ -117,19 +67,6 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
   lastJoystickX = _driverController->GetLeftX();
   lastJoystickY = _driverController->GetLeftY();
   lastJoystickRightX = _driverController->GetRightX();
-
-  //  _swerveDrivebase->SetVelocity(
-  //       frc::ChassisSpeeds{xVelocity * maxMovementMagnitude,
-  //                          yVelocity * maxMovementMagnitude,
-  //                          r_x * maxRotationMagnitude});
-  //   }
-  // }
-  // _swerveDrivebase->SetIndividualTuning(2, 0_deg, 0_mps);
-}
-
-void ManualDrivebase::ResetMode() {
-  _swerveDrivebase->OnResetMode();
-  resetMode = false;
 }
 
 void ManualDrivebase::CalculateRequestedAngle(double joystickX, double joystickY,

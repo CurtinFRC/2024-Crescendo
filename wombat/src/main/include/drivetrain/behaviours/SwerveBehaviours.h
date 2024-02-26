@@ -46,7 +46,6 @@ class ManualDrivebase : public behaviour::Behaviour {
    */
   void CalculateRequestedAngle(double joystickX, double joystickY, units::degree_t defaultAngle);
   void OnStart() override;
-  void ResetMode();
 
  private:
   double lastJoystickX = 0;
@@ -56,16 +55,7 @@ class ManualDrivebase : public behaviour::Behaviour {
   wom::drivetrain::SwerveDrive* _swerveDrivebase;
   frc::XboxController* _driverController;
 
-  // State-handler Boolean : Is the robot in field orientated control, or robot
-  // relative?
-  bool isFieldOrientated = true;
-  // State-handler Boolean : Do we currently want the angles of the wheels to be
-  // 0?
-  bool isZero = false;
-  bool resetMode = false;
-
   units::degree_t _requestedAngle;
-  bool isRotateMatch = false;
   double lastJoystickRightX = 0;
   // Deadzones
   const double driverDeadzone = 0.08;
