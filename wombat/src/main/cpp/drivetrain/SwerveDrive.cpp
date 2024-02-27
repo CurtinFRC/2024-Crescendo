@@ -257,20 +257,29 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
           }
           auto speed = new_target_states[i].speed;
           auto angle = new_target_states[i].angle.Radians();
+          currentAngle[i] = angle;
           if (i == 3) {
             speed = -speed;
             if (_target_speed.omega.value() == 0) {
               speed = -speed;
             }
           }
-          if (units::math::abs(prevAngle[i] - angle) < 0.5_rad) {
+          /*if (units::math::abs(prevAngle[i] - angle) < 0.5_rad) {
             angle = prevAngle[i];
           } else {
             if (!(units::math::abs(prevAngle[i] - angle) > (3.14159_rad / 2))) {
               prevAngle[i] = angle;
             }
-          }
+          }*/
+          /*if (i == 2) {
+            if (_target_speed.omega.value()  != 0 && (_target_speed.vx.value() != 0 || _target_speed.vy.value() != 0)) {
+                if (std::abs(std::abs(prevAngle[i].value() - angle.value()) - std::abs(prevAngle[i - 1].value() - currentAngle[i - 1].value())) > 0.2) {
+                    angle = prevAngle[i];
+                }
+            }
+          }*/
           _modules[i].SetPID(angle, speed, dt);
+          prevAngle[i] = angle;
       }
     } break;
     case SwerveDriveState::kIndividualTuning:
