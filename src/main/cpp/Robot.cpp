@@ -11,6 +11,12 @@
 #include <networktables/DoubleTopic.h>
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableInstance.h>
+#include <units/acceleration.h>
+#include <units/angle.h>
+#include <units/length.h>
+#include <units/time.h>
+#include <units/velocity.h>
+#include <units/voltage.h>
 
 // include units
 #include <units/velocity.h>
@@ -26,43 +32,14 @@
 #include <frc/kinematics/DifferentialDriveKinematics.h>
 #include <frc/controller/RamseteController.h>
 #include <frc/Timer.h>
-#include "ArmBehaviours.h"
 #include "behaviour/HasBehaviour.h"
-#include "frc/geometry/Pose2d.h"
-#include "utils/Pathplanner.h"
-#include "vision/Vision.h"
-#include "vision/VisionBehaviours.h"
+#include "vision/Limelight.h"
 
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
-  shooter = new Shooter(robotmap.shooterSystem.config);
-  wom::BehaviourScheduler::GetInstance()->Register(shooter);
-  // shooter->SetDefaultBehaviour(
-      // [this]() { return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver); });
-
   sched = wom::BehaviourScheduler::GetInstance();
-  m_chooser.SetDefaultOption("kTaxi", "kTaxi");
-
-  for (auto& option : autoOptions) {
-    m_chooser.AddOption(option, option);
-  }
-
-  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-
-  // m_path_chooser.SetDefaultOption("Path1", "paths/output/Path1.wpilib.json");
-
-  // m_path_chooser.AddOption("Path1", "paths/output/Path1.wpilib.json");
-  // m_path_chooser.AddOption("Path2", "paths/output/Path2.wpilib.json");
-
-  // frc::SmartDashboard::PutData("Path Selector", &m_path_chooser);
-
-  // frc::SmartDashboard::PutData("Field", &m_field);
-
-  timer = frc::Timer();
-  sched = wom::BehaviourScheduler::GetInstance();
-
-  _vision = new Vision("limelight", FMAP("fmap.fmap"));
+  m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
   // frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
 
@@ -79,11 +56,14 @@ void Robot::RobotInit() {
   // frc::SmartDashboard::PutData("Path Selector", &m_path_chooser);
   // frc::SmartDashboard::PutData("Path Selector", &m_path_chooser);
 
+  // frc::SmartDashboard::PutData("Field", &m_field);
+
   // simulation_timer = frc::Timer();
 
   // robotmap.swerveBase.gyro->Reset();
-  
-  _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+
+  _swerveDrive =
+      new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d(), new wom::Limelight("limelight"));
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   
   // _swerveDrive->SetDefaultBehaviour([this]() { return robotmap.builder->GetAutoRoutine(); });
@@ -132,15 +112,23 @@ void Robot::RobotInit() {
   // // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
   // // m_driveSim = wom::TempSimSwerveDrive();
 
+  // alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
+  // wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
+  // alphaArm->SetDefaultBehaviour(
+  //     [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
+
+  // // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
+  // // m_driveSim = wom::TempSimSwerveDrive();
+
   //   intake = new Intake(robotmap.intakeSystem.config);
   // wom::BehaviourScheduler::GetInstance()->Register(intake);
   // intake->SetDefaultBehaviour(
   //     [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
 
-  robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0.588_rad);
-  robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(2.647_rad);
-  robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(2.979_rad);
-  robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(4.388_rad);
+  robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(3.628_rad);
+  robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(5.851_rad);
+  robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(6.137_rad);
+  robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(1.300_rad);
 
   // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
@@ -154,19 +142,16 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.moduleConfigs[2].driveMotor.motorController->SetInverted(true);
 
   // robotmap.alphaArmSystem.armEncoder->Reset();
+  // robotmap.alphaArmSystem.armEncoder->Reset();
 
   // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
 
-  
-  shooter->OnStart();
+  _led = new LED();
 
   lastPeriodic = wom::now();
-
-  robotmap.builder = autos::InitCommands(_swerveDrive, shooter, intake, alphaArm);
-  robotmap.simSwerve = new wom::SimSwerve(_swerveDrive);
 }
 
 void Robot::RobotPeriodic() {
@@ -176,18 +161,22 @@ void Robot::RobotPeriodic() {
 
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
-  // shooter->OnUpdate(dt);
   sched->Tick();
 
-  robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder")
+  robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 0 offset: ")
       .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
-  robotmap.swerveTable.swerveDriveTable->GetEntry("frontRightEncoder")
+  robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 1 offset: ")
       .SetDouble(robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->GetEncoderPosition().value());
-  robotmap.swerveTable.swerveDriveTable->GetEntry("backLeftEncoder")
+  robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 2 offset: ")
       .SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
-  robotmap.swerveTable.swerveDriveTable->GetEntry("backRightEncoder")
+  robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 3 offset: ")
       .SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
-  // sched->Tick();
+
+  // shooter->OnUpdate(dt);
+  // intake->OnUpdate(dt);
+  // alphaArm->OnUpdate(dt);
+
+  _led->OnUpdate(dt);
 
   // intake->OnUpdate(dt);
   // alphaArm->OnUpdate(dt);
@@ -200,23 +189,6 @@ void Robot::RobotPeriodic() {
 void Robot::AutonomousInit() {
   loop.Clear();
   sched->InterruptAll();
-
-  m_autoSelected = m_chooser.GetSelected();
-
-  if (m_autoSelected == "kTaxi") {
-    sched->Schedule(autos::Taxi(robotmap.builder));
-    // sched->Schedule(wom::make<wom::FollowPath>(_swerveDrive, "FirstNote"));
-  }// else if (m_autoSelected == "Auto Test") {
-  //   sched->Schedule(autos::AutoTest(_swerveDrive, shooter, intake, alphaArm));
-  // } else if (m_autoSelected == "Quadruple Close") {
-  //   sched->Schedule(autos::QuadrupleClose(_swerveDrive, shooter, intake, alphaArm));
-  // } else if (m_autoSelected == "Quadruple Far") {
-  //   sched->Schedule(autos::QuadrupleFar(_swerveDrive, shooter, intake, alphaArm));
-  // } else if (m_autoSelected == "Quadruple Close Double Far") {
-  //   sched->Schedule(autos::QuadrupleCloseDoubleFar(_swerveDrive, shooter, intake, alphaArm));
-  // } else if (m_autoSelected == "Quadruple Close Single Far") {
-  //   sched->Schedule(autos::QuadrupleCloseSingleFar(_swerveDrive, shooter, intake, alphaArm));
-  // }
 }
 void Robot::AutonomousPeriodic() {
   fmt::print("Auto selected: {}\n", m_autoSelected);
@@ -236,34 +208,24 @@ void Robot::TeleopInit() {
   // alphaArm->OnStart();
   sched->InterruptAll();
 
+  _swerveDrive->ResetPose(frc::Pose2d());
   // frontLeft->SetVoltage(4_V);
   // frontRight->SetVoltage(4_V);
   // backLeft->SetVoltage(4_V);
   // backRight->SetVoltage(4_V);
 }
 
-// void Robot::TeleopPeriodic() {}
 void Robot::TeleopPeriodic() {
-  // if (robotmap.controllers.driver.GetXButtonPressed() &&
-  //     vision->TargetIsVisible(VisionTargetObjects::kNote)) {
-  //   units::degree_t turn = vision->LockOn(VisionTargetObjects::kNote);
-  //
-  //   frc::Pose2d current_pose = _swerveDrive->GetPose();
-  //
-  //   std::cout << "angle: " << turn.value() << std::endl;
-  //   current_pose.RotateBy(turn);
-  //
-  //   wom::make<wom::DrivebasePoseBehaviour>(_swerveDrive, current_pose);
-  // } else {
-  //   wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver);
-  // }
-
   if (robotmap.controllers.driver.GetXButtonPressed()) {
-    _vision->TurnToTarget(VisionTarget::kBlueSpeakerCenter, _swerveDrive);
+    sched->Schedule(
+        wom::make<wom::FollowTrajectory>(_swerveDrive, &robotmap.pathplanner, "output/Path1.wpilib.json"));
   }
 }
 
-void Robot::DisabledInit() {}
+void Robot::DisabledInit() {
+  loop.Clear();
+  sched->InterruptAll();
+}
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}

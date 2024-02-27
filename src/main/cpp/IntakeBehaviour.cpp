@@ -6,94 +6,64 @@
 
 #include <frc/XboxController.h>
 
-IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver)
-    : _intake(intake), _codriver(codriver) {
+IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver, LED* led)
+    : _intake(intake), _codriver(codriver), _led(led) {
   Controls(intake);
 }
 
 void IntakeManualControl::OnTick(units::second_t dt) {
   if (_codriver.GetBButtonReleased()) {
-    if (_rawControl) {
-      _rawControl = false;
-      _intaking = false;
-      _ejecting = false;
+    if (_intake->getState() == IntakeState::kRaw) {
       _intake->setState(IntakeState::kIdle);
     } else {
-      _rawControl = true;
-      _intaking = false;
-      _ejecting = false;
       _intake->setState(IntakeState::kRaw);
     }
   }
 
-  if (_rawControl) {
-    if (_codriver.GetRightTriggerAxis() > 0.1) {
-      _intake->setRaw(_codriver.GetRightTriggerAxis() * 10_V);
-    } else if (_codriver.GetLeftTriggerAxis() > 0.1) {
-      _intake->setRaw(_codriver.GetLeftTriggerAxis() * -10_V);
+  if (_intake->getState() == IntakeState::kRaw) {
+    if (_codriver.GetRightBumper()) {
+      _intake->setRaw(8_V);
+    } else if (_codriver.GetLeftBumper()) {
+      _intake->setRaw(-8_V);
     } else {
       _intake->setRaw(0_V);
     }
-    _intake->setState(IntakeState::kRaw);
 
   } else {
-    if (_codriver.GetRightTriggerAxis() > 0.1) {
-      if (_intaking) {
-        _intaking = false;
+    if (_codriver.GetRightBumperPressed()) {
+      if (_intake->getState() == IntakeState::kIntake) {
         _intake->setState(IntakeState::kIdle);
+        _led->SetState(LEDState::kIdle);
       } else {
-        _intaking = true;
-        _ejecting = false;
+        _intake->setState(IntakeState::kIntake);
+        _led->SetState(LEDState::kIntaking);
       }
     }
 
-    if (_codriver.GetLeftTriggerAxis() > 0.1) {
-      if (_ejecting) {
-        _ejecting = false;
+    if (_codriver.GetLeftBumper()) {
+      if (_intake->getState() == IntakeState::kEject) {
         _intake->setState(IntakeState::kIdle);
+        _led->SetState(LEDState::kIdle);
       } else {
-        _ejecting = true;
-        _intaking = false;
+        _intake->setState(IntakeState::kEject);
+        _led->SetState(LEDState::kIdle);
       }
     }
 
     if (_codriver.GetAButtonPressed()) {
-      if (_passing) {
-        _passing = false;
+      if (_intake->getState() == IntakeState::kPass) {
         _intake->setState(IntakeState::kIdle);
+        _led->SetState(LEDState::kIdle);
       } else {
-        _passing = true;
-        _intaking = false;
-      }
-    }
-
-    if (_intaking) {
-      if (_intake->getState() == IntakeState::kIdle) {
-        _intake->setState(IntakeState::kIntake);
-      }
-    }
-
-    if (_passing) {
-      if (_intake->getState() == IntakeState::kHold) {
         _intake->setState(IntakeState::kPass);
-      }
-    }
-
-    if (_ejecting) {
-      if (_intake->getState() == IntakeState::kIdle || _intake->getState() == IntakeState::kHold) {
-        _intake->setState(IntakeState::kEject);
+        _led->SetState(LEDState::kIntaking);
       }
     }
   }
 }
-AutoIntake::AutoIntake(Intake* intake) : _intake(intake) {
+
+IntakeAutoControl::IntakeAutoControl(Intake* intake) : _intake(intake) {
   Controls(intake);
 }
 
-void AutoIntake::OnTick(units::second_t dt) {
-  // if (_intake->GetConfig().intakeSensor->Get() == 1) {
-  //   _intake->setState(IntakeState::kPass);
-  // } else if (_intake->GetConfig().magSensor->Get() == 0) {
-  //   _intake->setState(IntakeState::kIdle);
-  // }
-}
+void IntakeAutoControl::OnTick(units::second_t dt) {}

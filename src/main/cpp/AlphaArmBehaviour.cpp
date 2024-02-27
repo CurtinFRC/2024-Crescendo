@@ -12,7 +12,7 @@ AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxContro
 }
 
 void AlphaArmManualControl::OnTick(units::second_t dt) {
-  if (_codriver->GetXButtonPressed()) {
+  if (_codriver->GetStartButtonPressed()) {
     if (_rawControl == true) {
       _rawControl = false;
     } else {
@@ -22,24 +22,9 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
 
   if (_rawControl) {
     _alphaArm->SetState(AlphaArmState::kRaw);
-    _alphaArm->SetArmRaw(_codriver->GetRightY() * 6_V);
-    _alphaArm->setWristRaw(_codriver->GetLeftY() * -6_V);
+    _alphaArm->SetArmRaw(_codriver->GetRightY() * 12_V);
   } else {
-    if (_codriver->GetRightBumperPressed()) {
-      _alphaArm->SetState(AlphaArmState::kForwardWrist);
-    }
-    if (_codriver->GetLeftBumperPressed()) {
-      _alphaArm->SetState(AlphaArmState::kReverseWrist);
-    }
+    _alphaArm->SetState(AlphaArmState::kAmpAngle);
+    _alphaArm->setControllerRaw(wom::deadzone(_codriver->GetRightY()) * 12_V);
   }
-}
-
-ArmToSetPoint::ArmToSetPoint(AlphaArm* alphaArm, units::degree_t armAngle) : _alphaArm(alphaArm) {
-  Controls(alphaArm);
-}
-// // ArmSpeed is a float from 0-1, 1 being instantly and 0 being don't move at all.
-
-void ArmToSetPoint::OnTick(units::second_t dt) {
-  // _armCurrentDegree = _alphaArm->GetConfig().alphaArmGearbox.encoder.GetEncoderPosition();
-  // _alphaArm->GetConfig().alphaArmGearbox.encoder.SetEncoderPosition(armAngle * armSpeed);
 }

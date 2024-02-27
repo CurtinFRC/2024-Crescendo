@@ -18,17 +18,5 @@ class AlphaArmManualControl : public behaviour::Behaviour {
  private:
   AlphaArm* _alphaArm;
   frc::XboxController* _codriver;
-  // units::volt_t _rightStick = ((_codriver->GetRightY()>0.05 || _codriver->GetRightY() < -0.05
-  // )?_codriver->GetRightY():0) * 2_V;
-  bool _rawControl;
-};
-
-class ArmToSetPoint : public behaviour::Behaviour {
- public:
-  explicit ArmToSetPoint(AlphaArm* alphaArm, units::degree_t armAngle);
-  void OnTick(units::second_t dt);
-
- private:
-  AlphaArm* _alphaArm;
-  // double _armCurrentDegree;
+  bool _rawControl = false;
 };

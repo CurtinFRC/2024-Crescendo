@@ -93,9 +93,20 @@ void Shooter::OnUpdate(units::second_t dt) {
       std::cout << "Error shooter in invalid state" << std::endl;
     } break;
   }
-  std::cout << "Voltage:" << _setVoltage.value() << std::endl;
+  // table->GetEntry("Motor OutPut").SetDouble(_setVoltage.value());
+  table->GetEntry("Encoder Output")
+      .SetDouble(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value());
+
   _config.ShooterGearbox.motorController->SetVoltage(_setVoltage);
 }
+
+//       // if (_pid.AtSetpoint()) {
+//       //   SetState(ShooterState::kShooting);
+//       // }
+//       // table->GetEntry("PID Setpoint:").SetDouble(_pid.GetSetpoint());
+//       std::cout << "KShooting" << std::endl;
+//       _pid.SetSetpoint(20);
+//       // _pid.SetSetpoint(_goal.value());
 
 void Shooter::SetState(ShooterState state) {
   _state = state;

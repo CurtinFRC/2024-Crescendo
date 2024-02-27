@@ -131,8 +131,11 @@ class PIDController {
     _last_error = error;
     _iterations++;
     if (is_negative) {
-      return out * -1;
+      out *= -1;
     }
+
+    _table->GetEntry("error").SetDouble(out.value());
+
     return out;
   }
 

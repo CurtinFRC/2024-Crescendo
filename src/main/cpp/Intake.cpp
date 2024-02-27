@@ -30,16 +30,12 @@ void Intake::OnUpdate(units::second_t dt) {
       _setVoltage = 7_V;
       if (_config.intakeSensor->Get() == true) {
         setState(IntakeState::kIdle);
-        _ejecting = false;
       }
     } break;
 
     case IntakeState::kHold: {
       _stringStateName = "Hold";
       _setVoltage = 0_V;
-      // if (_config.intakeSensor->Get() == false) {
-      //   setState(IntakeState::kHold);
-      // }
     } break;
 
     case IntakeState::kIntake: {
@@ -47,7 +43,6 @@ void Intake::OnUpdate(units::second_t dt) {
       _setVoltage = -7_V;
       if (_config.intakeSensor->Get() == false) {
         setState(IntakeState::kHold);
-        _intaking = false;
       }
     } break;
 
@@ -56,7 +51,6 @@ void Intake::OnUpdate(units::second_t dt) {
       _setVoltage = -7_V;
       if (_config.intakeSensor->Get() == true) {
         setState(IntakeState::kIdle);
-        _passing = false;
       }
     } break;
     default:
