@@ -18,9 +18,9 @@
 wom::SwerveAutoBuilder* autos::InitCommands(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter,
                                             Intake* _intake, AlphaArm* _alphaArm) {
   wom::Commands c = *new wom::Commands(
-      {/*{"ArmToSetPoint", [_alphaArm]() { return wom::make<ArmToSetPoint>(_alphaArm, 20_deg); }},
-       {"AutoShoot", [_shooter]() { return wom::make<AutoShoot>(_shooter); }},
-       {"AutoIntake", [_intake]() { return wom::make<AutoIntake>(_intake); }}*/});
+      {// {"ArmToSetPoint", [_alphaArm]() { return wom::make<ArmToSetPoint>(_alphaArm, 20_deg); }},
+       // {"AutoShoot", [_shooter]() { return wom::make<AutoShoot>(_shooter); }},
+       /*{"AutoIntake", [_intake]() { return wom::make<AutoIntake>(_intake); }}*/});
 
   return new wom::utils::SwerveAutoBuilder(_swerveDrive, "Taxi", c);
 }

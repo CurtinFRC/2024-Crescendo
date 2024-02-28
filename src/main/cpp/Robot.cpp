@@ -40,7 +40,7 @@ void Robot::RobotInit() {
   shooter = new Shooter(robotmap.shooterSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(shooter);
   // shooter->SetDefaultBehaviour(
-      // [this]() { return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver); });
+  // [this]() { return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver); });
 
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("kTaxi", "kTaxi");
@@ -85,7 +85,7 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.gyro->Reset();
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d(), _vision->GetLimelight());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
-  
+
   // _swerveDrive->SetDefaultBehaviour([this]() { return robotmap.builder->GetAutoRoutine(); });
 
   // _arm = new wom::Arm(robotmap.arm.config);
@@ -94,7 +94,7 @@ void Robot::RobotInit() {
   // _arm->SetDefaultBehaviour(
   //     [this]() { return wom::make<ArmManualControl>(_arm, &robotmap.controllers.codriver); });
   // _swerveDrive->SetDefaultBehaviour(
-     // [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
+  // [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
   // m_driveSim = new wom::TempSim_swerveDrive(&simulation_timer, &m_field);
   // m_driveSim = wom::TempSim_swerveDrive();
@@ -122,7 +122,7 @@ void Robot::RobotInit() {
   intake = new Intake(robotmap.intakeSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(intake);
   // intake->SetDefaultBehaviour(
-      // [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
+  // [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
 
   // alphaArm = new AlphaArm(robotmap.alphaArmSystem.config);
   // wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
@@ -160,7 +160,6 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
 
-  
   shooter->OnStart();
 
   lastPeriodic = wom::now();
@@ -208,7 +207,7 @@ void Robot::AutonomousInit() {
   if (m_autoSelected == "kTaxi") {
     sched->Schedule(autos::Taxi(robotmap.builder));
     // sched->Schedule(wom::make<wom::FollowPath>(_swerveDrive, "FirstNote"));
-  }// else if (m_autoSelected == "Auto Test") {
+  }  // else if (m_autoSelected == "Auto Test") {
   //   sched->Schedule(autos::AutoTest(_swerveDrive, shooter, intake, alphaArm));
   // } else if (m_autoSelected == "Quadruple Close") {
   //   sched->Schedule(autos::QuadrupleClose(_swerveDrive, shooter, intake, alphaArm));

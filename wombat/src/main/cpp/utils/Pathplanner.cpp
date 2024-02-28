@@ -41,73 +41,76 @@
 
 using namespace wom;
 
-wom::utils::BezierPoint::BezierPoint(double anchorX, double anchorY, wpi::json prevControlX, wpi::json prevControlY,
-                         wpi::json nextControlX, wpi::json nextControlY, bool isLocked, wpi::json linkedName)
+wom::utils::BezierPoint::BezierPoint(double anchorX, double anchorY, wpi::json prevControlX,
+                                     wpi::json prevControlY, wpi::json nextControlX, wpi::json nextControlY,
+                                     bool isLocked, wpi::json linkedName)
     : anchor({anchorX, anchorY}),
-      prevControl{prevControlX.is_null() ? NAN : prevControlX.get<double>(), prevControlY.is_null() ? NAN : prevControlY.get<double>()},
-      nextControl{nextControlX.is_null() ? NAN : nextControlX.get<double>(), nextControlY.is_null() ? NAN : nextControlY.get<double>()},
+      prevControl{prevControlX.is_null() ? NAN : prevControlX.get<double>(),
+                  prevControlY.is_null() ? NAN : prevControlY.get<double>()},
+      nextControl{nextControlX.is_null() ? NAN : nextControlX.get<double>(),
+                  nextControlY.is_null() ? NAN : nextControlY.get<double>()},
       isLocked(isLocked),
       linkedName(linkedName.is_null() ? "" : linkedName.get<std::string>()) {}
 
 double wom::utils::BezierPoint::calculateAngle() const {
-    return std::atan2(anchor.y - prevControl.y, anchor.x - prevControl.x);
+  return std::atan2(anchor.y - prevControl.y, anchor.x - prevControl.x);
 }
 
 double wom::utils::distance(const wom::utils::BezierPoint& p1, const wom::utils::BezierPoint& p2) {
-    return std::sqrt(std::pow(p2.anchor.x - p1.anchor.x, 2) + std::pow(p2.anchor.y - p1.anchor.y, 2));
+  return std::sqrt(std::pow(p2.anchor.x - p1.anchor.x, 2) + std::pow(p2.anchor.y - p1.anchor.y, 2));
 }
 
-std::vector<wom::utils::BezierPoint> wom::utils::interpolateAtIntervals(const wom::utils::BezierPoint& p1, const wom::utils::BezierPoint& p2, double interval) {
-    std::vector<wom::utils::BezierPoint> interpolatedPoints;
+std::vector<wom::utils::BezierPoint> wom::utils::interpolateAtIntervals(const wom::utils::BezierPoint& p1,
+                                                                        const wom::utils::BezierPoint& p2,
+                                                                        double interval) {
+  std::vector<wom::utils::BezierPoint> interpolatedPoints;
 
-    double totalDistance = distance(p1, p2);
-    int numPoints = static_cast<int>(std::ceil(totalDistance / interval));
+  double totalDistance = distance(p1, p2);
+  int numPoints = static_cast<int>(std::ceil(totalDistance / interval));
 
-    for (int i = 1; i <= numPoints; ++i) {
-        double t = static_cast<double>(i) / (numPoints + 1);
-        interpolatedPoints.emplace_back(
-            p1.anchor.x + t * (p2.anchor.x - p1.anchor.x),
-            p1.anchor.y + t * (p2.anchor.y - p1.anchor.y),
-            p1.prevControl.x + t * (p2.prevControl.x - p1.prevControl.x),
-            p1.prevControl.y + t * (p2.prevControl.y - p1.prevControl.y),
-            p1.nextControl.x + t * (p2.nextControl.x - p1.nextControl.x),
-            p1.nextControl.y + t * (p2.nextControl.y - p1.nextControl.y),
-            p1.isLocked, p1.linkedName
-        );
-    }
+  for (int i = 1; i <= numPoints; ++i) {
+    double t = static_cast<double>(i) / (numPoints + 1);
+    interpolatedPoints.emplace_back(
+        p1.anchor.x + t * (p2.anchor.x - p1.anchor.x), p1.anchor.y + t * (p2.anchor.y - p1.anchor.y),
+        p1.prevControl.x + t * (p2.prevControl.x - p1.prevControl.x),
+        p1.prevControl.y + t * (p2.prevControl.y - p1.prevControl.y),
+        p1.nextControl.x + t * (p2.nextControl.x - p1.nextControl.x),
+        p1.nextControl.y + t * (p2.nextControl.y - p1.nextControl.y), p1.isLocked, p1.linkedName);
+  }
 
-    return interpolatedPoints;
+  return interpolatedPoints;
 }
 
 std::vector<wom::utils::BezierPoint> wom::utils::createBezierPointsFromJson(const wpi::json& jsonData) {
-    std::vector<wom::utils::BezierPoint> bezierPoints;
+  std::vector<wom::utils::BezierPoint> bezierPoints;
 
-    for (const auto& point : jsonData["waypoints"]) {
-      auto anchorX = point["anchor"].is_null() ? NAN : point["anchor"]["x"].get<double>();
-      auto anchorY = point["anchor"].is_null() ? NAN : point["anchor"]["y"].get<double>();
-      auto prevControlX = point["prevControl"].is_null() ? NAN : point["prevControl"]["x"].get<double>();
-      auto prevControlY = point["prevControl"].is_null() ? NAN : point["prevControl"]["y"].get<double>();
-      auto nextControlX = point["nextControl"].is_null() ? NAN : point["nextControl"]["x"].get<double>();
-      auto nextControlY = point["nextControl"].is_null() ? NAN : point["nextControl"]["y"].get<double>();
-      auto isLocked = point["isLocked"].is_null() ? false : point["isLocked"].get<bool>();
-      auto linkedName = point["linkedName"].is_null() ? "" : point["linkedName"].get<std::string>();
-      
-      bezierPoints.emplace_back(anchorX, anchorY, prevControlX, prevControlY, nextControlX, nextControlY, isLocked, linkedName);
-       
-    }
+  for (const auto& point : jsonData["waypoints"]) {
+    auto anchorX = point["anchor"].is_null() ? NAN : point["anchor"]["x"].get<double>();
+    auto anchorY = point["anchor"].is_null() ? NAN : point["anchor"]["y"].get<double>();
+    auto prevControlX = point["prevControl"].is_null() ? NAN : point["prevControl"]["x"].get<double>();
+    auto prevControlY = point["prevControl"].is_null() ? NAN : point["prevControl"]["y"].get<double>();
+    auto nextControlX = point["nextControl"].is_null() ? NAN : point["nextControl"]["x"].get<double>();
+    auto nextControlY = point["nextControl"].is_null() ? NAN : point["nextControl"]["y"].get<double>();
+    auto isLocked = point["isLocked"].is_null() ? false : point["isLocked"].get<bool>();
+    auto linkedName = point["linkedName"].is_null() ? "" : point["linkedName"].get<std::string>();
 
-    return bezierPoints;
+    bezierPoints.emplace_back(anchorX, anchorY, prevControlX, prevControlY, nextControlX, nextControlY,
+                              isLocked, linkedName);
+  }
+
+  return bezierPoints;
 }
 
-std::vector<wom::utils::BezierPoint> wom::utils::interpolateBezierPoints(const std::vector<wom::utils::BezierPoint>& bezierPoints, double interval) {
-    std::vector<wom::utils::BezierPoint> interpolatedPoints;
+std::vector<wom::utils::BezierPoint> wom::utils::interpolateBezierPoints(
+    const std::vector<wom::utils::BezierPoint>& bezierPoints, double interval) {
+  std::vector<wom::utils::BezierPoint> interpolatedPoints;
 
-    for (size_t i = 0; i < bezierPoints.size() - 1; ++i) {
-        auto points = interpolateAtIntervals(bezierPoints[i], bezierPoints[i + 1], interval);
-        interpolatedPoints.insert(interpolatedPoints.end(), points.begin(), points.end());
-    }
+  for (size_t i = 0; i < bezierPoints.size() - 1; ++i) {
+    auto points = interpolateAtIntervals(bezierPoints[i], bezierPoints[i + 1], interval);
+    interpolatedPoints.insert(interpolatedPoints.end(), points.begin(), points.end());
+  }
 
-    return interpolatedPoints;
+  return interpolatedPoints;
 }
 
 // Command implementation
@@ -208,7 +211,7 @@ std::vector<wom::utils::BezierPoint> wom::utils::interpolateBezierPoints(const s
 //     }
 // }
 //
-// template <typename... CommandTypes> 
+// template <typename... CommandTypes>
 // template <typename T>
 // std::type_index utils::Commands<CommandTypes...>::GetTypeIndex() {
 //     return std::type_index(typeid(T));
@@ -236,9 +239,8 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
     _path = _path->flipPath();
   }
 
-  std::string filePath = frc::filesystem::GetDeployDirectory()
-			+ "/pathplanner/paths/" + path + ".path";
-  
+  std::string filePath = frc::filesystem::GetDeployDirectory() + "/pathplanner/paths/" + path + ".path";
+
   std::cout << filePath << std::endl;
 
   std::ifstream file(filePath);
@@ -252,33 +254,31 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   }
 
   // cjson.pop_back();
-  
-  std::vector<pathplanner::PathPoint> points = pathplanner::PathPlannerPath::fromPathFile(path)->getAllPathPoints();
 
-  pathplanner::RotationTarget *lastRot = nullptr;
+  std::vector<pathplanner::PathPoint> points =
+      pathplanner::PathPlannerPath::fromPathFile(path)->getAllPathPoints();
+
+  pathplanner::RotationTarget* lastRot = nullptr;
   units::degree_t rot;
 
-  for (const pathplanner::PathPoint &point : points) {
-    
+  for (const pathplanner::PathPoint& point : points) {
     if (lastRot != nullptr) {
       rot = point.rotationTarget.value_or(*lastRot).getTarget().Degrees();
     } else {
       rot = point.rotationTarget->getTarget().Degrees();
     }
 
-    pathplanner::RotationTarget t = pathplanner::RotationTarget(0, rot, false); 
-  
+    pathplanner::RotationTarget t = pathplanner::RotationTarget(0, rot, false);
+
     lastRot = &t;
 
-    _poses.emplace_back(
-      frc::Pose2d(point.position, rot)
-    );
+    _poses.emplace_back(frc::Pose2d(point.position, rot));
   }
-  // _poses = pathplanner::PathPlannerPath::fromPathFile(path)->getPathPoses(); 
+  // _poses = pathplanner::PathPlannerPath::fromPathFile(path)->getPathPoses();
   // wpi::json j = wpi::json::parse(cjson);
-  // 
+  //
   // std::vector<BezierPoint> bezierPoints = createBezierPointsFromJson(j);
-  // 
+  //
   // std::vector<BezierPoint> interpolatedPoints = interpolateBezierPoints(bezierPoints, 0.2);
   //
   // int i = 0;
@@ -291,25 +291,30 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   //     a = _swerve->GetPose().Rotation();
   //   }
   //
-  //   frc::Pose2d p = frc::Pose2d(frc::Translation2d(units::meter_t{point.anchor.x}, units::meter_t{point.anchor.y}), a);
-  //   frc::Pose2d p1 = frc::Pose2d(frc::Translation2d(units::meter_t{point.nextControl.x}, units::meter_t{point.nextControl.y}), 0_deg);
-  //   frc::Pose2d p2 = frc::Pose2d(frc::Translation2d(units::meter_t{point.nextControl.x}, units::meter_t{point.prevControl.y}), 0_deg);
-  //   
+  //   frc::Pose2d p = frc::Pose2d(frc::Translation2d(units::meter_t{point.anchor.x},
+  //   units::meter_t{point.anchor.y}), a); frc::Pose2d p1 =
+  //   frc::Pose2d(frc::Translation2d(units::meter_t{point.nextControl.x},
+  //   units::meter_t{point.nextControl.y}), 0_deg); frc::Pose2d p2 =
+  //   frc::Pose2d(frc::Translation2d(units::meter_t{point.nextControl.x},
+  //   units::meter_t{point.prevControl.y}), 0_deg);
+  //
   //   _poses.emplace_back(p);
   //
-  //   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/" + std::to_string(i) + "/poses/current"), p);
-  //   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/" + std::to_string(i) + "/poses/next"), p1);
-  //   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/" + std::to_string(i) + "/poses/prev"), p2);
+  //   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/" + std::to_string(i) +
+  //   "/poses/current"), p); WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/" +
+  //   std::to_string(i) + "/poses/next"), p1);
+  //   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/" + std::to_string(i) +
+  //   "/poses/prev"), p2);
   //
   //   i++;
   // }
-  
+
   int i = 0;
   for (const frc::Pose2d pose : _poses) {
-    WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/poses/" + std::to_string(i)), pose);
-    i++;  
+    WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/poses/" + std::to_string(i)),
+                 pose);
+    i++;
   }
-  
 
   CalcTimer();
 
@@ -324,7 +329,7 @@ void utils::FollowPath::CalcTimer() {
   units::meter_t deltaY = target_pose.Translation().Y() - current_pose.Translation().Y();
 
   units::meter_t dist = units::meter_t{std::sqrt(std::pow(deltaX.value(), 2) + std::pow(deltaY.value(), 2))};
-  
+
   _timer.Stop();
   _timer.Reset();
   _time = units::second_t{std::abs(dist.value()) * 1 /*meters per second*/};
@@ -334,11 +339,22 @@ void utils::FollowPath::CalcTimer() {
 void utils::FollowPath::OnTick(units::second_t dt) {
   _swerve->SetPose(_poses[_currentPose]);
 
-  nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("atPose").SetBoolean(_swerve->IsAtSetPose());
-  nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("timeout").SetDouble(_time.value());
-  nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("currentTime").SetDouble(_timer.Get().value());
-  WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/targetPose"), _poses[_currentPose]);
-  WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/currentPose"), _swerve->GetPose());
+  nt::NetworkTableInstance::GetDefault()
+      .GetTable("pathplanner")
+      ->GetEntry("atPose")
+      .SetBoolean(_swerve->IsAtSetPose());
+  nt::NetworkTableInstance::GetDefault()
+      .GetTable("pathplanner")
+      ->GetEntry("timeout")
+      .SetDouble(_time.value());
+  nt::NetworkTableInstance::GetDefault()
+      .GetTable("pathplanner")
+      ->GetEntry("currentTime")
+      .SetDouble(_timer.Get().value());
+  WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/targetPose"),
+               _poses[_currentPose]);
+  WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/currentPose"),
+               _swerve->GetPose());
 
   std::cout << "Following Path" << std::endl;
 
@@ -381,11 +397,11 @@ void utils::AutoBuilder::SetAuto(std::string path) {
   // cjson.pop_back();
 
   wpi::json j = wpi::json::parse(cjson);
-  
+
   _currentPath = &j;
   _startingPose = &j["startingPose"];
   _commands = &j["command"]["data"]["commands"];
-  
+
   commands = std::vector<std::pair<std::string, std::string>>();
 
   nt::NetworkTableInstance::GetDefault().GetTable("json")->GetEntry("data").SetString(_currentPath->dump());
@@ -423,7 +439,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
         .GetTable("commands/" + std::to_string(i))
         ->GetEntry("data")
         .SetString(static_cast<std::string>(command.second));
-    
+
     if (command.first == "path") {
       auto b = behaviour::make<FollowPath>(_swerve, command.second, _flip);
       std::cout << b->GetName() << std::endl;
@@ -437,10 +453,8 @@ void utils::AutoBuilder::SetAuto(std::string path) {
     i++;
   }
 
-    nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("PathAmt").SetInteger(pathamt);
-    nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("CommandAmt").SetInteger(commandamt);
-
-
+  nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("PathAmt").SetInteger(pathamt);
+  nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("CommandAmt").SetInteger(commandamt);
 
   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("startPose"),
                JSONPoseToPose2d(*_startingPose));

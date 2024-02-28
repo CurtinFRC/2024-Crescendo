@@ -9,6 +9,7 @@
 #include "behaviour/HasBehaviour.h"
 #include "drivetrain/SwerveDrive.h"
 #include "drivetrain/behaviours/SwerveBehaviours.h"
+#include "sim/Sim.h"
 #include "utils/Encoder.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
@@ -17,7 +18,6 @@
 #include "utils/Util.h"
 #include "vision/Camera.h"
 #include "vision/Limelight.h"
-#include "sim/Sim.h"
 
 namespace wom {
 using namespace wom;

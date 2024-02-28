@@ -7,8 +7,8 @@
 #include <frc/XboxController.h>
 
 // AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxController* codriver)
-    // : _alphaArm(alphaArm), _codriver(codriver) {
-  // Controls(alphaArm);
+// : _alphaArm(alphaArm), _codriver(codriver) {
+// Controls(alphaArm);
 // }
 
 void AlphaArmManualControl::OnTick(units::second_t dt) {

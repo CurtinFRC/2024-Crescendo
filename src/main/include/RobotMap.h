@@ -201,7 +201,7 @@ struct RobotMap {
   //   }
   // };
   // Arm arm;
-struct SwerveBase {
+  struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{16, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder frontRightCancoder{18, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder backLeftCancoder{17, "Drivebase"};

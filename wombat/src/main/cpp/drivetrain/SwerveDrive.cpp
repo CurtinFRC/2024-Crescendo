@@ -438,7 +438,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
   for (auto mod = _modules.begin(); mod < _modules.end(); mod++) {
     mod->OnUpdate(dt);
   }
-  
+
   _table->GetSubTable("gyro")->GetEntry("angle").SetDouble(_config.gyro->GetRotation2d().Degrees().value());
   _poseEstimator.Update(
       -_config.gyro->GetRotation2d(),
@@ -561,11 +561,13 @@ void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose, units::second_t timesta
 }
 
 frc::Pose2d SwerveDrive::GetSetpoint() {
-  return frc::Pose2d(units::meter_t{_xPIDController.GetSetpoint()}, units::meter_t{_yPIDController.GetSetpoint()}, units::radian_t{_anglePIDController.GetSetpoint()});
+  return frc::Pose2d(units::meter_t{_xPIDController.GetSetpoint()},
+                     units::meter_t{_yPIDController.GetSetpoint()},
+                     units::radian_t{_anglePIDController.GetSetpoint()});
 }
 
 void SwerveDrive::MakeItAtSetpoint() {
-  ResetPose(GetSetpoint());  
+  ResetPose(GetSetpoint());
 }
 
 }  // namespace drivetrain

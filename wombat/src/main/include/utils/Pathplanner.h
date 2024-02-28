@@ -15,6 +15,7 @@
 #include <stdexcept>
 #include <string>
 #include <typeindex>
+#include <utility>
 #include <vector>
 
 #include "behaviour/Behaviour.h"
@@ -28,43 +29,44 @@ namespace wom {
 namespace utils {
 
 struct BezierPoint {
-    struct {
-        double x;
-        double y;
-    } anchor;
+  struct {
+    double x;
+    double y;
+  } anchor;
 
-    struct {
-        double x;
-        double y;
-    } prevControl;
+  struct {
+    double x;
+    double y;
+  } prevControl;
 
-    struct {
-        double x;
-        double y;
-    } nextControl;
+  struct {
+    double x;
+    double y;
+  } nextControl;
 
-    bool isLocked;
-    std::string linkedName;
+  bool isLocked;
+  std::string linkedName;
 
-    BezierPoint(double anchorX, double anchorY, wpi::json prevControlX, wpi::json prevControlY,
-                wpi::json nextControlX, wpi::json nextControlY, bool isLocked, wpi::json linkedName);
+  BezierPoint(double anchorX, double anchorY, wpi::json prevControlX, wpi::json prevControlY,
+              wpi::json nextControlX, wpi::json nextControlY, bool isLocked, wpi::json linkedName);
 
-    // Function to calculate the angle of the point relative to the x-axis
-    double calculateAngle() const;
+  // Function to calculate the angle of the point relative to the x-axis
+  double calculateAngle() const;
 };
 
 // Function to calculate the distance between two points
 double distance(const BezierPoint& p1, const BezierPoint& p2);
 
 // Function to interpolate points at regular intervals
-std::vector<BezierPoint> interpolateAtIntervals(const BezierPoint& p1, const BezierPoint& p2, double interval);
+std::vector<BezierPoint> interpolateAtIntervals(const BezierPoint& p1, const BezierPoint& p2,
+                                                double interval);
 
 // Function to create a list of BezierPoints from JSON data
 std::vector<BezierPoint> createBezierPointsFromJson(const wpi::json& jsonData);
 
 // Function to create a list of interpolated BezierPoints
-std::vector<BezierPoint> interpolateBezierPoints(const std::vector<BezierPoint>& bezierPoints, double interval);
-
+std::vector<BezierPoint> interpolateBezierPoints(const std::vector<BezierPoint>& bezierPoints,
+                                                 double interval);
 
 // template <typename Ret, typename... Args>
 // class ConcreteCommand;
@@ -180,7 +182,7 @@ class Commands {
 
   Commands(
       std::vector<std::pair<std::string, std::function<std::shared_ptr<behaviour::Behaviour>()>>> commands)
-      : commands_(std::move(commands)){};
+      : commands_(std::move(commands)) {}
 
   std::shared_ptr<behaviour::Behaviour> Execute(std::string command) {
     auto it = std::find_if(commands_.begin(), commands_.end(),
@@ -248,11 +250,13 @@ class PathWeaver {
 
 class FollowPath : public behaviour::Behaviour {
  public:
-  FollowPath(drivetrain::SwerveDrive* swerve, std::string path, bool flip = false, std::string _name = "<Follow Path>");
+  FollowPath(drivetrain::SwerveDrive* swerve, std::string path, bool flip = false,
+             std::string _name = "<Follow Path>");
 
   void OnTick(units::time::second_t dt) override;
 
   void CalcTimer();
+
  private:
   units::second_t _time;
   frc::Timer _timer;
