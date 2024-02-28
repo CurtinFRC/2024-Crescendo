@@ -47,8 +47,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # Commit
-          git commit -am "Formatting fixes"
-          git push
+          git diff-index --quiet HEAD || git commit -am "Formatting fixes" && git push
       - name: Dispatch workflow_run event
         uses: ben-demigod/workflow-dispatch@v2.1.2
         env:
