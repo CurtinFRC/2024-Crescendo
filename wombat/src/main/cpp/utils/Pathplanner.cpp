@@ -394,7 +394,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
     cjson += cdata;
   }
 
-  // cjson.pop_back();
+  cjson.pop_back();
 
   wpi::json j = wpi::json::parse(cjson);
 
