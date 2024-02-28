@@ -47,7 +47,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if git diff --cached --exit-code; then
             git commit -am "/format"
-            git push 
+            git push origin  
           fi
       - name: Dispatch workflow_run event
         uses: ben-demigod/workflow-dispatch@v2.1.2
