@@ -413,3 +413,7 @@ int Vision::CurrentAprilTag() {
 
   return _limelight->GetTargetingData(wom::LimelightTargetingData::kTid);
 }
+
+wom::Limelight* Vision::GetLimelight() {
+  return _limelight;
+}

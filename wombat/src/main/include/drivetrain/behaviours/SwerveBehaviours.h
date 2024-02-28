@@ -139,66 +139,66 @@ class GoToPose : public behaviour::Behaviour {
 //   frc::Timer m_timer;
 // };
 
-class TempSimSwerveDrive {
- public:
-  TempSimSwerveDrive(frc::Timer* timer, frc::Field2d* field);
-
-  void OnUpdate();
-
-  void SetPath(std::string path);
-
-  frc::Pose3d GetPose();
-  frc::Pose2d GetPose2d();
-
- private:
-  frc::sim::DifferentialDrivetrainSim m_driveSim{
-      frc::DCMotor::NEO(2),  // 2 NEO motors on each side of the drivetrain.
-      7.29,                  // 7.29:1 gearing reduction.
-      7.5_kg_sq_m,           // MOI of 7.5 kg m^2 (from CAD model).
-      60_kg,                 // The mass of the robot is 60 kg.
-      3_in,                  // The robot uses 3" radius wheels.
-      0.7112_m,              // The track width is 0.7112 meters.
-
-      // The standard deviations for measurement noise:
-      // x and y:          0.001 m
-      // heading:          0.001 rad
-      // l and r velocity: 0.1   m/s
-      // l and r position: 0.005 m
-      {0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005}};
-
-  // wom::utils::Pathplanner m_pathplanner;
-
-  frc::Trajectory current_trajectory;
-
-  std::shared_ptr<nt::NetworkTable> current_trajectory_table;
-  std::shared_ptr<nt::NetworkTable> current_trajectory_state_table;
-
-  frc::Timer* m_timer;
-
-  frc::Field2d* m_field;
-
-  std::string m_path;
-};
-
-class AutoSwerveDrive {
- public:
-  AutoSwerveDrive(wom::drivetrain::SwerveDrive* swerve, frc::Timer* timer, frc::Field2d* field);
-
-  void OnUpdate();
-
-  void SetPath(std::string path);
-
- private:
-  wom::drivetrain::SwerveDrive* _swerve;
-
-  TempSimSwerveDrive* _simSwerveDrive;
-
-  frc::Timer* m_timer;
-
-  frc::Field2d* m_field;
-
-  std::string m_path;
-};
+// class TempSimSwerveDrive {
+//  public:
+//   TempSimSwerveDrive(frc::Timer* timer, frc::Field2d* field);
+//
+//   void OnUpdate();
+//
+//   void SetPath(std::string path);
+//
+//   frc::Pose3d GetPose();
+//   frc::Pose2d GetPose2d();
+//
+//  private:
+//   frc::sim::DifferentialDrivetrainSim m_driveSim{
+//       frc::DCMotor::NEO(2),  // 2 NEO motors on each side of the drivetrain.
+//       7.29,                  // 7.29:1 gearing reduction.
+//       7.5_kg_sq_m,           // MOI of 7.5 kg m^2 (from CAD model).
+//       60_kg,                 // The mass of the robot is 60 kg.
+//       3_in,                  // The robot uses 3" radius wheels.
+//       0.7112_m,              // The track width is 0.7112 meters.
+//
+//       // The standard deviations for measurement noise:
+//       // x and y:          0.001 m
+//       // heading:          0.001 rad
+//       // l and r velocity: 0.1   m/s
+//       // l and r position: 0.005 m
+//       {0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005}};
+//
+//   // wom::utils::Pathplanner m_pathplanner;
+//
+//   frc::Trajectory current_trajectory;
+//
+//   std::shared_ptr<nt::NetworkTable> current_trajectory_table;
+//   std::shared_ptr<nt::NetworkTable> current_trajectory_state_table;
+//
+//   frc::Timer* m_timer;
+//
+//   frc::Field2d* m_field;
+//
+//   std::string m_path;
+// };
+//
+// class AutoSwerveDrive {
+//  public:
+//   AutoSwerveDrive(wom::drivetrain::SwerveDrive* swerve, frc::Timer* timer, frc::Field2d* field);
+//
+//   void OnUpdate();
+//
+//   void SetPath(std::string path);
+//
+//  private:
+//   wom::drivetrain::SwerveDrive* _swerve;
+//
+//   TempSimSwerveDrive* _simSwerveDrive;
+//
+//   frc::Timer* m_timer;
+//
+//   frc::Field2d* m_field;
+//
+//   std::string m_path;
+// };
 
 /**
  * @brief Behaviour Class to hangle the swerve drivebase going to and potentially maintaining the position

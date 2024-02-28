@@ -223,6 +223,9 @@ class SwerveDrive : public behaviour::HasBehaviour {
   FieldRelativeSpeeds GetFieldRelativeSpeeds();
   frc::ChassisSpeeds GetChassisSpeeds();
 
+  frc::Pose2d GetSetpoint();
+  void MakeItAtSetpoint();
+
  private:
   SwerveDriveConfig _config;
   wom::vision::Limelight* _vision;

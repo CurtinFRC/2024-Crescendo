@@ -32,6 +32,7 @@
 #include "Wombat.h"
 #include "utils/Encoder.h"
 #include "utils/PID.h"
+#include "utils/Pathplanner.h"
 
 struct RobotMap {
   struct Controllers {
@@ -40,6 +41,51 @@ struct RobotMap {
     frc::XboxController testController = frc::XboxController(2);
   };
   Controllers controllers;
+
+  // struct AlphaArmSystem {
+  //   rev::CANSparkMax alphaArmMotor{21, rev::CANSparkMax::MotorType::kBrushless};
+  //   rev::CANSparkMax wristMotor{26, rev::CANSparkMax::MotorType::kBrushless};
+  //   wom::CANSparkMaxEncoder* alphaArmEncoder = new wom::CANSparkMaxEncoder(&alphaArmMotor, 0.1_m);
+  //   wom::Gearbox alphaArmGearbox{&alphaArmMotor, nullptr, frc::DCMotor::NEO(1)};
+  //   wom::Gearbox wristGearbox{&wristMotor, alphaArmEncoder, frc::DCMotor::NEO(1)};
+  //
+  //   AlphaArmConfig config{alphaArmGearbox, wristGearbox};
+  // };
+  // AlphaArmSystem alphaArmSystem;
+
+  struct IntakeSystem {
+    rev::CANSparkMax intakeMotor{31, rev::CANSparkMax::MotorType::kBrushless};
+    // wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
+    frc::DigitalInput intakeSensor{4};
+    // frc::DigitalInput magSensor{0};
+    // frc::DigitalInput shooterSensor{0};
+
+    wom::Gearbox IntakeGearbox{&intakeMotor, nullptr, frc::DCMotor::NEO(1)};
+
+    IntakeConfig config{IntakeGearbox, &intakeSensor /*, &magSensor, &shooterSensor*/};
+  };
+  IntakeSystem intakeSystem;
+
+  struct Shooter {
+    rev::CANSparkMax shooterMotor{35, rev::CANSparkMax::MotorType::kBrushless};  // Port 11
+    // frc::DigitalInput shooterSensor{2};
+
+    // wom::VoltageController shooterMotorGroup =
+    // wom::VoltagedController::Group(shooterMotor);
+    wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
+    wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder, frc::DCMotor::NEO(1)};
+
+    wom::utils::PIDConfig<units::radians_per_second, units::volts> pidConfigS{
+        "/armavator/arm/velocityPID/config",
+        0.1_V / (360_deg / 1_s),
+        0.03_V / 25_deg,
+        0.001_V / (90_deg / 1_s / 1_s),
+        5_rad_per_s,
+        10_rad_per_s / 1_s};
+
+    ShooterConfig config{"shooterGearbox", shooterGearbox, pidConfigS};
+  };
+  Shooter shooterSystem;
 
   //   struct AlphaArmSystem {
   //     rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
@@ -100,8 +146,62 @@ struct RobotMap {
 
   //   };
   //   Shooter shooterSystem;
-
-  struct SwerveBase {
+  //
+  // struct Arm {
+  //   // creates the motor used for the arm as well as the port it is plugged in
+  //   rev::CANSparkMax leftArmMotor{21, rev::CANSparkMax::MotorType::kBrushless};   // 11
+  //   rev::CANSparkMax rightArmMotor{26, rev::CANSparkMax::MotorType::kBrushless};  // 12
+  //
+  //   // rev::CANSparkMax leftPretendArmMotor{28, rev::CANSparkMax::MotorType::kBrushless};
+  //   // rev::CANSparkMax rightPretendArmMotor{29, rev::CANSparkMax::MotorType::kBrushless};
+  //
+  //   // wom::DigitalEncoder encoder{0, 1, 2048};
+  //   // sets the type sof encoder that is used up
+  //   wom::CANSparkMaxEncoder* leftEncoder = new wom::CANSparkMaxEncoder(&leftArmMotor, 10_cm);
+  //   wom::CANSparkMaxEncoder* rightEncoder = new wom::CANSparkMaxEncoder(&rightArmMotor, 10_cm);
+  //
+  //   // wom::DutyCycleEncoder *encoder = new wom::DutyCycleEncoder(3, 10_cm);
+  //
+  //   // wom::CANSparkMaxEncoder leftEncoder{&leftArmMotor, 100};
+  //   // wom::CANSparkMaxEncoder rightEncoder{&rightArmMotor, 100};
+  //
+  //   // rev::SparkMaxAbsoluteEncoder leftOtherArmEncoder{leftArmMotor,
+  //   // rev::CANSparkMax::SparkMaxAbsoluteEncoder::Type::kDutyCycle}; wom::CANSparkMaxEncoder
+  //   // leftOtherArmEncoder = leftArmMotor.GetEncoder(); wom::CANSparkMaxEncoder rightOtherArmEncoder =
+  //   // rightArmMotor.GetEncoder();
+  //
+  //   // creates an instance of the arm gearbox
+  //   wom::Gearbox leftGearbox{&leftArmMotor, leftEncoder,
+  //                            // nullptr,
+  //                            frc::DCMotor::NEO(1).WithReduction(100)};
+  //
+  //   wom::Gearbox rightGearbox{&rightArmMotor, rightEncoder,
+  //                             // nullptr,
+  //                             frc::DCMotor::NEO(1).WithReduction(100)};
+  //
+  //   // creates arm config information
+  //   wom::ArmConfig config{
+  //       "/armavator/arm", leftGearbox, rightGearbox,
+  //       // nullptr,
+  //       leftEncoder,
+  //       wom::PIDConfig<units::radian, units::volts>("/armavator/arm/pid/config",
+  //                                                   18_V / 25_deg,        // prev 13_V/25_deg
+  //                                                   0_V / (1_deg * 1_s),  // 0.1_V / (1_deg * 1_s)
+  //                                                   0_V / (1_deg / 1_s),  // 0_V / (1_deg / 1_s)
+  //                                                   5_deg, 2_deg / 1_s, 10_deg),
+  //       wom::PIDConfig<units::radians_per_second, units::volts>("/armavator/arm/velocityPID/config",
+  //                                                               9_V / (180_deg / 1_s), 0_V / 25_deg,
+  //                                                               0_V / (90_deg / 1_s / 1_s)),
+  //       1_kg, 0.5_kg, 1.15_m, -90_deg, 270_deg, 0_deg};
+  //
+  //   Arm() {
+  //     // inverts the motor so that it goes in the right direction while using RAW controlls
+  //     leftArmMotor.SetInverted(true);
+  //     rightArmMotor.SetInverted(false);
+  //   }
+  // };
+  // Arm arm;
+struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{16, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder frontRightCancoder{18, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder backLeftCancoder{17, "Drivebase"};
@@ -206,6 +306,7 @@ struct RobotMap {
     //  }
     //}
   };
+
   SwerveBase swerveBase;
 
   struct SwerveTable {
@@ -214,7 +315,6 @@ struct RobotMap {
   };
   SwerveTable swerveTable;
 
-  wom::Pathplanner pathplanner;
   // struct AlphaArmSystem {
   //   rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
   //   rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
@@ -225,4 +325,6 @@ struct RobotMap {
   //   AlphaArmConfig config{alphaArmGearbox, wristGearbox};
   // };
   // AlphaArmSystem alphaArmSystem;
+  wom::SwerveAutoBuilder* builder;
+  wom::SimSwerve* simSwerve;
 };

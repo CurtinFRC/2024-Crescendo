@@ -17,6 +17,7 @@
 #include <iostream>
 
 #include "frc/MathUtil.h"
+#include "frc/geometry/Pose2d.h"
 #include "units/current.h"
 #include "units/velocity.h"
 #include "utils/Util.h"
@@ -138,12 +139,7 @@ void SwerveModule::OnUpdate(units::second_t dt) {
 
   _table->GetEntry("/voltage/drive/").SetDouble(driveVoltage.value());
 
-  _table->GetEntry("TurnVoltage").SetDouble(turnVoltage.value());
-  _table->GetEntry("TurnSetpoint").SetDouble(_anglePIDController.GetSetpoint());
-  _table->GetEntry("Demand").SetDouble(_config.turnMotor.encoder->GetEncoderPosition().value());
-  _table->GetEntry("Error").SetDouble(_anglePIDController.GetPositionError());
-
-  _config.driveMotor.motorController->SetVoltage(driveVoltage * -1);
+  _config.driveMotor.motorController->SetVoltage(driveVoltage);
   _config.turnMotor.motorController->SetVoltage(turnVoltage);
 
   _table->GetEntry("speed").SetDouble(GetSpeed().value());
@@ -306,9 +302,9 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose, wom:
                                                    frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}},
                                                    frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}}},
           initialPose, _config.stateStdDevs, _config.visionMeasurementStdDevs),
-      _anglePIDController{frc::PIDController(8, 0.1, 0)},
-      _xPIDController{frc::PIDController(4, 0, 0)},
-      _yPIDController{frc::PIDController(4, 0, 0)},
+      _anglePIDController{frc::PIDController(1, 0.1, 0)},
+      _xPIDController{frc::PIDController(2, 0, 0)},
+      _yPIDController{frc::PIDController(2, 0, 0)},
       _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)),
       _vision(vision) {
   _anglePIDController.SetTolerance(360);
@@ -442,9 +438,10 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
   for (auto mod = _modules.begin(); mod < _modules.end(); mod++) {
     mod->OnUpdate(dt);
   }
-
+  
+  _table->GetSubTable("gyro")->GetEntry("angle").SetDouble(_config.gyro->GetRotation2d().Degrees().value());
   _poseEstimator.Update(
-      _config.gyro->GetRotation2d(),
+      -_config.gyro->GetRotation2d(),
       wpi::array<frc::SwerveModulePosition, 4>{_modules[0].GetPosition(), _modules[1].GetPosition(),
                                                _modules[2].GetPosition(), _modules[3].GetPosition()});
 
@@ -556,12 +553,20 @@ void SwerveDrive::ResetPose(frc::Pose2d pose) {
 }
 
 frc::Pose2d SwerveDrive::GetPose() {
-  // return frc::Pose2d();
   return _poseEstimator.GetEstimatedPosition();
 }
 
 void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp) {
-  _poseEstimator.AddVisionMeasurement(pose, timestamp);
+  // _poseEstimator.AddVisionMeasurement(pose, timestamp);
 }
+
+frc::Pose2d SwerveDrive::GetSetpoint() {
+  return frc::Pose2d(units::meter_t{_xPIDController.GetSetpoint()}, units::meter_t{_yPIDController.GetSetpoint()}, units::radian_t{_anglePIDController.GetSetpoint()});
+}
+
+void SwerveDrive::MakeItAtSetpoint() {
+  ResetPose(GetSetpoint());  
+}
+
 }  // namespace drivetrain
 }  // namespace wom

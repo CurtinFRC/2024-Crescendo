@@ -6,10 +6,10 @@
 
 #include <frc/XboxController.h>
 
-AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxController* codriver)
-    : _alphaArm(alphaArm), _codriver(codriver) {
-  Controls(alphaArm);
-}
+// AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxController* codriver)
+    // : _alphaArm(alphaArm), _codriver(codriver) {
+  // Controls(alphaArm);
+// }
 
 void AlphaArmManualControl::OnTick(units::second_t dt) {
   if (_codriver->GetStartButtonPressed()) {
@@ -21,10 +21,10 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
   }
 
   if (_rawControl) {
-    _alphaArm->SetState(AlphaArmState::kRaw);
-    _alphaArm->SetArmRaw(_codriver->GetRightY() * 12_V);
+    // _alphaArm->SetState(AlphaArmState::kRaw);
+    // _alphaArm->SetArmRaw(_codriver->GetRightY() * 12_V);
   } else {
-    _alphaArm->SetState(AlphaArmState::kAmpAngle);
-    _alphaArm->setControllerRaw(wom::deadzone(_codriver->GetRightY()) * 12_V);
+    // _alphaArm->SetState(AlphaArmState::kAmpAngle);
+    // _alphaArm->setControllerRaw(wom::deadzone(_codriver->GetRightY()) * 12_V);
   }
 }

@@ -107,6 +107,8 @@ class Vision {
 
   int CurrentAprilTag();
 
+  wom::Limelight* GetLimelight();
+
  private:
   wom::Limelight* _limelight;
   FMAP _fmap;

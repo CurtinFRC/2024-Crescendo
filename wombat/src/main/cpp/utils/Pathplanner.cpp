@@ -15,6 +15,7 @@
 #include <cmath>
 #include <fstream>
 #include <initializer_list>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -31,6 +32,8 @@
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
 #include "pathplanner/lib/path/PathPlannerPath.h"
+#include "pathplanner/lib/path/PathPoint.h"
+#include "pathplanner/lib/path/RotationTarget.h"
 #include "units/time.h"
 #include "utils/Util.h"
 #include "wpi/detail/conversions/to_json.h"
@@ -250,7 +253,28 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
 
   // cjson.pop_back();
   
-  _poses = pathplanner::PathPlannerPath::fromPathFile(path)->getPathPoses(); 
+  std::vector<pathplanner::PathPoint> points = pathplanner::PathPlannerPath::fromPathFile(path)->getAllPathPoints();
+
+  pathplanner::RotationTarget *lastRot = nullptr;
+  units::degree_t rot;
+
+  for (const pathplanner::PathPoint &point : points) {
+    
+    if (lastRot != nullptr) {
+      rot = point.rotationTarget.value_or(*lastRot).getTarget().Degrees();
+    } else {
+      rot = point.rotationTarget->getTarget().Degrees();
+    }
+
+    pathplanner::RotationTarget t = pathplanner::RotationTarget(0, rot, false); 
+  
+    lastRot = &t;
+
+    _poses.emplace_back(
+      frc::Pose2d(point.position, rot)
+    );
+  }
+  // _poses = pathplanner::PathPlannerPath::fromPathFile(path)->getPathPoses(); 
   // wpi::json j = wpi::json::parse(cjson);
   // 
   // std::vector<BezierPoint> bezierPoints = createBezierPointsFromJson(j);
@@ -288,6 +312,8 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   
 
   CalcTimer();
+
+  _timer.Start();
 }
 
 void utils::FollowPath::CalcTimer() {
@@ -298,9 +324,11 @@ void utils::FollowPath::CalcTimer() {
   units::meter_t deltaY = target_pose.Translation().Y() - current_pose.Translation().Y();
 
   units::meter_t dist = units::meter_t{std::sqrt(std::pow(deltaX.value(), 2) + std::pow(deltaY.value(), 2))};
-
+  
+  _timer.Stop();
   _timer.Reset();
   _time = units::second_t{std::abs(dist.value()) * 1 /*meters per second*/};
+  _timer.Start();
 }
 
 void utils::FollowPath::OnTick(units::second_t dt) {
@@ -315,7 +343,7 @@ void utils::FollowPath::OnTick(units::second_t dt) {
   std::cout << "Following Path" << std::endl;
 
   if (_swerve->IsAtSetPose() || _timer.Get() > _time) {
-    if (_currentPose == static_cast<int>(_poses.size())) {
+    if (_currentPose + 1 == static_cast<int>(_poses.size())) {
       SetDone();
     } else {
       _currentPose++;
