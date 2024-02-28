@@ -5,11 +5,25 @@
 #include "drivetrain/SwerveDrive.h"
 
 #include <networktables/NetworkTableInstance.h>
+#include <units/angle.h>
 #include <units/math.h>
+#include <units/voltage.h>
+#include <wpi/sendable/SendableBuilder.h>
+#include <wpi/sendable/SendableRegistry.h>
 
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
 #include <iostream>
 
+#include "frc/MathUtil.h"
+#include "units/current.h"
+#include "units/velocity.h"
 #include "utils/Util.h"
+#include "vision/Limelight.h"
+#include "wpimath/MathShared.h"
+
+using namespace wom;
 
 namespace wom {
 namespace drivetrain {
@@ -21,18 +35,29 @@ void SwerveModuleConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) const 
 }
 
 SwerveModule::SwerveModule(std::string path, SwerveModuleConfig config,
-                           SwerveModule::angle_pid_conf_t anglePID,
+                           // SwerveModule::angle_pid_conf_t anglePID,
                            SwerveModule::velocity_pid_conf_t velocityPID)
-    : _config(config),
-      _anglePIDController(path + "/pid/angle", anglePID),
-      _velocityPIDController(path + "/pid/velocity", velocityPID),
+    :  // _anglePIDController(path + "/pid/angle", anglePID),
+      _anglePIDController{frc::PIDController(5, 0, 0, 0.005_s)},
+      _config(config),
+      _velocityPIDController(frc::PIDController(1.2, 0, 0, 0.005_s)),
       _table(nt::NetworkTableInstance::GetDefault().GetTable(path)) {
-  _anglePIDController.SetWrap(360_deg);
+  // _anglePIDController.SetTolerance(360);
+  _anglePIDController.EnableContinuousInput(0, (2 * 3.141592));
+  // _anglePIDController.EnableContinuousInput(-3.141592, (3.141592));
+  // _anglePIDController.EnableContinuousInput(0, (3.1415 * 2));
+  // _anglePIDController.EnableContinuousInput(0, (3.1415));
+  // _anglePIDController.SetWrap(0, 3.1415);
 }
 
 void SwerveModule::OnStart() {
   // _offset = offset;
+  // _config.canEncoder->SetPosition(units::turn_t{0});
   _anglePIDController.Reset();
+  // _anglePIDController.EnableContinuousInput(-3.141592, 3.141592);
+  // _anglePIDController.EnableContinuousInput(-3.141592, (3.141592));
+  _anglePIDController.EnableContinuousInput(0, (2 * 3.141592));
+
   _velocityPIDController.Reset();
 }
 
@@ -48,38 +73,89 @@ void SwerveModule::OnUpdate(units::second_t dt) {
     case SwerveModuleState::kPID: {
       auto feedforward = _config.driveMotor.motor.Voltage(
           0_Nm,
-          units::radians_per_second_t{(_velocityPIDController.GetSetpoint() / _config.wheelRadius).value()});
-      driveVoltage = _velocityPIDController.Calculate(GetSpeed(), dt, feedforward);
-      turnVoltage = _anglePIDController.Calculate(_config.turnMotor.encoder->GetEncoderPosition(), dt);
+          units::radians_per_second_t{_velocityPIDController.GetSetpoint() / _config.wheelRadius.value()});
+      // units::radian_t input = units::math::fmod(_config.turnMotor.encoder->GetEncoderPosition(), (2_rad
+      // * 3.1415));
+      double input = _config.turnMotor.encoder->GetEncoderPosition().value();
+      _table->GetEntry("/testing/GetEncoderPos").SetDouble(input);
+      // _velocityPIDController.SetSetpoint(3);
+
+      driveVoltage = units::volt_t{_velocityPIDController.Calculate(GetSpeed().value())};
+      // if (_turnOffset == TurnOffsetValues::forward) {
+
+      // } else if (_turnOffset == TurnOffsetValues::reverse) {
+      //   input = input - (3.1415/2);
+      //   driveVoltage = -driveVoltage;
+      // }
+      double demand = _anglePIDController.Calculate(input);
+      // if ((_anglePIDController.GetSetpoint() - input) > (3.14159/2)) {
+      //   demand *= -1;
+      // }
+      turnVoltage = units::volt_t{demand};
     } break;
+    case wom::drivetrain::SwerveModuleState::kZeroing: {
+    } break;
+    default:
+      std::cerr << "Case not handled" << std::endl;
   }
 
-  units::newton_meter_t torqueLimit = 50_kg / 4 * _config.wheelRadius * _currentAccelerationLimit;
-  units::volt_t voltageMax =
-      _config.driveMotor.motor.Voltage(torqueLimit, _config.driveMotor.encoder->GetEncoderAngularVelocity());
-  units::volt_t voltageMin =
-      _config.driveMotor.motor.Voltage(-torqueLimit, _config.driveMotor.encoder->GetEncoderAngularVelocity());
+  // units::newton_meter_t torque_limit_drive = _config.driveMotor.motor.Torque(units::ampere_t{80});
+  // units::newton_meter_t torque_limit_turn = _config.turnMotor.motor.Torque(units::ampere_t{40});
+  //  units::volt_t voltageMax = _config.driveMotor.motor.Voltage(
+  //      torqueLimit, _config.driveMotor.encoder->GetEncoderAngularVelocity());
+  //  units::volt_t voltageMin = _config.driveMotor.motor.Voltage(
+  //      -torqueLimit, _config.driveMotor.encoder->GetEncoderAngularVelocity());
 
-  driveVoltage = units::math::max(units::math::min(driveVoltage, voltageMax), voltageMin);
+  // driveVoltage =
+  //     units::math::max(units::math::min(driveVoltage, voltageMax), voltageMin);
 
-  // driveVoltage = units::math::min(driveVoltage, 10_V);
-  turnVoltage = units::math::min(turnVoltage, 7_V);
+  // units::volt_t max_voltage_drive = _config.driveMotor.motor.Voltage(torque_limit_drive,
+  // _config.driveMotor.encoder->GetEncoderAngularVelocity()); units::volt_t max_voltage_turn =
+  // _config.turnMotor.motor.Voltage(torque_limit_turn,
+  // _config.turnMotor.encoder->GetEncoderAngularVelocity());
+
+  // units::volt_t max_voltage_drive = _config.driveMotor.motor.Voltage(torque_limit_drive,
+  // _config.driveMotor.encoder->GetEncoderAngularVelocity()); units::volt_t max_voltage_turn =
+  // _config.turnMotor.motor.Voltage(torque_limit_turn,
+  // _config.turnMotor.encoder->GetEncoderAngularVelocity());
+
+  // driveVoltage = units::math::min(driveVoltage, 7_V);
+  // turnVoltage = units::math::min(turnVoltage, 4_V);
 
   driveVoltage = units::math::min(units::math::max(driveVoltage, -_driveModuleVoltageLimit),
                                   _driveModuleVoltageLimit);  // was originally 10_V
-  std::cout << "drive-voltage: " << driveVoltage.value() << std::endl;
-  units::volt_t turnVoltageMax = 7_V - (driveVoltage * (7_V / 10_V));
-  turnVoltage = units::math::min(units::math::max(turnVoltage, -turnVoltageMax), turnVoltageMax);
+  turnVoltage =
+      units::math::min(units::math::max(turnVoltage, -_angleModuleVoltageLimit), _angleModuleVoltageLimit);
+  // driveVoltage = units::math::min(
+  //     units::math::max(driveVoltage, -_driveModuleVoltageLimit),
+  //     _driveModuleVoltageLimit);  // was originally 10_V
   // turnVoltage = units::math::min(units::math::max(turnVoltage, -7_V), 7_V);
-  // std::cout << "turn-voltage-max: " << turnVoltageMax.value() << std::endl;
+
+  _table->GetEntry("TurnVoltage").SetDouble(turnVoltage.value());
+  _table->GetEntry("TurnSetpoint").SetDouble(_anglePIDController.GetSetpoint());
+  _table->GetEntry("Demand").SetDouble(_config.turnMotor.encoder->GetEncoderPosition().value());
+  _table->GetEntry("Error").SetDouble(_anglePIDController.GetPositionError());
+
+  _table->GetEntry("/voltage/drive/").SetDouble(driveVoltage.value());
 
   _config.driveMotor.motorController->SetVoltage(driveVoltage);
   _config.turnMotor.motorController->SetVoltage(turnVoltage);
 
   _table->GetEntry("speed").SetDouble(GetSpeed().value());
-  _table->GetEntry("angle").SetDouble(
-      _config.turnMotor.encoder->GetEncoderPosition().convert<units::degree>().value());
+  _table->GetEntry("angle").SetDouble(_config.turnMotor.encoder->GetEncoderPosition().value());
   _config.WriteNT(_table->GetSubTable("config"));
+}
+
+void SwerveModule::SetTurnOffsetForward() {
+  _turnOffset = TurnOffsetValues::forward;
+}
+
+void SwerveModule::SetTurnOffsetReverse() {
+  _turnOffset = TurnOffsetValues::reverse;
+}
+
+void SwerveModule::TurnOffset() {
+  _turnOffset = TurnOffsetValues::none;
 }
 
 // double SwerveModule::GetCancoderPosition() {
@@ -98,6 +174,7 @@ void SwerveDrive::SetAccelerationLimit(units::meters_per_second_squared_t limit)
 
 void SwerveModule::SetVoltageLimit(units::volt_t driveModuleVoltageLimit) {
   _driveModuleVoltageLimit = driveModuleVoltageLimit;
+  _angleModuleVoltageLimit = driveModuleVoltageLimit - 4_V;
 }
 
 void SwerveModule::SetIdle() {
@@ -111,17 +188,67 @@ void SwerveModule::SetZero(units::second_t dt) {
 
 void SwerveModule::SetPID(units::radian_t angle, units::meters_per_second_t speed, units::second_t dt) {
   _state = SwerveModuleState::kPID;
-  // @liam start added
-  double diff = std::fmod((_anglePIDController.GetSetpoint() - angle).convert<units::degree>().value(), 360);
-  if (std::abs(diff) >= 90) {
-    speed *= -1;
-    angle += 180_deg;
-  }
-  // @liam end added
 
-  _anglePIDController.SetSetpoint(angle);
-  _velocityPIDController.SetSetpoint(speed);
+  // double diff = std::abs(_config.turnMotor.encoder->GetEncoderPosition().value() - angle.value());
+  // _table->GetEntry("diff").SetDouble(diff);
+  // if (std::abs(diff) > (3.14159/2)) {
+  //   speed *= -1;
+  //   angle = 3.14159_rad - units::radian_t{diff};
+  //   _anglePIDController.SetSetpoint(angle.value());
+  //   _velocityPIDController.SetSetpoint(speed.value());
+  // } else {
+  //   _anglePIDController.SetSetpoint(angle.value());
+  //   _velocityPIDController.SetSetpoint(speed.value());
+  // }
+
+  // if (diff > (3.14159 / 2)) {
+  //   speed *= -1;
+  //   _anglePIDController.SetSetpoint((3.14159 - (angle.value() -
+  //   _config.turnMotor.encoder->GetEncoderPosition().value())));
+  //   _velocityPIDController.SetSetpoint(speed.value());
+  // } else {
+
+  // double setValue = 3.141592 - (angle.value() - _config.turnMotor.encoder->GetEncoderPosition().value());
+
+  // if (diff > (3.141592/2)) {
+  //   if (setValue < 0 ) {
+  //     _anglePIDController.SetSetpoint(0);
+  //     _velocityPIDController.SetSetpoint(-speed.value());
+  //   } else if ( setValue < (2 * 3)) {
+  //     _anglePIDController.SetSetpoint(2 * 3.141592  );
+  //     _velocityPIDController.SetSetpoint(-speed.value());
+  //   } else {
+  //     _anglePIDController.SetSetpoint(setValue);
+  //     _velocityPIDController.SetSetpoint(-speed.value());
+  //   }
+  // } else {
+  _anglePIDController.SetSetpoint(angle.value());
+  _velocityPIDController.SetSetpoint(speed.value());
+  // }
+
+  // double currentAngle = _config.turnMotor.encoder->GetEncoderPosition().value();
+  // double setpointAngle = closestAngle(currentAngle, _anglePIDController.GetSetpoint());
+  // double setpointAngleFlipped = closestAngle(currentAngle, _anglePIDController.GetSetpoint() + 3.1415);
+  // _table->GetEntry("/Setpoint angle: ").SetDouble(setpointAngle);
+  // _table->GetEntry("/Setpoint angle flipped: ").SetDouble(setpointAngleFlipped);
+  // if (std::abs(setpointAngle) <= std::abs(setpointAngleFlipped)) {
+  //   // _anglePIDController.SetGain(1.0);
+  //   _anglePIDController.SetSetpoint(currentAngle + setpointAngle);
+  //   _velocityPIDController.SetSetpoint(speed.value());
+  // } else {
+  //   // _anglePIDController.SetGain(-1.0);
+  //   _velocityPIDController.SetSetpoint(-speed.value());
+  //   _anglePIDController.SetSetpoint(currentAngle + setpointAngleFlipped);
+  // }
 }
+
+// double SwerveModule::closestAngle(double a, double b) {
+//   double dir = std::fmod(b, (3.1415 * 2)) - std::fmod(a, (2 * 3.1415));
+//   if (std::abs(dir) > 3.1415) {
+//     dir = -(((dir < 0) ? -1 : (dir > 0)) * 3.1415) + dir;
+//   }
+//   return dir;
+// }
 
 void SwerveModule::ModuleVectorHandler(frc::ChassisSpeeds speeds) {
   units::meters_per_second_t xVelocityComponent =
@@ -133,13 +260,14 @@ void SwerveModule::ModuleVectorHandler(frc::ChassisSpeeds speeds) {
       1_mps * std::sqrt(std::pow(xVelocityComponent.value(), 2) + std::pow(yVelocityComponent.value(), 2));
   units::degree_t angle = 1_rad * std::atan2(yVelocityComponent.value(), xVelocityComponent.value());
 
-  _anglePIDController.SetSetpoint(angle);
-  _velocityPIDController.SetSetpoint(velocity);
+  _anglePIDController.SetSetpoint(angle.value());
+  _velocityPIDController.SetSetpoint(velocity.value());
 }
 
 units::meters_per_second_t SwerveModule::GetSpeed() const {
-  return units::meters_per_second_t{_config.driveMotor.encoder->GetEncoderAngularVelocity().value() *
-                                    _config.wheelRadius.value()};
+  units::meters_per_second_t returnVal{_config.driveMotor.encoder->GetVelocityValue() *
+                                       _config.wheelRadius.value()};
+  return returnVal;
 }
 
 units::meter_t SwerveModule::GetDistance() const {
@@ -159,10 +287,13 @@ void SwerveDriveConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
   table->GetEntry("mass").SetDouble(mass.value());
 }
 
-SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
+SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose, wom::vision::Limelight* vision)
     : _config(config),
-      _kinematics(_config.modules[0].position, _config.modules[1].position, _config.modules[2].position,
-                  _config.modules[3].position),
+      // _kinematics(_config.modules[1].position, _config.modules[0].position,
+      //             _config.modules[2].position, _config.modules[3].position),
+
+      _kinematics(_config.modules[3].position /*1*/, _config.modules[0].position /*0*/,
+                  _config.modules[1].position /*2*/, _config.modules[2].position /*3*/),
       _poseEstimator(
           _kinematics, frc::Rotation2d(0_deg),
           wpi::array<frc::SwerveModulePosition, 4>{frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}},
@@ -170,16 +301,18 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
                                                    frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}},
                                                    frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}}},
           initialPose, _config.stateStdDevs, _config.visionMeasurementStdDevs),
-      _anglePIDController(config.path + "/pid/heading", _config.poseAnglePID),
-      _xPIDController(config.path + "/pid/x", _config.posePositionPID),
-      _yPIDController(config.path + "/pid/y", _config.posePositionPID),
-      _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)) {
-  _anglePIDController.SetWrap(360_deg);
+      _anglePIDController{frc::PIDController(8, 0.1, 0)},
+      _xPIDController{frc::PIDController(4, 0, 0)},
+      _yPIDController{frc::PIDController(4, 0, 0)},
+      _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)),
+      _vision(vision) {
+  _anglePIDController.SetTolerance(360);
+  _anglePIDController.EnableContinuousInput(-3.14159, 3.14159);
 
   int i = 1;
   for (auto cfg : _config.modules) {
-    _modules.emplace_back(config.path + "/modules/" + std::to_string(i), cfg, config.anglePID,
-                          config.velocityPID);
+    _modules.emplace_back(config.path + "/modules/" + std::to_string(i), cfg,
+                          /*config.anglePID,*/ config.velocityPID);
     i++;
   }
 
@@ -191,10 +324,14 @@ frc::ChassisSpeeds FieldRelativeSpeeds::ToChassisSpeeds(const units::radian_t ro
 }
 
 void SwerveDrive::OnUpdate(units::second_t dt) {
+  _table->GetEntry("/gryo/z").SetDouble(_config.gyro->GetRotation3d().Z().value());
+  _table->GetEntry("/gryo/y").SetDouble(_config.gyro->GetRotation3d().Y().value());
+  _table->GetEntry("/gryo/x").SetDouble(_config.gyro->GetRotation3d().X().value());
+  AddVisionMeasurement(_vision->GetPose().ToPose2d(), wom::utils::now());
   switch (_state) {
     case SwerveDriveState::kZeroing:
       for (auto mod = _modules.begin(); mod < _modules.end(); mod++) {
-        mod->SetZero(dt);
+        // mod->SetZero(dt);
       }
       break;
     case SwerveDriveState::kIdle:
@@ -203,25 +340,69 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       }
       break;
     case SwerveDriveState::kPose: {
-      _target_fr_speeds.vx = _xPIDController.Calculate(GetPose().X(), dt);
-      _target_fr_speeds.vy = _yPIDController.Calculate(GetPose().Y(), dt);
-      _target_fr_speeds.omega = _anglePIDController.Calculate(GetPose().Rotation().Radians(), dt);
+      _table->GetEntry("/demand/x").SetDouble(_xPIDController.Calculate(GetPose().X().value()));
+      _table->GetEntry("/demand/y").SetDouble(_yPIDController.Calculate(GetPose().Y().value()));
+      _table->GetEntry("/demand/angle")
+          .SetDouble(_anglePIDController.Calculate(GetPose().Rotation().Radians().value()));
+
+      _table->GetEntry("/error/x").SetDouble(_xPIDController.GetPositionError());
+      _table->GetEntry("/error/y").SetDouble(_yPIDController.GetPositionError());
+      _table->GetEntry("/error/angle").SetDouble(_anglePIDController.GetPositionError());
+
+      _table->GetEntry("/setpoint/x").SetDouble(_xPIDController.GetSetpoint());
+      _table->GetEntry("/setpoint/y").SetDouble(_yPIDController.GetSetpoint());
+      _table->GetEntry("/setpoint/angle").SetDouble(_anglePIDController.GetSetpoint());
+
+      _target_fr_speeds.vx = units::meters_per_second_t{_xPIDController.Calculate(GetPose().X().value())};
+      _target_fr_speeds.vy = units::meters_per_second_t{_yPIDController.Calculate(GetPose().Y().value())};
+      _target_fr_speeds.omega =
+          units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
+      _target_fr_speeds.omega =
+          units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
     }
       [[fallthrough]];
     case SwerveDriveState::kFieldRelativeVelocity:
       _target_speed = _target_fr_speeds.ToChassisSpeeds(GetPose().Rotation().Radians());
       if (isRotateToMatchJoystick) {
-        _target_speed.omega = _anglePIDController.Calculate(GetPose().Rotation().Radians(), dt);
+        _target_speed.omega = units::radians_per_second_t{
+            _anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
       }
-      // std::cout << "vx = " << _target_speed.vx.value() << " vy = " <<
       // _target_fr_speeds.vy.value() << std::endl;
       [[fallthrough]];
     case SwerveDriveState::kVelocity: {
+      _table->GetEntry("Swerve module VX").SetDouble(_target_speed.vx.value());
+      _table->GetEntry("Swerve module VY").SetDouble(_target_speed.vy.value());
+      _table->GetEntry("Swerve module Omega").SetDouble(_target_speed.omega.value());
+      if (_target_speed.omega.value() > 0) {
+        // _modules[0].SetTurnOffsetForward();
+        _modules[1].SetTurnOffsetForward();
+      } else if (_target_speed.omega.value() < 0) {
+        // _modules[0].SetTurnOffsetReverse();
+        _modules[1].SetTurnOffsetReverse();
+      } else {
+        // _modules[0].TurnOffset();
+        _modules[1].TurnOffset();
+      }
+
+      if (_target_speed.vx > 0_mps || _target_speed.vy > 0_mps) {
+        _angle = _target_speed.omega * 1_s;
+      }
+
       auto target_states = _kinematics.ToSwerveModuleStates(_target_speed);
+      frc::ChassisSpeeds new_target_speed{_target_speed.vx, _target_speed.vy, -_target_speed.omega};
+      auto new_target_states = _kinematics.ToSwerveModuleStates(new_target_speed);
       for (size_t i = 0; i < _modules.size(); i++) {
-        _modules[i].SetPID(target_states[i].angle.Radians(), target_states[i].speed, dt);
-        // std::cout << "module " << i << ": " <<
-        // target_states[i].angle.Radians().value() << std::endl;
+        if (i == 3) {
+          _modules[i].SetPID(new_target_states[i].angle.Radians(), new_target_states[i].speed, dt);
+        } else {
+          _modules[i].SetPID(target_states[i].angle.Radians(), target_states[i].speed, dt);
+          // target_states[i].angle.Radians().value() << std::endl;
+        }
+
+        // if (i == 2) {
+        //   _modules[i].SetPID(new_target_states[i].angle.Radians(),
+        //                     new_target_states[i].speed, dt);
+        // }
       }
     } break;
     case SwerveDriveState::kIndividualTuning:
@@ -240,13 +421,14 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       _modules[3].SetPID(315_deg, 0_mps, dt);
       break;
     case SwerveDriveState::kFRVelocityRotationLock:
-      _target_speed.vx = _xPIDController.Calculate(GetPose().X(), dt);
-      _target_speed.vy = _yPIDController.Calculate(GetPose().Y(), dt);
-      _target_speed.omega = _anglePIDController.Calculate(GetPose().Rotation().Radians(), dt);
+      _target_speed.vx = units::meters_per_second_t{_xPIDController.Calculate(GetPose().X().value())};
+      _target_speed.vy = units::meters_per_second_t{_yPIDController.Calculate(GetPose().Y().value())};
+      _target_speed.omega =
+          units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
+      _target_speed = _requestedSpeeds.ToChassisSpeeds(GetPose().Rotation().Radians());
       _target_speed = _requestedSpeeds.ToChassisSpeeds(GetPose().Rotation().Radians());
       auto target_states = _kinematics.ToSwerveModuleStates(_target_speed);
       for (size_t i = 0; i < _modules.size(); i++) {
-        std::cout << "Speeds :" << target_states[i].speed.value() << std::endl;
         _modules[i].SetPID(target_states[i].angle.Radians(), target_states[i].speed, dt);
       }
       break;
@@ -284,9 +466,7 @@ void SwerveDrive::SetVoltageLimit(units::volt_t driveVoltageLimit) {
 // }
 
 void SwerveDrive::OnStart() {
-  _xPIDController.Reset();
-  _yPIDController.Reset();
-  _anglePIDController.Reset();
+  OnResetMode();
 
   _modules[0].OnStart();  // front left
   _modules[1].OnStart();  // front right
@@ -298,7 +478,6 @@ void SwerveDrive::OnResetMode() {
   _xPIDController.Reset();
   _yPIDController.Reset();
   _anglePIDController.Reset();
-  std::cout << "reset" << std::endl;
 }
 
 void SwerveDrive::RotateMatchJoystick(units::radian_t joystickAngle, FieldRelativeSpeeds speeds) {
@@ -307,7 +486,7 @@ void SwerveDrive::RotateMatchJoystick(units::radian_t joystickAngle, FieldRelati
   // _target_fr_speeds = speeds;
   _state = SwerveDriveState::kFieldRelativeVelocity;
   isRotateToMatchJoystick = true;
-  _anglePIDController.SetSetpoint(joystickAngle);
+  _anglePIDController.SetSetpoint(joystickAngle.value());
   _target_fr_speeds = speeds;
 }
 
@@ -348,13 +527,19 @@ void SwerveDrive::SetFieldRelativeVelocity(FieldRelativeSpeeds speeds) {
 
 void SwerveDrive::SetPose(frc::Pose2d pose) {
   _state = SwerveDriveState::kPose;
-  _anglePIDController.SetSetpoint(pose.Rotation().Radians());
-  _xPIDController.SetSetpoint(pose.X());
-  _yPIDController.SetSetpoint(pose.Y());
+  _anglePIDController.SetSetpoint(pose.Rotation().Radians().value());
+  _xPIDController.SetSetpoint(pose.X().value());
+  _yPIDController.SetSetpoint(pose.Y().value());
 }
 
 bool SwerveDrive::IsAtSetPose() {
-  return _anglePIDController.IsStable() && _xPIDController.IsStable() && _yPIDController.IsStable(0.05_m);
+  return std::abs(_anglePIDController.GetPositionError()) < 0.017 &&
+         std::abs(_anglePIDController.GetVelocityError()) < 0.017 &&
+         std::abs(_xPIDController.GetPositionError()) < 0.017 &&
+         std::abs(_xPIDController.GetVelocityError()) < 0.017 &&
+         std::abs(_yPIDController.GetPositionError()) < 0.017 &&
+         std::abs(_yPIDController.GetVelocityError()) <
+             0.017 /*true && _xPIDController.IsStable() && _yPIDController.IsStable(0.05_m)*/;
 }
 
 void SwerveDrive::ResetPose(frc::Pose2d pose) {
@@ -373,5 +558,4 @@ void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose, units::second_t timesta
   _poseEstimator.AddVisionMeasurement(pose, timestamp);
 }
 }  // namespace drivetrain
-
 }  // namespace wom
