@@ -43,10 +43,8 @@ jobs:
         run: wpiformat
       - name: Commit
         run: |
-          # Set credentials
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # Commit
           if git diff --cached --exit-code; then
             git commit -am "/format"
             git push 
@@ -57,4 +55,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           workflows: "ci.yml, format.yml"  # Replace with the actual workflow names (if different)
-          branches: [ ${{ github.ref }} ]
+          branches: "${{ github.ref }}"
