@@ -49,3 +49,10 @@ jobs:
           # Commit
           git commit -am "Formatting fixes"
           git push
+      - name: Dispatch workflow_run event
+        uses: ben-demigod/workflow-dispatch@v2.1.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          workflows: "ci.yml, format.yml"  # Replace with the actual workflow names (if different)
+          branches: [ ${{ github.ref }} ]
