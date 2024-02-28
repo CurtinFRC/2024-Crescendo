@@ -267,14 +267,14 @@ SwerveModule::SwerveModule(std::string path, SwerveModuleConfig config,
       _table(nt::NetworkTableInstance::GetDefault().GetTable(path)) {
   // _anglePIDController.SetTolerance(360);
   // _anglePIDController.EnableContinuousInput(-3.1415, (2 * 3.1415));
-  _anglePIDController.EnableContinuousInput(-3.1415, (3.1415));
+  _anglePIDController.EnableContinuousInput(0, (2*3.1415));
 }
 
 void SwerveModule::OnStart() {
   // _offset = offset;
   // _config.canEncoder->SetPosition(units::turn_t{0});
   _anglePIDController.Reset();
-  _anglePIDController.EnableContinuousInput(-3.14159, 3.14159);
+  _anglePIDController.EnableContinuousInput(0, 2*3.14159);
   _velocityPIDController.Reset();
 }
 
@@ -538,17 +538,19 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
         _angle = _target_speed.omega * 1_s;
       }
 
-      auto target_states = _kinematics.ToSwerveModuleStates(_target_speed);
+      
+      bool init = false;
+      
       frc::ChassisSpeeds new_target_speed {_target_speed.vx, _target_speed.vy, -_target_speed.omega};
+      auto target_states = _kinematics.ToSwerveModuleStates(_target_speed);
       auto new_target_states = _kinematics.ToSwerveModuleStates(new_target_speed);
       for (size_t i = 0; i < _modules.size(); i++) {
         if (i == 0 || i == 2 || i == 1) {
-          _modules[i].SetPID(new_target_states[i].angle.Radians(),
-                            new_target_states[i].speed, dt);
+          _modules[i].SetPID(new_target_states[i].angle.Radians(), new_target_states[i].speed, dt);
         } else {
-          _modules[i].SetPID(target_states[i].angle.Radians(),
-                            target_states[i].speed, dt);
+          _modules[i].SetPID(target_states[i].angle.Radians(), target_states[i].speed, dt);
         }
+
       }
     } break;
     case SwerveDriveState::kIndividualTuning:

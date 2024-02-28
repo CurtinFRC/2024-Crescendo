@@ -497,6 +497,15 @@ class SwerveDrive : public behaviour::HasBehaviour {
   units::degree_t _requestedAngle;
   FieldRelativeSpeeds _requestedSpeeds;
 
+  double diff = 0;
+  double diff2 = 0;
+
+  double lastdiff = 0;
+  double lastdiff2 = 0;
+
+  frc::ChassisSpeeds last_new_speed;
+  frc::ChassisSpeeds last_speed;
+
   frc::ChassisSpeeds _target_speed;
   FieldRelativeSpeeds _target_fr_speeds;
 
