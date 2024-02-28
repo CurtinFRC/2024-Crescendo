@@ -458,8 +458,8 @@ void SwerveDriveConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
 
 SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
     : _config(config),
-      _kinematics(_config.modules[1].position, _config.modules[0].position,
-                  _config.modules[2].position, _config.modules[3].position),
+      _kinematics(_config.modules[3].position, _config.modules[0].position,
+                  _config.modules[1].position, _config.modules[2].position),
       _poseEstimator(
           _kinematics, frc::Rotation2d(0_deg),
           wpi::array<frc::SwerveModulePosition, 4>{
@@ -542,13 +542,12 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       frc::ChassisSpeeds new_target_speed {_target_speed.vx, _target_speed.vy, -_target_speed.omega};
       auto new_target_states = _kinematics.ToSwerveModuleStates(new_target_speed);
       for (size_t i = 0; i < _modules.size(); i++) {
-        if (i == 1) {
+        if (i == 0 || i == 2 || i == 1) {
           _modules[i].SetPID(new_target_states[i].angle.Radians(),
                             new_target_states[i].speed, dt);
         } else {
           _modules[i].SetPID(target_states[i].angle.Radians(),
                             target_states[i].speed, dt);
-          // target_states[i].angle.Radians().value() << std::endl;
         }
       }
     } break;
@@ -588,8 +587,8 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
   _poseEstimator.Update(
       _config.gyro->GetRotation2d(),
       wpi::array<frc::SwerveModulePosition, 4>{
-          _modules[0].GetPosition(), _modules[1].GetPosition(),
-          _modules[2].GetPosition(), _modules[3].GetPosition()});
+          _modules[3].GetPosition(), _modules[0].GetPosition(),
+          _modules[1].GetPosition(), _modules[2].GetPosition()});
 
   utils::WritePose2NT(_table->GetSubTable("estimatedPose"),
                       _poseEstimator.GetEstimatedPosition());

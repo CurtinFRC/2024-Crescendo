@@ -381,7 +381,7 @@ class SwerveModule {
   double startingPos;
 
   double _offset;
-  units::meters_per_second_squared_t _currentAccelerationLimit = 6_mps / 1_s;
+  units::meters_per_second_squared_t _currentAccelerationLimit = 15_mps / 1_s;
 
   TurnOffsetValues _turnOffset = TurnOffsetValues::none;
 };
