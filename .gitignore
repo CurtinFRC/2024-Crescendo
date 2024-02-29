@@ -161,6 +161,9 @@ bin/
 # clangd
 /.cache
 compile_commands.json
+<<<<<<< HEAD
 
 # sim
 ctre_sim
+=======
+>>>>>>> eaa0623252b24fabd56e50f6a52c382e4c9640a4

@@ -18,5 +18,7 @@ class AlphaArmManualControl : public behaviour::Behaviour {
  private:
   AlphaArm* _alphaArm;
   frc::XboxController* _codriver;
-  bool _rawControl = false;
+  // units::volt_t _rightStick = ((_codriver->GetRightY()>0.05 || _codriver->GetRightY() < -0.05
+  // )?_codriver->GetRightY():0) * 2_V;
+  bool _rawControl;
 };

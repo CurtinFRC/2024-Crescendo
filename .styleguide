@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> eaa0623252b24fabd56e50f6a52c382e4c9640a4
 cppHeaderFileInclude {
    \.h$
    \.hpp$

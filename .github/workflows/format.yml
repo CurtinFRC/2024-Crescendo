@@ -21,7 +21,11 @@ jobs:
         with:
           python-version: 3.8
       - name: Install wpiformat
+<<<<<<< HEAD
         run: pip3 install wpiformat==2024.31
+=======
+        run: pip3 install wpiformat==2023.36
+>>>>>>> eaa0623252b24fabd56e50f6a52c382e4c9640a4
       - name: Run
         run: wpiformat
       - name: Check output
