@@ -24,3 +24,4 @@ class AlphaArmManualControl : public behaviour::Behaviour {
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("AlphaArmSubsystem");
 
 };
+

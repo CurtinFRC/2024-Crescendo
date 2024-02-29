@@ -5,6 +5,7 @@
 #pragma once
 #include <frc/DigitalInput.h>
 
+
 #include "Wombat.h"
 //#include "vision/Vision.h"
 #include "utils/PID.h"
@@ -19,6 +20,7 @@ struct AlphaArmConfig {
 
   std::string path;
   // Vision *vision;
+
 };
 
 enum class AlphaArmState {

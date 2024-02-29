@@ -161,3 +161,6 @@ bin/
 # clangd
 /.cache
 compile_commands.json
+
+# sim
+ctre_sim

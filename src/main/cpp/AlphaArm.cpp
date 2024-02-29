@@ -13,6 +13,7 @@ AlphaArm::AlphaArm(AlphaArmConfig *config/*, frc::Rotation2d initialAngle, wom::
 void AlphaArm::OnStart(){
   _pidArmStates.Reset();
   _pidIntakeState.Reset();
+
 }
 
 void AlphaArm::OnUpdate(units::second_t dt) {
@@ -85,6 +86,7 @@ void AlphaArm::OnUpdate(units::second_t dt) {
 
 
      std::cout << "Voltage:" << _setAlphaArmVoltage.value() << std::endl;
+
 }
 
 void AlphaArm::SetState(AlphaArmState state) {
@@ -95,6 +97,7 @@ void AlphaArm::SetArmRaw(units::volt_t voltage) {
   _rawArmVoltage = voltage;
 }
 
+
 void AlphaArm::SetGoal(double goal){
   _goal = goal;
 }
@@ -102,4 +105,5 @@ void AlphaArm::SetGoal(double goal){
 void AlphaArm::SetControllerRaw(units::volt_t voltage){
   _controlledRawVoltage = voltage;
 }
+
 

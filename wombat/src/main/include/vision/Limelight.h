@@ -82,7 +82,7 @@ class Limelight {
 
   std::string GetName();
 
-  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+  std::shared_ptr<nt::NetworkTable> table;
 
   std::pair<double, double> GetOffset();
 
