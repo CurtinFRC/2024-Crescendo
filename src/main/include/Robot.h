@@ -41,8 +41,6 @@ class Robot : public frc::TimedRobot {
   RobotMap robotmap;
   wom::BehaviourScheduler* sched;
   frc::EventLoop loop;
-  // Shooter* shooter;
-
   frc::SendableChooser<std::string> m_chooser;
 
   frc::Field2d m_field;
@@ -75,4 +73,11 @@ class Robot : public frc::TimedRobot {
   //     kTaxi, kAutoTest, kQuadrupleClose, kQuadrupleFar, kQuadrupleCloseDoubleFar, kQuadrupleCloseSingleFar,
   // };
   // Intake* intake;
+  wom::SwerveDrive* _swerveDrive;
+  AlphaArm* alphaArm;
+
+  ctre::phoenix6::hardware::TalonFX *frontLeft;
+  // ctre::phoenix6::hardware::TalonFX *frontRight;
+  // ctre::phoenix6::hardware::TalonFX *backLeft;
+  // ctre::phoenix6::hardware::TalonFX *backRight;
 };

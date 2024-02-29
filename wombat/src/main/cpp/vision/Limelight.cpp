@@ -8,7 +8,9 @@
 
 #include "utils/Util.h"
 
-wom::vision::Limelight::Limelight(std::string limelightName) : _limelightName(limelightName) {}
+wom::vision::Limelight::Limelight(std::string limelightName) : _limelightName(limelightName) {
+  table = nt::NetworkTableInstance::GetDefault().GetTable(_limelightName);
+}
 
 std::string wom::vision::Limelight::GetName() {
   return _limelightName;

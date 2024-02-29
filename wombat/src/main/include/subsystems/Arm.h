@@ -70,7 +70,8 @@ class Arm : public behaviour::HasBehaviour {
   ArmConfig _config;
   ArmState _state = ArmState::kIdle;
   wom::utils::PIDController<units::radian, units::volt> _pid;
-  wom::utils::PIDController<units::radians_per_second, units::volt> _velocityPID;
+  wom::utils::PIDController<units::radians_per_second, units::volt>
+      _velocityPID;
 
   std::shared_ptr<nt::NetworkTable> _table;
 
