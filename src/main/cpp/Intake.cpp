@@ -54,9 +54,9 @@ void Intake::OnUpdate(units::second_t dt) {
       }
       _pid.SetSetpoint(0);
       units::volt_t pidCalculate =
-          units::volt_t{_pid.Calculate(_config.IntakeGearbox.encoder->GetEncoderAngularVelocity().value())};
+          // units::volt_t{_pid.Calculate(_config.IntakeGearbox.encoder->GetEncoderAngularVelocity().value())};
       // units::volt_t pidCalculate =
-      //     units::volt_t{_pidPosition.Calculate(_config.IntakeGearbox.encoder->GetEncoderPosition().value())};
+          units::volt_t{_pidPosition.Calculate(_config.IntakeGearbox.encoder->GetEncoderPosition().value())};
       _setVoltage = pidCalculate;
       _stringStateName = "Hold";
     }

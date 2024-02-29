@@ -9,8 +9,6 @@
 #include "Intake.h"
 #include "Wombat.h"
 
-enum class IntakeBehaviourState { kIntaking, kEjecting, kPassing, kIdleing};
-
 class IntakeManualControl : public behaviour::Behaviour {
  public:
   explicit IntakeManualControl(Intake* intake, frc::XboxController& codriver);
@@ -26,6 +24,35 @@ class IntakeManualControl : public behaviour::Behaviour {
 class AutoIntake : public behaviour::Behaviour {
  public:
   explicit AutoIntake(Intake* intake);
+  void OnTick(units::second_t dt) override;
+
+ private:
+  Intake* _intake;
+};
+
+class IntakeNote : public behaviour::Behaviour {
+ public:
+  explicit IntakeNote(Intake* intake);
+  void OnTick(units::second_t dt) override;
+
+ private:
+  Intake* _intake;
+  
+};
+
+class PassNote : public behaviour::Behaviour {
+ public:
+  explicit PassNote(Intake* intake);
+  void OnTick(units::second_t dt) override;
+
+ private:
+  Intake* _intake;
+  
+};
+
+class EjectNote : public behaviour::Behaviour {
+ public:
+  explicit EjectNote(Intake* intake);
   void OnTick(units::second_t dt) override;
 
  private:

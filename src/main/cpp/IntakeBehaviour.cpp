@@ -58,4 +58,43 @@ void IntakeManualControl::OnTick(units::second_t dt) {
 AutoIntake::AutoIntake(Intake* intake) : _intake(intake) {
   Controls(intake);
 }
-void AutoIntake::OnTick(units::second_t dt) {}
+
+void AutoIntake::OnTick(units::second_t dt) {
+  _intake->SetState(IntakeState::kIntake);
+}
+
+IntakeNote::IntakeNote(Intake* intake) : _intake(intake) {
+  Controls(intake);
+}
+
+void IntakeNote::OnTick(units::second_t dt) {
+  _intake->SetState(IntakeState::kIntake);
+
+  if (_intake->GetState() == IntakeState::kHold) {
+    SetDone();
+  }
+}
+
+PassNote::PassNote(Intake* intake) : _intake(intake) {
+  Controls(intake);
+}
+
+void PassNote::OnTick(units::second_t dt) {
+  _intake->SetState(IntakeState::kPass);
+
+  if (_intake->GetState() == IntakeState::kIdle) {
+    SetDone();
+  }
+}
+
+EjectNote::EjectNote(Intake* intake) : _intake(intake) {
+  Controls(intake);
+}
+
+void EjectNote::OnTick(units::second_t dt) {
+  _intake->SetState(IntakeState::kEject);
+
+  if (_intake->GetState() == IntakeState::kIdle) {
+    SetDone();
+  }
+}
