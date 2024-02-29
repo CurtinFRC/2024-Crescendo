@@ -106,7 +106,7 @@ class DutyCycleEncoder : public Encoder {
   double GetVelocity() const override;
 
  private:
-  frc::DutyCycleEncoder _dutyCycleEncoder;
+  frc::DutyCycleEncoder* _dutyCycleEncoder;
 };
 
 class CanEncoder : public Encoder {

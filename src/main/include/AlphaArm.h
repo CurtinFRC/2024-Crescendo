@@ -4,11 +4,23 @@
 
 #pragma once
 #include <frc/DigitalInput.h>
+
+
 #include "Wombat.h"
+//#include "vision/Vision.h"
+#include "utils/PID.h"
+#include <units/angle.h>
+#include <units/voltage.h>
+#include <frc/controller/PIDController.h>
 
 struct AlphaArmConfig {
   wom::Gearbox alphaArmGearbox;
-  wom::Gearbox wristGearbox;
+  wom::Gearbox alphaArmGearbox2;
+  wom::DutyCycleEncoder alphaArmEncoder;
+
+  std::string path;
+  // Vision *vision;
+
 };
 
 enum class AlphaArmState {
@@ -16,28 +28,42 @@ enum class AlphaArmState {
   kIntakeAngle,
   kAmpAngle,
   kSpeakerAngle,
-  kForwardWrist,
-  kReverseWrist,
+  kHoldAngle,
+  kVisionAngle,
+  kStowed,
   kRaw
 };
 
-class AlphaArm : public ::behaviour::HasBehaviour {
+class AlphaArm : public behaviour::HasBehaviour {
  public:
-  explicit AlphaArm(AlphaArmConfig config);
+  AlphaArm(AlphaArmConfig *config/*, frc::Rotation2d initialAngle, wom::vision::Limelight* vision*/);
 
   void OnUpdate(units::second_t dt);
   void SetArmRaw(units::volt_t voltage);
-  void setWristRaw(units::volt_t voltage);
   void SetState(AlphaArmState state);
-  AlphaArmConfig GetConfig();
-  // void SetRaw(units::volt_t voltage);
+  void SetControllerRaw(units::volt_t voltage); 
+  void SetGoal(double goal);
+  void OnStart();
+  AlphaArmConfig GetConfig(); //{ return _config; }
+  frc::PIDController GetPID();
 
  private:
-  AlphaArmConfig _config;
-  AlphaArmState _state = AlphaArmState::kIdle;
-  units::volt_t _setAlphaArmVoltage = 0_V;
-  units::volt_t _setWristVoltage = 0_V;
+  // units::radian_t CalcTargetAngle();
 
+  AlphaArmConfig *_config;
+  wom::vision::Limelight* _vision;
+  AlphaArmState _state = AlphaArmState::kIdle;
+  //wom::utils::PIDController<units::degree, units::volt> _alphaArmPID;
+  //frc::DutyCycleEncoder armEncoder{4};
+  frc::PIDController _pidArm;
+  frc::PIDController _pidArmStates;
+  frc::PIDController _pidIntakeState;
+  std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("AlphaArm");
+  units::volt_t _setAlphaArmVoltage = 0_V;
+
+  units::volt_t _controlledRawVoltage = 0_V;
   units::volt_t _rawArmVoltage = 0_V;
-  units::volt_t _rawWristVoltage = 0_V;
+  units::volt_t _testRawVoltage = 3_V;
+  double _goal = 0;
+
 };
