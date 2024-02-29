@@ -41,12 +41,13 @@ struct RobotMap {
     rev::CANSparkMax intakeMotor{35, rev::CANSparkMax::MotorType::kBrushless};
     wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
     frc::DigitalInput intakeSensor{5};
+    frc::DigitalInput passSensor{99};
     // frc::DigitalInput magSensor{0};
     // frc::DigitalInput shooterSensor{0};
 
     wom::Gearbox IntakeGearbox{&intakeMotor, &intakeEncoder, frc::DCMotor::NEO(1)};
 
-    IntakeConfig config{"path", IntakeGearbox, &intakeSensor, wom::PIDConfig<units::radians_per_second, units::volts>(
+    IntakeConfig config{"path", IntakeGearbox, &intakeSensor, &passSensor, wom::PIDConfig<units::radians_per_second, units::volts>(
           "/intake/PID/config",
           9_V / (180_deg / 1_s),
           0_V / 25_deg,
