@@ -148,7 +148,7 @@ void Robot::AutonomousInit() {
 void Robot::AutonomousPeriodic() {
   // m_driveSim->OnUpdate();
 }
-void Robot::AutonomousPeriodic() {}
+
 
 void Robot::TeleopInit() {
   loop.Clear();
