@@ -5,13 +5,14 @@
 #include "AlphaArm.h"
 
 
-AlphaArm::AlphaArm(AlphaArmConfig *config) : _config(config), _pidArm{frc::PIDController(1.2, 0.4, 0)}, _pidArmStates{frc::PIDController(6.5, 0.1, 0)}, _pidIntakeState{frc::PIDController(1, 0, 0)} 
+AlphaArm::AlphaArm(AlphaArmConfig *config/*, frc::Rotation2d initialAngle, wom::vision::Limelight* vision */) : _config(config), _pidArm{frc::PIDController(1.2, 0.4, 0)}, _pidArmStates{frc::PIDController(37, 0.00070, 0.15)}, _pidIntakeState{frc::PIDController(30, 0.00015, 0.005)} 
 {
  
 }
 
 void AlphaArm::OnStart(){
   _pidArmStates.Reset();
+  _pidIntakeState.Reset();
 }
 
 void AlphaArm::OnUpdate(units::second_t dt) {
@@ -43,8 +44,8 @@ void AlphaArm::OnUpdate(units::second_t dt) {
 
     case AlphaArmState::kIntakeAngle:
     std::cout << "Intake Angle" << std::endl;
-       _pidIntakeState.SetSetpoint(-0.48);
-       _setAlphaArmVoltage = units::volt_t{_pidArmStates.Calculate(-_config->alphaArmEncoder.GetEncoderPosition().value())};
+       _pidIntakeState.SetSetpoint(-0.48); //-0.48
+       _setAlphaArmVoltage = units::volt_t{_pidIntakeState.Calculate(-_config->alphaArmEncoder.GetEncoderPosition().value())};
     break;
 
     case AlphaArmState::kSpeakerAngle:
@@ -53,6 +54,11 @@ void AlphaArm::OnUpdate(units::second_t dt) {
        _setAlphaArmVoltage = units::volt_t{_pidArmStates.Calculate(-_config->alphaArmEncoder.GetEncoderPosition().value())};
 
     break;
+
+    // case AlphaArmState::kVisionAngle:
+    // std::cout << "Vision Angle" << std::endl;
+
+    // break;
 
     case AlphaArmState::kStowed:
     std::cout << "Stowed" << std::endl;
@@ -72,6 +78,10 @@ void AlphaArm::OnUpdate(units::second_t dt) {
 
     _table->GetEntry("PID Error State").SetDouble(_pidArmStates.GetPositionError());
     _table->GetEntry("SetPoint State").SetDouble(_pidArmStates.GetSetpoint());
+
+    _table->GetEntry("Intake SetPoint State").SetDouble(_pidIntakeState.GetSetpoint());
+    _table->GetEntry("Intake PID Error State").SetDouble(_pidIntakeState.GetPositionError());
+
 
 
      std::cout << "Voltage:" << _setAlphaArmVoltage.value() << std::endl;

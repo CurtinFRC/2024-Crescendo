@@ -21,7 +21,7 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
   _table->GetEntry("Goal Value").SetBoolean(_gotValue);
   
 
-  if (_codriver->GetRightBumperPressed()) {
+  if (_codriver->GetBButton()) {
     if (_rawControl == true) {
       _rawControl = false;
     } else {
@@ -35,8 +35,11 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
     _alphaArm->SetState(AlphaArmState::kAmpAngle);
   } else if(_codriver->GetYButton()){
     _alphaArm->SetState(AlphaArmState::kStowed);
-  } else {
+  } else if(_codriver->GetRightBumper()){
     _alphaArm->SetState(AlphaArmState::kIntakeAngle);
+  } else {
+    _alphaArm->SetState(AlphaArmState::kIdle);
   }
+}
 
-  }
+  

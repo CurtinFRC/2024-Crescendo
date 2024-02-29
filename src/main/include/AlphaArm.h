@@ -27,13 +27,14 @@ enum class AlphaArmState {
   kAmpAngle,
   kSpeakerAngle,
   kHoldAngle,
+  kVisionAngle,
   kStowed,
   kRaw
 };
 
 class AlphaArm : public behaviour::HasBehaviour {
  public:
-  AlphaArm(AlphaArmConfig *config);
+  AlphaArm(AlphaArmConfig *config/*, frc::Rotation2d initialAngle, wom::vision::Limelight* vision*/);
 
   void OnUpdate(units::second_t dt);
   void SetArmRaw(units::volt_t voltage);
@@ -48,6 +49,7 @@ class AlphaArm : public behaviour::HasBehaviour {
   // units::radian_t CalcTargetAngle();
 
   AlphaArmConfig *_config;
+  wom::vision::Limelight* _vision;
   AlphaArmState _state = AlphaArmState::kIdle;
   //wom::utils::PIDController<units::degree, units::volt> _alphaArmPID;
   //frc::DutyCycleEncoder armEncoder{4};
