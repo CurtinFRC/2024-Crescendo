@@ -4,25 +4,23 @@
 
 #pragma once
 #include <frc/DigitalInput.h>
-#include <frc/DutyCycleEncoder.h>
-#include <frc/controller/PIDController.h>
-#include <units/angular_velocity.h>
 
-#include <memory>
-#include <string>
 
 #include "Wombat.h"
+//#include "vision/Vision.h"
 #include "utils/PID.h"
+#include <units/angle.h>
+#include <units/voltage.h>
+#include <frc/controller/PIDController.h>
 
 struct AlphaArmConfig {
   wom::Gearbox alphaArmGearbox;
-  // wom::Gearbox wristGearbox;
-  // wom::DutyCycleEncoder* armEncoder;
-  // wom::CANSparkMaxEncoder* armEncoder;
-  wom::utils::PIDConfig<units::radian, units::volt> pidConfigA;
-  // wom::utils::PIDConfig<units::radians_per_second, units::volt> velocityConfig;
+  wom::Gearbox alphaArmGearbox2;
+  wom::DutyCycleEncoder alphaArmEncoder;
+
   std::string path;
-  // void WriteNT(std::shared_ptr<nt::NetworkTable> table);
+  // Vision *vision;
+
 };
 
 enum class AlphaArmState {
@@ -30,52 +28,42 @@ enum class AlphaArmState {
   kIntakeAngle,
   kAmpAngle,
   kSpeakerAngle,
+  kHoldAngle,
+  kVisionAngle,
   kStowed,
   kRaw
-  // kForwardWrist,
-  // kReverseWrist,
 };
 
-class AlphaArm : public ::behaviour::HasBehaviour {
+class AlphaArm : public behaviour::HasBehaviour {
  public:
-  explicit AlphaArm(AlphaArmConfig config);
+  AlphaArm(AlphaArmConfig *config/*, frc::Rotation2d initialAngle, wom::vision::Limelight* vision*/);
 
-  void OnStart();
   void OnUpdate(units::second_t dt);
   void SetArmRaw(units::volt_t voltage);
   void SetState(AlphaArmState state);
-  void setControllerRaw(units::volt_t);
-  // void setGoal(units::radians_per_second_t);
-  void SetGoal(units::radian_t);
-  double GetArmEncoder();
-  AlphaArmConfig GetConfig();
-  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("AlphaArm");
-  // units::radians_per_second_t goal;
-  // double goal;
-
-  // frc::DutyCycleEncoder armEncoder{12};
-  // void SetRaw(units::volt_t voltage);
+  void SetControllerRaw(units::volt_t voltage); 
+  void SetGoal(double goal);
+  void OnStart();
+  AlphaArmConfig GetConfig(); //{ return _config; }
+  frc::PIDController GetPID();
 
  private:
-  // frc::PIDController _pidFRC;
-  wom::utils::PIDController<units::radian, units::volt> _pidWom;
-  // wom::utils::PIDController<units::radians_per_second, units::volt> _velocityPID;
+  // units::radian_t CalcTargetAngle();
 
-  std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("AlphaArm");
-  AlphaArmConfig _config;
+  AlphaArmConfig *_config;
+  wom::vision::Limelight* _vision;
   AlphaArmState _state = AlphaArmState::kIdle;
-  units::radian_t _goal;
+  //wom::utils::PIDController<units::degree, units::volt> _alphaArmPID;
+  //frc::DutyCycleEncoder armEncoder{4};
+  frc::PIDController _pidArm;
+  frc::PIDController _pidArmStates;
+  frc::PIDController _pidIntakeState;
+  std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("AlphaArm");
   units::volt_t _setAlphaArmVoltage = 0_V;
-  units::volt_t _setWristVoltage = 0_V;
 
-  units::volt_t _rawArmVoltage = 0_V;
-  units::volt_t _rawWristVoltage = 0_V;
-  // units::radiant_t maxAngle = 1_radian_t;
-
-  units::radian_t _encoderSetpoint = 0_rad;
   units::volt_t _controlledRawVoltage = 0_V;
-  units::radian_t _startingPos = 0_rad;
+  units::volt_t _rawArmVoltage = 0_V;
+  units::volt_t _testRawVoltage = 3_V;
+  double _goal = 0;
 
-  std::string _stateName = "Default";
-  bool started = false;
 };
