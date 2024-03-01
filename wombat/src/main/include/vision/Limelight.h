@@ -26,20 +26,11 @@
 namespace wom {
 namespace vision {
 
-enum class LimelightLEDMode {
-  kPipelineDefault = 0,
-  kForceOff = 1,
-  kForceBlink = 2,
-  kForceOn = 3
-};
+enum class LimelightLEDMode { kPipelineDefault = 0, kForceOff = 1, kForceBlink = 2, kForceOn = 3 };
 
 enum class LimelightCamMode { kVisionProcessor = 0, kDriverCamera = 1 };
 
-enum class LimelightStreamMode {
-  kStandard = 0,
-  kPiPMain = 1,
-  kPiPSecondary = 2
-};
+enum class LimelightStreamMode { kStandard = 0, kPiPMain = 1, kPiPSecondary = 2 };
 
 enum class LimelightSnapshotMode { kReset = 0, kSingle = 1 };
 
@@ -91,14 +82,12 @@ class Limelight {
 
   std::string GetName();
 
-  std::shared_ptr<nt::NetworkTable> table =
-      nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
 
   std::pair<double, double> GetOffset();
 
   std::vector<double> GetAprilTagData(LimelightAprilTagData dataType);
-  double GetTargetingData(LimelightTargetingData dataType,
-                          double defaultValue = 0.0);
+  double GetTargetingData(LimelightTargetingData dataType, double defaultValue = 0.0);
   void SetLEDMode(LimelightLEDMode mode);
   void SetCamMode(LimelightCamMode mode);
   void SetPipeline(LimelightPipeline pipeline);
@@ -112,8 +101,8 @@ class Limelight {
   bool IsAtSetPoseVision(frc::Pose3d pose, units::second_t dt);
   bool IsAtSetPoseVision(frc::Pose2d pose, units::second_t dt);
 
-  units::meters_per_second_t GetSpeed(frc::Pose3d pose1, frc::Pose3d pose2,
-                                      units::second_t dt);
+  units::meters_per_second_t GetSpeed(frc::Pose3d pose1, frc::Pose3d pose2, units::second_t dt);
+  units::meters_per_second_t GetSpeed(frc::Pose2d pose1, frc::Pose2d pose2, units::second_t dt);
 
   frc::Pose3d GetPose();
 

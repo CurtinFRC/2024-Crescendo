@@ -10,21 +10,8 @@ Fork this repository then open up a terminal and run :
 ```bash
 git clone https://github.com/*yourusernamehere*/2024-Crescendo.git
 cd 2024-Crescendo
-chmod +x init.sh
-./init.sh
 ```
 Now look in [CONTRIBUTING.md](./CONTRIBUTING.md) before continuing!
-
-Windows
----
-Fork this repository then open up a terminal and run :
-```powershell
-git clone https:\\github.com\*yourusernamehere*\2024-Crescendo.git
-cd 2024-Crescendo
-.\init
-```
-Now look in [CONTRIBUTING.md](./CONTRIBUTING.md) before continuing!
-
 Quick Commands
 ===
 These commands can be used in a variety of combinations, feel free to experiment!
@@ -55,6 +42,7 @@ Runs a simulation of your code at highest optimisation.
 
 **Debug**
 `./gradlew :simulateNativeDebug`
+
 Runs a debug simulation of your code, including a variety of debugging tools similar to glass but at lower optimisation.
 
 Documentation

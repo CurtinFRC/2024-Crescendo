@@ -41,7 +41,7 @@ class Shooter : public behaviour::HasBehaviour {
   units::volt_t _rawVoltage;
   units::radians_per_second_t _goal;
   units::volt_t _setVoltage = 0_V;
-  wom::utils::PIDController<units::radians_per_second, units::volt> _pid;
+  wom::PIDController<units::radians_per_second, units::volt> _pid;
   // frc::DigitalInput _shooterSensor{0};
 
   units::volt_t holdVoltage = 0_V;

@@ -10,19 +10,14 @@ using namespace frc;
 using namespace wom;
 
 // creates network table instatnce on shuffleboard
-void wom::subsystems::ArmConfig::WriteNT(
-    std::shared_ptr<nt::NetworkTable> table) {
+void wom::subsystems::ArmConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
   table->GetEntry("armMass").SetDouble(armMass.value());
   table->GetEntry("loadMass").SetDouble(loadMass.value());
   table->GetEntry("armLength").SetDouble(armLength.value());
-  table->GetEntry("minAngle")
-      .SetDouble(minAngle.convert<units::degree>().value());
-  table->GetEntry("maxAngle")
-      .SetDouble(maxAngle.convert<units::degree>().value());
-  table->GetEntry("initialAngle")
-      .SetDouble(initialAngle.convert<units::degree>().value());
-  table->GetEntry("angleOffset")
-      .SetDouble(initialAngle.convert<units::degree>().value());
+  table->GetEntry("minAngle").SetDouble(minAngle.convert<units::degree>().value());
+  table->GetEntry("maxAngle").SetDouble(maxAngle.convert<units::degree>().value());
+  table->GetEntry("initialAngle").SetDouble(initialAngle.convert<units::degree>().value());
+  table->GetEntry("angleOffset").SetDouble(initialAngle.convert<units::degree>().value());
 }
 
 // arm config is used
@@ -43,14 +38,12 @@ void wom::subsystems::Arm::OnUpdate(units::second_t dt) {
     case ArmState::kIdle:
       break;
     case ArmState::kVelocity: {
-      units::newton_meter_t torque =
-          9.81_m / 1_s / 1_s * _config.armLength *
-          units::math::cos(angle + _config.angleOffset) *
-          (0.5 * _config.armMass + _config.loadMass);
+      units::newton_meter_t torque = 9.81_m / 1_s / 1_s * _config.armLength *
+                                     units::math::cos(angle + _config.angleOffset) *
+                                     (0.5 * _config.armMass + _config.loadMass);
       // units::volt_t feedforward = _config.leftGearbox.motor.Voltage(torque,
       // 0_rad/1_s);
-      units::volt_t feedforward =
-          _config.leftGearbox.motor.Voltage(torque, _velocityPID.GetSetpoint());
+      units::volt_t feedforward = _config.leftGearbox.motor.Voltage(torque, _velocityPID.GetSetpoint());
       // feedforward = 3.5_V;
       // std::cout << "feedforward" << feedforward.value() << std::endl;
       voltage = _velocityPID.Calculate(GetArmVelocity(), dt, feedforward);
@@ -58,12 +51,10 @@ void wom::subsystems::Arm::OnUpdate(units::second_t dt) {
       // std::endl; voltage = 0_V;
     } break;
     case ArmState::kAngle: {
-      units::newton_meter_t torque =
-          9.81_m / 1_s / 1_s * _config.armLength *
-          units::math::cos(angle + _config.angleOffset) *
-          (0.5 * _config.armMass + _config.loadMass);
-      units::volt_t feedforward =
-          _config.leftGearbox.motor.Voltage(torque, 0_rad / 1_s);
+      units::newton_meter_t torque = 9.81_m / 1_s / 1_s * _config.armLength *
+                                     units::math::cos(angle + _config.angleOffset) *
+                                     (0.5 * _config.armMass + _config.loadMass);
+      units::volt_t feedforward = _config.leftGearbox.motor.Voltage(torque, 0_rad / 1_s);
       // std::cout << "feedforward" << feedforward.value() << std::endl;
       voltage = _pid.Calculate(angle, dt, feedforward);
     } break;
@@ -123,8 +114,12 @@ wom::subsystems::ArmConfig& wom::subsystems::Arm::GetConfig() {
   return _config;
 }
 
+wom::subsystems::ArmState wom::subsystems::Arm::GetState() {
+  return _state;
+}
+
 units::radian_t wom::subsystems::Arm::GetAngle() const {
-  return _config.armEncoder.GetPosition() / 100 * 360 * 1_deg;
+  return _config.armEncoder->GetPosition() / 100 * 360 * 1_deg;
 }
 
 units::radians_per_second_t wom::subsystems::Arm::MaxSpeed() const {
@@ -132,7 +127,7 @@ units::radians_per_second_t wom::subsystems::Arm::MaxSpeed() const {
 }
 
 units::radians_per_second_t wom::subsystems::Arm::GetArmVelocity() const {
-  return _config.armEncoder.GetVelocity() / 100 * 360 * 1_deg / 60_s;
+  return _config.armEncoder->GetVelocity() / 100 * 360 * 1_deg / 60_s;
 }
 
 bool wom::subsystems::Arm::IsStable() const {
