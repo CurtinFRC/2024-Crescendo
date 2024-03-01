@@ -6,6 +6,7 @@
 
 #include <frc/XboxController.h>
 #include "AlphaArm.h"
+#include "units/angle.h"
 #include "units/length.h"
 #include "units/time.h"
 #include "vision/Limelight.h"
@@ -39,6 +40,9 @@ AimToToAprilTag::AimToToAprilTag(AlphaArm* arm, Vision* vision) : _arm(arm), _ta
 
 void AimToToAprilTag::OnTick(units::second_t dt) {
   units::meter_t dist = _vision->GetDistanceToTarget(_target).first;
-
   
+  units::radian_t a = 1_rad; // angle to shoot at one meter
+  units::radian_t h = a * dist.value();
+  
+  _arm->SetGoal(h);
 }
