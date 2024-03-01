@@ -71,6 +71,7 @@ enum class LimelightTargetingData {
   kJson = 11,
   kTclass = 12,
   kTc = 13,
+  kTid = 14
 };
 
 enum class LimelightAprilTagData {
@@ -82,7 +83,6 @@ enum class LimelightAprilTagData {
   kTargetpose_robotspace = 5,
   kBotpose_targetspace = 6,
   kCamerapose_robotspace = 7,
-  kTid = 8
 };
 
 class Limelight {
@@ -110,11 +110,14 @@ class Limelight {
   void OnStart();
 
   bool IsAtSetPoseVision(frc::Pose3d pose, units::second_t dt);
+  bool IsAtSetPoseVision(frc::Pose2d pose, units::second_t dt);
 
   units::meters_per_second_t GetSpeed(frc::Pose3d pose1, frc::Pose3d pose2,
                                       units::second_t dt);
 
   frc::Pose3d GetPose();
+
+  bool HasTarget();
 
  private:
   std::string _limelightName;

@@ -4,6 +4,7 @@
 
 #pragma once
 // #include <frc/Encoder.h>
+#include <frc/Encoder.h>
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
 #include <frc/event/EventLoop.h>
@@ -12,11 +13,17 @@
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <networktables/DoubleTopic.h>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableInstance.h>
 
 #include <string>
+#include <vector>
 
 #include "AlphaArm.h"
 #include "AlphaArmBehaviour.h"
+#include "Intake.h"
+#include "IntakeBehaviour.h"
 #include "RobotMap.h"
 #include "Wombat.h"
 
@@ -48,8 +55,32 @@ class Robot : public frc::TimedRobot {
 
   // frc::Timer simulation_timer;
 
+  frc::Field2d field;
+  frc::Timer timer;
   frc::SendableChooser<std::string> m_path_chooser;
 
+  // wom::SwerveDrive* _swerveDrive;
+
+  // AlphaArm* alphaArm;
+  Intake* intake;
+  // Shooter* shooter;
+
+  // Vision* _vision;
+
+  // frc::SendableChooser<std::string> m_chooser;
+  // const std::string kTaxi = "kTaxi";
+  // const std::string kAutoTest = "kAutoTest";
+  // const std::string kQuadrupleClose = "kQuadrupleClose";
+  // const std::string kQuadrupleFar = "kQuadrupleFar";
+  // const std::string kQuadrupleCloseDoubleFar = "kQuadrupleCloseDoubleFar";
+  // const std::string kQuadrupleCloseSingleFar = "kQuadrupleCloseSingleFar";
+  // std::string m_autoSelected;
+
+  // std::string defaultAuto = "kTaxi";
+  // std::vector<std::string> autoOptions = {
+  //     kTaxi, kAutoTest, kQuadrupleClose, kQuadrupleFar, kQuadrupleCloseDoubleFar, kQuadrupleCloseSingleFar,
+  // };
+  // Intake* intake;
   wom::SwerveDrive* _swerveDrive;
 
   // rev::CANSparkMax testMotorUp{1, rev::CANSparkMax::MotorType::kBrushless};

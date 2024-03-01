@@ -60,13 +60,9 @@ std::vector<double> wom::vision::Limelight::GetAprilTagData(
     case LimelightAprilTagData::kCamerapose_robotspace:
       dataName = "camerapose_robotspace";
       break;
-
-    case LimelightAprilTagData::kTid:
-      dataName = "tid";
-      break;
   }
 
-  return table->GetNumberArray(dataName, std::vector<double>(6));
+  return table->GetEntry(dataName).GetDoubleArray(std::vector<double>(6));
 }
 
 double wom::vision::Limelight::GetTargetingData(LimelightTargetingData dataType,
@@ -129,9 +125,13 @@ double wom::vision::Limelight::GetTargetingData(LimelightTargetingData dataType,
     case LimelightTargetingData::kTc:
       dataName = "tc";
       break;
+
+    case LimelightTargetingData::kTid:
+      dataName = "tid";
+      break;
   }
 
-  return table->GetNumber(dataName, defaultValue);
+  return table->GetEntry(dataName).GetDouble(0);
 }
 
 void wom::vision::Limelight::SetLEDMode(LimelightLEDMode mode) {
@@ -170,6 +170,18 @@ units::meters_per_second_t wom::vision::Limelight::GetSpeed(
   return units::math::fabs(dTRANSLATION / dt);
 }
 
+units::meters_per_second_t wom::vision::Limelight::GetSpeed(frc::Pose2d pose1, frc::Pose2d pose2,
+                                                            units::second_t dt) {
+  frc::Transform2d dPose{pose1, pose2};
+  frc::Translation2d dTranslation = dPose.Translation();
+
+  units::meter_t y = dTranslation.Y();
+  units::meter_t x = dTranslation.X();
+  units::radian_t theta = units::math::atan(y / x);
+  units::meter_t dTRANSLATION = x / units::math::cos(theta);
+  return units::math::fabs(dTRANSLATION / dt);
+}
+
 frc::Pose3d wom::vision::Limelight::GetPose() {
   std::vector<double> pose = GetAprilTagData(LimelightAprilTagData::kBotpose);
   return frc::Pose3d(
@@ -192,4 +204,15 @@ bool wom::vision::Limelight::IsAtSetPoseVision(frc::Pose3d pose,
   return (units::math::fabs(relativePose.X()) < 0.01_m &&
           units::math::fabs(relativePose.Y()) < 0.01_m &&
           GetSpeed(pose, GetPose(), dt) < 1_m / 1_s);
+}
+
+bool wom::vision::Limelight::IsAtSetPoseVision(frc::Pose2d pose, units::second_t dt) {
+  frc::Pose2d actualPose = GetPose().ToPose2d();
+  frc::Pose2d relativePose = actualPose.RelativeTo(pose);
+  return (units::math::fabs(relativePose.X()) < 0.01_m && units::math::fabs(relativePose.Y()) < 0.01_m &&
+          GetSpeed(pose, GetPose().ToPose2d(), dt) < 1_m / 1_s);
+}
+
+bool wom::vision::Limelight::HasTarget() {
+  return GetTargetingData(LimelightTargetingData::kTv) == 1.0;
 }

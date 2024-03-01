@@ -123,8 +123,12 @@ wom::subsystems::ArmConfig& wom::subsystems::Arm::GetConfig() {
   return _config;
 }
 
+wom::subsystems::ArmState wom::subsystems::Arm::GetState() {
+  return _state;
+}
+
 units::radian_t wom::subsystems::Arm::GetAngle() const {
-  return _config.armEncoder.GetPosition() / 100 * 360 * 1_deg;
+  return _config.armEncoder->GetPosition() / 100 * 360 * 1_deg;
 }
 
 units::radians_per_second_t wom::subsystems::Arm::MaxSpeed() const {
@@ -132,7 +136,7 @@ units::radians_per_second_t wom::subsystems::Arm::MaxSpeed() const {
 }
 
 units::radians_per_second_t wom::subsystems::Arm::GetArmVelocity() const {
-  return _config.armEncoder.GetVelocity() / 100 * 360 * 1_deg / 60_s;
+  return _config.armEncoder->GetVelocity() / 100 * 360 * 1_deg / 60_s;
 }
 
 bool wom::subsystems::Arm::IsStable() const {

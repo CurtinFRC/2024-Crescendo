@@ -5,6 +5,8 @@
 #pragma once
 
 #include <frc/DigitalInput.h>
+#include <frc/controller/PIDController.h>
+#include <units/angular_velocity.h>
 
 #include <memory>
 #include <string>
@@ -12,13 +14,15 @@
 #include "Wombat.h"
 
 struct IntakeConfig {
-  wom::Gearbox IntakeMotor;
+  std::string path;
+  wom::Gearbox IntakeGearbox;
   frc::DigitalInput* intakeSensor;
-  frc::DigitalInput* magSensor;
-  frc::DigitalInput* shooterSensor;
+  frc::DigitalInput* passSensor;
+
+  wom::PIDConfig<units::radians_per_second, units::volt> pidConfig;
 };
 
-enum class IntakeState { kIdle, kRaw, kHold, kEject, kIntake, kPass };
+enum class IntakeState { kIdle, kRaw, kHold, kEject, kIntake, kPass, kAdjust};
 
 class Intake : public behaviour::HasBehaviour {
  public:
@@ -26,18 +30,26 @@ class Intake : public behaviour::HasBehaviour {
 
   void OnUpdate(units::second_t dt);
 
-  void setState(IntakeState state);
-  void setRaw(units::volt_t voltage);
-  IntakeState getState();
+  void SetState(IntakeState state);
+  void SetRaw(units::volt_t voltage);
+  void OnStart();
+  IntakeState GetState();
   IntakeConfig GetConfig();
 
  private:
   IntakeConfig _config;
   IntakeState _state = IntakeState::kIdle;
 
+  int _noteShot = 0;
+
+  bool _recordNote = false;
+
   units::volt_t _rawVoltage = 0_V;
   std::string _stringStateName = "error";
   units::volt_t _setVoltage = 0_V;
+
+  frc::PIDController _pid;
+  frc::PIDController _pidPosition;
 
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("Intake");
 };

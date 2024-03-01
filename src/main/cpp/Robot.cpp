@@ -13,6 +13,11 @@
 #include <networktables/NetworkTableInstance.h>
 #include <units/acceleration.h>
 // #include <units/angle.h>
+
+// include units
+#include <units/velocity.h>
+#include <units/acceleration.h>
+#include <units/angle.h>
 #include <units/length.h>
 #include <units/time.h>
 #include <units/velocity.h>
@@ -22,6 +27,12 @@
 #include "behaviour/HasBehaviour.h"
 #include "networktables/NetworkTableInstance.h"
 
+#include "behaviour/HasBehaviour.h"
+#include <frc/kinematics/DifferentialDriveKinematics.h>
+#include <frc/controller/RamseteController.h>
+#include <frc/Timer.h>
+#include "behaviour/HasBehaviour.h"
+#include "frc/geometry/Pose2d.h"
 
 static units::second_t lastPeriodic;
 
@@ -41,6 +52,15 @@ void Robot::RobotInit() {
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
+  sched = wom::BehaviourScheduler::GetInstance();
+  m_chooser.SetDefaultOption("kTaxi", "kTaxi");
+
+//   for (auto& option : autoOptions) {
+//     m_chooser.AddOption(option, option);
+//   }
+
+//   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+
   // m_path_chooser.SetDefaultOption("Path1", "paths/output/Path1.wpilib.json");
 
   // m_path_chooser.AddOption("Path1", "paths/output/Path1.wpilib.json");
@@ -50,12 +70,8 @@ void Robot::RobotInit() {
 
   // frc::SmartDashboard::PutData("Field", &m_field);
 
-  // simulation_timer = frc::Timer();
-
-  // robotmap.swerveBase.gyro->Reset();
-  
-
-  _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+  _swerveDrive =
+      new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour(
       [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
@@ -65,10 +81,15 @@ void Robot::RobotInit() {
   alphaArm->SetDefaultBehaviour(
       [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
 
-  // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
-  // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
-  // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
-  // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
+
+    intake = new Intake(robotmap.intakeSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(intake);
+  intake->SetDefaultBehaviour(
+      [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
+
+
+  // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
+  // m_driveSim = wom::TempSimSwerveDrive();
 
   // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0.5948_rad);
   // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(2.6156_rad);
@@ -94,20 +115,13 @@ void Robot::RobotInit() {
   // frontRight = new ctre::phoenix6::hardware::TalonFX(1, "Drivebase");   // front right
   // backLeft = new ctre::phoenix6::hardware::TalonFX(5, "Drivebase");   // back left
   // backRight = new ctre::phoenix6::hardware::TalonFX(3, "Drivebase");
+
+
   lastPeriodic = wom::now();
-
-  // intake = new Intake(robotmap.intakeSystem.config);
-  // wom::BehaviourScheduler::GetInstance()->Register(intake);
-  // intake->SetDefaultBehaviour(
-  //     [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
-
-  // _vision = new Vision("limelight", FMAP("fmap.fmap"));
-
-  //robotmap->vision = new Vision("limelight", FMAP("fmap.fmap"));
-
 }
 
 void Robot::RobotPeriodic() {
+  // double encoderDistance = robotmap.alphaArmSystem.armEncoder.GetDistance();
   auto dt = wom::now() - lastPeriodic;
   lastPeriodic = wom::now();
 
@@ -137,6 +151,7 @@ void Robot::RobotPeriodic() {
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 2 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 3 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
+  intake->OnUpdate(dt);
   alphaArm->OnUpdate(dt);
   _swerveDrive->OnUpdate(dt);
 }
@@ -148,9 +163,9 @@ void Robot::AutonomousInit() {
 
 void Robot::AutonomousPeriodic() {}
 
+
 void Robot::TeleopInit() {
   loop.Clear();
-
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
   sched->InterruptAll();
 
@@ -177,29 +192,3 @@ void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}
 void Robot::TestPeriodic() {}
-
-void Robot::SimulationInit() {
-  /*  std::string x = "[";
-    std::string y = "[";
-    // _vision->GetDistanceToTarget(16);
-    for (int i = 1; i < 17; i++) {
-      for (int j = 0; j < 17; j++) {
-        frc::Pose2d pose = _vision->AlignToTarget(i, units::meter_t{j * 0.1}, _swerveDrive);
-        x += std::to_string(pose.X().value()) + ",";
-        y += std::to_string(pose.Y().value()) + ",";
-      }
-    }
-
-    x += "]";
-    y += "]";
-
-    std::cout << x << std::endl;
-    std::cout << y << std::endl; */
-  // std::cout << _vision->TurnToTarget(1, _swerveDrive).Rotation().Degrees().value() << std::endl;
-  //Reimplement when vision is reimplemented
-  // frc::Pose2d pose = _vision->TurnToTarget(2, _swerveDrive);
-  // nt::NetworkTableInstance::GetDefault().GetTable("vision")->PutNumber("rot",
-  //                                                                     pose.Rotation().Degrees().value());
-}
-
-void Robot::SimulationPeriodic() {}

@@ -6,64 +6,95 @@
 
 #include <frc/XboxController.h>
 
-IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver, LED* led)
-    : _intake(intake), _codriver(codriver), _led(led) {
+IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver) : _intake(intake), _codriver(codriver) {
   Controls(intake);
 }
 
 void IntakeManualControl::OnTick(units::second_t dt) {
-  if (_codriver.GetBButtonReleased()) {
-    if (_intake->getState() == IntakeState::kRaw) {
-      _intake->setState(IntakeState::kIdle);
-    } else {
-      _intake->setState(IntakeState::kRaw);
-    }
-  }
 
-  if (_intake->getState() == IntakeState::kRaw) {
-    if (_codriver.GetRightBumper()) {
-      _intake->setRaw(8_V);
-    } else if (_codriver.GetLeftBumper()) {
-      _intake->setRaw(-8_V);
+  if (_codriver.GetBackButtonReleased()) {
+    if (_rawControl) {
+      _rawControl = false;
+      _intake->SetState(IntakeState::kIdle);
     } else {
-      _intake->setRaw(0_V);
+      _rawControl = true;
+      _intake->SetState(IntakeState::kRaw);
     }
-
+  } 
+  
+  if (_rawControl) {
+    _intake->SetState(IntakeState::kRaw);
+    if (_codriver.GetLeftTriggerAxis() > 0.1) {
+      _intake->SetRaw(_codriver.GetLeftTriggerAxis() * 10_V);
+    }
+    else if (_codriver.GetRightTriggerAxis() > 0.1) {
+      _intake->SetRaw(_codriver.GetRightTriggerAxis() * -10_V);
+    } else {
+      _intake->SetRaw(0_V);
+    }
   } else {
-    if (_codriver.GetRightBumperPressed()) {
-      if (_intake->getState() == IntakeState::kIntake) {
-        _intake->setState(IntakeState::kIdle);
-        _led->SetState(LEDState::kIdle);
+    if (_codriver.GetXButtonReleased()) {
+      if (_intake->GetState() == IntakeState::kIdle) {
+        _intake->SetState(IntakeState::kIntake);
       } else {
-        _intake->setState(IntakeState::kIntake);
-        _led->SetState(LEDState::kIntaking);
+        _intake->SetState(IntakeState::kIdle);
       }
-    }
-
-    if (_codriver.GetLeftBumper()) {
-      if (_intake->getState() == IntakeState::kEject) {
-        _intake->setState(IntakeState::kIdle);
-        _led->SetState(LEDState::kIdle);
+    } else if (_codriver.GetAButtonReleased()) {
+      if (_intake->GetState() == IntakeState::kHold) {
+        _intake->SetState(IntakeState::kPass);
       } else {
-        _intake->setState(IntakeState::kEject);
-        _led->SetState(LEDState::kIdle);
+        _intake->SetState(IntakeState::kIdle);
       }
-    }
-
-    if (_codriver.GetAButtonPressed()) {
-      if (_intake->getState() == IntakeState::kPass) {
-        _intake->setState(IntakeState::kIdle);
-        _led->SetState(LEDState::kIdle);
+    } else if (_codriver.GetBButtonReleased()) {
+      if (_intake->GetState() == IntakeState::kHold) {
+        _intake->SetState(IntakeState::kEject);
       } else {
-        _intake->setState(IntakeState::kPass);
-        _led->SetState(LEDState::kIntaking);
+        _intake->SetState(IntakeState::kIdle);
       }
     }
   }
 }
 
-IntakeAutoControl::IntakeAutoControl(Intake* intake) : _intake(intake) {
+AutoIntake::AutoIntake(Intake* intake) : _intake(intake) {
   Controls(intake);
 }
 
-void IntakeAutoControl::OnTick(units::second_t dt) {}
+void AutoIntake::OnTick(units::second_t dt) {
+  _intake->SetState(IntakeState::kIntake);
+}
+
+IntakeNote::IntakeNote(Intake* intake) : _intake(intake) {
+  Controls(intake);
+}
+
+void IntakeNote::OnTick(units::second_t dt) {
+  _intake->SetState(IntakeState::kIntake);
+
+  if (_intake->GetState() == IntakeState::kHold) {
+    SetDone();
+  }
+}
+
+PassNote::PassNote(Intake* intake) : _intake(intake) {
+  Controls(intake);
+}
+
+void PassNote::OnTick(units::second_t dt) {
+  _intake->SetState(IntakeState::kPass);
+
+  if (_intake->GetState() == IntakeState::kIdle) {
+    SetDone();
+  }
+}
+
+EjectNote::EjectNote(Intake* intake) : _intake(intake) {
+  Controls(intake);
+}
+
+void EjectNote::OnTick(units::second_t dt) {
+  _intake->SetState(IntakeState::kEject);
+
+  if (_intake->GetState() == IntakeState::kIdle) {
+    SetDone();
+  }
+}

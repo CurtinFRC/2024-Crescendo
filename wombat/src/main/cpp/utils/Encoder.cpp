@@ -91,10 +91,13 @@ wom::utils::CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax* controller,
                                                    double reduction)
     : wom::utils::Encoder(42, reduction, wheelRadius, 2),
       _encoder(controller->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)) {}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4a40db1df8a44d2b159b6e305bf230a715cab266
 
 double wom::utils::CANSparkMaxEncoder::GetEncoderRawTicks() const {
-  return _encoder.GetPosition() * _reduction;
+  return ((_encoder.GetPosition() * 2 * 3.1415) / 200);
 }
 
 double wom::utils::CANSparkMaxEncoder::GetEncoderTickVelocity() const {
