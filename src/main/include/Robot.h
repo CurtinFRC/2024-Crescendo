@@ -42,15 +42,15 @@ class Robot : public frc::TimedRobot {
   //Shooter* shooter;
 
   // Intake* intake;
-  // frc::SendableChooser<std::string> m_chooser;
+  frc::SendableChooser<std::string> m_chooser;
 
   // frc::Field2d m_field;
 
   // frc::Timer simulation_timer;
 
-  // frc::SendableChooser<std::string> m_path_chooser;
+  frc::SendableChooser<std::string> m_path_chooser;
 
-  //wom::SwerveDrive* _swerveDrive;
+  wom::SwerveDrive* _swerveDrive;
 
   // rev::CANSparkMax testMotorUp{1, rev::CANSparkMax::MotorType::kBrushless};
   // rev::CANSparkMax testMotorDown{6, rev::CANSparkMax::MotorType::kBrushless};

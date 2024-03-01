@@ -110,7 +110,7 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
     //  _swerveDrivebase->SetVelocity(
     //       frc::ChassisSpeeds{xVelocity * maxMovementMagnitude,
     //                          yVelocity * maxMovementMagnitude,
-    //                          r_x * maxRotationMagnitude});
+    //                          r_x * maxRotationMagnitude});                                          
   //   }
   // }
   // _swerveDrivebase->SetIndividualTuning(2, 0_deg, 0_mps);
@@ -121,7 +121,8 @@ void ManualDrivebase::ResetMode() {
   resetMode = false;
 }
 
-void ManualDrivebase::CalculateRequestedAngle(double joystickX, double joystickY,
+void ManualDrivebase::CalculateRequestedAngle(double joystickX,
+                                              double joystickY,
                                               units::degree_t defaultAngle) {
   _requestedAngle = (1_rad * std::atan2(joystickY, -joystickX)) + 90_deg;
   if (wom::utils::deadzone(joystickX) == 0 && wom::utils::deadzone(joystickY) == 0) {
@@ -130,7 +131,8 @@ void ManualDrivebase::CalculateRequestedAngle(double joystickX, double joystickY
 }
 
 // Code for x-ing the wheels on the drivebase
-XDrivebase::XDrivebase(wom::drivetrain::SwerveDrive* swerveDrivebase) : _swerveDrivebase(swerveDrivebase) {
+XDrivebase::XDrivebase(wom::drivetrain::SwerveDrive* swerveDrivebase)
+    : _swerveDrivebase(swerveDrivebase) {
   Controls(swerveDrivebase);
 }
 void XDrivebase::OnTick(units::second_t deltaTime) {
@@ -203,7 +205,8 @@ frc::Pose2d wom::drivetrain::behaviours::TempSimSwerveDrive::GetPose2d() {
   return m_driveSim.GetPose();
 }
 
-void wom::drivetrain::behaviours::TempSimSwerveDrive::SetPath(std::string path) {
+void wom::drivetrain::behaviours::TempSimSwerveDrive::SetPath(
+    std::string path) {
   nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
   std::shared_ptr<nt::NetworkTable> table = inst.GetTable("FMSInfo");
 

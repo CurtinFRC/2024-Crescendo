@@ -37,7 +37,7 @@ void Robot::RobotInit() {
 
   // m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
-  // frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
+  frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
   sched = wom::BehaviourScheduler::GetInstance();
   m_chooser.SetDefaultOption("Default Auto", "Default Auto");
 
@@ -55,24 +55,10 @@ void Robot::RobotInit() {
   // robotmap.swerveBase.gyro->Reset();
   
 
-  // _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
-  // wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
-  // _swerveDrive->SetDefaultBehaviour(
-  //     [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
-
-
-  _swerveDrive =
-      new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+  _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
-  _swerveDrive->SetDefaultBehaviour([this]() {
-    return wom::make<wom::ManualDrivebase>(_swerveDrive,
-                                           &robotmap.controllers.driver);
-  });
-
-
-  // m_driveSim = new wom::TempSimSwerveDrive(&simulation_timer, &m_field);
-  // m_driveSim = wom::TempSimSwerveDrive();
-
+  _swerveDrive->SetDefaultBehaviour(
+      [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
   alphaArm = new AlphaArm(&robotmap.alphaArmSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
@@ -146,14 +132,13 @@ void Robot::RobotPeriodic() {
   // _swerveDrive->OnUpdate(dt);
 
 
-//   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 0 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
-//   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 1 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->GetEncoderPosition().value());
-//   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 2 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
-//   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 3 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
+  robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 0 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
+  robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 1 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->GetEncoderPosition().value());
+  robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 2 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
+  robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 3 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
   alphaArm->OnUpdate(dt);
-  //_swerveDrive->OnUpdate(dt);
-
+  _swerveDrive->OnUpdate(dt);
 }
 
 void Robot::AutonomousInit() {

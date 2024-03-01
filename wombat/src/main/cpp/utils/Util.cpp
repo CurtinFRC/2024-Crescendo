@@ -13,18 +13,21 @@ units::second_t wom::utils::now() {
   return static_cast<double>(now) / 1000000 * 1_s;
 }
 
-void wom::utils::WritePose2NT(std::shared_ptr<nt::NetworkTable> table, frc::Pose2d pose) {
+void wom::utils::WritePose2NT(std::shared_ptr<nt::NetworkTable> table,
+                              frc::Pose2d pose) {
   table->GetEntry("x").SetDouble(pose.X().value());
   table->GetEntry("y").SetDouble(pose.Y().value());
   table->GetEntry("angle").SetDouble(pose.Rotation().Degrees().value());
 }
 
-void wom::utils::WritePose3NT(std::shared_ptr<nt::NetworkTable> table, frc::Pose3d pose) {
+void wom::utils::WritePose3NT(std::shared_ptr<nt::NetworkTable> table,
+                              frc::Pose3d pose) {
   table->GetEntry("x").SetDouble(pose.X().value());
   table->GetEntry("y").SetDouble(pose.Y().value());
   table->GetEntry("z").SetDouble(pose.Z().value());
 
-  table->GetEntry("angle").SetDouble(pose.Rotation().Z().convert<units::degree>().value());
+  table->GetEntry("angle").SetDouble(
+      pose.Rotation().Z().convert<units::degree>().value());
 }
 
 double wom::utils::deadzone(double val, double deadzone) {
@@ -47,7 +50,8 @@ units::volt_t wom::utils::GetVoltage(frc::MotorController* controller) {
   return controller->Get() * frc::RobotController::GetBatteryVoltage();
 }
 
-void wom::utils::WriteTrajectory(std::shared_ptr<nt::NetworkTable> table, frc::Trajectory trajectory) {
+void wom::utils::WriteTrajectory(std::shared_ptr<nt::NetworkTable> table,
+                                 frc::Trajectory trajectory) {
   table->GetEntry("length").SetDouble(trajectory.TotalTime().value());
 
   // write the trajectory to the network table
@@ -70,7 +74,8 @@ void wom::utils::WriteTrajectory(std::shared_ptr<nt::NetworkTable> table, frc::T
   }
 }
 
-void wom::utils::WriteTrajectoryState(std::shared_ptr<nt::NetworkTable> table, frc::Trajectory::State state) {
+void wom::utils::WriteTrajectoryState(std::shared_ptr<nt::NetworkTable> table,
+                                      frc::Trajectory::State state) {
   table->GetEntry("x").SetDouble(state.pose.X().value());
   table->GetEntry("y").SetDouble(state.pose.Y().value());
   table->GetEntry("angle").SetDouble(state.pose.Rotation().Degrees().value());

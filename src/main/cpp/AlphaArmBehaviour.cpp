@@ -29,18 +29,29 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
     }
   }
 
-  if(_codriver->GetLeftTriggerAxis() > 0.1){
-    _alphaArm->SetState(AlphaArmState::kSpeakerAngle);
-  } else if (_codriver->GetLeftBumper()){
-    _alphaArm->SetState(AlphaArmState::kAmpAngle);
-  } else if(_codriver->GetYButton()){
-    _alphaArm->SetState(AlphaArmState::kStowed);
-  } else if(_codriver->GetRightBumper()){
-    _alphaArm->SetState(AlphaArmState::kIntakeAngle);
+  if (_rawControl) {
+    _alphaArm->SetState(AlphaArmState::kRaw);
+    if (wom::deadzone(_codriver->GetRightY())) {
+      _alphaArm->SetArmRaw(_codriver->GetRightY() * 8_V);
+    } else {
+      _alphaArm->SetArmRaw(0_V);
+    }
   } else {
-    _alphaArm->SetState(AlphaArmState::kIdle);
+     if(_codriver->GetLeftTriggerAxis() > 0.1){
+      _alphaArm->SetState(AlphaArmState::kSpeakerAngle);
+    } else if (_codriver->GetLeftBumper()){
+      _alphaArm->SetState(AlphaArmState::kAmpAngle);
+    } else if(_codriver->GetYButton()){
+      _alphaArm->SetState(AlphaArmState::kStowed);
+    } else if(_codriver->GetRightBumper()){
+      _alphaArm->SetState(AlphaArmState::kIntakeAngle);
+    } else {
+      _alphaArm->SetState(AlphaArmState::kIdle);
+    }
   }
+ 
 }
+
 
   
 
