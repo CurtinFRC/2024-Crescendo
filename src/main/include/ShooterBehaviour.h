@@ -5,6 +5,10 @@
 #pragma once
 
 #include <frc/XboxController.h>
+#include <networktables/NetworkTable.h>
+
+#include <units/angular_velocity.h>
+#include <units/length.h>
 
 #include <memory>
 
@@ -27,4 +31,18 @@ class ShooterManualControl : public behaviour::Behaviour {
   bool _rawControl = false;
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("Shooter Behaviour");
+};
+
+class VisionShooterSpeed : public wom::Behaviour {
+ public:
+  VisionShooterSpeed(Shooter* shooter, Vision* vision);
+
+  units::meter_t DistanceFromTarget();
+  units::radians_per_second_t GetDesiredSpeed(units::meter_t distance);
+
+  void OnTick(units::second_t dt) override;
+
+ private:
+  Shooter* m_shooter;
+  std::shared_ptr<nt::NetworkTable> m_table;
 };

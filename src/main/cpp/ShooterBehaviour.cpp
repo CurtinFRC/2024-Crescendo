@@ -3,6 +3,7 @@
 // of the MIT License at the root of this project
 
 #include "ShooterBehaviour.h"
+#include "Shooter.h"
 
 ShooterManualControl::ShooterManualControl(Shooter* shooter, frc::XboxController* tester, LED* led)
     : _shooter(shooter), _codriver(tester), _led(led) {
@@ -51,4 +52,22 @@ void ShooterManualControl::OnTick(units::second_t dt) {
       _led->SetState(LEDState::kIdle);
     }
   }
+}
+
+VisionShooterSpeed::VisionShooterSpeed(Shooter* shooter)
+    : m_shooter{shooter}, m_table{nt::NetworkTableInstance::GetDefault().GetTable("shooter/visioncontrol")} {
+  Controls(m_shooter);
+}
+
+
+units::meter_t VisionShooterSpeed::DistanceFromTarget() {
+}
+
+units::radians_per_second_t VisionShooterSpeed::GetDesiredSpeed(units::meter_t distance) {
+  return units::radians_per_second_t{0};
+}
+
+void VisionShooterSpeed::OnTick(units::second_t dt) {
+  m_shooter->SetState(ShooterState::kSpinUp);
+  m_shooter->SetPidGoal(GetDesiredSpeed(DistanceFromTarget()));
 }
