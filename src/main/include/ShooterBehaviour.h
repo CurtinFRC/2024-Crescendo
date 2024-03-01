@@ -16,6 +16,8 @@
 #include "Shooter.h"
 #include "Wombat.h"
 
+class Vision;
+
 class ShooterManualControl : public behaviour::Behaviour {
  public:
   ShooterManualControl(Shooter* shooter, frc::XboxController* codriver, LED* led);
@@ -44,5 +46,6 @@ class VisionShooterSpeed : public wom::Behaviour {
 
  private:
   Shooter* m_shooter;
+  Vision* m_vision;
   std::shared_ptr<nt::NetworkTable> m_table;
 };
