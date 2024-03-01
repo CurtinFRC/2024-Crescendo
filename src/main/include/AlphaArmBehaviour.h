@@ -4,7 +4,10 @@
 
 #pragma once
 
-#pragma once
+#include "behaviour/Behaviour.h"
+#include "units/time.h"
+#include "vision/Vision.h"
+
 #include <frc/XboxController.h>
 
 #include "AlphaArm.h"
@@ -19,4 +22,17 @@ class AlphaArmManualControl : public behaviour::Behaviour {
   AlphaArm* _alphaArm;
   frc::XboxController* _codriver;
   bool _rawControl = false;
+};
+
+class AimToToAprilTag : public behaviour::Behaviour {
+public:
+  explicit AimToToAprilTag(AlphaArm* arm, VisionTarget target, Vision* vision);
+  explicit AimToToAprilTag(AlphaArm* arm, Vision* vision);
+
+  void OnTick(units::second_t dt);
+
+private:
+  AlphaArm* _arm;
+  int _target;
+  Vision* _vision;
 };
