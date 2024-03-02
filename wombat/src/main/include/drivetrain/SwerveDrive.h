@@ -28,13 +28,9 @@
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
 
-#include <functional>
-#include <limits>
-
 #include <wpi/SymbolExports.h>
 #include <wpi/sendable/Sendable.h>
 #include <wpi/sendable/SendableHelper.h>
-
 
 namespace wom {
 namespace drivetrain {
@@ -323,9 +319,8 @@ struct SwerveModuleConfig {
 
 class SwerveModule {
  public:
-  //using angle_pid_conf_t = utils::PIDConfig<units::radian, units::volt>;
-  using velocity_pid_conf_t =
-      utils::PIDConfig<units::meters_per_second, units::volt>;
+  // using angle_pid_conf_t = utils::PIDConfig<units::radian, units::volt>;
+  using velocity_pid_conf_t = utils::PIDConfig<units::meters_per_second, units::volt>;
 
   SwerveModule(std::string path, SwerveModuleConfig config,
                /*angle_pid_conf_t anglePID,*/ velocity_pid_conf_t velocityPID);
@@ -342,8 +337,7 @@ class SwerveModule {
 
   void SetZero(units::second_t dt);
   void SetIdle();
-  void SetPID(units::radian_t angle, units::meters_per_second_t speed,
-              units::second_t dt);
+  void SetPID(units::radian_t angle, units::meters_per_second_t speed, units::second_t dt);
   void SetZero();
   void SetVoltageLimit(units::volt_t driveModuleVoltageLimit);
 
@@ -363,13 +357,14 @@ class SwerveModule {
 
   const SwerveModuleConfig& GetConfig() const;
 
-  //utils::PIDController<units::radians, units::volt> _anglePIDController;
+  // utils::PIDController<units::radians, units::volt> _anglePIDController;
   frc::PIDController _anglePIDController;
 
  private:
   SwerveModuleConfig _config;
   SwerveModuleState _state;
   units::volt_t _driveModuleVoltageLimit = 10_V;
+  units::volt_t _angleModuleVoltageLimit = 6_V;
 
   bool _hasZeroedEncoder = false;
   bool _hasZeroed = false;
@@ -467,8 +462,7 @@ class SwerveDrive : public behaviour::HasBehaviour {
   void SetFieldRelativeVelocity(FieldRelativeSpeeds speeds);
   void SetPose(frc::Pose2d pose);
   bool IsAtSetPose();
-  void SetIndividualTuning(int mod, units::radian_t angle,
-                           units::meters_per_second_t speed);
+  void SetIndividualTuning(int mod, units::radian_t angle, units::meters_per_second_t speed);
   void SetTuning(units::radian_t angle, units::meters_per_second_t speed);
   void SetZero();
   void SetVoltageLimit(units::volt_t driveVoltageLimit);
@@ -514,9 +508,9 @@ class SwerveDrive : public behaviour::HasBehaviour {
 
   /*utils::PIDController<units::radian, units::radians_per_second>
       _anglePIDController;*/
-  PIDController _anglePIDController;
-  utils::PIDController<units::meter, units::meters_per_second> _xPIDController;
-  utils::PIDController<units::meter, units::meters_per_second> _yPIDController;
+  wom::drivetrain::PIDController _anglePIDController;
+  wom::utils::PIDController<units::meter, units::meters_per_second> _xPIDController;
+  wom::utils::PIDController<units::meter, units::meters_per_second> _yPIDController;
 
   std::shared_ptr<nt::NetworkTable> _table;
 

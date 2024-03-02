@@ -17,23 +17,10 @@ void Intake::OnStart() {
 void Intake::OnUpdate(units::second_t dt) {
 
   switch (_state) {
-
-    case IntakeState::kAdjust:
-    {
-      if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == true) { 
-        _setVoltage = -4_V;
-      } else if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == false) { 
-        SetState(IntakeState::kHold);
-      } else if (_config.intakeSensor->Get() == false && _config.passSensor->Get() == false) {
-        SetState(IntakeState::kIdle); 
-      }
-    } 
     case IntakeState::kIdle: 
     {
-      if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == false) { 
+      if (_config.intakeSensor->Get() == false) { 
         SetState(IntakeState::kHold);
-      } else if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == true) { 
-        SetState(IntakeState::kAdjust);
       }
       _stringStateName = "Idle";
       _pid.Reset();
@@ -52,10 +39,8 @@ void Intake::OnUpdate(units::second_t dt) {
 
     case IntakeState::kEject: 
     {
-      if (_config.intakeSensor->Get() == false && _config.passSensor->Get() == false) {
+      if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == true) {
         SetState(IntakeState::kIdle); 
-      } else if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == true) { 
-        SetState(IntakeState::kAdjust);
       }
       _stringStateName = "Eject";
       _setVoltage = -4_V;
@@ -65,27 +50,23 @@ void Intake::OnUpdate(units::second_t dt) {
 
     case IntakeState::kHold: 
     {
-      if (_config.intakeSensor->Get() == false && _config.passSensor->Get() == false) {
+      if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == true) {
         SetState(IntakeState::kIdle);
-      } else if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == true) { 
-        SetState(IntakeState::kAdjust);
       }
-      _pid.SetSetpoint(0);
-      units::volt_t pidCalculate =
+      // _pid.SetSetpoint(0);
+      // units::volt_t pidCalculate =
           // units::volt_t{_pid.Calculate(_config.IntakeGearbox.encoder->GetEncoderAngularVelocity().value())};
       // units::volt_t pidCalculate =
-          units::volt_t{_pidPosition.Calculate(_config.IntakeGearbox.encoder->GetEncoderPosition().value())};
-      _setVoltage = pidCalculate;
+          // units::volt_t{_pidPosition.Calculate(_config.IntakeGearbox.encoder->GetEncoderPosition().value())};
+      _setVoltage = 0_V;
       _stringStateName = "Hold";
     }
     break;
 
     case IntakeState::kIntake: 
     {
-      if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == false) {
+      if (_config.intakeSensor->Get() == false) {
         SetState(IntakeState::kHold);
-      } else if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == true) { 
-        SetState(IntakeState::kAdjust);
       }
       _stringStateName = "Intake";
       _setVoltage = 4_V; 
@@ -94,7 +75,7 @@ void Intake::OnUpdate(units::second_t dt) {
 
     case IntakeState::kPass: 
     {
-      if (_config.intakeSensor->Get() == false && _config.passSensor->Get() == false) {
+      if (_config.intakeSensor->Get() == true) {
         SetState(IntakeState::kIdle);
       } 
 

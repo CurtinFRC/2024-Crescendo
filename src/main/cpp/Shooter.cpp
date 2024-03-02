@@ -4,7 +4,7 @@
 
 #include "Shooter.h"
 
-Shooter::Shooter(ShooterConfig config) : _config(config), _pid(config.path + "/pid", config.pidConfig) {}
+Shooter::Shooter(ShooterConfig config) : _config(config), _pid(frc::PIDController(1, 0, 0, 0.05_s)) {}
 
 void Shooter::OnStart() {
   _pid.Reset();
@@ -12,9 +12,9 @@ void Shooter::OnStart() {
 
 void Shooter::OnUpdate(units::second_t dt) {
   // _pid.SetTolerance(0.5, 4);
-  table->GetEntry("Error").SetDouble(_pid.GetError().value());
+  table->GetEntry("Error").SetDouble(_pid.GetPositionError());
   // table->GetEntry("Acceleration Error").SetDouble(_pid.GetVelocityError());
-  table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint().value());
+  table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint());
   // table->GetEntry("Current
   // Pos").SetDouble(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value());
   // table->GetEntry("EncoderValue").SetDouble(_config.ShooterGearbox.encoder->GetVelocityValue());
@@ -33,12 +33,12 @@ void Shooter::OnUpdate(units::second_t dt) {
     case ShooterState::kSpinUp: {
       _statename = "SpinUp";
       std::cout << "KSpinUp" << std::endl;
-      _pid.SetSetpoint(_goal);
+      _pid.SetSetpoint(_goal.value());
       units::volt_t pidCalculate =
-          units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt, 0_V)};
+          units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
       std::cout << "KShooting" << std::endl;
 
-      if (_pid.IsStable()) {
+      if (_pid.GetPositionError() < 1 && _pid.GetVelocityError() < 1) {
         holdVoltage = pidCalculate;
         std::cout << "STABLE" << std::endl;
         _state = ShooterState::kShooting;
@@ -53,12 +53,12 @@ void Shooter::OnUpdate(units::second_t dt) {
     case ShooterState::kShooting: {
       _statename = "Shooting";
 
-      _pid.SetSetpoint(_goal);
+      _pid.SetSetpoint(_goal.value());
       units::volt_t pidCalculate =
-          units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity(), dt, 0_V)};
+          units::volt_t{_pid.Calculate(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value())};
       std::cout << "KShooting" << std::endl;
 
-      if (_pid.IsStable()) {
+      if (_pid.GetPositionError() < 1 && _pid.GetVelocityError() < 1) {
         holdVoltage = pidCalculate;
         std::cout << "STABLE" << std::endl;
       }

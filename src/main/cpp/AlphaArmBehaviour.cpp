@@ -32,12 +32,12 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
   if (_rawControl) {
     _alphaArm->SetState(AlphaArmState::kRaw);
     if (wom::deadzone(_codriver->GetRightY())) {
-      _alphaArm->SetArmRaw(_codriver->GetRightY() * 8_V);
+      _alphaArm->SetArmRaw(_codriver->GetRightY() * 7_V);
     } else {
       _alphaArm->SetArmRaw(0_V);
     }
   } else {
-     if(_codriver->GetLeftTriggerAxis() > 0.1){
+    if(_codriver->GetLeftTriggerAxis() > 0.1){
       _alphaArm->SetState(AlphaArmState::kSpeakerAngle);
     } else if (_codriver->GetLeftBumper()){
       _alphaArm->SetState(AlphaArmState::kAmpAngle);
@@ -49,9 +49,8 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
       _alphaArm->SetState(AlphaArmState::kIdle);
     }
   }
- 
+  
 }
-
 
   
 

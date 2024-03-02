@@ -27,7 +27,7 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-#include "Intake.h"
+// #include "Intake.h"
 #include "Wombat.h"
 #include "utils/Encoder.h"
 #include "utils/PID.h"
@@ -47,19 +47,30 @@ struct RobotMap {
     frc::XboxController testController = frc::XboxController(2);
   };
   Controllers controllers;
-  
-//    struct AlphaArmSystem {
-//     rev::CANSparkMax alphaArmMotorUp{21, rev::CANSparkMax::MotorType::kBrushless};
-//     rev::CANSparkMax alphaArmMotorDown{26, rev::CANSparkMax::MotorType::kBrushless};
 
-//     wom::DutyCycleEncoder alphaArmEncoder{3, 0.1_m, 2048, 1};
-//     wom::CANSparkMaxEncoder* alphaArmNeoEncoderUp = new wom::CANSparkMaxEncoder(&alphaArmMotorUp, 0.1_m);
-//     wom::CANSparkMaxEncoder* alphaArmNeoEncoderDown = new wom::CANSparkMaxEncoder(&alphaArmMotorDown, 0.1_m);
+    struct AlphaArmSystem {
+    rev::CANSparkMax alphaArmMotorUp{21, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax alphaArmMotorDown{26, rev::CANSparkMax::MotorType::kBrushless};
+
+    wom::DutyCycleEncoder alphaArmEncoder{3, 0.1_m, 2048, 1};
+    wom::CANSparkMaxEncoder* alphaArmNeoEncoderUp = new wom::CANSparkMaxEncoder(&alphaArmMotorUp, 0.1_m);
+    wom::CANSparkMaxEncoder* alphaArmNeoEncoderDown = new wom::CANSparkMaxEncoder(&alphaArmMotorDown, 0.1_m);
+
+
+    wom::Gearbox alphaArmGearbox{&alphaArmMotorUp, alphaArmNeoEncoderUp, frc::DCMotor::NEO(1)};
+    wom::Gearbox alphaArmGearbox2{&alphaArmMotorDown, alphaArmNeoEncoderDown, frc::DCMotor::NEO(1)};
+
+    AlphaArmConfig config{alphaArmGearbox, alphaArmGearbox2, alphaArmEncoder, "/alphaArm"
+    //, &vision
+    };
+  };
+  AlphaArmSystem alphaArmSystem;
+
   struct IntakeSystem {
     rev::CANSparkMax intakeMotor{35, rev::CANSparkMax::MotorType::kBrushless};
     wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
     frc::DigitalInput intakeSensor{5};
-    frc::DigitalInput passSensor{99};
+    frc::DigitalInput passSensor{7};
     // frc::DigitalInput magSensor{0};
     // frc::DigitalInput shooterSensor{0};
 
@@ -74,22 +85,7 @@ struct RobotMap {
   };
   IntakeSystem intakeSystem;
 
-  struct AlphaArmSystem {
-    rev::CANSparkMax alphaArmMotor{12, rev::CANSparkMax::MotorType::kBrushless};
-    rev::CANSparkMax wristMotor{15, rev::CANSparkMax::MotorType::kBrushless};
 
-
-    wom::Gearbox alphaArmGearbox{&alphaArmMotorUp, alphaArmNeoEncoderUp, frc::DCMotor::NEO(1)};
-    wom::Gearbox alphaArmGearbox2{&alphaArmMotorDown, alphaArmNeoEncoderDown, frc::DCMotor::NEO(1)};
-
-    AlphaArmConfig config{alphaArmGearbox, alphaArmGearbox2, alphaArmEncoder, "/alphaArm"
-    //, &vision
-    };
-  };
-  AlphaArmSystem alphaArmSystem;
-
-
-  
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{16, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder frontRightCancoder{18, "Drivebase"};
@@ -205,9 +201,24 @@ struct RobotMap {
   struct SwerveTable {
     std::shared_ptr<nt::NetworkTable> swerveDriveTable = nt::NetworkTableInstance::GetDefault().GetTable("swerve");
   }; SwerveTable swerveTable;
-};
-<<<<<<< HEAD
 
-=======
+
+    struct Shooter {
+    rev::CANSparkMax shooterMotor{31, rev::CANSparkMax::MotorType::kBrushless};// Port 11
+    // frc::DigitalInput shooterSensor{2};
+
+    // wom::VoltageController shooterMotorGroup = wom::VoltagedController::Group(shooterMotor);
+    wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
+    wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder, frc::DCMotor::NEO(1)};
+
+    
+
+    ShooterConfig config{
+        "shooterGearbox",
+        shooterGearbox,
+    };
+
+  };
+  Shooter shooterSystem;
+};
   // AlphaArmSystem alphaArmSystem;
->>>>>>> 4a40db1df8a44d2b159b6e305bf230a715cab266

@@ -39,7 +39,7 @@ void AlphaArm::OnUpdate(units::second_t dt) {
       std::cout << "Amp Angle" << std::endl;
       
        _pidArmStates.SetSetpoint(-2.17);
-       _setAlphaArmVoltage = units::volt_t{_pidArmStates.Calculate(-(_config->alphaArmEncoder.GetEncoderPosition().value() * (2 * 3.1415)) )};
+       _setAlphaArmVoltage = units::volt_t{_pidArmStates.Calculate(-(_config->alphaArmEncoder.GetEncoderPosition().value() * (2 * 3.1415)))};
 
     break;
 

@@ -51,7 +51,7 @@ class AlphaArm : public behaviour::HasBehaviour {
   // units::radian_t CalcTargetAngle();
 
   AlphaArmConfig *_config;
-  wom::vision::Limelight* _vision;
+  // wom::vision::Limelight* _vision;
   AlphaArmState _state = AlphaArmState::kIdle;
   //wom::utils::PIDController<units::degree, units::volt> _alphaArmPID;
   //frc::DutyCycleEncoder armEncoder{4};

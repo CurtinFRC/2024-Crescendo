@@ -12,20 +12,16 @@
 #include "utils/Util.h"
 
 #include <iostream>
-#include <algorithm>
 #include <cmath>
 
+#include "frc/MathUtil.h"
 #include <wpi/sendable/SendableBuilder.h>
 #include <wpi/sendable/SendableRegistry.h>
-
-#include "frc/MathUtil.h"
-#include "wpimath/MathShared.h"
 
 using namespace wom;
 
 namespace wom {
 namespace drivetrain {
-
 
 PIDController::PIDController(double Kp, double Ki, double Kd,
                              units::second_t period)
@@ -282,8 +278,6 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   units::volt_t driveVoltage{0};
   units::volt_t turnVoltage{0};
 
-
-
   switch (_state) {
     case SwerveModuleState::kIdle:
       driveVoltage = 0_V;
@@ -297,11 +291,11 @@ void SwerveModule::OnUpdate(units::second_t dt) {
       double input = _config.turnMotor.encoder->GetEncoderPosition().value();
       _table->GetEntry("/testing/GetEncoderPos").SetDouble(input);
       // _velocityPIDController.SetSetpoint(3);
-      
+
 
       driveVoltage = units::volt_t{_velocityPIDController.Calculate(GetSpeed().value())};
       // if (_turnOffset == TurnOffsetValues::forward) {
-        
+
       // } else if (_turnOffset == TurnOffsetValues::reverse) {
       //   input = input - (3.1415/2);
       //   driveVoltage = -driveVoltage;
@@ -538,9 +532,8 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
         _angle = _target_speed.omega * 1_s;
       }
 
-      
       bool init = false;
-      
+
       frc::ChassisSpeeds new_target_speed {_target_speed.vx, _target_speed.vy, -_target_speed.omega};
       auto target_states = _kinematics.ToSwerveModuleStates(_target_speed);
       auto new_target_states = _kinematics.ToSwerveModuleStates(new_target_speed);
@@ -550,7 +543,6 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
         } else {
           _modules[i].SetPID(target_states[i].angle.Radians(), target_states[i].speed, dt);
         }
-
       }
     } break;
     case SwerveDriveState::kIndividualTuning:
@@ -703,8 +695,7 @@ frc::Pose2d SwerveDrive::GetPose() {
   return _poseEstimator.GetEstimatedPosition();
 }
 
-void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose,
-                                       units::second_t timestamp) {
+void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp) {
   _poseEstimator.AddVisionMeasurement(pose, timestamp);
 }
 }  // namespace drivetrain

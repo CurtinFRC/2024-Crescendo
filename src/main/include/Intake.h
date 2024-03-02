@@ -22,7 +22,7 @@ struct IntakeConfig {
   wom::PIDConfig<units::radians_per_second, units::volt> pidConfig;
 };
 
-enum class IntakeState { kIdle, kRaw, kHold, kEject, kIntake, kPass, kAdjust};
+enum class IntakeState { kIdle, kRaw, kHold, kEject, kIntake, kPass};
 
 class Intake : public behaviour::HasBehaviour {
  public:

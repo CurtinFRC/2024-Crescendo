@@ -24,8 +24,11 @@
 #include "AlphaArmBehaviour.h"
 #include "Intake.h"
 #include "IntakeBehaviour.h"
+#include "Shooter.h"
+#include "ShooterBehaviour.h"
 #include "RobotMap.h"
 #include "Wombat.h"
+#include "LED.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -39,54 +42,32 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void DisabledInit() override;
   void DisabledPeriodic() override;
-  void SimulationInit() override;
-  void SimulationPeriodic() override;
+  // void SimulationInit() override;
+  // void SimulationPeriodic() override;
 
  private:
   RobotMap robotmap;
   wom::BehaviourScheduler* sched;
   frc::EventLoop loop;
-  //Shooter* shooter;
+  Shooter* shooter;
 
-  // Intake* intake;
+  Intake* intake;
+
   frc::SendableChooser<std::string> m_chooser;
 
   // frc::Field2d m_field;
 
   // frc::Timer simulation_timer;
 
-  frc::Field2d field;
-  frc::Timer timer;
   frc::SendableChooser<std::string> m_path_chooser;
 
-  // wom::SwerveDrive* _swerveDrive;
-
-  // AlphaArm* alphaArm;
-  Intake* intake;
-  // Shooter* shooter;
-
-  // Vision* _vision;
-
-  // frc::SendableChooser<std::string> m_chooser;
-  // const std::string kTaxi = "kTaxi";
-  // const std::string kAutoTest = "kAutoTest";
-  // const std::string kQuadrupleClose = "kQuadrupleClose";
-  // const std::string kQuadrupleFar = "kQuadrupleFar";
-  // const std::string kQuadrupleCloseDoubleFar = "kQuadrupleCloseDoubleFar";
-  // const std::string kQuadrupleCloseSingleFar = "kQuadrupleCloseSingleFar";
-  // std::string m_autoSelected;
-
-  // std::string defaultAuto = "kTaxi";
-  // std::vector<std::string> autoOptions = {
-  //     kTaxi, kAutoTest, kQuadrupleClose, kQuadrupleFar, kQuadrupleCloseDoubleFar, kQuadrupleCloseSingleFar,
-  // };
-  // Intake* intake;
   wom::SwerveDrive* _swerveDrive;
 
   // rev::CANSparkMax testMotorUp{1, rev::CANSparkMax::MotorType::kBrushless};
   // rev::CANSparkMax testMotorDown{6, rev::CANSparkMax::MotorType::kBrushless};
  // frc::XboxController testdriver = frc::XboxController(1);
   AlphaArm* alphaArm;
+  LED* _led;
 
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
