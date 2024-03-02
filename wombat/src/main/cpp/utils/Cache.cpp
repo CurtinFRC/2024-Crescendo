@@ -4,11 +4,11 @@
 
 template <typename T>
 wom::utils::Cached<T>::Cached(std::function<T()> supplier)
-    : m_supplier{supplier}, k_timestamp{wom::utils::now()}, k_dt{20_ms} {};
+    : m_supplier{supplier}, k_timestamp{wom::utils::now()}, k_cacheperiod{20_ms} {};
 
 template <typename T>
-wom::utils::Cached<T>::Cached(std::function<T()> supplier, units::second_t dt)
-    : m_supplier{supplier}, k_timestamp{wom::utils::now()}, k_dt{dt} {};
+wom::utils::Cached<T>::Cached(std::function<T()> supplier, units::second_t cacheperiod)
+    : m_supplier{supplier}, k_timestamp{wom::utils::now()}, k_cacheperiod{cacheperiod} {};
 
 template <typename T>
 wom::utils::Cached<T>& wom::utils::Cached<T>::Update() {
@@ -27,5 +27,5 @@ T& wom::utils::Cached<T>::GetValue() {
 
 template <typename T>
 bool wom::utils::Cached<T>::IsStale() {
-  return wom::utils::now() - this->k_timestamp > k_dt;
+  return wom::utils::now() - this->k_timestamp > k_cacheperiod;
 }

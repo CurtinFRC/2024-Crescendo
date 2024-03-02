@@ -22,9 +22,9 @@ class Cached {
    * Creates a new Cached<T> with the given supplier.
    *
    * @param supplier A function that sources the value.
-   * @param dt The validity length of the stored value.
+   * @param cacheperiod The validity length of the stored value.
    */
-  Cached(std::function<T()> supplier, units::second_t dt);
+  Cached(std::function<T()> supplier, units::second_t cacheperiod);
 
   Cached(Cached&&) = default;
   Cached& operator=(Cached&&) = default;
@@ -48,9 +48,9 @@ class Cached {
 
  private:
   T& m_value;
-  std::function<T()> m_supplier;
+  const std::function<T()> m_supplier;
   const units::second_t k_timestamp;
-  const units::second_t k_dt;
+  const units::second_t k_cacheperiod;
 };
 
 }  // namespace utils
