@@ -12,7 +12,7 @@ ShooterManualControl::ShooterManualControl(Shooter* shooter, frc::XboxController
 void ShooterManualControl::OnTick(units::second_t dt) {
   table->GetEntry("RawControl").SetBoolean(_rawControl);
 
-  if (_codriver->GetBackButtonPressed()) {
+  if (_codriver->GetStartButtonPressed()) {
     if (_rawControl == true) {
       _rawControl = false;
     } else {
@@ -22,30 +22,22 @@ void ShooterManualControl::OnTick(units::second_t dt) {
 
   if (_rawControl) {
     _shooter->SetState(ShooterState::kRaw);
-    if (_codriver->GetLeftTriggerAxis() > 0.1) {
-      _shooter->SetRaw(12_V * _codriver->GetLeftTriggerAxis());
-    } else if (_codriver->GetRightTriggerAxis() > 0.1) {
-      _shooter->SetRaw(-12_V * _codriver->GetRightTriggerAxis());
+    if (_codriver->GetRightBumper()) {
+      _shooter->SetRaw(8_V);
+    } else if (_codriver->GetLeftBumper()) {
+      _shooter->SetRaw(-18_V);
     } else {
       _shooter->SetRaw(0_V);
     }
   } else {
-    if (_codriver->GetXButton()) {
+    if (_codriver->GetPOV() == 0) {
       _shooter->SetPidGoal(150_rad_per_s);
       _shooter->SetState(ShooterState::kSpinUp);
       _led->SetState(LEDState::kAiming);
-    } else if (_codriver->GetYButton()) {
+    } else if (_codriver->GetPOV() == 90) {
       _shooter->SetPidGoal(300_rad_per_s);
       _shooter->SetState(ShooterState::kSpinUp);
       _led->SetState(LEDState::kAiming);
-    } else if (_codriver->GetLeftTriggerAxis() > 0.1) {
-      _shooter->SetState(ShooterState::kRaw);
-      _led->SetState(LEDState::kIdle);
-      _shooter->SetRaw(12_V * _codriver->GetLeftTriggerAxis());
-    } else if (_codriver->GetRightTriggerAxis() > 0.1) {
-      _shooter->SetState(ShooterState::kRaw);
-      _shooter->SetRaw(-12_V * _codriver->GetRightTriggerAxis());
-      _led->SetState(LEDState::kIdle);
     } else {
       _shooter->SetState(ShooterState::kIdle);
       _led->SetState(LEDState::kIdle);
