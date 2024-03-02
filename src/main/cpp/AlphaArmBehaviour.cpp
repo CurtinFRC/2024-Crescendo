@@ -6,6 +6,8 @@
 
 #include <frc/XboxController.h>
 
+#include "vision/Vision.h"
+
 AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxController* codriver)
     : _alphaArm(alphaArm), _codriver(codriver) {
   Controls(alphaArm);
@@ -47,4 +49,18 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
       _alphaArm->SetState(AlphaArmState::kIdle);
     }
   }
+}
+
+AimToToAprilTag::AimToToAprilTag(AlphaArm* arm, VisionTarget target, Vision* vision)
+    : _arm(arm), _target(static_cast<int>(target)), _vision(vision) {}
+AimToToAprilTag::AimToToAprilTag(AlphaArm* arm, Vision* vision)
+    : _arm(arm), _target(vision->CurrentAprilTag()), _vision(vision) {}
+
+void AimToToAprilTag::OnTick(units::second_t dt) {
+  units::meter_t dist = _vision->GetDistanceToTarget(_target).first;
+
+  units::radian_t a = 1_rad;  // angle to shoot at one meter
+  units::radian_t h = a * dist.value();
+
+  _arm->SetGoal(h.value());
 }

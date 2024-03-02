@@ -10,6 +10,7 @@
 #include "drivetrain/Drivetrain.h"
 #include "drivetrain/SwerveDrive.h"
 #include "drivetrain/behaviours/SwerveBehaviours.h"
+#include "sim/Sim.h"
 #include "subsystems/Arm.h"
 #include "subsystems/Elevator.h"
 #include "subsystems/Shooter.h"
@@ -18,9 +19,8 @@
 #include "utils/PID.h"
 #include "utils/RobotStartup.h"
 #include "utils/Util.h"
-#include "vision/Limelight.h"
-#include "sim/Sim.h"
 #include "vision/Camera.h"
+#include "vision/Limelight.h"
 
 namespace wom {
 using namespace wom;

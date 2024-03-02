@@ -9,6 +9,7 @@
 
 #include "AlphaArm.h"
 #include "Wombat.h"
+#include "vision/Vision.h"
 
 class AlphaArmManualControl : public behaviour::Behaviour {
  public:
@@ -23,4 +24,17 @@ class AlphaArmManualControl : public behaviour::Behaviour {
   bool _gotValue = false;
   std::shared_ptr<nt::NetworkTable> _table =
       nt::NetworkTableInstance::GetDefault().GetTable("AlphaArmSubsystem");
+};
+
+class AimToToAprilTag : public behaviour::Behaviour {
+ public:
+  explicit AimToToAprilTag(AlphaArm* arm, VisionTarget target, Vision* vision);
+  explicit AimToToAprilTag(AlphaArm* arm, Vision* vision);
+
+  void OnTick(units::second_t dt);
+
+ private:
+  AlphaArm* _arm;
+  int _target;
+  Vision* _vision;
 };
