@@ -3,6 +3,7 @@
 // of the MIT License at the root of this project
 
 #include "ShooterBehaviour.h"
+
 #include "Shooter.h"
 #include "utils/Util.h"
 
@@ -67,55 +68,55 @@ VisionShooterSpeed::VisionShooterSpeed(Shooter* shooter, Vision* vision)
 units::meter_t VisionShooterSpeed::DistanceFromTarget() {
   auto distance = m_vision->GetDistanceToTag();
   auto tag = m_vision->GetID();
-  switch(tag) {
+  switch (tag) {
     case 1:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 2:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 3:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 4:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 5:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 6:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 7:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 8:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 9:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 10:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 11:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 12:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 13:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 14:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 15:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
     case 16:
       return wom::utils::Pythagoras(distance, magicvalue);
-    break;
+      break;
   }
 }
 

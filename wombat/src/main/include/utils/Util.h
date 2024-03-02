@@ -90,7 +90,7 @@ frc::Pose2d TrajectoryStateToPose2d(frc::Trajectory::State state);
 double deadzone(double val, double deadzone = 0.05);
 double spow2(double val);
 
-template<typename T>
+template <typename T>
 T Pythagoras(T a, T b) {
   return (a ^ 2 + b ^ 2) ^ 0.5;
 }

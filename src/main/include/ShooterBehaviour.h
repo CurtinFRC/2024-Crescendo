@@ -6,7 +6,6 @@
 
 #include <frc/XboxController.h>
 #include <networktables/NetworkTable.h>
-
 #include <units/angular_velocity.h>
 #include <units/length.h>
 
