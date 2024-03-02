@@ -18,25 +18,27 @@
 
 static units::second_t lastPeriodic;
 
-void Robot::RobotInit() {
-  lastPeriodic = wom::now();
+// void Robot::RobotInit() {
+//   lastPeriodic = wom::now();
 
-  mag = new Mag(robotmap.MagSystem.config);
-  wom::BehaviourScheduler::GetInstance()->Register(mag);
-  mag->SetDefaultBehaviour(
-      [this]() { return wom::make<MagManualControl>(mag, &robotmap.Controllers.coDriver); });
-}
+//   mag = new Mag(robotmap.MagSystem.config);
+//   wom::BehaviourScheduler::GetInstance()->Register(mag);
+//   mag->SetDefaultBehaviour(
+//       [this]() { return wom::make<MagManualControl>(mag, &robotmap.Controllers.coDriver); });
+// }
 
-void Robot::RobotPeriodic() {
-  auto dt = wom::now() - lastPeriodic;
-  lastPeriodic = wom::now(); 
+ void Robot::RobotInit() {};
 
-  loop.Poll();
-  wom::BehaviourScheduler::GetInstance()->Tick();
+ void Robot::RobotPeriodic() {
+   auto dt = wom::now() - lastPeriodic;
+   lastPeriodic = wom::now(); 
 
-  _swerveDrive->OnUpdate(dt);
-  mag->OnUpdate(dt);
-}
+   loop.Poll();
+   wom::BehaviourScheduler::GetInstance()->Tick();
+
+   _swerveDrive->OnUpdate(dt);
+//   mag->OnUpdate(dt);
+ }
 
 void Robot::TeleopInit() {
   loop.Clear();
@@ -75,16 +77,6 @@ void Robot::TeleopInit() {
   // m_driveSim = wom::TempSimSwerveDrive();
 }
 
-void Robot::RobotPeriodic() {
-  auto dt = wom::now() - lastPeriodic;
-  lastPeriodic = wom::now();
-
-  loop.Poll();
-  wom::BehaviourScheduler::GetInstance()->Tick();
-
-  _swerveDrive->OnUpdate(dt);
-}
-
 void Robot::AutonomousInit() {
   // m_driveSim->SetPath(m_path_chooser.GetSelected());
 
@@ -92,14 +84,7 @@ void Robot::AutonomousInit() {
   sched->InterruptAll();
   // _swerveDrive->OnStart();
 }
-void Robot::AutonomousPeriodic() {
-  // m_driveSim->OnUpdate();
-}
-
-void Robot::TeleopInit() {
-  // _swerveDrive->OnStart();
-  // sched->InterruptAll();
-}
+void Robot::AutonomousPeriodic() {}
 void Robot::TeleopPeriodic() {}
 
 void Robot::DisabledInit() {}

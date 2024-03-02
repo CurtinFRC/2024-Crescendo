@@ -22,6 +22,11 @@ void Climber::OnUpdate(units::second_t dt) {
       _stringStateName = "Hang";
       _setVoltage = -8_V;
     } break;
+
+    case ClimberState::kReady: {
+      _stringStateName = "Raw";
+      _setVoltage = 0_V;
+    } break;
     
     default:
       std::cout << "Error climber in invalid state" << std::endl;
@@ -39,4 +44,8 @@ void Climber::SetState(ClimberState state) {
 
 void Climber::SetRaw(units::volt_t voltage) {
   _rawVoltage = voltage;
+}
+
+ClimberState Climber::GetState() {
+  return _state;
 }

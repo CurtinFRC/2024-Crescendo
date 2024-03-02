@@ -52,5 +52,5 @@ class Robot : public frc::TimedRobot {
 
   wom::SwerveDrive* _swerveDrive;
   Climber* climber;
-  Mag* mag;
+ // Mag* mag;
 };

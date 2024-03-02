@@ -13,7 +13,7 @@ struct ClimberConfig {
   wom::Gearbox climberGearbox;
 };
 
-enum class ClimberState { kIdle, kRaw };
+enum class ClimberState { kIdle, kReady, kClimb, kHang };
 
 class Climber : public behaviour::HasBehaviour {
  public:
@@ -21,6 +21,7 @@ class Climber : public behaviour::HasBehaviour {
 
   void OnUpdate(units::second_t dt);
   void SetState(ClimberState state);
+  ClimberState GetState();
   void SetRaw(units::volt_t voltage);
 
  private:

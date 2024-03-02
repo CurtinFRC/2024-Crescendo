@@ -12,7 +12,7 @@
 class ClimberManualControl : public behaviour::Behaviour {
  public:
   explicit ClimberManualControl(Climber* climber, frc::XboxController* codriver);
-  void OnTick(units::second_t dt) override;
+void OnTick(units::second_t dt) override;
 
  private:
   Climber* _climber;

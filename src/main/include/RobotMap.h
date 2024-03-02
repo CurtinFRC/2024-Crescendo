@@ -26,20 +26,27 @@ struct RobotMap {
     frc::XboxController driver = frc::XboxController(0);
     frc::XboxController coDriver = frc::XboxController(1);
     frc::XboxController testController = frc::XboxController(2);
+    
   };
+
+  Controllers controllers;
+
   struct ClimberSystem {
     rev::CANSparkMax climberMotor{99, rev::CANSparkMax::MotorType::kBrushed};
     wom::CANSparkMaxEncoder climberEncoder{&climberMotor, 0.1_m};
     frc::DigitalInput climberSensor{99};
+    // wom::MotorVoltageController climberMotorController = wom::MotorVoltageController::Group(climberMotor);
+    wom::Gearbox climberGearbox{&climberMotor, &climberEncoder, frc::DCMotor::NEO(99).WithReduction(1)};
+    ClimberConfig config {
+        climberGearbox
+    };
   };
-  struct MagSystem {
-    rev::CANSparkMax magMotor{99, rev::CANSparkMax::MotorType::kBrushed};
-    wom::CANSparkMaxEncoder magEncoder{&magEncoder, 0.1_m};
-    frc::DigitalInput magSensor{99};
-  }
-
-    
-  Controllers; Controllers;
+  ClimberSystem climberSystem;
+  // struct MagSystem {
+  //   rev::CANSparkMax magMotor{99, rev::CANSparkMax::MotorType::kBrushed};
+  //   wom::CANSparkMaxEncoder magEncoder{&magEncoder, 0.1_m};
+  //   frc::DigitalInput magSensor{99};
+  // };
 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{19};
