@@ -16,10 +16,8 @@ AlphaArmConfig AlphaArm::GetConfig() {
 }
 
 void AlphaArmManualControl::OnTick(units::second_t dt) {
-
   _table->GetEntry("State").SetBoolean(_rawControl);
   _table->GetEntry("Goal Value").SetBoolean(_gotValue);
-  
 
   if (_codriver->GetBButton()) {
     if (_rawControl == true) {
@@ -37,21 +35,16 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
       _alphaArm->SetArmRaw(0_V);
     }
   } else {
-     if(_codriver->GetLeftTriggerAxis() > 0.1){
+    if (_codriver->GetLeftTriggerAxis() > 0.1) {
       _alphaArm->SetState(AlphaArmState::kSpeakerAngle);
-    } else if (_codriver->GetLeftBumper()){
+    } else if (_codriver->GetLeftBumper()) {
       _alphaArm->SetState(AlphaArmState::kAmpAngle);
-    } else if(_codriver->GetYButton()){
+    } else if (_codriver->GetYButton()) {
       _alphaArm->SetState(AlphaArmState::kStowed);
-    } else if(_codriver->GetRightBumper()){
+    } else if (_codriver->GetRightBumper()) {
       _alphaArm->SetState(AlphaArmState::kIntakeAngle);
     } else {
       _alphaArm->SetState(AlphaArmState::kIdle);
     }
   }
- 
 }
-
-
-  
-
