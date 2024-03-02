@@ -15,20 +15,30 @@
 // include units
 #include <units/velocity.h>
 #include <units/acceleration.h>
+#include <units/angle.h>
 #include <units/length.h>
 #include <units/time.h>
 #include <units/velocity.h>
 #include <units/voltage.h>
 
-#include "RobotMap.h"
+#include "Auto.h"
 #include "behaviour/HasBehaviour.h"
-#include "networktables/NetworkTableInstance.h"
+#include <frc/kinematics/DifferentialDriveKinematics.h>
+#include <frc/controller/RamseteController.h>
+#include <frc/Timer.h>
+// #include "ArmBehaviours.h"
+#include "behaviour/HasBehaviour.h"
+#include "drivetrain/SwerveDrive.h"
+#include "frc/geometry/Pose2d.h"
+#include "utils/Pathplanner.h"
+#include "vision/Vision.h"
+#include "vision/VisionBehaviours.h"
 
 static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
-  // shooter = new Shooter(robotmap.shooterSystem.config);
-  // wom::BehaviourScheduler::GetInstance()->Register(shooter);
+  shooter = new Shooter(robotmap.shooterSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(shooter);
   // shooter->SetDefaultBehaviour(
   // [this]() { return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver); });
 
@@ -73,8 +83,7 @@ void Robot::RobotInit() {
   // simulation_timer = frc::Timer();
 
   // robotmap.swerveBase.gyro->Reset();
-
-  _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+  _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d(), _vision->GetLimelight());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
 
   // _swerveDrive->SetDefaultBehaviour([this]() { return robotmap.builder->GetAutoRoutine(); });
@@ -133,36 +142,36 @@ void Robot::RobotInit() {
   robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(2.979_rad);
   robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(4.388_rad);
 
-  // robotmap->vision = new Vision("limelight", FMAP("fmap.fmap"));
-}
+  // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
+  // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
+  // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
+  // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
+
+  // robotmap.swerveBase.moduleConfigs[0].driveMotor.motorController->SetInverted(true);
+  // robotmap.swerveBase.moduleConfigs[1].driveMotor.motorController->SetInverted(true);
 
   // robotmap.swerveBase.moduleConfigs[0].driveMotor.motorController->SetInverted(true);
   // robotmap.swerveBase.moduleConfigs[2].driveMotor.motorController->SetInverted(true);
 
-  loop.Poll();
-  wom::BehaviourScheduler::GetInstance()->Tick();
-  // shooter->OnUpdate(dt);
-  // sched->Tick();
+  // robotmap.alphaArmSystem.armEncoder->Reset();
 
   // robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(0_rad);
   // robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(0_rad);
 
-  // _swerveDrive->OnUpdate(dt);
-  // shooter->OnStart();
-  // intake->OnUpdate(dt);
+  shooter->OnStart();
 
   lastPeriodic = wom::now();
 
-  robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 0 offset: ")
-      .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
-  robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 1 offset: ")
-      .SetDouble(robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->GetEncoderPosition().value());
-  robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 2 offset: ")
-      .SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
-  robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 3 offset: ")
-      .SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
+  robotmap.builder = autos::InitCommands(_swerveDrive, shooter, intake, alphaArm);
+  robotmap.simSwerve = new wom::SimSwerve(_swerveDrive);
+}
+
+void Robot::RobotPeriodic() {
+  // double encoderDistance = robotmap.alphaArmSystem.armEncoder.GetDistance();
+  auto dt = wom::now() - lastPeriodic;
+  lastPeriodic = wom::now();
 
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
@@ -235,15 +244,6 @@ void Robot::TeleopInit() {
   // frontRight->SetVoltage(4_V);
   // backLeft->SetVoltage(4_V);
   // backRight->SetVoltage(4_V);
-
-  //  FMAP("fmap.fmap");
-
-  // _swerveDrive->OnStart();
-  // sched->InterruptAll();
-
-  // reimplement when vision is reimplemented
-
-  // _swerveDrive->SetPose(_vision->GetAngleToObject(VisionTargetObjects::kNote).first);
 }
 
 // void Robot::TeleopPeriodic() {}
@@ -272,29 +272,3 @@ void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}
 void Robot::TestPeriodic() {}
-
-void Robot::SimulationInit() {
-  /*  std::string x = "[";
-    std::string y = "[";
-    // _vision->GetDistanceToTarget(16);
-    for (int i = 1; i < 17; i++) {
-      for (int j = 0; j < 17; j++) {
-        frc::Pose2d pose = _vision->AlignToTarget(i, units::meter_t{j * 0.1}, _swerveDrive);
-        x += std::to_string(pose.X().value()) + ",";
-        y += std::to_string(pose.Y().value()) + ",";
-      }
-    }
-
-    x += "]";
-    y += "]";
-
-    std::cout << x << std::endl;
-    std::cout << y << std::endl; */
-  // std::cout << _vision->TurnToTarget(1, _swerveDrive).Rotation().Degrees().value() << std::endl;
-  // Reimplement when vision is reimplemented
-  // frc::Pose2d pose = _vision->TurnToTarget(2, _swerveDrive);
-  // nt::NetworkTableInstance::GetDefault().GetTable("vision")->PutNumber("rot",
-  //                                                                     pose.Rotation().Degrees().value());
-}
-
-void Robot::SimulationPeriodic() {}

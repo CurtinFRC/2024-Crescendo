@@ -3,9 +3,8 @@
 // of the MIT License at the root of this project
 
 #pragma once
-#include <frc/XboxController.h>
 
-#include <memory>
+#include <frc/XboxController.h>
 
 #include "AlphaArm.h"
 #include "Wombat.h"
@@ -21,9 +20,18 @@ class AlphaArmManualControl : public behaviour::Behaviour {
  private:
   AlphaArm* _alphaArm;
   frc::XboxController* _codriver;
-  units::volt_t _setAlphaArmVoltage = 0_V;
-  bool _rawControl;
-  bool _gotValue = false;
-  std::shared_ptr<nt::NetworkTable> _table =
-      nt::NetworkTableInstance::GetDefault().GetTable("AlphaArmSubsystem");
+  bool _rawControl = false;
+};
+
+class AimToToAprilTag : public behaviour::Behaviour {
+ public:
+  explicit AimToToAprilTag(AlphaArm* arm, VisionTarget target, Vision* vision);
+  explicit AimToToAprilTag(AlphaArm* arm, Vision* vision);
+
+  void OnTick(units::second_t dt);
+
+ private:
+  AlphaArm* _arm;
+  int _target;
+  Vision* _vision;
 };
