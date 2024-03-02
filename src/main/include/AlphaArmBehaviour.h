@@ -4,14 +4,13 @@
 
 #pragma once
 
-#include "behaviour/Behaviour.h"
-#include "units/time.h"
-#include "vision/Vision.h"
-
 #include <frc/XboxController.h>
 
 #include "AlphaArm.h"
 #include "Wombat.h"
+#include "behaviour/Behaviour.h"
+#include "units/time.h"
+#include "vision/Vision.h"
 
 class AlphaArmManualControl : public behaviour::Behaviour {
  public:
@@ -25,13 +24,13 @@ class AlphaArmManualControl : public behaviour::Behaviour {
 };
 
 class AimToToAprilTag : public behaviour::Behaviour {
-public:
+ public:
   explicit AimToToAprilTag(AlphaArm* arm, VisionTarget target, Vision* vision);
   explicit AimToToAprilTag(AlphaArm* arm, Vision* vision);
 
   void OnTick(units::second_t dt);
 
-private:
+ private:
   AlphaArm* _arm;
   int _target;
   Vision* _vision;
