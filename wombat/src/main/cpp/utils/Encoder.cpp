@@ -132,7 +132,9 @@ double wom::utils::TalonFXEncoder::GetEncoderTickVelocity() const {
 
 wom::utils::DutyCycleEncoder::DutyCycleEncoder(int channel, units::meter_t wheelRadius,
                                                double ticksPerRotation, double reduction)
-    : wom::utils::Encoder(ticksPerRotation, reduction, wheelRadius, 0), _dutyCycleEncoder(channel) {}
+    : wom::utils::Encoder(ticksPerRotation, reduction, wheelRadius, 0) {
+  _dutyCycleEncoder = new frc::DutyCycleEncoder(channel);
+}
 
 double wom::utils::DutyCycleEncoder::GetEncoderRawTicks() const {
   return _dutyCycleEncoder.Get().value();
@@ -141,7 +143,6 @@ double wom::utils::DutyCycleEncoder::GetEncoderRawTicks() const {
 double wom::utils::DutyCycleEncoder::GetEncoderTickVelocity() const {
   return 0;
 }
-
 wom::utils::CanEncoder::CanEncoder(int deviceNumber, units::meter_t wheelRadius, double ticksPerRotation,
                                    double reduction, std::string name)
     : wom::utils::Encoder(ticksPerRotation, 2, wheelRadius, reduction) {

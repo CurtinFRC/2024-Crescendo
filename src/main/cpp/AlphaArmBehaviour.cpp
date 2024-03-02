@@ -19,7 +19,10 @@
 // }
 
 void AlphaArmManualControl::OnTick(units::second_t dt) {
-  if (_codriver->GetStartButtonPressed()) {
+  _table->GetEntry("State").SetBoolean(_rawControl);
+  _table->GetEntry("Goal Value").SetBoolean(_gotValue);
+
+  if (_codriver->GetBButton()) {
     if (_rawControl == true) {
       _rawControl = false;
     } else {
@@ -31,21 +34,16 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
     // _alphaArm->SetState(AlphaArmState::kRaw);
     // _alphaArm->SetArmRaw(_codriver->GetRightY() * 12_V);
   } else {
-    // _alphaArm->SetState(AlphaArmState::kAmpAngle);
-    // _alphaArm->setControllerRaw(wom::deadzone(_codriver->GetRightY()) * 12_V);
+    if (_codriver->GetLeftTriggerAxis() > 0.1) {
+      _alphaArm->SetState(AlphaArmState::kSpeakerAngle);
+    } else if (_codriver->GetLeftBumper()) {
+      _alphaArm->SetState(AlphaArmState::kAmpAngle);
+    } else if (_codriver->GetYButton()) {
+      _alphaArm->SetState(AlphaArmState::kStowed);
+    } else if (_codriver->GetRightBumper()) {
+      _alphaArm->SetState(AlphaArmState::kIntakeAngle);
+    } else {
+      _alphaArm->SetState(AlphaArmState::kIdle);
+    }
   }
-}
-
-AimToToAprilTag::AimToToAprilTag(AlphaArm* arm, VisionTarget target, Vision* vision)
-    : _arm(arm), _target(static_cast<int>(target)), _vision(vision) {}
-AimToToAprilTag::AimToToAprilTag(AlphaArm* arm, Vision* vision)
-    : _arm(arm), _target(vision->CurrentAprilTag()), _vision(vision) {}
-
-void AimToToAprilTag::OnTick(units::second_t dt) {
-  units::meter_t dist = _vision->GetDistanceToTarget(_target).first;
-
-  units::radian_t a = 1_rad;  // angle to shoot at one meter
-  units::radian_t h = a * dist.value();
-
-  _arm->SetGoal(h);
 }
