@@ -25,7 +25,11 @@ void Climber::OnUpdate(units::second_t dt) {
 
     case ClimberState::kReady: {
       _stringStateName = "Raw";
-      _setVoltage = 0_V;
+      if (_config.climberGearbox.climberEncoder.GetPosition() * (2 * 3.14159265) == 0_rad) {
+        _setVoltage = 0_V;
+      } else {
+        _setVoltage = 8_V;
+      }
     } break;
     
     default:

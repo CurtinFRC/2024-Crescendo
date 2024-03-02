@@ -10,13 +10,13 @@ ClimberManualControl::ClimberManualControl(Climber* climber, frc::XboxController
 }
 
 void ClimberManualControl::OnTick(units::second_t dt) {
-  if (_codriver->GetPOVButton() == 270) {
+  if (_codriver->GetPOV() == 270) {
     if (_climber->GetState() == ClimberState::kIdle) {
       _climber->SetState(ClimberState::kReady);
     } else {
      _climber->SetState(ClimberState::kIdle);
     }
-  } else if (_codriver->GetPOVButton() == 90) {
+  } else if (_codriver->GetPOV() == 90) {
     if (_climber->GetState() == ClimberState::kReady) {
       _climber->SetState(ClimberState::kClimb);
     } else {

@@ -10,7 +10,7 @@ BehaviourScheduler::BehaviourScheduler() {}
 
 BehaviourScheduler::~BehaviourScheduler() {
   for (HasBehaviour* sys : _systems) {
-    if (sys->_active_behaviour)
+    if (sys->_active_behaviour != nullptr)
       sys->_active_behaviour->Interrupt();
   }
 
@@ -78,7 +78,8 @@ void BehaviourScheduler::Tick() {
 void BehaviourScheduler::InterruptAll() {
   std::lock_guard<std::recursive_mutex> lk(_active_mtx);
   for (HasBehaviour* sys : _systems) {
-    if (sys->_active_behaviour)
+    if (sys->_active_behaviour != nullptr) {
       sys->_active_behaviour->Interrupt();
+    }
   }
 }

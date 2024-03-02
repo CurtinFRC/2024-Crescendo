@@ -4,11 +4,8 @@ Our code for the 2024 FRC game, CRESCENDO, using GradleRIO, Wombat, and probably
 
 Setup
 ===
-
 First install WPILib and if running Windows the FRC game tools. Instructions can be found [here](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/index.html).
 
-Linux
----
 Fork this repository then open up a terminal and run :
 ```bash
 git clone https://github.com/*yourusernamehere*/2024-Crescendo.git
@@ -35,9 +32,9 @@ These commands can be used in a variety of combinations, feel free to experiment
 Build
 ---
 `./gradlew build`
-Build will compile and get the code ready without deploying it. It will also run all automated tests, which is great for testing your code before it ever gets run on a robot (which also means you can build whenever).
+Build will compile your code without deploying it. It will also run all automated tests, which is great for testing code before it runs on a robot.
 
-`./gradlew :Wombat:build`
+`./gradlew :wombat:build`
 Will compile and build the Wombat library. Also runs all of Wombat's inbuilt tests.
 
 Deploy
@@ -53,11 +50,11 @@ Cleaning removes caches of your compiled code. If you do not understand an error
 Simulation
 ----------
 **Release**
-`./gradlew :nativeSimulation`
+`./gradlew :simulateNative`
 Runs a simulation of your code at highest optimisation.
 
 **Debug**
-`./gradlew :nativeSimulationDebug`
+`./gradlew :simulateNativeDebug`
 Runs a debug simulation of your code, including a variety of debugging tools similar to glass but at lower optimisation.
 
 Documentation

@@ -62,7 +62,8 @@ class ShooterConstant : public behaviour::Behaviour {
 
 class ShooterSpinup : public behaviour::Behaviour {
  public:
-  ShooterSpinup(Shooter* s, units::radians_per_second_t speed, bool hold = false);
+  ShooterSpinup(Shooter* s, units::radians_per_second_t speed,
+                bool hold = false);
 
   void OnTick(units::second_t dt) override;
 
