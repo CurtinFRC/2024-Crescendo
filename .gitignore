@@ -3,6 +3,7 @@
 
 ### Sim ###
 
+./ctre_sim
 ctre_sim
 
 ### C++ ###
