@@ -19,6 +19,8 @@
 #include "utils/RobotStartup.h"
 #include "utils/Util.h"
 #include "vision/Limelight.h"
+#include "sim/Sim.h"
+#include "vision/Camera.h"
 
 namespace wom {
 using namespace wom;
@@ -27,5 +29,6 @@ using namespace wom::subsystems;
 using namespace wom::drivetrain;
 using namespace wom::drivetrain::behaviours;
 using namespace wom::vision;
+using namespace wom::sim;
 using namespace behaviour;
 }  // namespace wom
