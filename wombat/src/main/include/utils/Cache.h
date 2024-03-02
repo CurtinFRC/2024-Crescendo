@@ -1,8 +1,12 @@
+// Copyright (c) 2023-2024 CurtinFRC
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
-#include <functional>
-
 #include <units/time.h>
+
+#include <functional>
 
 namespace wom {
 namespace utils {
@@ -16,7 +20,7 @@ class Cached {
    *
    * @param supplier A function that sources the value.
    */
-  Cached(std::function<T()> supplier);
+  explicit Cached(std::function<T()> supplier);
 
   /**
    * Creates a new Cached<T> with the given supplier.
