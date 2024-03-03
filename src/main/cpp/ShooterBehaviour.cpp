@@ -3,6 +3,7 @@
 // of the MIT License at the root of this project
 
 #include "ShooterBehaviour.h"
+#include <stdexcept>
 
 #include "Shooter.h"
 #include "utils/Util.h"
@@ -70,10 +71,10 @@ units::meter_t VisionShooterSpeed::DistanceFromTarget() {
   auto tag = m_vision->GetID();
   switch (tag) {
     case 1:
-      return wom::utils::Pythagoras(distance, magicvalue);
+      throw new std::runtime_error("UNSUPPORTED TAG");
       break;
     case 2:
-      return wom::utils::Pythagoras(distance, magicvalue);
+      throw new std::runtime_error("UNSUPPORTED TAG");
       break;
     case 3:
       return wom::utils::Pythagoras(distance, magicvalue);
@@ -94,28 +95,28 @@ units::meter_t VisionShooterSpeed::DistanceFromTarget() {
       return wom::utils::Pythagoras(distance, magicvalue);
       break;
     case 9:
-      return wom::utils::Pythagoras(distance, magicvalue);
+      throw new std::runtime_error("UNSUPPORTED TAG");
       break;
     case 10:
-      return wom::utils::Pythagoras(distance, magicvalue);
+      throw new std::runtime_error("UNSUPPORTED TAG");
       break;
     case 11:
-      return wom::utils::Pythagoras(distance, magicvalue);
+      throw new std::runtime_error("UNSUPPORTED TAG");
       break;
     case 12:
-      return wom::utils::Pythagoras(distance, magicvalue);
+      throw new std::runtime_error("UNSUPPORTED TAG");
       break;
     case 13:
-      return wom::utils::Pythagoras(distance, magicvalue);
+      throw new std::runtime_error("UNSUPPORTED TAG");
       break;
     case 14:
-      return wom::utils::Pythagoras(distance, magicvalue);
+      throw new std::runtime_error("UNSUPPORTED TAG");
       break;
     case 15:
-      return wom::utils::Pythagoras(distance, magicvalue);
+      throw new std::runtime_error("UNSUPPORTED TAG");
       break;
     case 16:
-      return wom::utils::Pythagoras(distance, magicvalue);
+      throw new std::runtime_error("UNSUPPORTED TAG");
       break;
   }
 }
