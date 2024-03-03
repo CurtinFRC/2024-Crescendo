@@ -370,7 +370,7 @@ void utils::FollowPath::OnTick(units::second_t dt) {
 
 // AutoBuilder implementation
 utils::AutoBuilder::AutoBuilder(drivetrain::SwerveDrive* swerve, std::function<bool()> shouldFlipPath,
-                                std::string auto_routine, utils::Commands commands)
+                                std::string auto_routine, utils::AutoCommands commands)
     : _path(auto_routine), _flip(shouldFlipPath()), _swerve(swerve), _commandsList(std::move(commands)) {
   SetAuto(auto_routine);
 }
@@ -495,7 +495,7 @@ std::shared_ptr<behaviour::Behaviour> utils::AutoBuilder::GetAutoPath(std::strin
 
 // SwerveAutoBuilder implementation
 utils::SwerveAutoBuilder::SwerveAutoBuilder(drivetrain::SwerveDrive* swerve, std::string name,
-                                            utils::Commands commands)
+                                            utils::AutoCommands commands)
     : _builder(new AutoBuilder(
           swerve,
           []() {

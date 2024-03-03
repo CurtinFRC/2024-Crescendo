@@ -173,14 +173,14 @@ std::vector<BezierPoint> interpolateBezierPoints(const std::vector<BezierPoint>&
 //         std::string name_;
 //     };
 
-class Commands {
+class AutoCommands {
  public:
   // template <typename... CommandTypes>
   // Commands(CommandTypes&&... commands)
   // : commands_{std::make_shared<Command<BehaviorType,
   // CommandTypes>>(std::forward<CommandTypes>(commands))...} {}
 
-  Commands(
+  AutoCommands(
       std::vector<std::pair<std::string, std::function<std::shared_ptr<behaviour::Behaviour>()>>> commands)
       : commands_(std::move(commands)) {}
 
@@ -273,7 +273,7 @@ class FollowPath : public behaviour::Behaviour {
 class AutoBuilder {
  public:
   AutoBuilder(drivetrain::SwerveDrive* swerve, std::function<bool()> shouldFlipPath, std::string autoRoutine,
-              Commands commands);
+              AutoCommands commands);
 
   void Invert();
   void SetAuto(std::string path);
@@ -290,7 +290,7 @@ class AutoBuilder {
   bool _flip;
   drivetrain::SwerveDrive* _swerve;
 
-  Commands _commandsList;
+  AutoCommands _commandsList;
 
   wpi::json* _currentPath;
   wpi::json* _startingPose;
@@ -303,7 +303,7 @@ class AutoBuilder {
 
 class SwerveAutoBuilder {
  public:
-  SwerveAutoBuilder(drivetrain::SwerveDrive* swerve, std::string name, Commands commands);
+  SwerveAutoBuilder(drivetrain::SwerveDrive* swerve, std::string name, AutoCommands commands);
 
   void SetAuto(std::string path);
   std::shared_ptr<behaviour::Behaviour> GetAutoRoutine();
