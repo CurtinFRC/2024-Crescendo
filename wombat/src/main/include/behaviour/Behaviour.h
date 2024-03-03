@@ -239,10 +239,8 @@ class ConcurrentBehaviour : public Behaviour {
  * Create a concurrent behaviour group, waiting for all behaviours
  * to finish before moving on.
  */
-inline std::shared_ptr<ConcurrentBehaviour> operator&(Behaviour::ptr a,
-                                                      Behaviour::ptr b) {
-  auto conc =
-      std::make_shared<ConcurrentBehaviour>(ConcurrentBehaviourReducer::ALL);
+inline std::shared_ptr<ConcurrentBehaviour> operator&(Behaviour::ptr a, Behaviour::ptr b) {
+  auto conc = std::make_shared<ConcurrentBehaviour>(ConcurrentBehaviourReducer::ALL);
   conc->Add(a);
   conc->Add(b);
   return conc;

@@ -37,7 +37,6 @@ class IntakeNote : public behaviour::Behaviour {
 
  private:
   Intake* _intake;
-  
 };
 
 class PassNote : public behaviour::Behaviour {
@@ -47,7 +46,6 @@ class PassNote : public behaviour::Behaviour {
 
  private:
   Intake* _intake;
-  
 };
 
 class EjectNote : public behaviour::Behaviour {
@@ -57,5 +55,4 @@ class EjectNote : public behaviour::Behaviour {
 
  private:
   Intake* _intake;
-  
 };

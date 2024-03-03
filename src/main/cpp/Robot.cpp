@@ -3,8 +3,7 @@
 // of the MIT License at the root of this project
 
 #include "Robot.h"
-#include "Auto.h"
-#include "RobotMap.h"
+
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
 #include <frc/controller/RamseteController.h>
@@ -13,6 +12,9 @@
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableInstance.h>
 #include <units/acceleration.h>
+
+#include "Auto.h"
+#include "RobotMap.h"
 
 // include units
 #include <units/velocity.h>
@@ -23,7 +25,6 @@
 #include <units/velocity.h>
 #include <units/voltage.h>
 
-
 #include "behaviour/HasBehaviour.h"
 #include "networktables/NetworkTableInstance.h"
 
@@ -33,6 +34,8 @@
 #include <frc/Timer.h>
 #include "behaviour/HasBehaviour.h"
 #include "frc/geometry/Pose2d.h"
+#include "vision/Vision.h"
+#include "vision/VisionBehaviours.h"
 
 static units::second_t lastPeriodic;
 
@@ -53,15 +56,13 @@ void Robot::RobotInit() {
   wom::BehaviourScheduler::GetInstance()->Register(shooter);
   shooter->SetDefaultBehaviour(
       [this]() { return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver, _led); });
-  
 
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour(
       [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
-
-    intake = new Intake(robotmap.intakeSystem.config);
+  intake = new Intake(robotmap.intakeSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(intake);
   intake->SetDefaultBehaviour(
       [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
@@ -73,8 +74,11 @@ void Robot::RobotInit() {
 
   climber = new Climber(robotmap.climberSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(climber);
-  climber->SetDefaultBehaviour(
-      [this]() { return wom::make<ClimberManualControl>(climber, alphaArm, &robotmap.controllers.codriver); });
+  climber->SetDefaultBehaviour([this]() {
+    return wom::make<ClimberManualControl>(climber, alphaArm, &robotmap.controllers.codriver);
+  });
+
+  vision = new Vision("limelight", FMAP("fmap.fmap"));
 
   robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0.45229_rad);
   robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(2.6846_rad);
@@ -94,7 +98,7 @@ void Robot::RobotPeriodic() {
 
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
-  //sched->Tick();
+  // sched->Tick();
 
   // robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder")
   //     .SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
@@ -106,16 +110,19 @@ void Robot::RobotPeriodic() {
   //     .SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
   // _swerveDrive->OnUpdate(dt);
-  //shooter->OnStart();
-  //intake->OnUpdate(dt);
+  // shooter->OnStart();
+  // intake->OnUpdate(dt);
 
   // _swerveDrive->OnUpdate(dt);
 
-
-//   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 0 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
-//   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 1 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->GetEncoderPosition().value());
-//   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 2 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
-//   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 3 offset: ").SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
+  //   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 0 offset:
+  //   ").SetDouble(robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->GetEncoderPosition().value());
+  //   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 1 offset:
+  //   ").SetDouble(robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->GetEncoderPosition().value());
+  //   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 2 offset:
+  //   ").SetDouble(robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->GetEncoderPosition().value());
+  //   robotmap.swerveTable.swerveDriveTable->GetEntry("Encoder 3 offset:
+  //   ").SetDouble(robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->GetEncoderPosition().value());
 
   _led->OnUpdate(dt);
   shooter->OnUpdate(dt);
@@ -123,7 +130,6 @@ void Robot::RobotPeriodic() {
   _swerveDrive->OnUpdate(dt);
   intake->OnUpdate(dt);
   climber->OnUpdate(dt);
-
 }
 
 void Robot::AutonomousInit() {
@@ -144,7 +150,6 @@ void Robot::AutonomousPeriodic() {
   _swerveDrive->MakeAtSetPoint();
 }
 
-
 void Robot::TeleopInit() {
   loop.Clear();
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
@@ -155,22 +160,22 @@ void Robot::TeleopInit() {
   // backLeft->SetVoltage(4_V);
   // backRight->SetVoltage(4_V);
 
-
   //  FMAP("fmap.fmap");
 
   // _swerveDrive->OnStart();
   // sched->InterruptAll();
 
-  //reimplement when vision is reimplemented
-
-  // _swerveDrive->SetPose(_vision->GetAngleToObject(VisionTargetObjects::kNote).first);
+  // reimplement when vision is reimplemented
+  sched->Schedule(wom::make<LockOnToTarget>(vision, VisionTargetObjects::kNote, _swerveDrive));    
 }
 
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+  // _swerveDrive->SetPose(vision->GetAngleToObject(VisionTargetObjects::kNote).first);   
+  
+}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}
-void Robot::TestPeriodic() {
-}
+void Robot::TestPeriodic() {}

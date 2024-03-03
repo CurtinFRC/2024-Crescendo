@@ -63,8 +63,7 @@ double wom::utils::Encoder::GetEncoderDistance() {
 units::radians_per_second_t wom::utils::Encoder::GetEncoderAngularVelocity() {
   // return GetEncoderTickVelocity() / (double)GetEncoderTicksPerRotation() * 2
   // * 3.1415926;
-  units::turns_per_second_t n_turns_per_s{GetEncoderTickVelocity() /
-                                          GetEncoderTicksPerRotation()};
+  units::turns_per_second_t n_turns_per_s{GetEncoderTickVelocity() / GetEncoderTicksPerRotation()};
   return n_turns_per_s;
 }
 
@@ -86,8 +85,7 @@ double wom::utils::DigitalEncoder::GetEncoderTickVelocity() const {
   return _nativeEncoder.GetRate();
 }
 
-wom::utils::CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax* controller,
-                                                   units::meter_t wheelRadius,
+wom::utils::CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax* controller, units::meter_t wheelRadius,
                                                    double reduction)
     : wom::utils::Encoder(42, reduction, wheelRadius, 2),
       _encoder(controller->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)) {}
@@ -119,11 +117,9 @@ double wom::utils::CANSparkMaxEncoder::GetVelocity() const {
   return _encoder.GetVelocity();
 }
 
-wom::utils::TalonFXEncoder::TalonFXEncoder(
-    ctre::phoenix6::hardware::TalonFX* controller, units::meter_t wheelRadius,
-    double reduction)
-    : utils::Encoder(2048, reduction, wheelRadius, 0),
-      _controller(controller) {}
+wom::utils::TalonFXEncoder::TalonFXEncoder(ctre::phoenix6::hardware::TalonFX* controller,
+                                           units::meter_t wheelRadius, double reduction)
+    : utils::Encoder(2048, reduction, wheelRadius, 0), _controller(controller) {}
 
 double wom::utils::TalonFXEncoder::GetEncoderRawTicks() const {
   return _controller->GetPosition().GetValue().value();
@@ -136,9 +132,8 @@ double wom::utils::TalonFXEncoder::GetEncoderTickVelocity() const {
 wom::utils::DutyCycleEncoder::DutyCycleEncoder(int channel, units::meter_t wheelRadius,
                                                double ticksPerRotation, double reduction)
     : wom::utils::Encoder(ticksPerRotation, reduction, wheelRadius, 0) {
-      _dutyCycleEncoder = new frc::DutyCycleEncoder(channel);
-      
-    }
+  _dutyCycleEncoder = new frc::DutyCycleEncoder(channel);
+}
 
 double wom::utils::DutyCycleEncoder::GetEncoderRawTicks() const {
   return _dutyCycleEncoder->GetAbsolutePosition();

@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include <frc/controller/PIDController.h>
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
-#include <frc/controller/PIDController.h>
 #include <networktables/DoubleTopic.h>
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableInstance.h>
@@ -16,6 +16,9 @@
 #include <units/moment_of_inertia.h>
 #include <units/time.h>
 #include <units/velocity.h>
+#include <wpi/SymbolExports.h>
+#include <wpi/sendable/Sendable.h>
+#include <wpi/sendable/SendableHelper.h>
 
 #include <memory>
 #include <string>
@@ -28,19 +31,13 @@
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
 
-#include <wpi/SymbolExports.h>
-#include <wpi/sendable/Sendable.h>
-#include <wpi/sendable/SendableHelper.h>
-
 namespace wom {
 namespace drivetrain {
 
 /**
  * Implements a PID control loop.
  */
-class PIDController
-    : public wpi::Sendable,
-      public wpi::SendableHelper<PIDController> {
+class PIDController : public wpi::Sendable, public wpi::SendableHelper<PIDController> {
  public:
   /**
    * Allocates a PIDController with the given constants for Kp, Ki, and Kd.
@@ -51,8 +48,7 @@ class PIDController
    * @param period The period between controller updates in seconds. The
    *               default is 20 milliseconds. Must be positive.
    */
-  PIDController(double Kp, double Ki, double Kd,
-                units::second_t period = 20_ms);
+  PIDController(double Kp, double Ki, double Kd, units::second_t period = 20_ms);
 
   ~PIDController() override = default;
 
@@ -215,9 +211,8 @@ class PIDController
    * @param positionTolerance Position error which is tolerable.
    * @param velocityTolerance Velocity error which is tolerable.
    */
-  void SetTolerance(
-      double positionTolerance,
-      double velocityTolerance = std::numeric_limits<double>::infinity());
+  void SetTolerance(double positionTolerance,
+                    double velocityTolerance = std::numeric_limits<double>::infinity());
 
   /**
    * Returns the difference between the setpoint and the measurement.
@@ -299,7 +294,6 @@ class PIDController
   bool m_haveSetpoint = false;
   bool m_haveMeasurement = false;
 };
-
 
 enum class SwerveModuleState { kZeroing, kIdle, kPID };
 enum class TurnOffsetValues { reverse, forward, none };
@@ -384,20 +378,18 @@ class SwerveModule {
 struct SwerveDriveConfig {
   /*using pose_angle_conf_t =
       utils::PIDConfig<units::radian, units::radians_per_second>;*/
-  using pose_position_conf_t =
-      utils::PIDConfig<units::meter, units::meters_per_second>;
-  using balance_conf_t =
-      utils::PIDConfig<units::degree, units::meters_per_second>;
+  using pose_position_conf_t = utils::PIDConfig<units::meter, units::meters_per_second>;
+  using balance_conf_t = utils::PIDConfig<units::degree, units::meters_per_second>;
 
   std::string path;
-  //SwerveModule::angle_pid_conf_t anglePID;
+  // SwerveModule::angle_pid_conf_t anglePID;
   SwerveModule::velocity_pid_conf_t velocityPID;
 
   wpi::array<SwerveModuleConfig, 4> modules;
 
   ctre::phoenix6::hardware::Pigeon2* gyro;
 
-  //pose_angle_conf_t poseAnglePID;
+  // pose_angle_conf_t poseAnglePID;
   pose_position_conf_t posePositionPID;
 
   units::kilogram_t mass;
@@ -451,8 +443,7 @@ class SwerveDrive : public behaviour::HasBehaviour {
    * @brief This function switches the state to handle the robot's rotation
    * matching that of the joystick
    */
-  void RotateMatchJoystick(units::radian_t joystickAngle,
-                           FieldRelativeSpeeds speeds);
+  void RotateMatchJoystick(units::radian_t joystickAngle, FieldRelativeSpeeds speeds);
 
   void SetIdle();
 
@@ -486,6 +477,7 @@ class SwerveDrive : public behaviour::HasBehaviour {
   frc::Pose2d GetSetpoint();
 
   void MakeAtSetPoint();
+
  private:
   SwerveDriveConfig _config;
   SwerveDriveState _state = SwerveDriveState::kIdle;
