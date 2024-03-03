@@ -11,6 +11,8 @@
 #include "Intake.h"
 #include "Wombat.h"
 
+#include <memory>
+
 class AlphaArmManualControl : public behaviour::Behaviour {
  public:
   explicit AlphaArmManualControl(AlphaArm* alphaArm, Intake* intake, frc::XboxController* codriver);
