@@ -18,6 +18,7 @@
 #include "utils/Pathplanner.h"
 #include "vision/Camera.h"
 #include "vision/Limelight.h"
+#include "sim/Sim.h"
 
 namespace wom {
 using namespace wom;
@@ -26,5 +27,6 @@ using namespace wom::utils;
 using namespace wom::drivetrain;
 using namespace wom::drivetrain::behaviours;
 using namespace wom::vision;
+using namespace wom::sim;
 using namespace behaviour;
 }  // namespace wom
