@@ -140,14 +140,17 @@ void Robot::AutonomousInit() {
 
   m_autoSelected = m_chooser.GetSelected();
 
+  robotmap._builder = autos::InitCommands(_swerveDrive, shooter, intake, alphaArm);
+
   if (m_autoSelected == "kTaxi") {
     sched->Schedule(autos::Taxi(robotmap._builder));
   }
 }
 
 void Robot::AutonomousPeriodic() {
-  robotmap._simSwerve->OnTick(_swerveDrive->GetSetpoint());
-  _swerveDrive->MakeAtSetPoint();
+  robotmap._simSwerve->OnTick();
+  // robotmap._simSwerve->OnTick(_swerveDrive->GetSetpoint());
+  // _swerveDrive->MakeAtSetPoint();
 }
 
 void Robot::TeleopInit() {
@@ -166,12 +169,11 @@ void Robot::TeleopInit() {
   // sched->InterruptAll();
 
   // reimplement when vision is reimplemented
-  sched->Schedule(wom::make<LockOnToTarget>(vision, VisionTargetObjects::kNote, _swerveDrive));    
+  // sched->Schedule(wom::make<LockOnToTarget>(vision, VisionTargetObjects::kNote, _swerveDrive));
 }
 
 void Robot::TeleopPeriodic() {
-  // _swerveDrive->SetPose(vision->GetAngleToObject(VisionTargetObjects::kNote).first);   
-  
+  // _swerveDrive->SetPose(vision->GetAngleToObject(VisionTargetObjects::kNote).first);
 }
 
 void Robot::DisabledInit() {}

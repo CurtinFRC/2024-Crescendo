@@ -12,9 +12,11 @@
 #include <wpi/sendable/SendableRegistry.h>
 
 #include <cmath>
+#include <cstdlib>
 #include <iostream>
 
 #include "frc/MathUtil.h"
+#include "units/velocity.h"
 #include "utils/Util.h"
 
 using namespace wom;
@@ -426,9 +428,12 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
                                                    frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}},
                                                    frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}}},
           initialPose, _config.stateStdDevs, _config.visionMeasurementStdDevs),
-      _anglePIDController{PIDController(1, 0, 0)},
-      _xPIDController(config.path + "/pid/x", _config.posePositionPID),
-      _yPIDController(config.path + "/pid/y", _config.posePositionPID),
+      _anglePIDController{PIDController(1.5, 0, 0)},
+      _xPIDController(PIDController(1, 0, 0)),
+      _yPIDController(PIDController(1, 0, 0)),
+      // _xPIDController(std::string path, config_t initialGains)
+      // _xPIDController(config.path + "/pid/x", _config.posePositionPID),
+      // _yPIDController(config.path + "/pid/y", _config.posePositionPID),
       _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)) {
   _anglePIDController.SetTolerance(360);
 
@@ -462,10 +467,17 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       }
       break;
     case SwerveDriveState::kPose: {
-      _target_fr_speeds.vx = _xPIDController.Calculate(GetPose().X(), dt);
-      _target_fr_speeds.vy = _yPIDController.Calculate(GetPose().Y(), dt);
-      _target_fr_speeds.omega =
-          units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
+      // _target_fr_speeds.vx = _xPIDController.Calculate(GetPose().X(), dt);
+      // _target_fr_speeds.vy = _yPIDController.Calculate(GetPose().Y(), dt);
+      _target_fr_speeds.vx = units::meters_per_second_t{_xPIDController.Calculate(GetPose().X().value())};
+      _target_fr_speeds.vx = units::meters_per_second_t{_xPIDController.Calculate(GetPose().Y().value())};
+      _target_fr_speeds.omega = 0_rad_per_s;
+          // -units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
+
+      _table->GetEntry("Swerve vx").SetDouble(_target_fr_speeds.vx.value());
+      _table->GetEntry("Swerve vy").SetDouble(_target_fr_speeds.vy.value());
+      _table->GetEntry("Swerve omega").SetDouble(_target_fr_speeds.omega.value());
+
     }
       [[fallthrough]];
     case SwerveDriveState::kFieldRelativeVelocity:
@@ -524,8 +536,11 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       _modules[3].SetPID(315_deg, 0_mps, dt);
       break;
     case SwerveDriveState::kFRVelocityRotationLock:
-      _target_speed.vx = _xPIDController.Calculate(GetPose().X(), dt);
-      _target_speed.vy = _yPIDController.Calculate(GetPose().Y(), dt);
+      // _target_speed.vx = _xPIDController.Calculate(GetPose().X(), dt);
+      // _target_speed.vy = _yPIDController.Calculate(GetPose().Y(), dt);
+      _target_fr_speeds.vx = units::meters_per_second_t{_xPIDController.Calculate(GetPose().X().value())};
+      _target_fr_speeds.vx = units::meters_per_second_t{_xPIDController.Calculate(GetPose().Y().value())};
+
       _target_speed.omega =
           units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
       _target_speed = _requestedSpeeds.ToChassisSpeeds(GetPose().Rotation().Radians());
@@ -630,13 +645,19 @@ void SwerveDrive::SetFieldRelativeVelocity(FieldRelativeSpeeds speeds) {
 void SwerveDrive::SetPose(frc::Pose2d pose) {
   _state = SwerveDriveState::kPose;
   _anglePIDController.SetSetpoint(pose.Rotation().Radians().value());
-  _xPIDController.SetSetpoint(pose.X());
-  _yPIDController.SetSetpoint(pose.Y());
+  _xPIDController.SetSetpoint(pose.X().value());
+  _yPIDController.SetSetpoint(pose.Y().value());
+
+  utils::WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("swerveSetpoint"), GetSetpoint());
 }
 
 bool SwerveDrive::IsAtSetPose() {
-  return /*_anglePIDController.IsStable()*/ true && _xPIDController.IsStable() &&
-         _yPIDController.IsStable(0.05_m);
+  if (std::abs(_xPIDController.GetPositionError()) < 0.1 && std::abs(_yPIDController.GetPositionError()) < 0.1 && std::abs(_anglePIDController.GetPositionError()) < 0.1) {
+    if (std::abs(_xPIDController.GetVelocityError()) < 1 && std::abs(_yPIDController.GetVelocityError()) < 1 && std::abs(_anglePIDController.GetVelocityError()) < 1) {
+      return true;
+    }
+  }
+  return false;
 }
 
 void SwerveDrive::ResetPose(frc::Pose2d pose) {
@@ -652,7 +673,7 @@ frc::Pose2d SwerveDrive::GetPose() {
 }
 
 void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp) {
-  _poseEstimator.AddVisionMeasurement(pose, timestamp);
+  // _poseEstimator.AddVisionMeasurement(pose, timestamp);
 }
 
 frc::Pose2d SwerveDrive::GetSetpoint() {

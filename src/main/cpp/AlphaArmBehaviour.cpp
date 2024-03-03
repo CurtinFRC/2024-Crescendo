@@ -5,6 +5,7 @@
 #include "AlphaArmBehaviour.h"
 
 #include <frc/XboxController.h>
+
 #include "vision/Vision.h"
 
 AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxController* codriver)

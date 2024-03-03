@@ -504,8 +504,10 @@ class SwerveDrive : public behaviour::HasBehaviour {
   /*utils::PIDController<units::radian, units::radians_per_second>
       _anglePIDController;*/
   wom::drivetrain::PIDController _anglePIDController;
-  wom::utils::PIDController<units::meter, units::meters_per_second> _xPIDController;
-  wom::utils::PIDController<units::meter, units::meters_per_second> _yPIDController;
+  wom::drivetrain::PIDController _xPIDController;
+  wom::drivetrain::PIDController _yPIDController;
+  // wom::utils::PIDController<units::meter, units::meters_per_second> _xPIDController;
+  // wom::utils::PIDController<units::meter, units::meters_per_second> _yPIDController;
 
   std::shared_ptr<nt::NetworkTable> _table;
 

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "vision/Vision.h"
+
 #pragma once
 #include <frc/XboxController.h>
 

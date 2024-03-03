@@ -42,7 +42,9 @@ LockOnToTarget::LockOnToTarget(wom::PhotonVision* vision, Vision* limelight, wom
     : _camera(vision), _swerveDrive(swerveDrive), _vision(limelight), _type(VisionType::kGenericCamera) {}
 
 void LockOnToTarget::OnTick(units::second_t dt) {
-  if (!_vision->TargetIsVisible(VisionTargetObjects::kNote)) { SetDone(); }
+  if (!_vision->TargetIsVisible(VisionTargetObjects::kNote)) {
+    SetDone();
+  }
 
   units::degree_t angle;
 
@@ -62,5 +64,4 @@ void LockOnToTarget::OnTick(units::second_t dt) {
   if (_vision->IsAtPose(pose, dt)) {
     SetDone();
   }
-  
 }
