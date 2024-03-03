@@ -332,13 +332,14 @@ void utils::FollowPath::CalcTimer() {
 
   _timer.Stop();
   _timer.Reset();
-  _time = units::second_t{std::abs(dist.value()) * 1 /*meters per second*/};
+  // _time = units::second_t{std::abs(dist.value()) * 1 /*meters per second*/};
+  _time = 20_s;
   _timer.Start();
 }
 
 void utils::FollowPath::OnTick(units::second_t dt) {
   _swerve->SetPose(_poses[_currentPose]);
-
+  
   nt::NetworkTableInstance::GetDefault()
       .GetTable("pathplanner")
       ->GetEntry("atPose")
@@ -360,6 +361,7 @@ void utils::FollowPath::OnTick(units::second_t dt) {
 
   if (_swerve->IsAtSetPose() || _timer.Get() > _time) {
     if (_currentPose + 1 == static_cast<int>(_poses.size())) {
+      _swerve->MakeAtSetPoint();
       SetDone();
     } else {
       _currentPose++;

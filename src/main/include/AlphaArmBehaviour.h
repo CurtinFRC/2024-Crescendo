@@ -3,8 +3,7 @@
 // of the MIT License at the root of this project
 
 #pragma once
-
-#pragma once
+#include "vision/Vision.h"
 #include <frc/XboxController.h>
 
 #include "AlphaArm.h"

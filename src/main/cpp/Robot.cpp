@@ -138,7 +138,10 @@ void Robot::AutonomousInit() {
   _swerveDrive->OnStart();
 }
 
-void Robot::AutonomousPeriodic() {}
+void Robot::AutonomousPeriodic() {
+  // robotmap._simSwerve->OnTick(_swerveDrive->GetSetpoint());
+  // _swerveDrive->MakeAtSetPoint();
+}
 
 void Robot::TeleopInit() {
   loop.Clear();

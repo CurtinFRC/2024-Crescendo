@@ -6,6 +6,8 @@
 
 #include <frc/XboxController.h>
 
+#include "vision/Vision.h"
+
 AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, Intake *intake, frc::XboxController* codriver)
     : _alphaArm(alphaArm), _intake(intake), _codriver(codriver) {
   Controls(alphaArm);
