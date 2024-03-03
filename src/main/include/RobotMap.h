@@ -237,5 +237,8 @@ struct RobotMap {
         climberGearbox,
     };
   }; ClimberSystem climberSystem;
+
+  wom::SwerveAutoBuilder* _builder;
+  wom::SimSwerve* _simSwerve;
 };
   // AlphaArmSystem alphaArmSystem;

@@ -483,6 +483,9 @@ class SwerveDrive : public behaviour::HasBehaviour {
 
   SwerveDriveConfig& GetConfig() { return _config; }
 
+  frc::Pose2d GetSetpoint();
+
+  void MakeAtSetPoint();
  private:
   SwerveDriveConfig _config;
   SwerveDriveState _state = SwerveDriveState::kIdle;

@@ -3,6 +3,7 @@
 // of the MIT License at the root of this project
 
 #include "Robot.h"
+#include "Auto.h"
 #include "RobotMap.h"
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
@@ -12,7 +13,6 @@
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableInstance.h>
 #include <units/acceleration.h>
-// #include <units/angle.h>
 
 // include units
 #include <units/velocity.h>
@@ -38,7 +38,14 @@ static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
   sched = wom::BehaviourScheduler::GetInstance();
-  m_chooser.SetDefaultOption("Default Auto", "Default Auto");
+
+  frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
+
+  m_chooser.SetDefaultOption(defaultAuto, defaultAuto);
+
+  for (auto& option : autoOptions) {
+    m_chooser.AddOption(option, option);
+  }
 
   _led = new LED();
 
@@ -56,8 +63,8 @@ void Robot::RobotInit() {
 
   alphaArm = new AlphaArm(&robotmap.alphaArmSystem.config);
   intake = new Intake(robotmap.intakeSystem.config);
-  
-  
+
+
   wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
   alphaArm->SetDefaultBehaviour(
       [this]() { return wom::make<AlphaArmManualControl>(alphaArm, intake, &robotmap.controllers.codriver); });
@@ -75,6 +82,9 @@ void Robot::RobotInit() {
   robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(2.6846_rad);
   robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(3.01121_rad);
   robotmap.swerveBase.moduleConfigs[3].turnMotor.encoder->SetEncoderOffset(4.4524_rad);
+
+  robotmap._builder = autos::InitCommands(_swerveDrive, shooter, intake, alphaArm);
+  robotmap._simSwerve = new wom::SimSwerve(_swerveDrive);
 
   lastPeriodic = wom::now();
 }
@@ -121,9 +131,20 @@ void Robot::RobotPeriodic() {
 void Robot::AutonomousInit() {
   loop.Clear();
   sched->InterruptAll();
+
+  _swerveDrive->GetConfig().gyro->Reset();
+
+  m_autoSelected = m_chooser.GetSelected();
+
+  if (m_autoSelected == "kTaxi") {
+    sched->Schedule(autos::Taxi(robotmap._builder));
+  }
 }
 
-void Robot::AutonomousPeriodic() {}
+void Robot::AutonomousPeriodic() {
+  robotmap._simSwerve->OnTick(_swerveDrive->GetSetpoint());
+  _swerveDrive->MakeAtSetPoint();
+}
 
 
 void Robot::TeleopInit() {
@@ -157,7 +178,7 @@ void Robot::TeleopPeriodic() {
       armServo->SetAngle(0);
       climberTimer.Stop();
       climberTimer.Reset();
-    } 
+    }
   }
 
   robotmap.swerveTable.swerveDriveTable->GetEntry("SERVO POS").SetDouble(armServo->GetAngle());
