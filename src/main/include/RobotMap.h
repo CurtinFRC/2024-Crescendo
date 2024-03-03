@@ -26,6 +26,8 @@
 #include "Intake.h"
 #include "Shooter.h"
 #include "Wombat.h"
+#include "sim/Sim.h"
+#include "utils/Pathplanner.h"
 
 struct RobotMap {
   struct Controllers {
@@ -156,4 +158,7 @@ struct RobotMap {
         nt::NetworkTableInstance::GetDefault().GetTable("swerve");
   };
   SwerveTable swerveTable;
+
+  wom::SwerveAutoBuilder* _builder;
+  wom::SimSwerve* _simSwerve;
 };

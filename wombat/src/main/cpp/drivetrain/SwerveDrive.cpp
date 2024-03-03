@@ -656,5 +656,15 @@ frc::Pose2d SwerveDrive::GetPose() {
 void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp) {
   _poseEstimator.AddVisionMeasurement(pose, timestamp);
 }
+
+frc::Pose2d SwerveDrive::GetSetpoint() {
+  return frc::Pose2d(units::meter_t{_xPIDController.GetSetpoint()},
+                     units::meter_t{_yPIDController.GetSetpoint()},
+                     units::radian_t{_anglePIDController.GetSetpoint()});
+}
+
+void SwerveDrive::MakeAtSetPoint() {
+  ResetPose(GetSetpoint());
+}
 }  // namespace drivetrain
 }  // namespace wom

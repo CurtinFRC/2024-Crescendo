@@ -17,6 +17,7 @@
 #include <units/velocity.h>
 #include <units/voltage.h>
 
+#include "Auto.h"
 #include "RobotMap.h"
 #include "behaviour/HasBehaviour.h"
 #include "networktables/NetworkTableInstance.h"
@@ -36,7 +37,12 @@ void Robot::RobotInit() {
 
   frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
   sched = wom::BehaviourScheduler::GetInstance();
-  m_chooser.SetDefaultOption("Default Auto", "Default Auto");
+
+  m_chooser.SetDefaultOption("kTaxi", "kTaxi");
+
+  for (auto& option : autoOptions) {
+    m_chooser.AddOption(option, option);
+  }
 
   // m_path_chooser.SetDefaultOption("Path1", "paths/output/Path1.wpilib.json");
 
@@ -100,6 +106,9 @@ void Robot::RobotInit() {
   // _vision = new Vision("limelight", FMAP("fmap.fmap"));
 
   // robotmap->vision = new Vision("limelight", FMAP("fmap.fmap"));
+  //
+  robotmap._builder = autos::InitCommands(_swerveDrive, _shooter, _intake, alphaArm);
+  robotmap._simSwerve = new wom::SimSwerve(_swerveDrive);
 }
 
 void Robot::RobotPeriodic() {
@@ -137,14 +146,29 @@ void Robot::RobotPeriodic() {
 
   alphaArm->OnUpdate(dt);
   _swerveDrive->OnUpdate(dt);
+
+  robotmap._simSwerve->OnTick();
 }
 
 void Robot::AutonomousInit() {
   loop.Clear();
   sched->InterruptAll();
+
+  _swerveDrive->GetConfig().gyro->Reset();
+
+  m_autoSelected = m_chooser.GetSelected();
+
+  if (m_autoSelected == "kTaxi") {
+    sched->Schedule(autos::Taxi(robotmap._builder));
+  }
 }
 
-void Robot::AutonomousPeriodic() {}
+void Robot::AutonomousPeriodic() {
+  fmt::print("Auto selected: {}\n", m_autoSelected);
+
+  robotmap._simSwerve->OnTick(_swerveDrive->GetSetpoint());
+  _swerveDrive->MakeAtSetPoint();
+}
 
 void Robot::TeleopInit() {
   loop.Clear();

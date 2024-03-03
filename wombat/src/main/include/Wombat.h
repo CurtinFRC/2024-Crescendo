@@ -17,6 +17,7 @@
 #include "utils/Encoder.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
+#include "utils/Pathplanner.h"
 #include "utils/RobotStartup.h"
 #include "utils/Util.h"
 #include "vision/Camera.h"
