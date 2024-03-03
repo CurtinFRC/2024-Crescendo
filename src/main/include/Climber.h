@@ -8,12 +8,13 @@
 #include <string>
 
 #include "Wombat.h"
+#include <frc/Servo.h>
 
 struct ClimberConfig {
   wom::Gearbox climberGearbox;
 };
 
-enum class ClimberState { kIdle, kArmUp, kArmDown, kMatch, kRaw };
+enum class ClimberState { kIdle, kArmUp, kArmDown, kMatch, kRaw, kRatchet };
 
 class Climber : public behaviour::HasBehaviour {
  public:

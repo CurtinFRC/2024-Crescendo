@@ -31,6 +31,7 @@
 #include "LED.h"
 #include "Climber.h"
 #include "ClimberBehaviour.h"
+#include <frc/Servo.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -56,6 +57,8 @@ class Robot : public frc::TimedRobot {
   Intake* intake;
   Climber* climber;
 
+  frc::Timer climberTimer;
+
   frc::SendableChooser<std::string> m_chooser;
 
   // frc::Field2d m_field;
@@ -80,6 +83,7 @@ class Robot : public frc::TimedRobot {
 
   //wom::SwerveDrive* _swerveDrive;
 
+  frc::Servo *armServo;
 
   //ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;

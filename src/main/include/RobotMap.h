@@ -26,6 +26,7 @@
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
+// #include <frc/Servo.h>
 
 // #include "Intake.h"
 #include "Wombat.h"
@@ -233,7 +234,7 @@ struct RobotMap {
 //     // wom::MotorVoltageController climberMotorController = wom::MotorVoltageController::Group(climberMotor);
     wom::Gearbox climberGearbox{&climberMotor, climberEncoder, frc::DCMotor::NEO(1)};
     ClimberConfig config {
-        climberGearbox
+        climberGearbox,
     };
   }; ClimberSystem climberSystem;
 };

@@ -15,6 +15,14 @@ void Climber::OnUpdate(units::second_t dt) {
     } 
     break;
 
+    case ClimberState::kRatchet: 
+    {
+      _stringStateName = "Ratchet";
+      _setVoltage = 0_V;
+      // armServo.SetAngle(0);
+    } 
+    break;
+
     case ClimberState::kArmUp: 
     {
       _stringStateName = "Arm Up";
@@ -31,6 +39,7 @@ void Climber::OnUpdate(units::second_t dt) {
       _stringStateName = "Arm Down";
       _pid.SetSetpoint(0.07*100);
       _setVoltage = -units::volt_t{_pid.Calculate((-_config.climberGearbox.encoder->GetEncoderPosition().value()) * 100)};
+      // armServo.SetAngle(180);
       // _setVoltage = -8_V;
     } 
     break;
@@ -50,7 +59,7 @@ void Climber::OnUpdate(units::second_t dt) {
     {
       _stringStateName = "Raw";
       _setVoltage = _rawVoltage;
-    } 
+    }  
     break;
     
     default:

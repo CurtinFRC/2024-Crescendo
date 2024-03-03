@@ -35,7 +35,7 @@ void ClimberManualControl::OnTick(units::second_t dt) {
     else if (_codriver->GetPOV() == 180) {
       _climber->SetState(ClimberState::kArmDown);
     } else  if (_codriver->GetPOV() == 270){
-      _climber->SetState(ClimberState::kIdle);
+      _climber->SetState(ClimberState::kRatchet);
       _arm->SetState(AlphaArmState::kClimbed);
     }
   }
