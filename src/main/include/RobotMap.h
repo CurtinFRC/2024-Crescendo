@@ -2,13 +2,19 @@
 // Open Source Software, you can modify it according to the terms
 // of the MIT License at the root of this project
 
+// Open Source Software, you can modify it according to the terms
+// of the MIT License at the root of this project
+
 #pragma once
 
 #include <frc/Compressor.h>
+#include <frc/DigitalInput.h>
 #include <frc/DoubleSolenoid.h>
 #include <frc/DutyCycleEncoder.h>
 #include <frc/Encoder.h>
 #include <frc/XboxController.h>
+#include <frc/motorcontrol/MotorControllerGroup.h>
+#include <frc/system/plant/DCMotor.h>
 #include <frc/controller/PIDController.h>
 #include <frc/system/plant/DCMotor.h>
 #include <units/angle.h>
@@ -21,21 +27,31 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
+// #include "Intake.h"
+#include "Wombat.h"
+#include "utils/Encoder.h"
+#include "utils/PID.h"
 #include "AlphaArm.h"
 #include "AlphaArmBehaviour.h"
 #include "Intake.h"
 #include "Shooter.h"
 #include "Wombat.h"
+#include "Wombat.h"
+#include "AlphaArm.h"
+#include "AlphaArmBehaviour.h"
+#include "Climber.h"
 
 struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
     frc::XboxController codriver = frc::XboxController(1);
     frc::XboxController testController = frc::XboxController(2);
+    
   };
+
   Controllers controllers;
 
-  struct AlphaArmSystem {
+    struct AlphaArmSystem {
     rev::CANSparkMax alphaArmMotorUp{21, rev::CANSparkMax::MotorType::kBrushless};
     rev::CANSparkMax alphaArmMotorDown{26, rev::CANSparkMax::MotorType::kBrushless};
 
@@ -52,6 +68,26 @@ struct RobotMap {
     };
   };
   AlphaArmSystem alphaArmSystem;
+
+  struct IntakeSystem {
+    rev::CANSparkMax intakeMotor{35, rev::CANSparkMax::MotorType::kBrushless};
+    wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
+    frc::DigitalInput intakeSensor{5};
+    frc::DigitalInput passSensor{7};
+    // frc::DigitalInput magSensor{0};
+    // frc::DigitalInput shooterSensor{0};
+
+    wom::Gearbox IntakeGearbox{&intakeMotor, &intakeEncoder, frc::DCMotor::NEO(1)};
+
+    IntakeConfig config{"path", IntakeGearbox, &intakeSensor, &passSensor, wom::PIDConfig<units::radians_per_second, units::volts>(
+          "/intake/PID/config",
+          9_V / (180_deg / 1_s),
+          0_V / 25_deg,
+          0_V / (90_deg / 1_s / 1_s)
+        ),/*, &magSensor, &shooterSensor*/};
+  };
+  IntakeSystem intakeSystem;
+
 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{16, "Drivebase"};
@@ -152,8 +188,39 @@ struct RobotMap {
   SwerveBase swerveBase;
 
   struct SwerveTable {
-    std::shared_ptr<nt::NetworkTable> swerveDriveTable =
-        nt::NetworkTableInstance::GetDefault().GetTable("swerve");
+    std::shared_ptr<nt::NetworkTable> swerveDriveTable = nt::NetworkTableInstance::GetDefault().GetTable("swerve");
+  }; SwerveTable swerveTable;
+
+
+    struct Shooter {
+    rev::CANSparkMax shooterMotor{31, rev::CANSparkMax::MotorType::kBrushless};// Port 11
+    // frc::DigitalInput shooterSensor{2};
+
+    // wom::VoltageController shooterMotorGroup = wom::VoltagedController::Group(shooterMotor);
+    wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
+    wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder, frc::DCMotor::NEO(1)};
+
+    
+
+    ShooterConfig config{
+        "shooterGearbox",
+        shooterGearbox,
+    };
+
   };
-  SwerveTable swerveTable;
+  Shooter shooterSystem;
+
+  struct ClimberSystem {
+    rev::CANSparkMax climberMotor{32, rev::CANSparkMax::MotorType::kBrushless};
+    // wom::utils::CANSparkMaxEncoder climberEncoder{&climberMotor, 0.1_m};
+    wom::CANSparkMaxEncoder* climberEncoder = new wom::CANSparkMaxEncoder(&climberMotor, 0.1_m);
+
+//     // frc::DigitalInput climberSensor{99};
+//     // wom::MotorVoltageController climberMotorController = wom::MotorVoltageController::Group(climberMotor);
+    wom::Gearbox climberGearbox{&climberMotor, climberEncoder, frc::DCMotor::NEO(1)};
+    ClimberConfig config {
+        climberGearbox
+    };
+  }; ClimberSystem climberSystem;
 };
+  // AlphaArmSystem alphaArmSystem;

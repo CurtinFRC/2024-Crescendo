@@ -11,20 +11,20 @@
 #include <wpi/sendable/SendableBuilder.h>
 #include <wpi/sendable/SendableRegistry.h>
 
-#include <algorithm>
-#include <cmath>
 #include <iostream>
+#include <cmath>
 
 #include "frc/MathUtil.h"
-#include "utils/Util.h"
-#include "wpimath/MathShared.h"
+#include <wpi/sendable/SendableBuilder.h>
+#include <wpi/sendable/SendableRegistry.h>
 
 using namespace wom;
 
 namespace wom {
 namespace drivetrain {
 
-PIDController::PIDController(double Kp, double Ki, double Kd, units::second_t period)
+PIDController::PIDController(double Kp, double Ki, double Kd,
+                             units::second_t period)
     : m_Kp(Kp), m_Ki(Ki), m_Kd(Kd), m_period(period) {
   bool invalidGains = false;
   if (Kp < 0.0) {
@@ -274,6 +274,7 @@ void SwerveModule::OnUpdate(units::second_t dt) {
       _table->GetEntry("/testing/GetEncoderPos").SetDouble(input);
       // _velocityPIDController.SetSetpoint(3);
 
+
       driveVoltage = units::volt_t{_velocityPIDController.Calculate(GetSpeed().value())};
       // if (_turnOffset == TurnOffsetValues::forward) {
 
@@ -499,7 +500,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
 
       bool init = false;
 
-      frc::ChassisSpeeds new_target_speed{_target_speed.vx, _target_speed.vy, -_target_speed.omega};
+      frc::ChassisSpeeds new_target_speed {_target_speed.vx, _target_speed.vy, -_target_speed.omega};
       auto target_states = _kinematics.ToSwerveModuleStates(_target_speed);
       auto new_target_states = _kinematics.ToSwerveModuleStates(new_target_speed);
       for (size_t i = 0; i < _modules.size(); i++) {
@@ -655,6 +656,16 @@ frc::Pose2d SwerveDrive::GetPose() {
 
 void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp) {
   _poseEstimator.AddVisionMeasurement(pose, timestamp);
+}
+
+frc::Pose2d SwerveDrive::GetSetpoint() {
+  return frc::Pose2d(units::meter_t{_xPIDController.GetSetpoint()},
+                     units::meter_t{_yPIDController.GetSetpoint()},
+                     units::radian_t{_anglePIDController.GetSetpoint()});
+}
+
+void SwerveDrive::MakeAtSetPoint() {
+  ResetPose(GetSetpoint());
 }
 }  // namespace drivetrain
 }  // namespace wom

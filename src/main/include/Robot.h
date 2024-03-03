@@ -3,6 +3,8 @@
 // of the MIT License at the root of this project
 
 #pragma once
+// #include <frc/Encoder.h>
+#include <frc/Encoder.h>
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
 #include <frc/event/EventLoop.h>
@@ -11,13 +13,25 @@
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <networktables/DoubleTopic.h>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableInstance.h>
 
 #include <string>
+#include <vector>
 
 #include "AlphaArm.h"
 #include "AlphaArmBehaviour.h"
+#include "Intake.h"
+#include "IntakeBehaviour.h"
+#include "Shooter.h"
+#include "ShooterBehaviour.h"
 #include "RobotMap.h"
+#include "Shooter.h"
 #include "Wombat.h"
+#include "LED.h"
+#include "Climber.h"
+#include "ClimberBehaviour.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -31,16 +45,18 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void DisabledInit() override;
   void DisabledPeriodic() override;
-  void SimulationInit() override;
-  void SimulationPeriodic() override;
+  // void SimulationInit() override;
+  // void SimulationPeriodic() override;
 
  private:
   RobotMap robotmap;
   wom::BehaviourScheduler* sched;
   frc::EventLoop loop;
-  // Shooter* shooter;
+  Shooter* shooter;
 
-  // Intake* intake;
+  Intake* intake;
+  Climber* climber;
+
   frc::SendableChooser<std::string> m_chooser;
 
   // frc::Field2d m_field;
@@ -51,10 +67,15 @@ class Robot : public frc::TimedRobot {
 
   wom::SwerveDrive* _swerveDrive;
 
+  Intake* _intake;
+
+  Shooter* _shooter;
+
   // rev::CANSparkMax testMotorUp{1, rev::CANSparkMax::MotorType::kBrushless};
   // rev::CANSparkMax testMotorDown{6, rev::CANSparkMax::MotorType::kBrushless};
   // frc::XboxController testdriver = frc::XboxController(1);
   AlphaArm* alphaArm;
+  LED* _led;
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;
@@ -67,4 +88,17 @@ class Robot : public frc::TimedRobot {
   //  ctre::phoenix6::hardware::TalonFX *frontRight;
   //  ctre::phoenix6::hardware::TalonFX *backLeft;
   //  ctre::phoenix6::hardware::TalonFX *backRight;
+  //
+  const std::string kTaxi = "kTaxi";
+  const std::string kAutoTest = "kAutoTest";
+  const std::string kQuadrupleClose = "kQuadrupleClose";
+  const std::string kQuadrupleFar = "kQuadrupleFar";
+  const std::string kQuadrupleCloseDoubleFar = "kQuadrupleCloseDoubleFar";
+  const std::string kQuadrupleCloseSingleFar = "kQuadrupleCloseSingleFar";
+  std::string m_autoSelected;
+
+  std::string defaultAuto = "kTaxi";
+  std::vector<std::string> autoOptions = {
+      kTaxi, kAutoTest, kQuadrupleClose, kQuadrupleFar, kQuadrupleCloseDoubleFar, kQuadrupleCloseSingleFar,
+  };
 };

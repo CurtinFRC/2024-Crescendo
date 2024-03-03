@@ -89,9 +89,8 @@ wom::utils::CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax* controller,
                                                    double reduction)
     : wom::utils::Encoder(42, reduction, wheelRadius, 2),
       _encoder(controller->GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor)) {}
-
 double wom::utils::CANSparkMaxEncoder::GetEncoderRawTicks() const {
-  return _encoder.GetPosition() * _reduction;
+  return ((_encoder.GetPosition() * 2 * 3.1415) / 200);
 }
 
 double wom::utils::CANSparkMaxEncoder::GetEncoderTickVelocity() const {
@@ -143,10 +142,12 @@ double wom::utils::DutyCycleEncoder::GetEncoderRawTicks() const {
 double wom::utils::DutyCycleEncoder::GetEncoderTickVelocity() const {
   return 0;
 }
+
 wom::utils::CanEncoder::CanEncoder(int deviceNumber, units::meter_t wheelRadius, double ticksPerRotation,
                                    double reduction, std::string name)
     : wom::utils::Encoder(ticksPerRotation, 2, wheelRadius, reduction) {
   _canEncoder = new ctre::phoenix6::hardware::CANcoder(deviceNumber, name);
+  // _canEncoder->ConfigAbsoluteEncoderRange(0, 1);
 }
 
 double wom::utils::CanEncoder::GetEncoderRawTicks() const {

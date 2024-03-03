@@ -33,6 +33,10 @@
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
 
+#include <wpi/SymbolExports.h>
+#include <wpi/sendable/Sendable.h>
+#include <wpi/sendable/SendableHelper.h>
+
 namespace wom {
 namespace drivetrain {
 
@@ -360,6 +364,7 @@ class SwerveModule {
   SwerveModuleConfig _config;
   SwerveModuleState _state;
   units::volt_t _driveModuleVoltageLimit = 10_V;
+  units::volt_t _angleModuleVoltageLimit = 6_V;
 
   bool _hasZeroedEncoder = false;
   bool _hasZeroed = false;
@@ -475,6 +480,10 @@ class SwerveDrive : public behaviour::HasBehaviour {
 
   SwerveDriveConfig& GetConfig() { return _config; }
 
+  frc::Pose2d GetSetpoint();
+
+  void MakeAtSetPoint();
+
  private:
   SwerveDriveConfig _config;
   SwerveDriveState _state = SwerveDriveState::kIdle;
@@ -500,9 +509,9 @@ class SwerveDrive : public behaviour::HasBehaviour {
 
   /*utils::PIDController<units::radian, units::radians_per_second>
       _anglePIDController;*/
-  PIDController _anglePIDController;
-  utils::PIDController<units::meter, units::meters_per_second> _xPIDController;
-  utils::PIDController<units::meter, units::meters_per_second> _yPIDController;
+  wom::drivetrain::PIDController _anglePIDController;
+  wom::utils::PIDController<units::meter, units::meters_per_second> _xPIDController;
+  wom::utils::PIDController<units::meter, units::meters_per_second> _yPIDController;
 
   std::shared_ptr<nt::NetworkTable> _table;
 
