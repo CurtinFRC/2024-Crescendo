@@ -3,7 +3,7 @@
 // of the MIT License at the root of this project
 
 #pragma once
-// #include <frc/Encoder.h>
+
 #include <frc/Encoder.h>
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
