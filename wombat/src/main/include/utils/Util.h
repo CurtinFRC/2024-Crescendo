@@ -71,6 +71,7 @@ class NTBoundDouble : public NTBound {
                 [&val](const nt::Value& v) { val = v.GetDouble(); }) {}
 };
 
+// sussy baka should be constrained to a unit type
 template <typename T>
 class NTBoundUnit : public NTBound {
  public:

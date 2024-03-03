@@ -31,6 +31,8 @@ enum class AlphaArmState {
   kHoldAngle,
   kVisionAngle,
   kStowed,
+  kClimbAngle,
+  kClimbed,
   kRaw
 };
 
@@ -50,14 +52,15 @@ class AlphaArm : public behaviour::HasBehaviour {
  private:
   // units::radian_t CalcTargetAngle();
 
-  AlphaArmConfig* _config;
-  wom::vision::Limelight* _vision;
+  AlphaArmConfig *_config;
+  // wom::vision::Limelight* _vision;
   AlphaArmState _state = AlphaArmState::kIdle;
   // wom::utils::PIDController<units::degree, units::volt> _alphaArmPID;
   // frc::DutyCycleEncoder armEncoder{4};
   frc::PIDController _pidArm;
   frc::PIDController _pidArmStates;
   frc::PIDController _pidIntakeState;
+  frc::PIDController _pidClimberStates;
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("AlphaArm");
   units::volt_t _setAlphaArmVoltage = 0_V;
 

@@ -81,13 +81,13 @@ class ManualDrivebase : public behaviour::Behaviour {
 
   // The translation speeds for when "slow speed", "normal speed", "fast speed"
   // modes are active
-  const translationSpeed_ lowSensitivityDriveSpeed = 15_ft / 1_s;
-  const translationSpeed_ defaultDriveSpeed = 10_ft / 1_s;
-  const translationSpeed_ highSensitivityDriveSpeed = 10_ft / 1_s;
+  const translationSpeed_ lowSensitivityDriveSpeed = 27_ft / 1_s;
+  const translationSpeed_ defaultDriveSpeed = 40_ft / 1_s;
+  const translationSpeed_ highSensitivityDriveSpeed = 27_ft / 1_s;
   // The rotation speeds for when "slow speed", "normal speed", "fast speed"
   // modes are active
-  const rotationSpeed_ lowSensitivityRotateSpeed = 120_deg / 1_s;
-  const rotationSpeed_ defaultRotateSpeed = 100_deg / 0.7_s;
+  const rotationSpeed_ lowSensitivityRotateSpeed = 720_deg / 1_s;
+  const rotationSpeed_ defaultRotateSpeed = 720_deg / 0.7_s;
   const rotationSpeed_ highSensitivityRotateSpeed = 720_deg / 1_s;
 
   translationSpeed_ maxMovementMagnitude = defaultDriveSpeed;
@@ -205,16 +205,9 @@ class GoToPose : public behaviour::Behaviour {
  */
 class DrivebasePoseBehaviour : public behaviour::Behaviour {
  public:
-  /**
-   * @param swerveDrivebase
-   * A pointer to the swerve drivebase
-   * @param pose
-   * A variable containing an X coordinate, a Y coordinate, and a rotation, for the drivebase to go to
-   * @param hold
-   * An optional variable (defaulting false), to say whether this position should be maintained
-   */
-  DrivebasePoseBehaviour(SwerveDrive* swerveDrivebase, frc::Pose2d pose, units::volt_t voltageLimit = 10_V,
-                         bool hold = false);
+  AutoSwerveDrive(wom::drivetrain::SwerveDrive* swerve, frc::Timer* timer, frc::Field2d* field);
+
+  void OnUpdate();
 
   /**
    * @brief

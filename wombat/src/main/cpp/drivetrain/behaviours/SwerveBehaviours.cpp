@@ -72,41 +72,45 @@ void ManualDrivebase::OnTick(units::second_t deltaTime) {
   // if (isZero) {
   //   _swerveDrivebase->SetZeroing();
   // } else {
-  double xVelocity = wom::utils::spow2(
-      -wom::utils::deadzone(_driverController->GetLeftY(),
-                            driverDeadzone));  // GetLeftY due to x being where y should be on field
-  double yVelocity = wom::utils::spow2(-wom::utils::deadzone(_driverController->GetLeftX(), driverDeadzone));
+    double xVelocity = wom::utils::spow2(-wom::utils::deadzone(
+        _driverController->GetLeftY(),
+        driverDeadzone));  // GetLeftY due to x being where y should be on field
+    double yVelocity = wom::utils::spow2(
+        -wom::utils::deadzone(_driverController->GetLeftX(), driverDeadzone));
 
-  double r_x = wom::utils::spow2(-wom::utils::deadzone(_driverController->GetRightX(), turningDeadzone));
+    double r_x = wom::utils::spow2(
+        -wom::utils::deadzone(_driverController->GetRightX(), turningDeadzone));
 
-  double turnX = _driverController->GetRightX();
-  double turnY = _driverController->GetRightY();
-  double num = std::sqrt(turnX * turnX + turnY * turnY);
-  if (num < turningDeadzone) {
-    turnX = 0;
-    turnY = 0;
-  }
+    double turnX = _driverController->GetRightX();
+    double turnY = _driverController->GetRightY();
+    double num = std::sqrt(turnX * turnX + turnY * turnY);
+    if (num < turningDeadzone) {
+      turnX = 0;
+      turnY = 0;
+    }
 
-  // if (isRotateMatch) {
-  //   units::degree_t currentAngle =
-  //       _swerveDrivebase->GetPose().Rotation().Degrees();
-  //   CalculateRequestedAngle(turnX, turnY, currentAngle);
-  //   _swerveDriveTable->GetEntry("RotateMatch")
-  //       .SetDouble(_requestedAngle.value());
-  //   _swerveDrivebase->RotateMatchJoystick(
-  //       _requestedAngle,
-  //       wom::drivetrain::FieldRelativeSpeeds{// also field relative
-  //                                            xVelocity * maxMovementMagnitude,
-  //                                            yVelocity * maxMovementMagnitude,
-  //                                            r_x * maxRotationMagnitude});
-  // } else {
-  _swerveDrivebase->SetFieldRelativeVelocity(wom::drivetrain::FieldRelativeSpeeds{
-      xVelocity * -maxMovementMagnitude, yVelocity * -maxMovementMagnitude, r_x * -maxRotationMagnitude});
+    // if (isRotateMatch) {
+    //   units::degree_t currentAngle =
+    //       _swerveDrivebase->GetPose().Rotation().Degrees();
+    //   CalculateRequestedAngle(turnX, turnY, currentAngle);
+    //   _swerveDriveTable->GetEntry("RotateMatch")
+    //       .SetDouble(_requestedAngle.value());
+    //   _swerveDrivebase->RotateMatchJoystick(
+    //       _requestedAngle,
+    //       wom::drivetrain::FieldRelativeSpeeds{// also field relative
+    //                                            xVelocity * maxMovementMagnitude,
+    //                                            yVelocity * maxMovementMagnitude,
+    //                                            r_x * maxRotationMagnitude});
+    // } else {
+      _swerveDrivebase->SetFieldRelativeVelocity(
+          wom::drivetrain::FieldRelativeSpeeds{xVelocity * -maxMovementMagnitude,
+                                               yVelocity * -maxMovementMagnitude,
+                                               r_x * -maxRotationMagnitude});
 
-  //  _swerveDrivebase->SetVelocity(
-  //       frc::ChassisSpeeds{xVelocity * maxMovementMagnitude,
-  //                          yVelocity * maxMovementMagnitude,
-  //                          r_x * maxRotationMagnitude});
+    //  _swerveDrivebase->SetVelocity(
+    //       frc::ChassisSpeeds{xVelocity * maxMovementMagnitude,
+    //                          yVelocity * maxMovementMagnitude,
+    //                          r_x * maxRotationMagnitude});
   //   }
   // }
   // _swerveDrivebase->SetIndividualTuning(2, 0_deg, 0_mps);
@@ -244,8 +248,24 @@ void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t
 
   double currentAngle = _swerveDrivebase->GetPose().Rotation().Degrees().value();
 
-  units::degree_t adjustedAngle =
-      1_deg * (currentAngle - std::fmod(currentAngle, 360) + _pose.Rotation().Degrees().value());
+void wom::drivetrain::behaviours::TempSimSwerveDrive::SetPath(std::string path) {
+  nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
+  std::shared_ptr<nt::NetworkTable> table = inst.GetTable("FMSInfo");
+
+  // create a netowrk table for the trajectory
+  std::shared_ptr<nt::NetworkTable> trajectory_table =
+      nt::NetworkTableInstance::GetDefault().GetTable("trajectory_path");
+  current_trajectory_table =
+      nt::NetworkTableInstance::GetDefault().GetTable("current_trajectory");
+  current_trajectory_state_table =
+      nt::NetworkTableInstance::GetDefault().GetTable(
+          "current_trajectory_state");
+
+  current_trajectory = m_pathplanner.getTrajectory(path);
+  m_driveSim.SetPose(current_trajectory.Sample(0_s).pose);
+  m_timer->Reset();
+  m_timer->Start();
+}
 
   _swerveDrivebase->SetVoltageLimit(_voltageLimit);
 
@@ -254,6 +274,6 @@ void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t
   if (_swerveDrivebase->IsAtSetPose() && !_hold) {
     std::cout << "Exited..." << std::endl;
 
-    SetDone();
-  }
+void wom::drivetrain::behaviours::AutoSwerveDrive::SetPath(std::string path) {
+  _simSwerveDrive->SetPath(path);
 }

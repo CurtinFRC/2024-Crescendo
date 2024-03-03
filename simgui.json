@@ -1,22 +1,26 @@
 {
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Auto Selector": "String Chooser",
-      "/SmartDashboard/Field": "Field2d"
-    },
-    "windows": {
-      "/SmartDashboard/Field": {
-        "bottom": 1476,
-        "height": 8.210550308227539,
-        "left": 150,
-        "right": 2961,
-        "top": 79,
-        "width": 16.541748046875
+      "/FMSInfo": "FMSInfo"
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "drivetrain": {
+        "open": true,
+        "pid": {
+          "open": true
+        }
+      },
+      "vision": {
+        "open": true
       }
     }
   },
   "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
     "visible": true
   }
 }

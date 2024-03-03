@@ -21,7 +21,7 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
   _table->GetEntry("State").SetBoolean(_rawControl);
   _table->GetEntry("Goal Value").SetBoolean(_gotValue);
 
-  if (_codriver->GetBButton()) {
+  if (_codriver->GetBackButton()) {
     if (_rawControl == true) {
       _rawControl = false;
     } else {
@@ -32,32 +32,37 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
   if (_rawControl) {
     _alphaArm->SetState(AlphaArmState::kRaw);
     if (wom::deadzone(_codriver->GetRightY())) {
-      _alphaArm->SetArmRaw(_codriver->GetRightY() * 8_V);
+      _alphaArm->SetArmRaw(_codriver->GetRightY() * 7_V);
     } else {
       _alphaArm->SetArmRaw(0_V);
     }
   } else {
-    if (_codriver->GetLeftTriggerAxis() > 0.1) {
-      _alphaArm->SetState(AlphaArmState::kSpeakerAngle);
-    } else if (_codriver->GetLeftBumper()) {
-      _alphaArm->SetState(AlphaArmState::kAmpAngle);
-    } else if (_codriver->GetYButton()) {
-      _alphaArm->SetState(AlphaArmState::kStowed);
-    } else if (_codriver->GetRightBumper()) {
-      _alphaArm->SetState(AlphaArmState::kIntakeAngle);
+    _table->GetEntry("CLIMBING:").SetBoolean(climbing);
+    if (_codriver->GetPOV() == 90 || _codriver->GetPOV() == 180 || _codriver->GetPOV() == 270) {
+      climbing = true;
+    } if (_codriver->GetPOV() == 0) {
+      climbing = false;
     } else {
-      _alphaArm->SetState(AlphaArmState::kIdle);
+      if (!climbing) {
+        if(_codriver->GetLeftTriggerAxis() > 0.1){
+          _alphaArm->SetState(AlphaArmState::kIntakeAngle);
+        } else if (_codriver->GetLeftBumper()){
+          _alphaArm->SetState(AlphaArmState::kAmpAngle);
+        } else if(_codriver->GetAButton()){
+          _alphaArm->SetState(AlphaArmState::kStowed);
+        } else if(_codriver->GetPOV() == 90){
+          _alphaArm->SetState(AlphaArmState::kClimbAngle);
+        } else {
+          _alphaArm->SetState(AlphaArmState::kIntakeAngle);
+        }
+      }
     }
+
   }
+  
 }
 
-AimToToAprilTag::AimToToAprilTag(AlphaArm* arm, VisionTarget target, Vision* vision)
-    : _arm(arm), _target(static_cast<int>(target)), _vision(vision) {}
-AimToToAprilTag::AimToToAprilTag(AlphaArm* arm, Vision* vision)
-    : _arm(arm), _target(vision->CurrentAprilTag()), _vision(vision) {}
-
-void AimToToAprilTag::OnTick(units::second_t dt) {
-  units::meter_t dist = _vision->GetDistanceToTarget(_target).first;
+  
 
   units::radian_t a = 1_rad;  // angle to shoot at one meter
   units::radian_t h = a * dist.value();

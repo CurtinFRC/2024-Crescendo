@@ -7,32 +7,55 @@
 #include <frc/XboxController.h>
 
 #include "Intake.h"
-#include "LED.h"
 #include "Wombat.h"
 
 class IntakeManualControl : public behaviour::Behaviour {
  public:
-  explicit IntakeManualControl(Intake* intake, frc::XboxController& codriver, LED* led);
+  explicit IntakeManualControl(Intake* intake, frc::XboxController& codriver);
 
   void OnTick(units::second_t dt) override;
 
  private:
   Intake* _intake;
   frc::XboxController& _codriver;
-  LED* _led;
-
-  units::volt_t _rawVoltage;
-  units::volt_t _setVoltage;
+  bool _rawControl = false;
 };
 
-class IntakeAutoControl : public behaviour::Behaviour {
+class AutoIntake : public behaviour::Behaviour {
  public:
-  explicit IntakeAutoControl(Intake* intake);
-
+  explicit AutoIntake(Intake* intake);
   void OnTick(units::second_t dt) override;
 
  private:
   Intake* _intake;
+};
 
-  LED* _led;
+class IntakeNote : public behaviour::Behaviour {
+ public:
+  explicit IntakeNote(Intake* intake);
+  void OnTick(units::second_t dt) override;
+
+ private:
+  Intake* _intake;
+  
+};
+
+class PassNote : public behaviour::Behaviour {
+ public:
+  explicit PassNote(Intake* intake);
+  void OnTick(units::second_t dt) override;
+
+ private:
+  Intake* _intake;
+  
+};
+
+class EjectNote : public behaviour::Behaviour {
+ public:
+  explicit EjectNote(Intake* intake);
+  void OnTick(units::second_t dt) override;
+
+ private:
+  Intake* _intake;
+  
 };
