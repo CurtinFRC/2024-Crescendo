@@ -6,9 +6,9 @@
 
 #include <frc/XboxController.h>
 
+#include "AlphaArm.h"
 #include "Climber.h"
 #include "Wombat.h"
-#include "AlphaArm.h"
 
 class ClimberManualControl : public behaviour::Behaviour {
  public:

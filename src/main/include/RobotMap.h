@@ -13,45 +13,39 @@
 #include <frc/DutyCycleEncoder.h>
 #include <frc/Encoder.h>
 #include <frc/XboxController.h>
+#include <frc/controller/PIDController.h>
 #include <frc/motorcontrol/MotorControllerGroup.h>
 #include <frc/system/plant/DCMotor.h>
-#include <frc/controller/PIDController.h>
 #include <units/angle.h>
 #include <units/length.h>
 
 #include <memory>
 #include <string>
 
-#include "AlphaArm.h"
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 // #include <frc/Servo.h>
 
-#include "Wombat.h"
-#include "utils/Encoder.h"
-#include "utils/PID.h"
-#include "AlphaArm.h"
-#include "AlphaArmBehaviour.h"
-#include "Intake.h"
-#include "Shooter.h"
-#include "Wombat.h"
-#include "Wombat.h"
 #include "AlphaArm.h"
 #include "AlphaArmBehaviour.h"
 #include "Climber.h"
+#include "Intake.h"
+#include "Shooter.h"
+#include "Wombat.h"
+#include "utils/Encoder.h"
+#include "utils/PID.h"
 
 struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
     frc::XboxController codriver = frc::XboxController(1);
     frc::XboxController testController = frc::XboxController(2);
-    
   };
 
   Controllers controllers;
 
-    struct AlphaArmSystem {
+  struct AlphaArmSystem {
     rev::CANSparkMax alphaArmMotorUp{21, rev::CANSparkMax::MotorType::kBrushless};
     rev::CANSparkMax alphaArmMotorDown{26, rev::CANSparkMax::MotorType::kBrushless};
 
@@ -59,12 +53,12 @@ struct RobotMap {
     wom::CANSparkMaxEncoder* alphaArmNeoEncoderUp = new wom::CANSparkMaxEncoder(&alphaArmMotorUp, 0.1_m);
     wom::CANSparkMaxEncoder* alphaArmNeoEncoderDown = new wom::CANSparkMaxEncoder(&alphaArmMotorDown, 0.1_m);
 
-
     wom::Gearbox alphaArmGearbox{&alphaArmMotorUp, alphaArmNeoEncoderUp, frc::DCMotor::NEO(1)};
     wom::Gearbox alphaArmGearbox2{&alphaArmMotorDown, alphaArmNeoEncoderDown, frc::DCMotor::NEO(1)};
 
-    AlphaArmConfig config{alphaArmGearbox, alphaArmGearbox2, alphaArmEncoder, "/alphaArm"
-    //, &vision
+    AlphaArmConfig config{
+        alphaArmGearbox, alphaArmGearbox2, alphaArmEncoder, "/alphaArm"
+        //, &vision
     };
   };
   AlphaArmSystem alphaArmSystem;
@@ -79,15 +73,16 @@ struct RobotMap {
 
     wom::Gearbox IntakeGearbox{&intakeMotor, &intakeEncoder, frc::DCMotor::NEO(1)};
 
-    IntakeConfig config{"path", IntakeGearbox, &intakeSensor, &passSensor, wom::PIDConfig<units::radians_per_second, units::volts>(
-          "/intake/PID/config",
-          9_V / (180_deg / 1_s),
-          0_V / 25_deg,
-          0_V / (90_deg / 1_s / 1_s)
-        ),/*, &magSensor, &shooterSensor*/};
+    IntakeConfig config{
+        "path",
+        IntakeGearbox,
+        &intakeSensor,
+        &passSensor,
+        wom::PIDConfig<units::radians_per_second, units::volts>("/intake/PID/config", 9_V / (180_deg / 1_s),
+                                                                0_V / 25_deg, 0_V / (90_deg / 1_s / 1_s)),
+        /*, &magSensor, &shooterSensor*/};
   };
   IntakeSystem intakeSystem;
-
 
   struct SwerveBase {
     ctre::phoenix6::hardware::CANcoder frontLeftCancoder{16, "Drivebase"};
@@ -95,8 +90,7 @@ struct RobotMap {
     ctre::phoenix6::hardware::CANcoder backLeftCancoder{17, "Drivebase"};
     ctre::phoenix6::hardware::CANcoder backRightCancoder{19, "Drivebase"};
 
-    ctre::phoenix6::hardware::Pigeon2* gyro =
-        new ctre::phoenix6::hardware::Pigeon2(20, "Drivebase");
+    ctre::phoenix6::hardware::Pigeon2* gyro = new ctre::phoenix6::hardware::Pigeon2(20, "Drivebase");
     wpi::array<ctre::phoenix6::hardware::TalonFX*, 4> turnMotors{
         new ctre::phoenix6::hardware::TalonFX(6, "Drivebase"),   // front left
         new ctre::phoenix6::hardware::TalonFX(7, "Drivebase"),   // front right
@@ -109,48 +103,38 @@ struct RobotMap {
         new ctre::phoenix6::hardware::TalonFX(1, "Drivebase")};  // back right
 
     wpi::array<wom::SwerveModuleConfig, 4> moduleConfigs{
-        wom::SwerveModuleConfig{ //CORRECT
+        wom::SwerveModuleConfig{
+            // CORRECT
             // front left module
             frc::Translation2d(-10_in, 9_in),
-            wom::Gearbox{
-                driveMotors[0],
-                new wom::TalonFXEncoder(driveMotors[0], 0.0445_m, 6.75),
-                frc::DCMotor::Falcon500(1).WithReduction(6.75)},
-            wom::Gearbox{turnMotors[0],
-                         new wom::CanEncoder(16, 0.0445_m, 4096, 12.8),
+            wom::Gearbox{driveMotors[0], new wom::TalonFXEncoder(driveMotors[0], 0.0445_m, 6.75),
+                         frc::DCMotor::Falcon500(1).WithReduction(6.75)},
+            wom::Gearbox{turnMotors[0], new wom::CanEncoder(16, 0.0445_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &frontLeftCancoder, 4_in / 2},
-        wom::SwerveModuleConfig{ //CORRECT
+        wom::SwerveModuleConfig{
+            // CORRECT
             // front right module
             frc::Translation2d(10_in, 9_in),
-            wom::Gearbox{
-                driveMotors[1],
-                new wom::TalonFXEncoder(driveMotors[1], 0.0445_m, 6.75),
-                frc::DCMotor::Falcon500(1).WithReduction(6.75)},
-            wom::Gearbox{turnMotors[1],
-                         new wom::CanEncoder(18, 0.0445_m, 4096, 12.8),
+            wom::Gearbox{driveMotors[1], new wom::TalonFXEncoder(driveMotors[1], 0.0445_m, 6.75),
+                         frc::DCMotor::Falcon500(1).WithReduction(6.75)},
+            wom::Gearbox{turnMotors[1], new wom::CanEncoder(18, 0.0445_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &frontRightCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
             // back left module
             frc::Translation2d(-10_in, 9_in),
-            wom::Gearbox{
-                driveMotors[2],
-                new wom::TalonFXEncoder(driveMotors[2], 0.0445_m, 6.75),
-                frc::DCMotor::Falcon500(1).WithReduction(6.75)},
-            wom::Gearbox{turnMotors[2],
-                         new wom::CanEncoder(17, 0.0445_m, 4096, 12.8),
+            wom::Gearbox{driveMotors[2], new wom::TalonFXEncoder(driveMotors[2], 0.0445_m, 6.75),
+                         frc::DCMotor::Falcon500(1).WithReduction(6.75)},
+            wom::Gearbox{turnMotors[2], new wom::CanEncoder(17, 0.0445_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &backRightCancoder, 4_in / 2},
         wom::SwerveModuleConfig{
             // back right module
             frc::Translation2d(-10_in, -9_in),
-            wom::Gearbox{
-                driveMotors[3],
-                new wom::TalonFXEncoder(driveMotors[3], 0.0445_m, 6.75),
-                frc::DCMotor::Falcon500(1).WithReduction(6.75)},
-            wom::Gearbox{turnMotors[3],
-                         new wom::CanEncoder(19, 0.0445_m, 4096, 12.8),
+            wom::Gearbox{driveMotors[3], new wom::TalonFXEncoder(driveMotors[3], 0.0445_m, 6.75),
+                         frc::DCMotor::Falcon500(1).WithReduction(6.75)},
+            wom::Gearbox{turnMotors[3], new wom::CanEncoder(19, 0.0445_m, 4096, 12.8),
                          frc::DCMotor::Falcon500(1).WithReduction(12.8)},
             &backLeftCancoder, 4_in / 2},
     };
@@ -170,19 +154,16 @@ struct RobotMap {
         wom::SwerveDriveConfig::pose_angle_conf_t::ki_t{0},
         0_deg / 1_deg};*/
     wom::SwerveDriveConfig::pose_position_conf_t posePositionPID{
-        "/drivetrain/pid/pose/position/config",
-        0_mps / 1_m,
-        wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0.15},
-        0_m / 1_m,
-        0_cm};
+        "/drivetrain/pid/pose/position/config", 0_mps / 1_m,
+        wom::SwerveDriveConfig::pose_position_conf_t::ki_t{0.15}, 0_m / 1_m, 0_cm};
 
     // the config for the whole swerve drive
     wom::SwerveDriveConfig config{"/drivetrain",
-                                  //anglePID,
+                                  // anglePID,
                                   velocityPID,
                                   moduleConfigs,  // each module
                                   gyro,
-                                  //poseAnglePID,
+                                  // poseAnglePID,
                                   posePositionPID,
                                   60_kg,  // robot mass (estimate rn)
                                   {0.1, 0.1, 0.1},
@@ -202,25 +183,23 @@ struct RobotMap {
   SwerveBase swerveBase;
 
   struct SwerveTable {
-    std::shared_ptr<nt::NetworkTable> swerveDriveTable = nt::NetworkTableInstance::GetDefault().GetTable("swerve");
-  }; SwerveTable swerveTable;
+    std::shared_ptr<nt::NetworkTable> swerveDriveTable =
+        nt::NetworkTableInstance::GetDefault().GetTable("swerve");
+  };
+  SwerveTable swerveTable;
 
-
-    struct Shooter {
-    rev::CANSparkMax shooterMotor{31, rev::CANSparkMax::MotorType::kBrushless};// Port 11
+  struct Shooter {
+    rev::CANSparkMax shooterMotor{31, rev::CANSparkMax::MotorType::kBrushless};  // Port 11
     // frc::DigitalInput shooterSensor{2};
 
     // wom::VoltageController shooterMotorGroup = wom::VoltagedController::Group(shooterMotor);
     wom::CANSparkMaxEncoder* shooterEncoder = new wom::CANSparkMaxEncoder(&shooterMotor, 0.01_m);
     wom::Gearbox shooterGearbox{&shooterMotor, shooterEncoder, frc::DCMotor::NEO(1)};
 
-    
-
     ShooterConfig config{
         "shooterGearbox",
         shooterGearbox,
     };
-
   };
   Shooter shooterSystem;
 
@@ -229,8 +208,9 @@ struct RobotMap {
     // wom::utils::CANSparkMaxEncoder climberEncoder{&climberMotor, 0.1_m};
     wom::CANSparkMaxEncoder* climberEncoder = new wom::CANSparkMaxEncoder(&climberMotor, 0.1_m);
 
-//     // frc::DigitalInput climberSensor{99};
-//     // wom::MotorVoltageController climberMotorController = wom::MotorVoltageController::Group(climberMotor);
+    //     // frc::DigitalInput climberSensor{99};
+    //     // wom::MotorVoltageController climberMotorController =
+    //     wom::MotorVoltageController::Group(climberMotor);
     wom::Gearbox climberGearbox{&climberMotor, climberEncoder, frc::DCMotor::NEO(1)};
     ClimberConfig config {
         climberGearbox,
@@ -240,4 +220,4 @@ struct RobotMap {
   wom::SwerveAutoBuilder* _builder;
   wom::SimSwerve* _simSwerve;
 };
-  // AlphaArmSystem alphaArmSystem;
+// AlphaArmSystem alphaArmSystem;

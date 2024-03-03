@@ -37,9 +37,8 @@ void ShooterManualControl::OnTick(units::second_t dt) {
       _shooter->SetPidGoal(300_rad_per_s);
       _shooter->SetState(ShooterState::kSpinUp);
       _led->SetState(LEDState::kAiming);
-      } else if (_codriver->GetBButton()) {
+    } else if (_codriver->GetBButton()) {
       _shooter->SetState(ShooterState::kReverse);
-      
 
     } else if (_codriver->GetAButton()) {
       _shooter->SetPidGoal(1500_rad_per_s);

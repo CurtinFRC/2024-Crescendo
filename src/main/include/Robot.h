@@ -7,6 +7,7 @@
 #include <frc/Encoder.h>
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
+#include "Auto.h"
 #include <frc/event/EventLoop.h>
 #include <frc/simulation/DifferentialDrivetrainSim.h>
 #include <frc/simulation/EncoderSim.h>
@@ -22,16 +23,17 @@
 
 #include "AlphaArm.h"
 #include "AlphaArmBehaviour.h"
-#include "Intake.h"
-#include "IntakeBehaviour.h"
-#include "Shooter.h"
-#include "ShooterBehaviour.h"
-#include "RobotMap.h"
-#include "Wombat.h"
-#include "LED.h"
 #include "Climber.h"
 #include "ClimberBehaviour.h"
 #include <frc/Servo.h>
+#include "Intake.h"
+#include "IntakeBehaviour.h"
+#include "LED.h"
+#include "RobotMap.h"
+#include "Shooter.h"
+#include "ShooterBehaviour.h"
+#include "Wombat.h"
+#include "vision/Vision.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -58,6 +60,7 @@ class Robot : public frc::TimedRobot {
   Climber* climber;
 
   frc::Timer climberTimer;
+  Vision* vision;
 
   frc::SendableChooser<std::string> m_chooser;
 
@@ -84,17 +87,16 @@ class Robot : public frc::TimedRobot {
 
   // rev::CANSparkMax testMotorUp{1, rev::CANSparkMax::MotorType::kBrushless};
   // rev::CANSparkMax testMotorDown{6, rev::CANSparkMax::MotorType::kBrushless};
- // frc::XboxController testdriver = frc::XboxController(1);
+  // frc::XboxController testdriver = frc::XboxController(1);
   AlphaArm* alphaArm;
   LED* _led;
-
 
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;
   // ctre::phoenix6::hardware::TalonFX *backLeft;
   // ctre::phoenix6::hardware::TalonFX *backRight;
 
-  //wom::SwerveDrive* _swerveDrive;
+  // wom::SwerveDrive* _swerveDrive;
 
   frc::Servo *armServo;
 
@@ -102,5 +104,8 @@ class Robot : public frc::TimedRobot {
   // ctre::phoenix6::hardware::TalonFX *frontRight;
   // ctre::phoenix6::hardware::TalonFX *backLeft;
   // ctre::phoenix6::hardware::TalonFX *backRight;
+  // ctre::phoenix6::hardware::TalonFX *frontLeft;
+  //  ctre::phoenix6::hardware::TalonFX *frontRight;
+  //  ctre::phoenix6::hardware::TalonFX *backLeft;
+  //  ctre::phoenix6::hardware::TalonFX *backRight;
 };
-

@@ -11,8 +11,6 @@
 #include "Intake.h"
 #include "Wombat.h"
 
-#include <memory>
-
 class AlphaArmManualControl : public behaviour::Behaviour {
  public:
   explicit AlphaArmManualControl(AlphaArm* alphaArm, Intake* intake, frc::XboxController* codriver);
@@ -28,4 +26,3 @@ class AlphaArmManualControl : public behaviour::Behaviour {
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("AlphaArmSubsystem");
   bool climbing = false;
 };
-

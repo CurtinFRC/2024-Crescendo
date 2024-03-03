@@ -9,16 +9,16 @@
 #include "behaviour/HasBehaviour.h"
 #include "drivetrain/SwerveDrive.h"
 #include "drivetrain/behaviours/SwerveBehaviours.h"
+#include "sim/Sim.h"
 #include "subsystems/Arm.h"
 #include "utils/Encoder.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
+#include "utils/Pathplanner.h"
 #include "utils/RobotStartup.h"
 #include "utils/Util.h"
-#include "utils/Pathplanner.h"
 #include "vision/Camera.h"
 #include "vision/Limelight.h"
-#include "sim/Sim.h"
 
 namespace wom {
 using namespace wom;

@@ -13,7 +13,8 @@ void Shooter::OnStart() {
 void Shooter::OnUpdate(units::second_t dt) {
   table->GetEntry("Error").SetDouble(_pid.GetPositionError());
   table->GetEntry("SetPoint").SetDouble(_pid.GetSetpoint());
-  table->GetEntry("Encoder Output").SetDouble(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value());
+  table->GetEntry("Encoder Output")
+      .SetDouble(_config.ShooterGearbox.encoder->GetEncoderAngularVelocity().value());
   table->GetEntry("Shooting").SetString(_statename);
   // table->GetEntry("PID CONTROLLER").Set(_pid);
 
@@ -94,7 +95,6 @@ void Shooter::OnUpdate(units::second_t dt) {
     } break;
   }
   // table->GetEntry("Motor OutPut").SetDouble(_setVoltage.value());
-
 
   _config.ShooterGearbox.motorController->SetVoltage(_setVoltage);
 }

@@ -5,41 +5,36 @@
 #include "drivetrain/SwerveDrive.h"
 
 #include <networktables/NetworkTableInstance.h>
+#include <units/angle.h>
 #include <units/math.h>
 #include <units/voltage.h>
-#include <units/angle.h>
-
-#include "utils/Util.h"
-
-#include <iostream>
-#include <cmath>
-
-#include "frc/MathUtil.h"
 #include <wpi/sendable/SendableBuilder.h>
 #include <wpi/sendable/SendableRegistry.h>
+
+#include <cmath>
+#include <iostream>
+
+#include "frc/MathUtil.h"
+#include "utils/Util.h"
 
 using namespace wom;
 
 namespace wom {
 namespace drivetrain {
 
-PIDController::PIDController(double Kp, double Ki, double Kd,
-                             units::second_t period)
+PIDController::PIDController(double Kp, double Ki, double Kd, units::second_t period)
     : m_Kp(Kp), m_Ki(Ki), m_Kd(Kd), m_period(period) {
   bool invalidGains = false;
   if (Kp < 0.0) {
-    wpi::math::MathSharedStore::ReportError(
-        "Kp must be a non-negative number, got {}!", Kp);
+    wpi::math::MathSharedStore::ReportError("Kp must be a non-negative number, got {}!", Kp);
     invalidGains = true;
   }
   if (Ki < 0.0) {
-    wpi::math::MathSharedStore::ReportError(
-        "Ki must be a non-negative number, got {}!", Ki);
+    wpi::math::MathSharedStore::ReportError("Ki must be a non-negative number, got {}!", Ki);
     invalidGains = true;
   }
   if (Kd < 0.0) {
-    wpi::math::MathSharedStore::ReportError(
-        "Kd must be a non-negative number, got {}!", Kd);
+    wpi::math::MathSharedStore::ReportError("Kd must be a non-negative number, got {}!", Kd);
     invalidGains = true;
   }
   if (invalidGains) {
@@ -50,17 +45,15 @@ PIDController::PIDController(double Kp, double Ki, double Kd,
   }
 
   if (period <= 0_s) {
-    wpi::math::MathSharedStore::ReportError(
-        "Controller period must be a positive number, got {}!", period.value());
+    wpi::math::MathSharedStore::ReportError("Controller period must be a positive number, got {}!",
+                                            period.value());
     m_period = 20_ms;
-    wpi::math::MathSharedStore::ReportWarning(
-        "Controller period defaulted to 20ms.");
+    wpi::math::MathSharedStore::ReportWarning("Controller period defaulted to 20ms.");
   }
   static int instances = 0;
   instances++;
 
-  wpi::math::MathSharedStore::ReportUsage(
-      wpi::math::MathUsageId::kController_PIDController2, instances);
+  wpi::math::MathSharedStore::ReportUsage(wpi::math::MathUsageId::kController_PIDController2, instances);
   wpi::SendableRegistry::Add(this, "PIDController", instances);
 }
 
@@ -84,8 +77,7 @@ void PIDController::SetD(double Kd) {
 
 void PIDController::SetIZone(double iZone) {
   if (iZone < 0) {
-    wpi::math::MathSharedStore::ReportError(
-        "IZone must be a non-negative number, got {}!", iZone);
+    wpi::math::MathSharedStore::ReportError("IZone must be a non-negative number, got {}!", iZone);
   }
   m_iZone = iZone;
 }
@@ -124,8 +116,7 @@ void PIDController::SetSetpoint(double setpoint) {
 
   if (m_continuous) {
     double errorBound = (m_maximumInput - m_minimumInput) / 2.0;
-    m_positionError =
-        frc::InputModulus(m_setpoint - m_measurement, -errorBound, errorBound);
+    m_positionError = frc::InputModulus(m_setpoint - m_measurement, -errorBound, errorBound);
   } else {
     m_positionError = m_setpoint - m_measurement;
   }
@@ -138,13 +129,11 @@ double PIDController::GetSetpoint() const {
 }
 
 bool PIDController::AtSetpoint() const {
-  return m_haveMeasurement && m_haveSetpoint &&
-         std::abs(m_positionError) < m_positionTolerance &&
+  return m_haveMeasurement && m_haveSetpoint && std::abs(m_positionError) < m_positionTolerance &&
          std::abs(m_velocityError) < m_velocityTolerance;
 }
 
-void PIDController::EnableContinuousInput(double minimumInput,
-                                          double maximumInput) {
+void PIDController::EnableContinuousInput(double minimumInput, double maximumInput) {
   m_continuous = true;
   m_minimumInput = minimumInput;
   m_maximumInput = maximumInput;
@@ -158,14 +147,12 @@ bool PIDController::IsContinuousInputEnabled() const {
   return m_continuous;
 }
 
-void PIDController::SetIntegratorRange(double minimumIntegral,
-                                       double maximumIntegral) {
+void PIDController::SetIntegratorRange(double minimumIntegral, double maximumIntegral) {
   m_minimumIntegral = minimumIntegral;
   m_maximumIntegral = maximumIntegral;
 }
 
-void PIDController::SetTolerance(double positionTolerance,
-                                 double velocityTolerance) {
+void PIDController::SetTolerance(double positionTolerance, double velocityTolerance) {
   m_positionTolerance = positionTolerance;
   m_velocityTolerance = velocityTolerance;
 }
@@ -185,8 +172,7 @@ double PIDController::Calculate(double measurement) {
 
   if (m_continuous) {
     double errorBound = (m_maximumInput - m_minimumInput) / 2.0;
-    m_positionError =
-        frc::InputModulus(m_setpoint - m_measurement, -errorBound, errorBound);
+    m_positionError = frc::InputModulus(m_setpoint - m_measurement, -errorBound, errorBound);
   } else {
     m_positionError = m_setpoint - m_measurement;
   }
@@ -198,9 +184,8 @@ double PIDController::Calculate(double measurement) {
   if (std::abs(m_positionError) > m_iZone) {
     m_totalError = 0;
   } else if (m_Ki != 0) {
-    m_totalError =
-        std::clamp(m_totalError + m_positionError * m_period.value(),
-                   m_minimumIntegral / m_Ki, m_maximumIntegral / m_Ki);
+    m_totalError = std::clamp(m_totalError + m_positionError * m_period.value(), m_minimumIntegral / m_Ki,
+                              m_maximumIntegral / m_Ki);
   }
 
   // double absError = m_setpoint - m_measurement;
@@ -236,41 +221,35 @@ void PIDController::InitSendable(wpi::SendableBuilder& builder) {
   builder.AddDoubleProperty(
       "d", [this] { return GetD(); }, [this](double value) { SetD(value); });
   builder.AddDoubleProperty(
-      "izone", [this] { return GetIZone(); },
-      [this](double value) { SetIZone(value); });
+      "izone", [this] { return GetIZone(); }, [this](double value) { SetIZone(value); });
   builder.AddDoubleProperty(
-      "setpoint", [this] { return GetSetpoint(); },
-      [this](double value) { SetSetpoint(value); });
+      "setpoint", [this] { return GetSetpoint(); }, [this](double value) { SetSetpoint(value); });
 }
 
-
-
-
-void SwerveModuleConfig::WriteNT(
-    std::shared_ptr<nt::NetworkTable> table) const {
+void SwerveModuleConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) const {
   std::array<double, 2> pos{position.X().value(), position.Y().value()};
   table->GetEntry("position").SetDoubleArray(std::span(pos));
   table->GetEntry("wheelRadius").SetDouble(wheelRadius.value());
 }
 
 SwerveModule::SwerveModule(std::string path, SwerveModuleConfig config,
-                           //SwerveModule::angle_pid_conf_t anglePID,
+                           // SwerveModule::angle_pid_conf_t anglePID,
                            SwerveModule::velocity_pid_conf_t velocityPID)
-    : //_anglePIDController(path + "/pid/angle", anglePID),
+    :  //_anglePIDController(path + "/pid/angle", anglePID),
       _anglePIDController{frc::PIDController(5, 0, 0, 0.005_s)},
       _config(config),
       _velocityPIDController(frc::PIDController(1.2, 0, 0, 0.005_s)),
       _table(nt::NetworkTableInstance::GetDefault().GetTable(path)) {
   // _anglePIDController.SetTolerance(360);
   // _anglePIDController.EnableContinuousInput(-3.1415, (2 * 3.1415));
-  _anglePIDController.EnableContinuousInput(0, (2*3.1415));
+  _anglePIDController.EnableContinuousInput(0, (2 * 3.1415));
 }
 
 void SwerveModule::OnStart() {
   // _offset = offset;
   // _config.canEncoder->SetPosition(units::turn_t{0});
   _anglePIDController.Reset();
-  _anglePIDController.EnableContinuousInput(0, 2*3.14159);
+  _anglePIDController.EnableContinuousInput(0, 2 * 3.14159);
   _velocityPIDController.Reset();
 }
 
@@ -285,13 +264,13 @@ void SwerveModule::OnUpdate(units::second_t dt) {
       break;
     case SwerveModuleState::kPID: {
       auto feedforward = _config.driveMotor.motor.Voltage(
-          0_Nm, units::radians_per_second_t{
-                    _velocityPIDController.GetSetpoint() / _config.wheelRadius.value()});
-      // units::radian_t input = units::math::fmod(_config.turnMotor.encoder->GetEncoderPosition(), (2_rad * 3.1415));
+          0_Nm,
+          units::radians_per_second_t{_velocityPIDController.GetSetpoint() / _config.wheelRadius.value()});
+      // units::radian_t input = units::math::fmod(_config.turnMotor.encoder->GetEncoderPosition(), (2_rad
+      // * 3.1415));
       double input = _config.turnMotor.encoder->GetEncoderPosition().value();
       _table->GetEntry("/testing/GetEncoderPos").SetDouble(input);
       // _velocityPIDController.SetSetpoint(3);
-
 
       driveVoltage = units::volt_t{_velocityPIDController.Calculate(GetSpeed().value())};
       // if (_turnOffset == TurnOffsetValues::forward) {
@@ -312,8 +291,7 @@ void SwerveModule::OnUpdate(units::second_t dt) {
       std::cerr << "Case not handled" << std::endl;
   }
 
-  units::newton_meter_t torqueLimit =
-      50_kg / 4 * _config.wheelRadius * _currentAccelerationLimit;
+  units::newton_meter_t torqueLimit = 50_kg / 4 * _config.wheelRadius * _currentAccelerationLimit;
   // units::volt_t voltageMax = _config.driveMotor.motor.Voltage(
   //     torqueLimit, _config.driveMotor.encoder->GetEncoderAngularVelocity());
   // units::volt_t voltageMin = _config.driveMotor.motor.Voltage(
@@ -329,8 +307,7 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   //     units::math::max(driveVoltage, -_driveModuleVoltageLimit),
   //     _driveModuleVoltageLimit);  // was originally 10_V
   units::volt_t turnVoltageMax = 7_V - (driveVoltage * (7_V / 10_V));
-  turnVoltage = units::math::min(units::math::max(turnVoltage, -turnVoltageMax),
-                                 turnVoltageMax);
+  turnVoltage = units::math::min(units::math::max(turnVoltage, -turnVoltageMax), turnVoltageMax);
   // turnVoltage = units::math::min(units::math::max(turnVoltage, -7_V), 7_V);
 
   _table->GetEntry("TurnVoltage").SetDouble(turnVoltage.value());
@@ -362,13 +339,11 @@ void SwerveModule::TurnOffset() {
 //   return (_config.turnMotor.encoder->GetEncoderPosition().value());
 // }
 
-void SwerveModule::SetAccelerationLimit(
-    units::meters_per_second_squared_t limit) {
+void SwerveModule::SetAccelerationLimit(units::meters_per_second_squared_t limit) {
   _currentAccelerationLimit = limit;
 }
 
-void SwerveDrive::SetAccelerationLimit(
-    units::meters_per_second_squared_t limit) {
+void SwerveDrive::SetAccelerationLimit(units::meters_per_second_squared_t limit) {
   for (int motorNumber = 0; motorNumber < 4; motorNumber++) {
     _modules[motorNumber].SetAccelerationLimit(limit);
   }
@@ -387,11 +362,8 @@ void SwerveModule::SetZero(units::second_t dt) {
   _state = SwerveModuleState::kPID;
 }
 
-void SwerveModule::SetPID(units::radian_t angle,
-                          units::meters_per_second_t speed,
-                          units::second_t dt) {
+void SwerveModule::SetPID(units::radian_t angle, units::meters_per_second_t speed, units::second_t dt) {
   _state = SwerveModuleState::kPID;
-
 
   // double diff = std::abs(_config.turnMotor.encoder->GetEncoderPosition().value() - angle.value());
   // _table->GetEntry("diff").SetDouble(diff);
@@ -401,45 +373,38 @@ void SwerveModule::SetPID(units::radian_t angle,
   //   _anglePIDController.SetSetpoint(angle.value());
   //   _velocityPIDController.SetSetpoint(speed.value());
   // } else {
-    _anglePIDController.SetSetpoint(angle.value());
-    _velocityPIDController.SetSetpoint(speed.value());
+  _anglePIDController.SetSetpoint(angle.value());
+  _velocityPIDController.SetSetpoint(speed.value());
   // }
 }
 
 void SwerveModule::ModuleVectorHandler(frc::ChassisSpeeds speeds) {
   units::meters_per_second_t xVelocityComponent =
-      1_mps *
-      (speeds.vx.value() + speeds.omega.value() * _config.position.X().value());
+      1_mps * (speeds.vx.value() + speeds.omega.value() * _config.position.X().value());
   units::meters_per_second_t yVelocityComponent =
-      1_mps *
-      (speeds.vy.value() + speeds.omega.value() * _config.position.Y().value());
+      1_mps * (speeds.vy.value() + speeds.omega.value() * _config.position.Y().value());
 
   units::meters_per_second_t velocity =
-      1_mps * std::sqrt(std::pow(xVelocityComponent.value(), 2) +
-                        std::pow(yVelocityComponent.value(), 2));
-  units::degree_t angle = 1_rad * std::atan2(yVelocityComponent.value(),
-                                             xVelocityComponent.value());
+      1_mps * std::sqrt(std::pow(xVelocityComponent.value(), 2) + std::pow(yVelocityComponent.value(), 2));
+  units::degree_t angle = 1_rad * std::atan2(yVelocityComponent.value(), xVelocityComponent.value());
 
   _anglePIDController.SetSetpoint(angle.value());
   _velocityPIDController.SetSetpoint(velocity.value());
 }
 
 units::meters_per_second_t SwerveModule::GetSpeed() const {
-  units::meters_per_second_t returnVal{
-    _config.driveMotor.encoder->GetVelocityValue() *
-    _config.wheelRadius.value()};
-    return returnVal;
+  units::meters_per_second_t returnVal{_config.driveMotor.encoder->GetVelocityValue() *
+                                       _config.wheelRadius.value()};
+  return returnVal;
 }
 
 units::meter_t SwerveModule::GetDistance() const {
-  return units::meter_t{
-      _config.driveMotor.encoder->GetEncoderPosition().value() *
-      _config.wheelRadius.value()};
+  return units::meter_t{_config.driveMotor.encoder->GetEncoderPosition().value() *
+                        _config.wheelRadius.value()};
 }
 
 frc::SwerveModulePosition SwerveModule::GetPosition() const {
-  return frc::SwerveModulePosition{
-      GetDistance(), _config.turnMotor.encoder->GetEncoderPosition()};
+  return frc::SwerveModulePosition{GetDistance(), _config.turnMotor.encoder->GetEncoderPosition()};
 }
 
 const SwerveModuleConfig& SwerveModule::GetConfig() const {
@@ -452,15 +417,14 @@ void SwerveDriveConfig::WriteNT(std::shared_ptr<nt::NetworkTable> table) {
 
 SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
     : _config(config),
-      _kinematics(_config.modules[3].position, _config.modules[0].position,
-                  _config.modules[1].position, _config.modules[2].position),
+      _kinematics(_config.modules[3].position, _config.modules[0].position, _config.modules[1].position,
+                  _config.modules[2].position),
       _poseEstimator(
           _kinematics, frc::Rotation2d(0_deg),
-          wpi::array<frc::SwerveModulePosition, 4>{
-              frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}},
-              frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}},
-              frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}},
-              frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}}},
+          wpi::array<frc::SwerveModulePosition, 4>{frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}},
+                                                   frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}},
+                                                   frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}},
+                                                   frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}}},
           initialPose, _config.stateStdDevs, _config.visionMeasurementStdDevs),
       _anglePIDController{PIDController(1, 0, 0)},
       _xPIDController(config.path + "/pid/x", _config.posePositionPID),
@@ -478,10 +442,8 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
   ResetPose(initialPose);
 }
 
-frc::ChassisSpeeds FieldRelativeSpeeds::ToChassisSpeeds(
-    const units::radian_t robotHeading) {
-  return frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-      vx, vy, omega, frc::Rotation2d{robotHeading});
+frc::ChassisSpeeds FieldRelativeSpeeds::ToChassisSpeeds(const units::radian_t robotHeading) {
+  return frc::ChassisSpeeds::FromFieldRelativeSpeeds(vx, vy, omega, frc::Rotation2d{robotHeading});
 }
 
 void SwerveDrive::OnUpdate(units::second_t dt) {
@@ -502,14 +464,15 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
     case SwerveDriveState::kPose: {
       _target_fr_speeds.vx = _xPIDController.Calculate(GetPose().X(), dt);
       _target_fr_speeds.vy = _yPIDController.Calculate(GetPose().Y(), dt);
-      _target_fr_speeds.omega = units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
+      _target_fr_speeds.omega =
+          units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
     }
       [[fallthrough]];
     case SwerveDriveState::kFieldRelativeVelocity:
-      _target_speed =
-          _target_fr_speeds.ToChassisSpeeds(GetPose().Rotation().Radians());
+      _target_speed = _target_fr_speeds.ToChassisSpeeds(GetPose().Rotation().Radians());
       if (isRotateToMatchJoystick) {
-        _target_speed.omega = units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
+        _target_speed.omega = units::radians_per_second_t{
+            _anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
       }
       // _target_fr_speeds.vy.value() << std::endl;
       [[fallthrough]];
@@ -534,7 +497,7 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
 
       bool init = false;
 
-      frc::ChassisSpeeds new_target_speed {_target_speed.vx, _target_speed.vy, -_target_speed.omega};
+      frc::ChassisSpeeds new_target_speed{_target_speed.vx, _target_speed.vy, -_target_speed.omega};
       auto target_states = _kinematics.ToSwerveModuleStates(_target_speed);
       auto new_target_states = _kinematics.ToSwerveModuleStates(new_target_speed);
       for (size_t i = 0; i < _modules.size(); i++) {
@@ -563,13 +526,12 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
     case SwerveDriveState::kFRVelocityRotationLock:
       _target_speed.vx = _xPIDController.Calculate(GetPose().X(), dt);
       _target_speed.vy = _yPIDController.Calculate(GetPose().Y(), dt);
-      _target_speed.omega = units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
-      _target_speed =
-          _requestedSpeeds.ToChassisSpeeds(GetPose().Rotation().Radians());
+      _target_speed.omega =
+          units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
+      _target_speed = _requestedSpeeds.ToChassisSpeeds(GetPose().Rotation().Radians());
       auto target_states = _kinematics.ToSwerveModuleStates(_target_speed);
       for (size_t i = 0; i < _modules.size(); i++) {
-        _modules[i].SetPID(target_states[i].angle.Radians(),
-                           target_states[i].speed, dt);
+        _modules[i].SetPID(target_states[i].angle.Radians(), target_states[i].speed, dt);
       }
       break;
   }
@@ -580,12 +542,10 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
 
   _poseEstimator.Update(
       _config.gyro->GetRotation2d(),
-      wpi::array<frc::SwerveModulePosition, 4>{
-          _modules[3].GetPosition(), _modules[0].GetPosition(),
-          _modules[1].GetPosition(), _modules[2].GetPosition()});
+      wpi::array<frc::SwerveModulePosition, 4>{_modules[3].GetPosition(), _modules[0].GetPosition(),
+                                               _modules[1].GetPosition(), _modules[2].GetPosition()});
 
-  utils::WritePose2NT(_table->GetSubTable("estimatedPose"),
-                      _poseEstimator.GetEstimatedPosition());
+  utils::WritePose2NT(_table->GetSubTable("estimatedPose"), _poseEstimator.GetEstimatedPosition());
   _config.WriteNT(_table->GetSubTable("config"));
 }
 
@@ -622,8 +582,7 @@ void SwerveDrive::OnResetMode() {
   _anglePIDController.Reset();
 }
 
-void SwerveDrive::RotateMatchJoystick(units::radian_t joystickAngle,
-                                      FieldRelativeSpeeds speeds) {
+void SwerveDrive::RotateMatchJoystick(units::radian_t joystickAngle, FieldRelativeSpeeds speeds) {
   // _state = SwerveDriveState::kFRVelocityRotationLock;
   // _anglePIDController.SetSetpoint(joystickAngle);
   // _target_fr_speeds = speeds;
@@ -649,16 +608,14 @@ bool SwerveDrive::GetIsFieldRelative() {
   return _isFieldRelative;
 }
 
-void SwerveDrive::SetIndividualTuning(int mod, units::radian_t angle,
-                                      units::meters_per_second_t speed) {
+void SwerveDrive::SetIndividualTuning(int mod, units::radian_t angle, units::meters_per_second_t speed) {
   _mod = mod;
   _angle = angle;
   _speed = speed;
   _state = SwerveDriveState::kIndividualTuning;
 }
 
-void SwerveDrive::SetTuning(units::radian_t angle,
-                            units::meters_per_second_t speed) {
+void SwerveDrive::SetTuning(units::radian_t angle, units::meters_per_second_t speed) {
   _angle = angle;
   _speed = speed;
   _state = SwerveDriveState::kTuning;
@@ -685,9 +642,8 @@ bool SwerveDrive::IsAtSetPose() {
 void SwerveDrive::ResetPose(frc::Pose2d pose) {
   _poseEstimator.ResetPosition(
       _config.gyro->GetRotation2d(),
-      wpi::array<frc::SwerveModulePosition, 4>{
-          _modules[0].GetPosition(), _modules[1].GetPosition(),
-          _modules[2].GetPosition(), _modules[3].GetPosition()},
+      wpi::array<frc::SwerveModulePosition, 4>{_modules[0].GetPosition(), _modules[1].GetPosition(),
+                                               _modules[2].GetPosition(), _modules[3].GetPosition()},
       pose);
 }
 

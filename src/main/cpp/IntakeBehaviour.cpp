@@ -20,8 +20,8 @@ void IntakeManualControl::OnTick(units::second_t dt) {
       _rawControl = true;
       _intake->SetState(IntakeState::kRaw);
     }
-  } 
-  
+  }
+
   if (_rawControl) {
     _intake->SetState(IntakeState::kRaw);
     if (_codriver.GetLeftTriggerAxis() > 0.1) {
@@ -32,7 +32,7 @@ void IntakeManualControl::OnTick(units::second_t dt) {
       _intake->SetRaw(0_V);
     }
   } else {
-    
+
 
     if (_codriver.GetXButton()) {
       if (_intake->GetState() == IntakeState::kIdle) {

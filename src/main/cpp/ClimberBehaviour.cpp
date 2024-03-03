@@ -10,15 +10,13 @@ ClimberManualControl::ClimberManualControl(Climber* climber, AlphaArm* arm, frc:
 }
 
 void ClimberManualControl::OnTick(units::second_t dt) {
-
-  if (_codriver->GetBackButtonPressed()) {
+  if (_codriver->GetAButtonPressed()) {
     if (_rawControl) {
       _rawControl = false;
     } else {
       _rawControl = true;
     }
   }
-
 
   if (_rawControl) {
     _climber->SetState(ClimberState::kRaw);
@@ -31,13 +29,11 @@ void ClimberManualControl::OnTick(units::second_t dt) {
     if (_codriver->GetPOV() == 90) {
       _climber->SetState(ClimberState::kMatch);
       _arm->SetState(AlphaArmState::kClimbAngle);
-    } 
-    else if (_codriver->GetPOV() == 180) {
+    } else if (_codriver->GetPOV() == 180) {
       _climber->SetState(ClimberState::kArmDown);
     } else  if (_codriver->GetPOV() == 270){
       _climber->SetState(ClimberState::kRatchet);
       _arm->SetState(AlphaArmState::kClimbed);
     }
   }
-
 }
