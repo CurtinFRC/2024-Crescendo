@@ -31,6 +31,8 @@ enum class AlphaArmState {
   kHoldAngle,
   kVisionAngle,
   kStowed,
+  kClimbAngle,
+  kClimbed,
   kRaw
 };
 
@@ -58,6 +60,7 @@ class AlphaArm : public behaviour::HasBehaviour {
   frc::PIDController _pidArm;
   frc::PIDController _pidArmStates;
   frc::PIDController _pidIntakeState;
+  frc::PIDController _pidClimberStates;
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("AlphaArm");
   units::volt_t _setAlphaArmVoltage = 0_V;
 

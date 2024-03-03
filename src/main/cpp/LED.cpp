@@ -22,7 +22,7 @@ void LED::OnUpdate(units::second_t dt) {
       _led.frc::PWM::SetSpeed(0.57);
     } break;
     case LEDState::kIntaking: {
-      _led.frc::PWM::SetSpeed(0.07);
+      _led.frc::PWM::SetSpeed(0.93);
     } break;
     case LEDState::kShooterReady: {
       _led.frc::PWM::SetSpeed(0.77);

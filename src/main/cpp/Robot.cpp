@@ -64,6 +64,11 @@ void Robot::RobotInit() {
   alphaArm->SetDefaultBehaviour(
       [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
 
+  climber = new Climber(robotmap.climberSystem.config);
+  wom::BehaviourScheduler::GetInstance()->Register(climber);
+  climber->SetDefaultBehaviour(
+      [this]() { return wom::make<ClimberManualControl>(climber, alphaArm, &robotmap.controllers.codriver); });
+
   robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0.45229_rad);
   robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(2.6846_rad);
   robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(3.01121_rad);
@@ -107,6 +112,7 @@ void Robot::RobotPeriodic() {
   alphaArm->OnUpdate(dt);
   _swerveDrive->OnUpdate(dt);
   intake->OnUpdate(dt);
+  climber->OnUpdate(dt);
 
 }
 
@@ -145,4 +151,5 @@ void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}
-void Robot::TestPeriodic() {}
+void Robot::TestPeriodic() {
+}

@@ -32,27 +32,27 @@ void IntakeManualControl::OnTick(units::second_t dt) {
     } else {
       _intake->SetRaw(0_V);
     }
-  } else {
-    if (_codriver.GetXButtonReleased()) {
+    } else if (_codriver.GetXButton()) {
       if (_intake->GetState() == IntakeState::kIdle) {
         _intake->SetState(IntakeState::kIntake);
-      } else {
-        _intake->SetState(IntakeState::kIdle);
       }
-    } else if (_codriver.GetAButtonReleased()) {
+    } else if (_codriver.GetRightBumper() || _codriver.GetRightTriggerAxis() > 0.1) {
       if (_intake->GetState() == IntakeState::kHold) {
         _intake->SetState(IntakeState::kPass);
+        
       } else {
         _intake->SetState(IntakeState::kIdle);
       }
-    } else if (_codriver.GetBButtonReleased()) {
+    } else if (_codriver.GetBButtonPressed()) {
       if (_intake->GetState() == IntakeState::kHold) {
         _intake->SetState(IntakeState::kEject);
       } else {
         _intake->SetState(IntakeState::kIdle);
-      }
+      
     }
-  }
+    } else {
+        _intake->SetState(IntakeState::kIdle);
+      }
 }
 
 AutoIntake::AutoIntake(Intake* intake) : _intake(intake) {

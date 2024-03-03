@@ -25,19 +25,22 @@ void ShooterManualControl::OnTick(units::second_t dt) {
     if (_codriver->GetRightBumper()) {
       _shooter->SetRaw(8_V);
     } else if (_codriver->GetLeftBumper()) {
-      _shooter->SetRaw(-18_V);
+      _shooter->SetRaw(-8_V);
     } else {
       _shooter->SetRaw(0_V);
     }
   } else {
-    if (_codriver->GetPOV() == 0) {
-      _shooter->SetPidGoal(150_rad_per_s);
+    if (_codriver->GetLeftTriggerAxis() > 0.1) {
+      _shooter->SetPidGoal(1500_rad_per_s);
       _shooter->SetState(ShooterState::kSpinUp);
-      _led->SetState(LEDState::kAiming);
-    } else if (_codriver->GetPOV() == 90) {
+    } else if (_codriver->GetLeftBumper()) {
       _shooter->SetPidGoal(300_rad_per_s);
       _shooter->SetState(ShooterState::kSpinUp);
       _led->SetState(LEDState::kAiming);
+      } else if (_codriver->GetBButton()) {
+      _shooter->SetState(ShooterState::kReverse);
+      
+
     } else {
       _shooter->SetState(ShooterState::kIdle);
       _led->SetState(LEDState::kIdle);

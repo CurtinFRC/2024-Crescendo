@@ -29,6 +29,8 @@
 #include "RobotMap.h"
 #include "Wombat.h"
 #include "LED.h"
+#include "Climber.h"
+#include "ClimberBehaviour.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -52,6 +54,7 @@ class Robot : public frc::TimedRobot {
   Shooter* shooter;
 
   Intake* intake;
+  Climber* climber;
 
   frc::SendableChooser<std::string> m_chooser;
 

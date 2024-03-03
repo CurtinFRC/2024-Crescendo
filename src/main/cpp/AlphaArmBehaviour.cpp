@@ -21,7 +21,7 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
   _table->GetEntry("Goal Value").SetBoolean(_gotValue);
   
 
-  if (_codriver->GetBButton()) {
+  if (_codriver->GetBackButton()) {
     if (_rawControl == true) {
       _rawControl = false;
     } else {
@@ -37,17 +37,27 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
       _alphaArm->SetArmRaw(0_V);
     }
   } else {
-    if(_codriver->GetLeftTriggerAxis() > 0.1){
-      _alphaArm->SetState(AlphaArmState::kSpeakerAngle);
-    } else if (_codriver->GetLeftBumper()){
-      _alphaArm->SetState(AlphaArmState::kAmpAngle);
-    } else if(_codriver->GetYButton()){
-      _alphaArm->SetState(AlphaArmState::kStowed);
-    } else if(_codriver->GetRightBumper()){
-      _alphaArm->SetState(AlphaArmState::kIntakeAngle);
+    _table->GetEntry("CLIMBING:").SetBoolean(climbing);
+    if (_codriver->GetPOV() == 90 || _codriver->GetPOV() == 180 || _codriver->GetPOV() == 270) {
+      climbing = true;
+    } if (_codriver->GetPOV() == 0) {
+      climbing = false;
     } else {
-      _alphaArm->SetState(AlphaArmState::kIdle);
+      if (!climbing) {
+        if(_codriver->GetLeftTriggerAxis() > 0.1){
+          _alphaArm->SetState(AlphaArmState::kIntakeAngle);
+        } else if (_codriver->GetLeftBumper()){
+          _alphaArm->SetState(AlphaArmState::kAmpAngle);
+        } else if(_codriver->GetAButton()){
+          _alphaArm->SetState(AlphaArmState::kStowed);
+        } else if(_codriver->GetPOV() == 90){
+          _alphaArm->SetState(AlphaArmState::kClimbAngle);
+        } else {
+          _alphaArm->SetState(AlphaArmState::kIntakeAngle);
+        }
+      }
     }
+
   }
   
 }

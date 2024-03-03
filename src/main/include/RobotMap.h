@@ -39,13 +39,16 @@
 #include "Wombat.h"
 #include "AlphaArm.h"
 #include "AlphaArmBehaviour.h"
+#include "Climber.h"
 
 struct RobotMap {
   struct Controllers {
     frc::XboxController driver = frc::XboxController(0);
     frc::XboxController codriver = frc::XboxController(1);
     frc::XboxController testController = frc::XboxController(2);
+    
   };
+
   Controllers controllers;
 
     struct AlphaArmSystem {
@@ -220,5 +223,18 @@ struct RobotMap {
 
   };
   Shooter shooterSystem;
+
+  struct ClimberSystem {
+    rev::CANSparkMax climberMotor{32, rev::CANSparkMax::MotorType::kBrushless};
+    // wom::utils::CANSparkMaxEncoder climberEncoder{&climberMotor, 0.1_m};
+    wom::CANSparkMaxEncoder* climberEncoder = new wom::CANSparkMaxEncoder(&climberMotor, 0.1_m);
+
+//     // frc::DigitalInput climberSensor{99};
+//     // wom::MotorVoltageController climberMotorController = wom::MotorVoltageController::Group(climberMotor);
+    wom::Gearbox climberGearbox{&climberMotor, climberEncoder, frc::DCMotor::NEO(1)};
+    ClimberConfig config {
+        climberGearbox
+    };
+  }; ClimberSystem climberSystem;
 };
   // AlphaArmSystem alphaArmSystem;

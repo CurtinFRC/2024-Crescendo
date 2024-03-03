@@ -43,7 +43,7 @@ void Intake::OnUpdate(units::second_t dt) {
         SetState(IntakeState::kIdle); 
       }
       _stringStateName = "Eject";
-      _setVoltage = -4_V;
+      _setVoltage = 4_V;
       _pid.Reset();
     } 
     break;
@@ -69,7 +69,7 @@ void Intake::OnUpdate(units::second_t dt) {
         SetState(IntakeState::kHold);
       }
       _stringStateName = "Intake";
-      _setVoltage = 4_V; 
+      _setVoltage = -4_V; 
     } 
     break;
 
@@ -85,7 +85,7 @@ void Intake::OnUpdate(units::second_t dt) {
       }
 
       _stringStateName = "Pass";
-      _setVoltage = 4_V;
+      _setVoltage = -4_V;
     }
     break;
   }
