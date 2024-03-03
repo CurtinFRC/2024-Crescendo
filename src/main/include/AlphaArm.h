@@ -7,11 +7,12 @@
 
 
 #include "Wombat.h"
-//#include "vision/Vision.h"
 #include "utils/PID.h"
 #include <units/angle.h>
 #include <units/voltage.h>
 #include <frc/controller/PIDController.h>
+#include <string>
+#include <memory>
 
 struct AlphaArmConfig {
   wom::Gearbox alphaArmGearbox;
@@ -38,7 +39,7 @@ enum class AlphaArmState {
 
 class AlphaArm : public behaviour::HasBehaviour {
  public:
-  AlphaArm(AlphaArmConfig *config/*, frc::Rotation2d initialAngle, wom::vision::Limelight* vision*/);
+  explicit AlphaArm(AlphaArmConfig *config/*, frc::Rotation2d initialAngle, wom::vision::Limelight* vision*/);
 
   void OnUpdate(units::second_t dt);
   void SetArmRaw(units::volt_t voltage);

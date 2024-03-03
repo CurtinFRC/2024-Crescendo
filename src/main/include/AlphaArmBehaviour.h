@@ -10,6 +10,8 @@
 #include "AlphaArm.h"
 #include "Wombat.h"
 
+#include <memory>
+
 class AlphaArmManualControl : public behaviour::Behaviour {
  public:
   explicit AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxController* codriver);
