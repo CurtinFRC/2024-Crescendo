@@ -428,15 +428,17 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
                                                    frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}},
                                                    frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}}},
           initialPose, _config.stateStdDevs, _config.visionMeasurementStdDevs),
-      _anglePIDController{PIDController(1.5, 0, 0)},
-      _xPIDController(PIDController(1, 0, 0)),
-      _yPIDController(PIDController(1, 0, 0)),
+      _anglePIDController{PIDController(0.7, 0, 0)},
+      _xPIDController(PIDController(0, 0, 0)),
+      _yPIDController(PIDController(0, 0, 0)),
       // _xPIDController(std::string path, config_t initialGains)
       // _xPIDController(config.path + "/pid/x", _config.posePositionPID),
       // _yPIDController(config.path + "/pid/y", _config.posePositionPID),
       _table(nt::NetworkTableInstance::GetDefault().GetTable(_config.path)) {
   _anglePIDController.SetTolerance(360);
-
+  _anglePIDController.EnableContinuousInput(0, 2 * 3.14159);
+  // _anglePIDController.EnableContinuousInput(-3.14159, 3.14159);
+    
   int i = 1;
   for (auto cfg : _config.modules) {
     _modules.emplace_back(config.path + "/modules/" + std::to_string(i), cfg,
@@ -470,9 +472,9 @@ void SwerveDrive::OnUpdate(units::second_t dt) {
       // _target_fr_speeds.vx = _xPIDController.Calculate(GetPose().X(), dt);
       // _target_fr_speeds.vy = _yPIDController.Calculate(GetPose().Y(), dt);
       _target_fr_speeds.vx = units::meters_per_second_t{_xPIDController.Calculate(GetPose().X().value())};
-      _target_fr_speeds.vx = units::meters_per_second_t{_xPIDController.Calculate(GetPose().Y().value())};
-      _target_fr_speeds.omega = 0_rad_per_s;
-          // -units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
+      _target_fr_speeds.vy = units::meters_per_second_t{_yPIDController.Calculate(GetPose().Y().value())};
+      _target_fr_speeds.omega = /*0_rad_per_s;*/
+          units::radians_per_second_t{_anglePIDController.Calculate(GetPose().Rotation().Radians().value())};
 
       _table->GetEntry("Swerve vx").SetDouble(_target_fr_speeds.vx.value());
       _table->GetEntry("Swerve vy").SetDouble(_target_fr_speeds.vy.value());
@@ -585,6 +587,9 @@ void SwerveDrive::SetVoltageLimit(units::volt_t driveVoltageLimit) {
 void SwerveDrive::OnStart() {
   OnResetMode();
 
+  _anglePIDController.EnableContinuousInput(0, 2 * 3.14159);
+  // _anglePIDController.EnableContinuousInput(-3.14159, 3.14159);
+
   _modules[0].OnStart();  // front left
   _modules[1].OnStart();  // front right
   _modules[2].OnStart();  // back right
@@ -670,6 +675,7 @@ void SwerveDrive::ResetPose(frc::Pose2d pose) {
 
 frc::Pose2d SwerveDrive::GetPose() {
   return _poseEstimator.GetEstimatedPosition();
+  // return frc::Pose2d(1_m, 1_m, 0_deg);
 }
 
 void SwerveDrive::AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp) {

@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 1.3732635157578024,
+      "y": 5.564955745296107
     },
     "rotation": 0.0
   },
@@ -15,6 +15,12 @@
           "type": "path",
           "data": {
             "pathName": "FirstNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeNote"
           }
         }
       ]
