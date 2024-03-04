@@ -145,6 +145,8 @@ void Robot::AutonomousInit() {
   if (m_autoSelected == "kTaxi") {
     sched->Schedule(autos::Taxi(robotmap._builder));
   }
+
+  _swerveDrive->OnStart();
 }
 
 void Robot::AutonomousPeriodic() {
@@ -165,7 +167,7 @@ void Robot::TeleopInit() {
 
   //  FMAP("fmap.fmap");
 
-  // _swerveDrive->OnStart();
+  _swerveDrive->OnStart();
   // sched->InterruptAll();
 
   // reimplement when vision is reimplemented

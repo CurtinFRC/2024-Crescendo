@@ -309,6 +309,8 @@ class SwerveAutoBuilder {
   std::shared_ptr<behaviour::Behaviour> GetAutoRoutine();
   std::shared_ptr<behaviour::Behaviour> GetAutoRoutine(std::string path);
 
+  drivetrain::SwerveDrive* GetSwerve();
+
  private:
   AutoBuilder* _builder;
   drivetrain::SwerveDrive* _swerve;

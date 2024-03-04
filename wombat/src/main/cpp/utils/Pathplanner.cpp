@@ -27,6 +27,7 @@
 #include "frc/Filesystem.h"
 #include "frc/geometry/Pose2d.h"
 #include "frc/geometry/Rotation2d.h"
+#include "frc/geometry/Transform2d.h"
 #include "frc/kinematics/ChassisSpeeds.h"
 #include "frc/smartdashboard/SmartDashboard.h"
 #include "networktables/NetworkTable.h"
@@ -272,7 +273,7 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
 
     lastRot = &t;
 
-    _poses.emplace_back(frc::Pose2d(point.position, rot));
+    _poses.emplace_back(frc::Pose2d(point.position, rot).TransformBy(frc::Transform2d(-1.37_m, -5.56_m, 0_deg)));
   }
   // _poses = pathplanner::PathPlannerPath::fromPathFile(path)->getPathPoses();
   // wpi::json j = wpi::json::parse(cjson);
@@ -332,8 +333,8 @@ void utils::FollowPath::CalcTimer() {
 
   _timer.Stop();
   _timer.Reset();
-  // _time = units::second_t{std::abs(dist.value()) * 1 /*meters per second*/};
-  _time = 20_s;
+  _time = units::second_t{std::abs(dist.value()) * 2 /*meters per second*/};
+  // _time = 20_s;
   _timer.Start();
 }
 
@@ -361,6 +362,8 @@ void utils::FollowPath::OnTick(units::second_t dt) {
 
   if (_swerve->IsAtSetPose() || _timer.Get() > _time) {
     if (_currentPose + 1 == static_cast<int>(_poses.size())) {
+      // _swerve->MakeAtSetPoint();
+      _swerve->SetVelocity(frc::ChassisSpeeds());
       _swerve->MakeAtSetPoint();
       SetDone();
     } else {
@@ -396,7 +399,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
     cjson += cdata;
   }
 
-  cjson.pop_back();
+  // cjson.pop_back();
 
   wpi::json j = wpi::json::parse(cjson);
 
@@ -418,7 +421,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
     if (c["type"] == "path") {
       commands.push_back(std::make_pair(c["type"], c["data"]["pathName"]));
     }
-    if (c["type"] == "command") {
+    if (c["type"] == "named") {
       commands.push_back(std::make_pair(c["type"], c["data"]["name"]));
     }
   }
@@ -426,7 +429,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("length").SetInteger(commands.size());
 
   pathplan = behaviour::make<drivetrain::behaviours::DrivebasePoseBehaviour>(
-      _swerve, JSONPoseToPose2d(*_startingPose));
+      _swerve, JSONPoseToPose2d(*_startingPose).TransformBy(frc::Transform2d(-1.37_m, -5.56_m, 0_deg)));
 
   int i = 0;
   int pathamt = 0;
@@ -519,4 +522,8 @@ std::shared_ptr<behaviour::Behaviour> utils::SwerveAutoBuilder::GetAutoRoutine()
 
 std::shared_ptr<behaviour::Behaviour> utils::SwerveAutoBuilder::GetAutoRoutine(std::string path) {
   return _builder->GetAutoPath(path);
+}
+
+drivetrain::SwerveDrive* utils::SwerveAutoBuilder::GetSwerve() {
+  return _swerve;
 }

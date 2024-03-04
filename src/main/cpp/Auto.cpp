@@ -19,14 +19,17 @@ wom::SwerveAutoBuilder* autos::InitCommands(wom::drivetrain::SwerveDrive* _swerv
                                             Intake* _intake, AlphaArm* _alphaArm) {
   wom::AutoCommands c = *new wom::AutoCommands(
       {// {"ArmToSetPoint", [_alphaArm]() { return wom::make<ArmToSetPoint>(_alphaArm, 20_deg); }},
-       // {"AutoShoot", [_shooter]() { return wom::make<AutoShoot>(_shooter); }},
-       /*{"AutoIntake", [_intake]() { return wom::make<AutoIntake>(_intake); }}*/});
+       // {"Shoot", [_shooter]() { return wom::make<AutoShoot>(_shooter); }},
+       {"IntakeNote", [_intake]() { return wom::make<IntakeNote>(_intake)->WithTimeout(1_s); }},
+       {"PassNote", [_intake]() { return wom::make<PassNote>(_intake)->WithTimeout(1_s); }},
+       {"EjectNote", [_intake]() { return wom::make<EjectNote>(_intake)->WithTimeout(1_s); } }});
 
   return new wom::utils::SwerveAutoBuilder(_swerveDrive, "Taxi", c);
 }
 
 std::shared_ptr<behaviour::Behaviour> autos::Taxi(wom::SwerveAutoBuilder* builder) {
-  return builder->GetAutoRoutine("Taxi");
+  return wom::make<wom::DrivebasePoseBehaviour>(builder->GetSwerve(), frc::Pose2d(0_m, 0_m, -120_deg));
+  // return builder->GetAutoRoutine("Taxi");
   // return behaviour::make<ArmToSetPoint>(_alphaArm, 0_deg);
   // behaviour::make<AutoShoot>(_shooter);
   // behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
