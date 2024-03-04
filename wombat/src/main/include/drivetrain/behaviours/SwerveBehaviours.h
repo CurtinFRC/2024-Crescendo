@@ -81,9 +81,9 @@ class ManualDrivebase : public behaviour::Behaviour {
 
   // The translation speeds for when "slow speed", "normal speed", "fast speed"
   // modes are active
-  const translationSpeed_ lowSensitivityDriveSpeed = 27_ft / 1_s;
-  const translationSpeed_ defaultDriveSpeed = 40_ft / 1_s;
-  const translationSpeed_ highSensitivityDriveSpeed = 27_ft / 1_s;
+  const translationSpeed_ lowSensitivityDriveSpeed = 80_ft / 1_s;
+  const translationSpeed_ defaultDriveSpeed = 80_ft / 1_s;
+  const translationSpeed_ highSensitivityDriveSpeed = 80_ft / 1_s;
   // The rotation speeds for when "slow speed", "normal speed", "fast speed"
   // modes are active
   const rotationSpeed_ lowSensitivityRotateSpeed = 720_deg / 1_s;

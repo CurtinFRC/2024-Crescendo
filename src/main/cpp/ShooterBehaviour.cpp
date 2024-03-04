@@ -41,6 +41,10 @@ void ShooterManualControl::OnTick(units::second_t dt) {
       _shooter->SetState(ShooterState::kReverse);
       
 
+    } else if (_codriver->GetAButton()) {
+      _shooter->SetPidGoal(1500_rad_per_s);
+      _shooter->SetState(ShooterState::kSpinUp);
+      _led->SetState(LEDState::kAiming);
     } else {
       _shooter->SetState(ShooterState::kIdle);
       _led->SetState(LEDState::kIdle);

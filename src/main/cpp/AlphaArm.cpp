@@ -45,7 +45,7 @@ void AlphaArm::OnUpdate(units::second_t dt) {
 
     case AlphaArmState::kIntakeAngle:
     std::cout << "Intake Angle" << std::endl;
-       _pidIntakeState.SetSetpoint(-0.50); //-0.48
+       _pidIntakeState.SetSetpoint(-0.52); //-0.48
        _setAlphaArmVoltage = units::volt_t{_pidIntakeState.Calculate(-(_config->alphaArmEncoder.GetEncoderPosition().value() * (2 * 3.1415)))};
     break;
     case AlphaArmState::kClimbAngle:

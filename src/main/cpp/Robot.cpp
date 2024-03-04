@@ -149,12 +149,12 @@ void Robot::TeleopInit() {
 }
 
 void Robot::TeleopPeriodic() {
-  if (robotmap.controllers.testController.GetPOV() == 270) {
-    armServo->SetAngle(0);
-  } else if (robotmap.controllers.codriver.GetPOV() == 0) {
+  if (robotmap.controllers.testController.GetPOV() == 0) {
+    armServo->SetAngle(130);
+  } else if (robotmap.controllers.codriver.GetPOV() == 270) {
     climberTimer.Start();
-    if (climberTimer.Get() > 2_s) {
-      armServo->SetAngle(130);
+    if (climberTimer.Get() > 1_s) {
+      armServo->SetAngle(0);
       climberTimer.Stop();
       climberTimer.Reset();
     } 
