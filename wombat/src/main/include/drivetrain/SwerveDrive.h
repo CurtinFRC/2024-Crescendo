@@ -28,6 +28,7 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 
 #include "behaviour/HasBehaviour.h"
+#include "units/angle.h"
 #include "utils/Gearbox.h"
 #include "utils/PID.h"
 
@@ -403,6 +404,7 @@ struct SwerveDriveConfig {
 enum class SwerveDriveState {
   kZeroing,
   kIdle,
+  kAngle,
   kVelocity,
   kFieldRelativeVelocity,
   kPose,
@@ -458,6 +460,10 @@ class SwerveDrive : public behaviour::HasBehaviour {
   void SetZero();
   void SetVoltageLimit(units::volt_t driveVoltageLimit);
   void OnResetMode();
+
+  SwerveDriveState GetState();
+  bool IsAtSetAngle();
+
   // double GetModuleCANPosition(int mod);  // from liam's
 
   void SetXWheelState();
@@ -471,6 +477,8 @@ class SwerveDrive : public behaviour::HasBehaviour {
 
   frc::Pose2d GetPose();
   void AddVisionMeasurement(frc::Pose2d pose, units::second_t timestamp);
+
+  void TurnToAngle(units::radian_t angle);
 
   SwerveDriveConfig& GetConfig() { return _config; }
 
@@ -506,6 +514,7 @@ class SwerveDrive : public behaviour::HasBehaviour {
   wom::drivetrain::PIDController _anglePIDController;
   wom::drivetrain::PIDController _xPIDController;
   wom::drivetrain::PIDController _yPIDController;
+  wom::drivetrain::PIDController _turnPIDController;
   // wom::utils::PIDController<units::meter, units::meters_per_second> _xPIDController;
   // wom::utils::PIDController<units::meter, units::meters_per_second> _yPIDController;
 
@@ -517,7 +526,10 @@ class SwerveDrive : public behaviour::HasBehaviour {
   int _mod;
   units::radian_t _angle;
   units::meters_per_second_t _speed;
+  frc::SwerveModuleState laststates[4];
+  frc::SwerveModuleState lastnewstates[4];
 
+  units::radian_t _reqAngle;
   // double frontLeftEncoderOffset = -143.26171875;
   // double frontRightEncoderOffset = 167.87109375;
   // double backLeftEncoderOffset = -316.669921875;

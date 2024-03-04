@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3732635157578024,
-      "y": 5.564955745296107
+      "x": 1.37,
+      "y": 5.56
     },
     "rotation": 0.0
   },
@@ -11,6 +11,12 @@
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
         {
           "type": "path",
           "data": {
@@ -21,6 +27,18 @@
           "type": "named",
           "data": {
             "name": "IntakeNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BackToStart"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]

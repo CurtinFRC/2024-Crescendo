@@ -49,7 +49,7 @@ void Robot::RobotInit() {
   shooter->SetDefaultBehaviour(
       [this]() { return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver, _led); });
 
-  _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
+  _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d(0_m, 0_m, 0_deg));
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour(
       [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
@@ -87,6 +87,8 @@ void Robot::RobotPeriodic() {
 
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
+
+        nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("state").SetInteger(static_cast<int>(_swerveDrive->GetState()));
   // sched->Tick();
 
   // robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder")
