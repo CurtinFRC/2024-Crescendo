@@ -12,6 +12,9 @@
 #include <units/charge.h>
 #include <units/moment_of_inertia.h>
 
+#include "drivetrain/SwerveDrive.h"
+#include "networktables/NetworkTableInstance.h"
+#include "units/angle.h"
 #include "utils/Pathplanner.h"
 #include "utils/Util.h"
 
@@ -236,24 +239,39 @@ wom::drivetrain::behaviours::DrivebasePoseBehaviour::DrivebasePoseBehaviour(Swer
   Controls(swerveDrivebase);
 }
 
-// used in autonomous for going to set drive poses
-void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t deltaTime) {
-  if (_voltageLimit >= (frc::RobotController::GetBatteryVoltage() - 0.5_V)) {
+void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnStart() {
+    if (_voltageLimit >= (frc::RobotController::GetBatteryVoltage() - 0.5_V)) {
     _voltageLimit = frc::RobotController::GetBatteryVoltage() - 1_V;
   }
 
-  double currentAngle = _swerveDrivebase->GetPose().Rotation().Degrees().value();
+  double currentAngle = _swerveDrivebase->GetPose().Rotation().Radians().value();
 
-  units::degree_t adjustedAngle =
-      1_deg * (currentAngle - std::fmod(currentAngle, 360) + _pose.Rotation().Degrees().value());
+  units::radian_t adjustedAngle =
+      1_rad * (currentAngle - std::fmod(currentAngle, 360) + _pose.Rotation().Radians().value() - 3.14159);
 
   _swerveDrivebase->SetVoltageLimit(_voltageLimit);
 
-  _swerveDrivebase->SetPose(frc::Pose2d{_pose.X(), _pose.Y(), adjustedAngle});
+  // _swerveDrivebase->SetPose(frc::Pose2d{_pose.X(), _pose.Y(), adjustedAngle});
+  _swerveDrivebase->TurnToAngle(adjustedAngle);
 
-  if (_swerveDrivebase->IsAtSetPose() && !_hold) {
-    std::cout << "Exited..." << std::endl;
+  _timer.Start();
+}
 
+
+// used in autonomous for going to set drive poses
+void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t deltaTime) {
+        nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(true);
+  if (_timer.Get() > 1_s) {
+            nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(false);
     SetDone();
+  }
+  if (_swerveDrivebase->IsAtSetAngle() && _swerveDrivebase->GetState() == SwerveDriveState::kAngle) {
+    _swerveDrivebase->SetPose(frc::Pose2d(_pose.X(), _pose.Y(), 0_deg));
+  } else {
+    if (_swerveDrivebase->IsAtSetPose() && !_hold) {
+      std::cout << "Exited..." << std::endl;
+        nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(false);
+      SetDone();
+    }
   }
 }

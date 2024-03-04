@@ -8,9 +8,12 @@
 
 #include <memory>
 
+#include "Intake.h"
 #include "LED.h"
 #include "Shooter.h"
 #include "Wombat.h"
+#include "frc/Timer.h"
+#include <units/angular_velocity.h>
 
 class ShooterManualControl : public behaviour::Behaviour {
  public:
@@ -27,4 +30,18 @@ class ShooterManualControl : public behaviour::Behaviour {
   bool _rawControl = false;
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("Shooter Behaviour");
+};
+
+class AutoShooter : public behaviour::Behaviour {
+ public:
+  AutoShooter(Shooter* shooter, Intake* intake, units::radians_per_second_t goal);
+
+  void OnTick(units::second_t dt) override;
+
+ private:
+  Shooter* _shooter;
+  Intake* _intake;
+  units::radians_per_second_t _goal;
+
+  frc::Timer _timer;
 };

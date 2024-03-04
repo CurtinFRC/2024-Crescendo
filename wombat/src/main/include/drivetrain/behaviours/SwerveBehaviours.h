@@ -222,12 +222,15 @@ class DrivebasePoseBehaviour : public behaviour::Behaviour {
    * @param deltaTime change in time since the last iteration
    */
   void OnTick(units::second_t deltaTime) override;
+  void OnStart() override;
 
  private:
   SwerveDrive* _swerveDrivebase;
   frc::Pose2d _pose;
   bool _hold;
   units::volt_t _voltageLimit;
+
+  frc::Timer _timer;
 
   std::shared_ptr<nt::NetworkTable> _swerveDriveTable =
       nt::NetworkTableInstance::GetDefault().GetTable("swerve");

@@ -262,6 +262,16 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   pathplanner::RotationTarget* lastRot = nullptr;
   units::degree_t rot;
 
+  int amt = 2;
+  size_t tot = points.size();
+  int index = std::round((static_cast<double>(amt) / static_cast<int>(tot)) * 100);
+  // double index = (amt / tot) * 100;
+  int i = 0;
+  bool f = true;
+
+  nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("index").SetDouble(index);
+  nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("total").SetInteger(tot);
+
   for (const pathplanner::PathPoint& point : points) {
     if (lastRot != nullptr) {
       rot = point.rotationTarget.value_or(*lastRot).getTarget().Degrees();
@@ -273,7 +283,16 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
 
     lastRot = &t;
 
-    _poses.emplace_back(frc::Pose2d(point.position, rot).TransformBy(frc::Transform2d(-1.37_m, -5.56_m, 0_deg)));
+    frc::Translation2d tr = frc::Translation2d(point.position.X() * -1, point.position.Y() * -1);
+    frc::Pose2d pose2 = frc::Pose2d(tr, rot);//.TransformBy(frc::Transform2d(-1.37_m, -5.56_m, 0_deg));
+
+    if (i == index || i == tot || f) {
+      _poses.emplace_back(frc::Pose2d(pose2.Y() - 5.56_m, pose2.X() - 2.91_m, pose2.Rotation()));
+      i = 0;
+      f = false;
+    }
+
+    i++;
   }
   // _poses = pathplanner::PathPlannerPath::fromPathFile(path)->getPathPoses();
   // wpi::json j = wpi::json::parse(cjson);
@@ -310,7 +329,7 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   //   i++;
   // }
 
-  int i = 0;
+  i = 0;
   for (const frc::Pose2d pose : _poses) {
     WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/poses/" + std::to_string(i)),
                  pose);
@@ -320,6 +339,8 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   CalcTimer();
 
   _timer.Start();
+
+  // _swerve->TurnToAngle(_poses[_currentPose].Rotation().Radians());
 }
 
 void utils::FollowPath::CalcTimer() {
@@ -333,13 +354,12 @@ void utils::FollowPath::CalcTimer() {
 
   _timer.Stop();
   _timer.Reset();
-  _time = units::second_t{std::abs(dist.value()) * 2 /*meters per second*/};
+  _time = units::second_t{std::abs(dist.value()) * 1.2 /*meters per second*/};
   // _time = 20_s;
   _timer.Start();
 }
 
 void utils::FollowPath::OnTick(units::second_t dt) {
-  _swerve->SetPose(_poses[_currentPose]);
   
   nt::NetworkTableInstance::GetDefault()
       .GetTable("pathplanner")
@@ -359,8 +379,11 @@ void utils::FollowPath::OnTick(units::second_t dt) {
                _swerve->GetPose());
 
   std::cout << "Following Path" << std::endl;
-
-  if (_swerve->IsAtSetPose() || _timer.Get() > _time) {
+  
+  // if (_swerve->IsAtSetAngle() && _swerve->GetState() == drivetrain::SwerveDriveState::kAngle) {
+    _swerve->SetPose(_poses[_currentPose]);
+  // }
+  /*else*/ if (_swerve->IsAtSetPose() || _timer.Get() > _time) {
     if (_currentPose + 1 == static_cast<int>(_poses.size())) {
       // _swerve->MakeAtSetPoint();
       _swerve->SetVelocity(frc::ChassisSpeeds());
@@ -368,6 +391,7 @@ void utils::FollowPath::OnTick(units::second_t dt) {
       SetDone();
     } else {
       _currentPose++;
+      // _swerve->TurnToAngle(_poses[_currentPose].Rotation().Radians());
       CalcTimer();
     }
   }
@@ -424,37 +448,57 @@ void utils::AutoBuilder::SetAuto(std::string path) {
     if (c["type"] == "named") {
       commands.push_back(std::make_pair(c["type"], c["data"]["name"]));
     }
+    // if (c["type"] == "parallel") {
+      // commands.push_back(std::make_pair(c["type"], ""));
+    // }
   }
 
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("length").SetInteger(commands.size());
 
-  pathplan = behaviour::make<drivetrain::behaviours::DrivebasePoseBehaviour>(
-      _swerve, JSONPoseToPose2d(*_startingPose).TransformBy(frc::Transform2d(-1.37_m, -5.56_m, 0_deg)));
+  pathplan = behaviour::make<behaviour::SequentialBehaviour>();
 
   int i = 0;
   int pathamt = 0;
   int commandamt = 0;
 
-  for (std::pair<std::string, std::string> command : commands) {
+  for (auto command : *_commands) {
     nt::NetworkTableInstance::GetDefault()
         .GetTable("commands/" + std::to_string(i))
         ->GetEntry("type")
-        .SetString(static_cast<std::string>(command.first));
+        .SetString(static_cast<std::string>(command["type"]));
     nt::NetworkTableInstance::GetDefault()
         .GetTable("commands/" + std::to_string(i))
         ->GetEntry("data")
-        .SetString(static_cast<std::string>(command.second));
+        .SetString(static_cast<std::string>(command["data"].dump()));
 
-    if (command.first == "path") {
-      auto b = behaviour::make<FollowPath>(_swerve, command.second, _flip);
+    if (command["type"] == "path") {
+      auto b = behaviour::make<FollowPath>(_swerve, command["data"]["pathName"], _flip);
       std::cout << b->GetName() << std::endl;
       pathplan = pathplan << b;
       pathamt++;
-    } else /*(command.first == "command")*/ {
-      pathplan = pathplan << _commandsList.Run(command.second);
+    } else if (command["type"] == "named") {
+      pathplan = pathplan << _commandsList.Run(command["data"]["name"]);
       commandamt++;
-    }
+    } else if (command["type"] == "parallel") {
+      
+      std::shared_ptr<behaviour::Behaviour> nb = behaviour::make<behaviour::ConcurrentBehaviour>(behaviour::ConcurrentBehaviourReducer::ALL);
+      int j = 0;
+      for (auto c : command["data"]["commands"]) { 
+        nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("type").SetString(static_cast<std::string>(c["type"]));
 
+        nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("typeisstring").SetBoolean(c["type"].is_string());
+        if (static_cast<std::string>(c["type"]) == "path") {
+          nb = nb &  behaviour::make<FollowPath>(_swerve, c["data"]["pathName"], _flip);
+          pathamt++;
+        } else if (static_cast<std::string>(c["type"]) == "named") {
+          nb = nb & _commandsList.Run(c["data"]["name"]);
+          commandamt++;
+        }
+        j++;
+      }
+      nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("parallelcommandsamt").SetInteger(j);
+      pathplan = pathplan << nb;
+    }
     i++;
   }
 

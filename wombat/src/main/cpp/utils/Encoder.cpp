@@ -5,6 +5,7 @@
 #include "utils/Encoder.h"
 
 #include <rev/SparkRelativeEncoder.h>
+#include <cmath>
 
 wom::utils::Encoder::Encoder(double encoderTicksPerRotation, int type, units::meter_t wheelRadius,
                              double reduction)
