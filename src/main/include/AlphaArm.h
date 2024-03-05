@@ -33,7 +33,8 @@ enum class AlphaArmState {
   kStowed,
   kClimbAngle,
   kClimbed,
-  kRaw
+  kRaw,
+  kIntakedAngle
 };
 
 class AlphaArm : public behaviour::HasBehaviour {

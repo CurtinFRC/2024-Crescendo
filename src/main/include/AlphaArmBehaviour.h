@@ -8,15 +8,17 @@
 #include <frc/XboxController.h>
 
 #include "AlphaArm.h"
+#include "Intake.h"
 #include "Wombat.h"
 
 class AlphaArmManualControl : public behaviour::Behaviour {
  public:
-  explicit AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxController* codriver);
+  explicit AlphaArmManualControl(AlphaArm* alphaArm, Intake* intake, frc::XboxController* codriver);
   void OnTick(units::second_t dt);
 
  private:
   AlphaArm* _alphaArm;
+  Intake *_intake;
   frc::XboxController* _codriver;
   units::volt_t _setAlphaArmVoltage = 0_V;
   bool _rawControl = false;

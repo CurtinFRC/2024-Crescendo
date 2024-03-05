@@ -6,7 +6,7 @@
 
 #include <frc/XboxController.h>
 
-IntakeManualControl::IntakeManualControl(Intake* intake, frc::XboxController& codriver) : _intake(intake), _codriver(codriver) {
+IntakeManualControl::IntakeManualControl(Intake* intake, AlphaArm *arm, frc::XboxController& codriver) : _intake(intake), _arm(arm), _codriver(codriver) {
   Controls(intake);
 }
 
@@ -32,6 +32,8 @@ void IntakeManualControl::OnTick(units::second_t dt) {
       _intake->SetRaw(0_V);
     }
   } else {
+    
+
     if (_codriver.GetXButton()) {
       if (_intake->GetState() == IntakeState::kIdle) {
         _intake->SetState(IntakeState::kIntake);
@@ -49,7 +51,11 @@ void IntakeManualControl::OnTick(units::second_t dt) {
       //   _intake->SetState(IntakeState::kIdle);
       // }
     } else {
-      _intake->SetState(IntakeState::kIdle);
+      if (_intake->GetState() == IntakeState::kHold) {
+        _arm->SetState(AlphaArmState::kIntakedAngle);
+      } else {
+        _intake->SetState(IntakeState::kIdle);
+      }
     }
   }
 }

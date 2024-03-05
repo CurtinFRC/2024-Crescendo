@@ -73,7 +73,7 @@ void Shooter::OnUpdate(units::second_t dt) {
     case ShooterState::kReverse: {
       _statename = "Reverse";
       _pid.Reset();
-      _setVoltage = -5_V;
+      _setVoltage = -8_V;
       std::cout << "KReverse" << std::endl;
       // if (!_shooterSensor.Get()) {
       //   SetState(ShooterState::kIdle);

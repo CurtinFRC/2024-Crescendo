@@ -4,7 +4,7 @@
 
 #include "Intake.h"
 
-Intake::Intake(IntakeConfig config) : _config(config), _pid(frc::PIDController (0.0125, 0, 0, 0.05_s)), _pidPosition(frc::PIDController (0.0125, 0, 0, 0.05_s)) {}
+Intake::Intake(IntakeConfig config) : _config(config), _pid(frc::PIDController (0.0125, 0, 0, 0.05_s)), _pidPosition(frc::PIDController (1, 0, 0, 0.05_s)) {}
 
 IntakeConfig Intake::GetConfig() {
   return _config;
@@ -26,6 +26,7 @@ void Intake::OnUpdate(units::second_t dt) {
       _pid.Reset();
       _setVoltage = 0_V;
       _recordNote = false;
+      hasValue = false;
     } 
     break;
 
@@ -43,22 +44,26 @@ void Intake::OnUpdate(units::second_t dt) {
         SetState(IntakeState::kIdle); 
       }
       _stringStateName = "Eject";
-      _setVoltage = 4_V;
+      _setVoltage = 8_V;
       _pid.Reset();
     } 
     break;
 
     case IntakeState::kHold: 
     {
+      units::volt_t pidCalculate = 0_V;
       if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == true) {
         SetState(IntakeState::kIdle);
       }
-      // _pid.SetSetpoint(0);
       // units::volt_t pidCalculate =
-          // units::volt_t{_pid.Calculate(_config.IntakeGearbox.encoder->GetEncoderAngularVelocity().value())};
-      // units::volt_t pidCalculate =
-          // units::volt_t{_pidPosition.Calculate(_config.IntakeGearbox.encoder->GetEncoderPosition().value())};
-      _setVoltage = 0_V;
+      //     units::volt_t{_pid.Calculate(_config.IntakeGearbox.encoder->GetEncoderAngularVelocity().value())};
+      if (_config.IntakeGearbox.encoder->GetEncoderPosition().value() < 0) {
+        pidCalculate = units::volt_t{-_pidPosition.Calculate(-_config.IntakeGearbox.encoder->GetEncoderPosition().value())};
+      } else {
+        pidCalculate = units::volt_t{_pidPosition.Calculate(_config.IntakeGearbox.encoder->GetEncoderPosition().value())};
+      }
+      
+      _setVoltage = pidCalculate;
       _stringStateName = "Hold";
     }
     break;
@@ -66,10 +71,17 @@ void Intake::OnUpdate(units::second_t dt) {
     case IntakeState::kIntake: 
     {
       if (_config.intakeSensor->Get() == false) {
+       
+        if (_config.IntakeGearbox.encoder->GetEncoderPosition().value() < 0) {
+          _pidPosition.SetSetpoint((-_config.IntakeGearbox.encoder->GetEncoderPosition().value()) - 0.5);
+        } else {
+          _pidPosition.SetSetpoint(_config.IntakeGearbox.encoder->GetEncoderPosition().value() + 0.5 );
+        }
+  
         SetState(IntakeState::kHold);
       }
       _stringStateName = "Intake";
-      _setVoltage = -4_V; 
+      _setVoltage = -10_V; 
     } 
     break;
 
@@ -85,24 +97,25 @@ void Intake::OnUpdate(units::second_t dt) {
       }
 
       _stringStateName = "Pass";
-      _setVoltage = -4_V;
+      _setVoltage = -10_V;
     }
     break;
   }
-  _table->GetEntry("State: ").SetString(_stringStateName);
-  _table->GetEntry("Motor Voltage: ").SetDouble(_setVoltage.value());
-  _table->GetEntry("Intake Sensor: ").SetBoolean(_config.intakeSensor->Get());
-  _table->GetEntry("Pass Sensor: ").SetBoolean(_config.passSensor->Get());
-  _table->GetEntry("Error: ").SetDouble(_pid.GetPositionError());
-  _table->GetEntry("SetPoint: ").SetDouble(_pid.GetSetpoint());
-  _table->GetEntry("Encoder: ").SetDouble(_config.IntakeGearbox.encoder->GetEncoderAngularVelocity().value());
-  _table->GetEntry("Shot Count: ").SetDouble(_noteShot);
+  _table->GetEntry("State").SetString(_stringStateName);
+  _table->GetEntry("Motor Voltage").SetDouble(_setVoltage.value());
+  _table->GetEntry("Intake Sensor").SetBoolean(_config.intakeSensor->Get());
+  _table->GetEntry("Pass Sensor").SetBoolean(_config.passSensor->Get());
+  _table->GetEntry("Error").SetDouble(_pidPosition.GetPositionError());
+  _table->GetEntry("SetPoint").SetDouble(_pidPosition.GetSetpoint());
+  _table->GetEntry("Encoder").SetDouble(_config.IntakeGearbox.encoder->GetEncoderPosition().value());
+  _table->GetEntry("Shot Count").SetDouble(_noteShot);
   // _table->GetEntry("Encoder: ").SetDouble(_config.IntakeGearbox.encoder->GetEncoderPosition().value());
  
   _config.IntakeGearbox.motorController->SetVoltage(_setVoltage);
 }
 
 void Intake::SetState(IntakeState state) {
+  
   _state = state;
 }
 void Intake::SetRaw(units::volt_t voltage) {

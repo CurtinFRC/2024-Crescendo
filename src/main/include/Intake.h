@@ -43,6 +43,7 @@ class Intake : public behaviour::HasBehaviour {
   int _noteShot = 0;
 
   bool _recordNote = false;
+  bool hasValue = false;
 
   units::volt_t _rawVoltage = 0_V;
   std::string _stringStateName = "error";

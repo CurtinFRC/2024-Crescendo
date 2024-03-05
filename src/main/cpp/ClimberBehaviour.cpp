@@ -11,7 +11,7 @@ ClimberManualControl::ClimberManualControl(Climber* climber, AlphaArm* arm, frc:
 
 void ClimberManualControl::OnTick(units::second_t dt) {
 
-  if (_codriver->GetAButtonPressed()) {
+  if (_codriver->GetBackButtonPressed()) {
     if (_rawControl) {
       _rawControl = false;
     } else {

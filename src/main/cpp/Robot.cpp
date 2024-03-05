@@ -48,28 +48,28 @@ void Robot::RobotInit() {
   wom::BehaviourScheduler::GetInstance()->Register(shooter);
   shooter->SetDefaultBehaviour(
       [this]() { return wom::make<ShooterManualControl>(shooter, &robotmap.controllers.codriver, _led); });
-  
 
   _swerveDrive = new wom::SwerveDrive(robotmap.swerveBase.config, frc::Pose2d());
   wom::BehaviourScheduler::GetInstance()->Register(_swerveDrive);
   _swerveDrive->SetDefaultBehaviour(
       [this]() { return wom::make<wom::ManualDrivebase>(_swerveDrive, &robotmap.controllers.driver); });
 
-
-    intake = new Intake(robotmap.intakeSystem.config);
-  wom::BehaviourScheduler::GetInstance()->Register(intake);
-  intake->SetDefaultBehaviour(
-      [this]() { return wom::make<IntakeManualControl>(intake, robotmap.controllers.codriver); });
-
   alphaArm = new AlphaArm(&robotmap.alphaArmSystem.config);
+  intake = new Intake(robotmap.intakeSystem.config);
+  
+  
   wom::BehaviourScheduler::GetInstance()->Register(alphaArm);
   alphaArm->SetDefaultBehaviour(
-      [this]() { return wom::make<AlphaArmManualControl>(alphaArm, &robotmap.controllers.codriver); });
+      [this]() { return wom::make<AlphaArmManualControl>(alphaArm, intake, &robotmap.controllers.codriver); });
 
   climber = new Climber(robotmap.climberSystem.config);
   wom::BehaviourScheduler::GetInstance()->Register(climber);
   climber->SetDefaultBehaviour(
       [this]() { return wom::make<ClimberManualControl>(climber, alphaArm, &robotmap.controllers.codriver); });
+
+  wom::BehaviourScheduler::GetInstance()->Register(intake);
+  intake->SetDefaultBehaviour(
+      [this]() { return wom::make<IntakeManualControl>(intake, alphaArm, robotmap.controllers.codriver); });
 
   robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0.45229_rad);
   robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(2.6846_rad);

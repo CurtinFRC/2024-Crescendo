@@ -6,8 +6,8 @@
 
 #include <frc/XboxController.h>
 
-AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, frc::XboxController* codriver)
-    : _alphaArm(alphaArm), _codriver(codriver) {
+AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, Intake *intake, frc::XboxController* codriver)
+    : _alphaArm(alphaArm), _intake(intake), _codriver(codriver) {
   Controls(alphaArm);
 }
 
@@ -53,7 +53,11 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
         } else if(_codriver->GetPOV() == 90){
           _alphaArm->SetState(AlphaArmState::kClimbAngle);
         } else {
-          _alphaArm->SetState(AlphaArmState::kIntakeAngle);
+          if (_intake->GetState() == IntakeState::kHold) {
+            _alphaArm->SetState(AlphaArmState::kIntakedAngle);
+          } else {
+            _alphaArm->SetState(AlphaArmState::kIntakeAngle);
+          }
         }
       }
     }
