@@ -1,26 +1,20 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.9455266691330485,
-      "y": 5.5233478865961345
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
+            "pathName": "FirstNote"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "FirstNote"
+            "pathName": "Backwards"
           }
         }
       ]

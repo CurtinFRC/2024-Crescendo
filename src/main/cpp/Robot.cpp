@@ -126,6 +126,8 @@ void Robot::RobotPeriodic() {
 void Robot::AutonomousInit() {
   loop.Clear();
   sched->InterruptAll();
+  _swerveDrive->MakeAtSetPoint();
+  // _swerveDrive->SetPose(frc::Pose2d());
 
   _swerveDrive->GetConfig().gyro->Reset();
 

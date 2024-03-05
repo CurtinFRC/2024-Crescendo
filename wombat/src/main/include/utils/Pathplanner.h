@@ -293,7 +293,7 @@ class AutoBuilder {
   AutoCommands _commandsList;
 
   wpi::json* _currentPath;
-  wpi::json* _startingPose;
+  // wpi::json* _startingPose;
   wpi::json* _commands;
 
   behaviour::Behaviour::ptr pathplan;

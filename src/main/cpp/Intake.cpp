@@ -51,6 +51,7 @@ void Intake::OnUpdate(units::second_t dt) {
 
     case IntakeState::kHold:
     {
+      std::cerr << "HEY FROM kHold" << std::endl;
       units::volt_t pidCalculate = 0_V;
       if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == true) {
         SetState(IntakeState::kIdle);

@@ -76,6 +76,7 @@ void IntakeNote::OnTick(units::second_t dt) {
   _intake->SetState(IntakeState::kIntake);
 
   if (_intake->GetState() == IntakeState::kHold) {
+    std::cerr << "EXITING" << std::endl;
     SetDone();
   }
 }

@@ -269,8 +269,8 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   int i = 0;
   bool f = true;
 
-  nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("index").SetDouble(index);
-  nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("total").SetInteger(tot);
+  // nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("index").SetDouble(index);
+  // nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("total").SetInteger(tot);
 
   for (const pathplanner::PathPoint& point : points) {
     if (lastRot != nullptr) {
@@ -287,8 +287,9 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
     frc::Pose2d pose2 = frc::Pose2d(tr, rot);//.TransformBy(frc::Transform2d(-1.37_m, -5.56_m, 0_deg));
 
     if (i == index || i == tot || f) {
-      _poses.emplace_back(frc::Pose2d(pose2.Y() - 5.56_m, pose2.X() - 2.91_m, pose2.Rotation()));
-      i = 0;
+      _poses.emplace_back(frc::Pose2d(pose2.X(), pose2.Y(), pose2.Rotation()));
+      // _poses.emplace_back(frc::Pose2d(pose2.Y(), pose2.X(), pose2.Rotation()));
+      i = 0;//  - 5.56_m,  - 2.91_m
       f = false;
     }
 
@@ -326,14 +327,14 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   //   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/" + std::to_string(i) +
   //   "/poses/prev"), p2);
   //
-  //   i++;
+    i++;
   // }
 
   i = 0;
   for (const frc::Pose2d pose : _poses) {
     WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/poses/" + std::to_string(i)),
                  pose);
-    i++;
+    // i++;
   }
 
   CalcTimer();
@@ -354,7 +355,7 @@ void utils::FollowPath::CalcTimer() {
 
   _timer.Stop();
   _timer.Reset();
-  _time = units::second_t{std::abs(dist.value()) * 1.2 /*meters per second*/};
+  _time = units::second_t{std::abs(dist.value()) * 4 /*meters per second*/};
   // _time = 20_s;
   _timer.Start();
 }
@@ -428,13 +429,13 @@ void utils::AutoBuilder::SetAuto(std::string path) {
   wpi::json j = wpi::json::parse(cjson);
 
   _currentPath = &j;
-  _startingPose = &j["startingPose"];
+  // _startingPose = &j["startingPose"];
   _commands = &j["command"]["data"]["commands"];
 
   commands = std::vector<std::pair<std::string, std::string>>();
 
   nt::NetworkTableInstance::GetDefault().GetTable("json")->GetEntry("data").SetString(_currentPath->dump());
-  nt::NetworkTableInstance::GetDefault().GetTable("json")->GetEntry("start").SetString(_startingPose->dump());
+  // nt::NetworkTableInstance::GetDefault().GetTable("json")->GetEntry("start").SetString(_startingPose->dump());
   nt::NetworkTableInstance::GetDefault().GetTable("json")->GetEntry("commands").SetString(_commands->dump());
   nt::NetworkTableInstance::GetDefault()
       .GetTable("json")
@@ -448,9 +449,9 @@ void utils::AutoBuilder::SetAuto(std::string path) {
     if (c["type"] == "named") {
       commands.push_back(std::make_pair(c["type"], c["data"]["name"]));
     }
-    // if (c["type"] == "parallel") {
-      // commands.push_back(std::make_pair(c["type"], ""));
-    // }
+    if (c["type"] == "parallel") {
+      commands.push_back(std::make_pair(c["type"], ""));
+    }
   }
 
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("length").SetInteger(commands.size());
@@ -505,8 +506,8 @@ void utils::AutoBuilder::SetAuto(std::string path) {
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("PathAmt").SetInteger(pathamt);
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("CommandAmt").SetInteger(commandamt);
 
-  WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("startPose"),
-               JSONPoseToPose2d(*_startingPose));
+  // WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("startPose"),
+  //              JSONPoseToPose2d(*_startingPose));
 
   // nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("behaviours").SetStringArray(pathplan->GetName());
 }
