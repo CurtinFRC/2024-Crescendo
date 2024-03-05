@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.37,
-      "y": 5.56
+      "x": 0.7850516674765234,
+      "y": 6.3027226484706595
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -20,19 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "FirstNote"
+            "pathName": "LeftCloseLeft"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "IntakeNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BackToStart"
           }
         },
         {
