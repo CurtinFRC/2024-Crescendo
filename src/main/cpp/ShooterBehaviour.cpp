@@ -63,6 +63,7 @@ AutoShooter::AutoShooter(Shooter* shooter, Intake* intake, units::radians_per_se
 }
 
 void AutoShooter::OnTick(units::second_t dt) {
+  _goal = 300_rad_per_s;
   _shooter->SetState(ShooterState::kSpinUp);
   _shooter->SetPidGoal(_goal);
 
