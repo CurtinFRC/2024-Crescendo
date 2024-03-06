@@ -295,7 +295,7 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
     frc::Translation2d tr = frc::Translation2d(point.position.X() * -1, point.position.Y() * -1);
     frc::Pose2d pose2 = frc::Pose2d(tr, rot);//.TransformBy(frc::Transform2d(-1.37_m, -5.56_m, 0_deg));
     //
-    if ( /*i == index ||*/ i == tot || f) {
+    if (i == index || i == static_cast<int>(tot - 1) || f) {
       _poses.emplace_back(frc::Pose2d(pose2.X(), pose2.Y(), pose2.Rotation()));
       // _poses.emplace_back(frc::Pose2d(pose2.Y(), pose2.X(), pose2.Rotation()));
       i = 0;//  - 5.56_m,  - 2.91_m
@@ -363,8 +363,8 @@ void utils::FollowPath::CalcTimer() {
 
   _timer.Stop();
   _timer.Reset();
-  // _time = units::second_t{std::abs(dist.value()) / 3 /*meters per second ?No?*/};
-  _time = 15_s;
+  _time = units::second_t{std::abs(dist.value()) / 1 /*meters per second ?No?*/};
+  // _time = 15_s;
   _timer.Start();
 }
 
@@ -405,7 +405,7 @@ void utils::FollowPath::OnTick(units::second_t dt) {
     _swerve->SetPose(_poses[_currentPose]);
   // }
   /*else*/ if (_swerve->IsAtSetPose() || _timer.Get() > _time) {
-    if (_currentPose + 1 == static_cast<int>(_poses.size())) {
+    if (_currentPose == static_cast<int>(_poses.size())) {
       // _swerve->MakeAtSetPoint();
       // _swerve->SetVelocity(frc::ChassisSpeeds());
       // _swerve->MakeAtSetPoint();
@@ -486,7 +486,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
 
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("length").SetInteger(commands.size());
 
-  pathplan = behaviour::make<behaviour::SequentialBehaviour>();
+  auto _pathplan = behaviour::make<behaviour::SequentialBehaviour>();
 
   int i = 0;
   int pathamt = 0;
@@ -503,14 +503,16 @@ void utils::AutoBuilder::SetAuto(std::string path) {
         .SetString(static_cast<std::string>(command["data"].dump()));
 
     if (command["type"] == "path") {
-      pathplan->Add(behaviour::make<FollowPath>(_swerve, command["data"]["pathName"], _flip));
+      _pathplan->Add(behaviour::make<FollowPath>(_swerve, command["data"]["pathName"], _flip));
       pathamt++;
+          nt::NetworkTableInstance::GetDefault().GetTable("commands/" + std::to_string(i))->GetEntry("behaviours").SetStringArray(_pathplan->GetQueue());
     } else if (command["type"] == "named") {
-      pathplan->Add(_commandsList.Run(command["data"]["name"]));
+      _pathplan->Add(_commandsList.Run(command["data"]["name"]));
       commandamt++;
+          nt::NetworkTableInstance::GetDefault().GetTable("commands/" + std::to_string(i))->GetEntry("behaviours").SetStringArray(_pathplan->GetQueue());
     } else if (command["type"] == "parallel") {
       
-      auto nb = behaviour::make<behaviour::ConcurrentBehaviour>(behaviour::ConcurrentBehaviourReducer::FIRST);
+      auto nb = behaviour::make<behaviour::ConcurrentBehaviour>(behaviour::ConcurrentBehaviourReducer::ANY);
       int j = 0;
       for (auto c : command["data"]["commands"]) { 
         nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("type").SetString(static_cast<std::string>(c["type"]));
@@ -523,17 +525,25 @@ void utils::AutoBuilder::SetAuto(std::string path) {
           nb->Add(_commandsList.Run(c["data"]["name"]));
           commandamt++;
         }
+        nb->Add(behaviour::make<behaviour::Print>("ok"));
         j++;
       }
       nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("parallelcommandsamt").SetInteger(j);
-      pathplan->Add(nb);
+      nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("parallel-" + std::to_string(i)).SetStringArray(nb->GetQueue());
+      _pathplan->Add(nb);
     }
+
+    _pathplan->Add(behaviour::make<behaviour::Print>("idk"));
+
+    pathplan = _pathplan;
+    nt::NetworkTableInstance::GetDefault().GetTable("commands/" + std::to_string(i))->GetEntry("currentbehaviours").SetStringArray(pathplan->GetQueue());
     i++;
   }
 
-  for (int i = 0; i < commandamt; i++) {
-    nt::NetworkTableInstance::GetDefault().GetTable("commands/behaviours")->GetEntry(std::to_string(i)).SetString(pathplan->GetQueue()[i]);
-  }
+  // pathplan->Add(behaviour::make<behaviour::Print>("test"));
+  //   pathplan->Add(behaviour::make<behaviour::Print>("test"));
+
+    nt::NetworkTableInstance::GetDefault().GetTable("commands/newbehaviours")->GetEntry(std::to_string(i)).SetStringArray(pathplan->GetQueue());
 
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("PathAmt").SetInteger(pathamt);
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("CommandAmt").SetInteger(commandamt);

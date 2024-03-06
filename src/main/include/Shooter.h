@@ -36,7 +36,7 @@ class Shooter : public behaviour::HasBehaviour {
  private:
   ShooterConfig _config;
   std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Shooter");
-  ShooterState _state = ShooterState::kRaw;
+  ShooterState _state = ShooterState::kIdle;
   units::volt_t _rawVoltage;
   units::radians_per_second_t _goal;
   units::volt_t _setVoltage = 0_V;

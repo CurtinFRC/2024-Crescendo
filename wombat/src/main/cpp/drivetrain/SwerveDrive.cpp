@@ -695,8 +695,8 @@ void SwerveDrive::SetPose(frc::Pose2d pose) {
 }
 
 bool SwerveDrive::IsAtSetPose() {
-  if (std::abs(_xPIDController.GetPositionError()) < 0.1 && std::abs(_yPIDController.GetPositionError()) < 0.1 && std::abs(_turnPIDController.GetPositionError()) < 0.1) {
-    if (std::abs(_xPIDController.GetVelocityError()) < 1 && std::abs(_yPIDController.GetVelocityError()) < 1 && std::abs(_turnPIDController.GetVelocityError()) < 1) {
+  if (std::abs(_xPIDController.GetPositionError()) < 0.1 && std::abs(_yPIDController.GetPositionError()) < 0.1) {
+    if (std::abs(_xPIDController.GetVelocityError()) < 1 && std::abs(_yPIDController.GetVelocityError()) < 1) {
       return false;
     }
   }
@@ -723,7 +723,7 @@ void SwerveDrive::ResetPose(frc::Pose2d pose) {
 }
 
 frc::Pose2d SwerveDrive::GetPose() {
-  return _poseEstimator.GetEstimatedPosition();
+  return frc::Pose2d(_poseEstimator.GetEstimatedPosition().X(), _poseEstimator.GetEstimatedPosition().Y(), _poseEstimator.GetEstimatedPosition().Rotation());
   // return frc::Pose2d(1_m, 1_m, 0_deg);
 }
 

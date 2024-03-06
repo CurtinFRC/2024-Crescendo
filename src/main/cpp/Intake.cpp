@@ -3,6 +3,7 @@
 // of the MIT License at the root of this project
 
 #include "Intake.h"
+#include "frc/RobotController.h"
 
 Intake::Intake(IntakeConfig config) : _config(config), _pid(frc::PIDController (0.0125, 0, 0, 0.05_s)), _pidPosition(frc::PIDController (1, 0, 0, 0.05_s)) {}
 

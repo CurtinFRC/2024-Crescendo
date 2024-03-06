@@ -185,7 +185,8 @@ class SequentialBehaviour : public Behaviour {
   std::vector<std::string> GetQueue();
 
  protected:
-  std::deque<ptr> _queue;
+  // std::deque<ptr> _queue;
+  std::vector<ptr> _queue;
 };
 
 inline std::shared_ptr<SequentialBehaviour> operator<<(Behaviour::ptr a, Behaviour::ptr b) {
@@ -228,6 +229,8 @@ class ConcurrentBehaviour : public Behaviour {
   void OnStart() override;
   void OnTick(units::time::second_t dt) override;
   void OnStop() override;
+
+  std::vector<std::string> GetQueue();
 
  private:
   ConcurrentBehaviourReducer _reducer;

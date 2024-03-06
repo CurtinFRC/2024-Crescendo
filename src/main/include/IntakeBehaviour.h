@@ -37,10 +37,11 @@ class IntakeNote : public behaviour::Behaviour {
   explicit IntakeNote(Intake* intake);
   void OnTick(units::second_t dt) override;
   void OnStop() override;
+  void OnStart() override;
 
  private:
   Intake* _intake;
-
+  frc::Timer _timer;
 };
 
 class PassNote : public behaviour::Behaviour {

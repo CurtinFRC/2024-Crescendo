@@ -75,21 +75,26 @@ IntakeNote::IntakeNote(Intake* intake) : _intake(intake), behaviour::Behaviour("
   Controls(intake);
 }
 
+void IntakeNote::OnStart() {
+  _timer.Reset();
+  _timer.Start();
+}
+
 void IntakeNote::OnTick(units::second_t dt) {
   _intake->SetState(IntakeState::kIntake);
 
-  nt::NetworkTableInstance::GetDefault().GetTable("AutoIntake")->GetEntry("running").SetBoolean(true);
+  // nt::NetworkTableInstance::GetDefault().GetTable("AutoIntake")->GetEntry("running").SetBoolean(true);
 
-  if (_intake->GetState() == IntakeState::kHold || _intake->GetState() == IntakeState::kIdle) {
-    _intake->SetState(IntakeState::kIdle);
-    std::cerr << "EXITING" << std::endl;
+  // if (_intake->GetState() == IntakeState::kHold || _intake->GetState() == IntakeState::kIdle || _timer.Get() > 3_s) {
+    // _intake->SetState(IntakeState::kIdle);
+    // std::cerr << "EXITING" << std::endl;
     SetDone();
-  }
+  // }
 }
 
 void IntakeNote::OnStop() {
-  _intake->SetState(IntakeState::kIdle);
-    nt::NetworkTableInstance::GetDefault().GetTable("AutoIntake")->GetEntry("running").SetBoolean(false);
+  // _intake->SetState(IntakeState::kIdle);
+    // nt::NetworkTableInstance::GetDefault().GetTable("AutoIntake")->GetEntry("running").SetBoolean(false);
 }
 
 PassNote::PassNote(Intake* intake) : _intake(intake) {

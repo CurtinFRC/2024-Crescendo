@@ -20,10 +20,10 @@ wom::SwerveAutoBuilder* autos::InitCommands(wom::drivetrain::SwerveDrive* _swerv
   wom::AutoCommands c = *new wom::AutoCommands(
       {// {"ArmToSetPoint", [_alphaArm]() { return wom::make<ArmToSetPoint>(_alphaArm, 20_deg); }},
        // {"Shoot", [_shooter]() { return wom::make<AutoShoot>(_shooter); }},
-       {"IntakeNote", [_intake]() { return wom::make<IntakeNote>(_intake)->WithTimeout(1_s); }},
-       {"PassNote", [_intake]() { return wom::make<PassNote>(_intake)->WithTimeout(1_s); }},
+       {"IntakeNote", [_intake]() { return wom::make<IntakeNote>(_intake)/*->Until(wom::make<behaviour::WaitTime>(3_s))*/;}},
+       {"PassNote", [_intake]() { return wom::make<PassNote>(_intake)->Until(wom::make<behaviour::WaitTime>(1_s)); }},
        {"EjectNote", [_intake]() { return wom::make<EjectNote>(_intake)->WithTimeout(1_s); }},
-       {"Shoot", [_shooter, _intake]() { return wom::make<AutoShooter>(_shooter, _intake, 300_rad_per_s)->WithTimeout(2.5_s); }} 
+       {"Shoot", [_shooter, _intake]() { return wom::make<AutoShooter>(_shooter, _intake, 300_rad_per_s)->Until(wom::make<wom::WaitTime>(2_s)); }} 
       });
 
   return new wom::utils::SwerveAutoBuilder(_swerveDrive, "Taxi", c);

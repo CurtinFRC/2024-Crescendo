@@ -13,7 +13,7 @@ void LED::OnUpdate(units::second_t dt) {
     } break;
 
     case LEDState::kAiming: {
-      _led.frc::PWM::SetSpeed(0.27);
+      _led.frc::PWM::SetSpeed(0.21);
     } break;
     case LEDState::kAmpReady: {
       _led.frc::PWM::SetSpeed(0.87);

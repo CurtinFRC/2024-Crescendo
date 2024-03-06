@@ -37,6 +37,7 @@ class AutoShooter : public behaviour::Behaviour {
   AutoShooter(Shooter* shooter, Intake* intake, units::radians_per_second_t goal);
 
   void OnTick(units::second_t dt) override;
+  void OnStop() override;
 
  private:
   Shooter* _shooter;

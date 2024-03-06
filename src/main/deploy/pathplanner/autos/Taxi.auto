@@ -12,15 +12,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "FirstNote"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeNote"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "FirstNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeNote"
+                }
+              }
+            ]
           }
         },
         {
