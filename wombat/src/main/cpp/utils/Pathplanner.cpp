@@ -492,9 +492,9 @@ void utils::AutoBuilder::SetAuto(std::string path) {
       auto nb = behaviour::make<behaviour::ConcurrentBehaviour>(behaviour::ConcurrentBehaviourReducer::FIRST);
       int j = 0;
       for (auto c : command["data"]["commands"]) { 
-        // nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("type").SetString(static_cast<std::string>(c["type"]));
+        nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("type").SetString(static_cast<std::string>(c["type"]));
 
-        // nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("typeisstring").SetBoolean(c["type"].is_string());
+        nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("typeisstring").SetBoolean(c["type"].is_string());
         if (static_cast<std::string>(c["type"]) == "path") {
           nb->Add(behaviour::make<FollowPath>(_swerve, c["data"]["pathName"], _flip));
           pathamt++;
