@@ -35,6 +35,7 @@
 #include "pathplanner/lib/path/PathPlannerPath.h"
 #include "pathplanner/lib/path/PathPoint.h"
 #include "pathplanner/lib/path/RotationTarget.h"
+#include "units/acceleration.h"
 #include "units/time.h"
 #include "utils/Util.h"
 #include "wpi/detail/conversions/to_json.h"
@@ -547,6 +548,9 @@ void utils::AutoBuilder::SetAuto(std::string path) {
 
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("PathAmt").SetInteger(pathamt);
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("CommandAmt").SetInteger(commandamt);
+
+  _swerve->SetAccelerationLimit(units::meters_per_second_squared_t{2});
+  _swerve->SetVoltageLimit(6_V);
 
   // WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("startPose"),
   //              JSONPoseToPose2d(*_startingPose));
