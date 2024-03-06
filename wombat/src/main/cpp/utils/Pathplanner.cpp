@@ -246,6 +246,11 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
 
   std::ifstream file(filePath);
 
+  nt::NetworkTableInstance::GetDefault()
+      .GetTable("pathplanner")
+      ->GetEntry("Current path")
+      .SetString(filePath);
+
   std::string cdata;
   std::string cjson;
 
@@ -259,18 +264,19 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   std::vector<pathplanner::PathPoint> points =
       pathplanner::PathPlannerPath::fromPathFile(path)->getAllPathPoints();
 
+
   pathplanner::RotationTarget* lastRot = nullptr;
   units::degree_t rot;
 
   int amt = 2;
   size_t tot = points.size();
-  int index = std::round((static_cast<double>(amt) / static_cast<int>(tot)) * 100);
+  int index = std::round((static_cast<double>(amt) / static_cast<double>(tot)) * 100);
   // double index = (amt / tot) * 100;
   int i = 0;
   bool f = true;
 
-  // nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("index").SetDouble(index);
-  // nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("total").SetInteger(tot);
+  nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("index").SetDouble(index);
+  nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("total").SetInteger(tot);
 
   for (const pathplanner::PathPoint& point : points) {
     if (lastRot != nullptr) {
@@ -285,8 +291,8 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
 
     frc::Translation2d tr = frc::Translation2d(point.position.X() * -1, point.position.Y() * -1);
     frc::Pose2d pose2 = frc::Pose2d(tr, rot);//.TransformBy(frc::Transform2d(-1.37_m, -5.56_m, 0_deg));
-
-    if (i == index || i == tot || f) {
+    //
+    if ( i == index || i == tot || f) {
       _poses.emplace_back(frc::Pose2d(pose2.X(), pose2.Y(), pose2.Rotation()));
       // _poses.emplace_back(frc::Pose2d(pose2.Y(), pose2.X(), pose2.Rotation()));
       i = 0;//  - 5.56_m,  - 2.91_m
@@ -327,10 +333,10 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   //   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/" + std::to_string(i) +
   //   "/poses/prev"), p2);
   //
-    i++;
+    // i++;
   // }
 
-  i = 0;
+  // i = 0;
   for (const frc::Pose2d pose : _poses) {
     WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/poses/" + std::to_string(i)),
                  pose);
@@ -355,8 +361,8 @@ void utils::FollowPath::CalcTimer() {
 
   _timer.Stop();
   _timer.Reset();
-  _time = units::second_t{std::abs(dist.value()) * 4 /*meters per second*/};
-  // _time = 20_s;
+  // _time = units::second_t{std::abs(dist.value()) * 3 /*meters per second ?No?*/};
+  _time = 20_s;
   _timer.Start();
 }
 
@@ -374,6 +380,7 @@ void utils::FollowPath::OnTick(units::second_t dt) {
       .GetTable("pathplanner")
       ->GetEntry("currentTime")
       .SetDouble(_timer.Get().value());
+  
   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/targetPose"),
                _poses[_currentPose]);
   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/currentPose"),
@@ -387,8 +394,8 @@ void utils::FollowPath::OnTick(units::second_t dt) {
   /*else*/ if (_swerve->IsAtSetPose() || _timer.Get() > _time) {
     if (_currentPose + 1 == static_cast<int>(_poses.size())) {
       // _swerve->MakeAtSetPoint();
-      _swerve->SetVelocity(frc::ChassisSpeeds());
-      _swerve->MakeAtSetPoint();
+      // _swerve->SetVelocity(frc::ChassisSpeeds());
+      // _swerve->MakeAtSetPoint();
       SetDone();
     } else {
       _currentPose++;

@@ -8,13 +8,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "FirstNote"
+            "pathName": "Backwards"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Backwards"
+            "name": null
           }
         }
       ]

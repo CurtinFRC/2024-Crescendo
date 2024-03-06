@@ -36,6 +36,10 @@ std::shared_ptr<behaviour::Behaviour> autos::Taxi(wom::SwerveAutoBuilder* builde
   // behaviour::make<ArmToSetPoint>(_alphaArm, 1_deg);
 }
 
+std::shared_ptr<behaviour::Behaviour> autos::OneNoteTaxi(wom::SwerveAutoBuilder* builder) {
+  return builder->GetAutoRoutine("OneNoteTaxi");
+}
+
 // std::shared_ptr<behaviour::Behaviour> autos::QuadrupleClose(wom::drivetrain::SwerveDrive* _swerveDrive,
 //                                                             Shooter* _shooter, Intake* _intake,
 //                                                             AlphaArm* _alphaArm) {

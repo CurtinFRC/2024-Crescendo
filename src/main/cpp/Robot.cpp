@@ -38,7 +38,14 @@ static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
   sched = wom::BehaviourScheduler::GetInstance();
-  m_chooser.SetDefaultOption("Default Auto", "Default Auto");
+  
+  frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
+
+  m_chooser.SetDefaultOption(defaultAuto, defaultAuto);
+
+  for (auto& option : autoOptions) {
+    m_chooser.AddOption(option, option);
+  }
 
   _led = new LED();
 
@@ -135,10 +142,10 @@ void Robot::AutonomousInit() {
 
   robotmap._builder = autos::InitCommands(_swerveDrive, shooter, intake, alphaArm);
 
-  //if (m_autoSelected == "kTaxi") {
-  //  sched->Schedule(autos::Taxi(robotmap._builder));
-  //}
-  sched->Schedule(robotmap._builder->GetAutoRoutine("OneNoteTaxi"));
+  if (m_autoSelected == "kTaxi") {
+   sched->Schedule(autos::Taxi(robotmap._builder));
+  }
+  // sched->Schedule(robotmap._builder->GetAutoRoutine("OneNoteTaxi"));
 
   _swerveDrive->OnStart();
 }

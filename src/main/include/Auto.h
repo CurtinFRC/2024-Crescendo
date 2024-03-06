@@ -24,6 +24,7 @@ std::shared_ptr<behaviour::Behaviour> AutoTest(wom::drivetrain::SwerveDrive* _sw
                                                Intake* _intake, AlphaArm* _alphaArm);
 
 std::shared_ptr<behaviour::Behaviour> Taxi(wom::utils::SwerveAutoBuilder* builder);
+std::shared_ptr<behaviour::Behaviour> OneNoteTaxi(wom::utils::SwerveAutoBuilder* builder);
 
 std::shared_ptr<behaviour::Behaviour> QuadrupleClose(wom::drivetrain::SwerveDrive* _swerveDrive,
                                                      Shooter* _shooter, Intake* _intake, AlphaArm* _alphaArm);

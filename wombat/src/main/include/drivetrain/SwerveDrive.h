@@ -286,7 +286,7 @@ class PIDController : public wpi::Sendable, public wpi::SendableHelper<PIDContro
   double m_totalError = 0;
 
   // The error that is considered at setpoint.
-  double m_positionTolerance = 0.05;
+  double m_positionTolerance = 0.2;
   double m_velocityTolerance = std::numeric_limits<double>::infinity();
 
   double m_setpoint = 0;
