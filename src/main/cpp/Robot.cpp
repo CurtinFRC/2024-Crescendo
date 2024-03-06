@@ -19,7 +19,6 @@
 
 #include "RobotMap.h"
 #include "behaviour/HasBehaviour.h"
-#include "networktables/NetworkTableInstance.h"
 
 static units::second_t lastPeriodic;
 
@@ -175,28 +174,5 @@ void Robot::DisabledPeriodic() {}
 void Robot::TestInit() {}
 void Robot::TestPeriodic() {}
 
-void Robot::SimulationInit() {
-  /*  std::string x = "[";
-    std::string y = "[";
-    // _vision->GetDistanceToTarget(16);
-    for (int i = 1; i < 17; i++) {
-      for (int j = 0; j < 17; j++) {
-        frc::Pose2d pose = _vision->AlignToTarget(i, units::meter_t{j * 0.1}, _swerveDrive);
-        x += std::to_string(pose.X().value()) + ",";
-        y += std::to_string(pose.Y().value()) + ",";
-      }
-    }
-
-    x += "]";
-    y += "]";
-
-    std::cout << x << std::endl;
-    std::cout << y << std::endl; */
-  // std::cout << _vision->TurnToTarget(1, _swerveDrive).Rotation().Degrees().value() << std::endl;
-  // Reimplement when vision is reimplemented
-  // frc::Pose2d pose = _vision->TurnToTarget(2, _swerveDrive);
-  // nt::NetworkTableInstance::GetDefault().GetTable("vision")->PutNumber("rot",
-  //                                                                     pose.Rotation().Degrees().value());
-}
-
+void Robot::SimulationInit() {}
 void Robot::SimulationPeriodic() {}
