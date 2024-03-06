@@ -268,7 +268,7 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   pathplanner::RotationTarget* lastRot = nullptr;
   units::degree_t rot;
 
-  int amt = 2;
+  int amt = 1;
   size_t tot = points.size();
   int index = std::round((static_cast<double>(amt) / static_cast<double>(tot)) * 100);
   // double index = (amt / tot) * 100;
@@ -292,7 +292,7 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
     frc::Translation2d tr = frc::Translation2d(point.position.X() * -1, point.position.Y() * -1);
     frc::Pose2d pose2 = frc::Pose2d(tr, rot);//.TransformBy(frc::Transform2d(-1.37_m, -5.56_m, 0_deg));
     //
-    if ( i == index || i == tot || f) {
+    if ( /*i == index ||*/ i == tot || f) {
       _poses.emplace_back(frc::Pose2d(pose2.X(), pose2.Y(), pose2.Rotation()));
       // _poses.emplace_back(frc::Pose2d(pose2.Y(), pose2.X(), pose2.Rotation()));
       i = 0;//  - 5.56_m,  - 2.91_m
@@ -361,8 +361,8 @@ void utils::FollowPath::CalcTimer() {
 
   _timer.Stop();
   _timer.Reset();
-  // _time = units::second_t{std::abs(dist.value()) * 3 /*meters per second ?No?*/};
-  _time = 20_s;
+  // _time = units::second_t{std::abs(dist.value()) / 0.7 /*meters per second ?No?*/};
+  _time = 15_s;
   _timer.Start();
 }
 
@@ -489,17 +489,17 @@ void utils::AutoBuilder::SetAuto(std::string path) {
       commandamt++;
     } else if (command["type"] == "parallel") {
       
-      std::shared_ptr<behaviour::Behaviour> nb = behaviour::make<behaviour::ConcurrentBehaviour>(behaviour::ConcurrentBehaviourReducer::ALL);
+      auto nb = behaviour::make<behaviour::ConcurrentBehaviour>(behaviour::ConcurrentBehaviourReducer::FIRST);
       int j = 0;
       for (auto c : command["data"]["commands"]) { 
-        nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("type").SetString(static_cast<std::string>(c["type"]));
+        // nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("type").SetString(static_cast<std::string>(c["type"]));
 
-        nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("typeisstring").SetBoolean(c["type"].is_string());
+        // nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("typeisstring").SetBoolean(c["type"].is_string());
         if (static_cast<std::string>(c["type"]) == "path") {
-          nb = nb &  behaviour::make<FollowPath>(_swerve, c["data"]["pathName"], _flip);
+          nb->Add(behaviour::make<FollowPath>(_swerve, c["data"]["pathName"], _flip));
           pathamt++;
         } else if (static_cast<std::string>(c["type"]) == "named") {
-          nb = nb & _commandsList.Run(c["data"]["name"]);
+          nb->Add(_commandsList.Run(c["data"]["name"]));
           commandamt++;
         }
         j++;

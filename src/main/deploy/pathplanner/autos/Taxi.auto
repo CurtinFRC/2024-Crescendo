@@ -16,15 +16,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "IntakeNote"
+                  "pathName": "FirstNote"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Backwards"
+                  "name": "IntakeNote"
                 }
               }
             ]
@@ -33,19 +33,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "FirstNote"
+            "pathName": "Backwards"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Backwards"
           }
         }
       ]
