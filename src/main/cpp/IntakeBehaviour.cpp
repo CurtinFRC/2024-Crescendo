@@ -5,6 +5,9 @@
 #include "IntakeBehaviour.h"
 
 #include <frc/XboxController.h>
+#include "Intake.h"
+#include "behaviour/Behaviour.h"
+#include "networktables/NetworkTableInstance.h"
 
 IntakeManualControl::IntakeManualControl(Intake* intake, AlphaArm *arm, frc::XboxController& codriver) : _intake(intake), _arm(arm), _codriver(codriver) {
   Controls(intake);
@@ -68,17 +71,25 @@ void AutoIntake::OnTick(units::second_t dt) {
   _intake->SetState(IntakeState::kIntake);
 }
 
-IntakeNote::IntakeNote(Intake* intake) : _intake(intake) {
+IntakeNote::IntakeNote(Intake* intake) : _intake(intake), behaviour::Behaviour("<Intake Note>") {
   Controls(intake);
 }
 
 void IntakeNote::OnTick(units::second_t dt) {
   _intake->SetState(IntakeState::kIntake);
 
-  if (_intake->GetState() == IntakeState::kHold) {
+  nt::NetworkTableInstance::GetDefault().GetTable("AutoIntake")->GetEntry("running").SetBoolean(true);
+
+  if (_intake->GetState() == IntakeState::kHold || _intake->GetState() == IntakeState::kIdle) {
+    _intake->SetState(IntakeState::kIdle);
     std::cerr << "EXITING" << std::endl;
     SetDone();
   }
+}
+
+void IntakeNote::OnStop() {
+  _intake->SetState(IntakeState::kIdle);
+    nt::NetworkTableInstance::GetDefault().GetTable("AutoIntake")->GetEntry("running").SetBoolean(false);
 }
 
 PassNote::PassNote(Intake* intake) : _intake(intake) {

@@ -250,12 +250,13 @@ class PathWeaver {
 
 class FollowPath : public behaviour::Behaviour {
  public:
-  FollowPath(drivetrain::SwerveDrive* swerve, std::string path, bool flip = false,
-             std::string _name = "<Follow Path>");
+  FollowPath(drivetrain::SwerveDrive* swerve, std::string path, bool flip = false);
 
   void OnTick(units::time::second_t dt) override;
 
   void CalcTimer();
+
+  void OnStart() override;
 
  private:
   units::second_t _time;
@@ -296,7 +297,7 @@ class AutoBuilder {
   // wpi::json* _startingPose;
   wpi::json* _commands;
 
-  behaviour::Behaviour::ptr pathplan;
+  std::shared_ptr<behaviour::SequentialBehaviour> pathplan;
 
   std::vector<std::pair<std::string, std::string>> commands;
 };

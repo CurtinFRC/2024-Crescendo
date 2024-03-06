@@ -232,8 +232,11 @@ frc::Trajectory utils::PathWeaver::getTrajectory(std::string_view path) {
 }
 
 // FollowPath implementation
-utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path, bool flip, std::string name)
-    : _swerve(swerve), behaviour::Behaviour(name) {
+utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path, bool flip)
+    : _swerve(swerve), behaviour::Behaviour("<Follow Path: " + path + ">") {
+  
+  Controls(swerve);
+
   _path = pathplanner::PathPlannerPath::fromPathFile(path);
 
   if (flip) {
@@ -343,9 +346,8 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
     // i++;
   }
 
-  CalcTimer();
 
-  _timer.Start();
+  _pathName = path;
 
   // _swerve->TurnToAngle(_poses[_currentPose].Rotation().Radians());
 }
@@ -361,8 +363,16 @@ void utils::FollowPath::CalcTimer() {
 
   _timer.Stop();
   _timer.Reset();
-  // _time = units::second_t{std::abs(dist.value()) / 0.7 /*meters per second ?No?*/};
+  // _time = units::second_t{std::abs(dist.value()) / 3 /*meters per second ?No?*/};
   _time = 15_s;
+  _timer.Start();
+}
+
+void utils::FollowPath::OnStart() {
+  _timer.Reset();
+
+  CalcTimer();
+
   _timer.Start();
 }
 
@@ -385,6 +395,9 @@ void utils::FollowPath::OnTick(units::second_t dt) {
                _poses[_currentPose]);
   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/currentPose"),
                _swerve->GetPose());
+  nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("currentPoseNumber").SetInteger(_currentPose);
+    nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("amtPoses").SetInteger(static_cast<int>(_poses.size()));
+
 
   std::cout << "Following Path" << std::endl;
   
@@ -403,6 +416,16 @@ void utils::FollowPath::OnTick(units::second_t dt) {
       CalcTimer();
     }
   }
+
+  std::string filePath = frc::filesystem::GetDeployDirectory() + "/pathplanner/paths/" + _pathName + ".path";
+
+  std::cout << filePath << std::endl;
+
+  nt::NetworkTableInstance::GetDefault()
+      .GetTable("pathplanner")
+      ->GetEntry("Current path")
+      .SetString(filePath);
+
 }
 
 // AutoBuilder implementation
@@ -480,12 +503,10 @@ void utils::AutoBuilder::SetAuto(std::string path) {
         .SetString(static_cast<std::string>(command["data"].dump()));
 
     if (command["type"] == "path") {
-      auto b = behaviour::make<FollowPath>(_swerve, command["data"]["pathName"], _flip);
-      std::cout << b->GetName() << std::endl;
-      pathplan = pathplan << b;
+      pathplan->Add(behaviour::make<FollowPath>(_swerve, command["data"]["pathName"], _flip));
       pathamt++;
     } else if (command["type"] == "named") {
-      pathplan = pathplan << _commandsList.Run(command["data"]["name"]);
+      pathplan->Add(_commandsList.Run(command["data"]["name"]));
       commandamt++;
     } else if (command["type"] == "parallel") {
       
@@ -505,9 +526,13 @@ void utils::AutoBuilder::SetAuto(std::string path) {
         j++;
       }
       nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("parallelcommandsamt").SetInteger(j);
-      pathplan = pathplan << nb;
+      pathplan->Add(nb);
     }
     i++;
+  }
+
+  for (int i = 0; i < commandamt; i++) {
+    nt::NetworkTableInstance::GetDefault().GetTable("commands/behaviours")->GetEntry(std::to_string(i)).SetString(pathplan->GetQueue()[i]);
   }
 
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("PathAmt").SetInteger(pathamt);

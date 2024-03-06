@@ -182,6 +182,8 @@ class SequentialBehaviour : public Behaviour {
   void OnTick(units::time::second_t dt) override;
   void OnStop() override;
 
+  std::vector<std::string> GetQueue();
+
  protected:
   std::deque<ptr> _queue;
 };

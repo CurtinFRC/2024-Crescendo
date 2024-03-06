@@ -44,4 +44,5 @@ class AutoShooter : public behaviour::Behaviour {
   units::radians_per_second_t _goal;
 
   frc::Timer _timer;
+  bool _timer_started = false;
 };

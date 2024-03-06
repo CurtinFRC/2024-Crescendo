@@ -5,6 +5,7 @@
 #include "behaviour/Behaviour.h"
 
 #include <iostream>
+#include <string>
 
 using namespace behaviour;
 
@@ -146,6 +147,16 @@ void SequentialBehaviour::OnStop() {
       _queue.pop_front();
     }
   }
+}
+
+std::vector<std::string> SequentialBehaviour::GetQueue() {
+  std::vector<std::string> names;
+
+  for (auto bh : _queue) {
+    names.push_back(bh->GetName());
+  }
+
+  return names;
 }
 
 // ConcurrentBehaviour

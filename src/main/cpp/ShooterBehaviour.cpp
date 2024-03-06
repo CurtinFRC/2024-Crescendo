@@ -5,6 +5,7 @@
 #include "ShooterBehaviour.h"
 #include "Intake.h"
 #include "Shooter.h"
+#include "behaviour/Behaviour.h"
 #include "units/angle.h"
 #include "units/angular_velocity.h"
 #include "units/time.h"
@@ -56,21 +57,26 @@ void ShooterManualControl::OnTick(units::second_t dt) {
   }
 }
 
-AutoShooter::AutoShooter(Shooter* shooter, Intake* intake, units::radians_per_second_t goal) : _shooter(shooter), _intake(intake), _goal(goal) {
+AutoShooter::AutoShooter(Shooter* shooter, Intake* intake, units::radians_per_second_t goal) : _shooter(shooter), _intake(intake), _goal(goal), behaviour::Behaviour("<Shoot>") {
   Controls(shooter);
 
-  _timer.Start();
 }
 
 void AutoShooter::OnTick(units::second_t dt) {
-  _goal = 300_rad_per_s;
+  if (!_timer_started) {
+    _timer.Start();
+    _timer_started = true;
+  }
+
   _shooter->SetState(ShooterState::kSpinUp);
+  _intake->SetState(IntakeState::kHold);
+
   _shooter->SetPidGoal(_goal);
 
-  if (_timer.Get() > 3_s) {
+  if (_timer.Get() > 1.5_s) {
     _intake->SetState(IntakeState::kPass);
 
-    if (_timer.Get() > 5_s) {
+    if (_timer.Get() > 2_s) {
       _intake->SetState(IntakeState::kIdle);
       _shooter->SetState(ShooterState::kIdle);
 

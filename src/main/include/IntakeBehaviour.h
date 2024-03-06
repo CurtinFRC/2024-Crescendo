@@ -36,6 +36,7 @@ class IntakeNote : public behaviour::Behaviour {
  public:
   explicit IntakeNote(Intake* intake);
   void OnTick(units::second_t dt) override;
+  void OnStop() override;
 
  private:
   Intake* _intake;

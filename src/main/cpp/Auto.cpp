@@ -23,7 +23,7 @@ wom::SwerveAutoBuilder* autos::InitCommands(wom::drivetrain::SwerveDrive* _swerv
        {"IntakeNote", [_intake]() { return wom::make<IntakeNote>(_intake)->WithTimeout(1_s); }},
        {"PassNote", [_intake]() { return wom::make<PassNote>(_intake)->WithTimeout(1_s); }},
        {"EjectNote", [_intake]() { return wom::make<EjectNote>(_intake)->WithTimeout(1_s); }},
-       {"Shoot", [_shooter, _intake]() { return wom::make<AutoShooter>(_shooter, _intake, 1500_rad_per_s); }} 
+       {"Shoot", [_shooter, _intake]() { return wom::make<AutoShooter>(_shooter, _intake, 300_rad_per_s)->WithTimeout(2.5_s); }} 
       });
 
   return new wom::utils::SwerveAutoBuilder(_swerveDrive, "Taxi", c);
