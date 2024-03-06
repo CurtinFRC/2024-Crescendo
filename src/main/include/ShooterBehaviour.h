@@ -36,9 +36,8 @@ class ShooterManualControl : public behaviour::Behaviour {
 
 class VisionShooterSpeed : public wom::Behaviour {
  public:
-  VisionShooterSpeed(Shooter* shooter, Vision* vision);
+  VisionShooterSpeed(Shooter* shooter, Vision* vision, wom::SwerveDrive* swerve);
 
-  units::meter_t DistanceFromTarget();
   units::radians_per_second_t GetDesiredSpeed(units::meter_t distance);
 
   void OnTick(units::second_t dt) override;
@@ -46,5 +45,6 @@ class VisionShooterSpeed : public wom::Behaviour {
  private:
   Shooter* m_shooter;
   Vision* m_vision;
+  wom::SwerveDrive* m_swerve;
   std::shared_ptr<nt::NetworkTable> m_table;
 };
