@@ -9,6 +9,7 @@
 #include "AlphaArmBehaviour.h"
 #include "IntakeBehaviour.h"
 #include "ShooterBehaviour.h"
+#include "drivetrain/behaviours/SwerveBehaviours.h"
 #include "Wombat.h"
 #include "utils/Pathplanner.h"
 
@@ -16,6 +17,7 @@ namespace autos {
 
 // wom::Commands* _commands = nullptr;
 // wom::SwerveAutoBuilder* builder = nullptr;
+std::shared_ptr<behaviour::Behaviour> ManualTaxi(wom::drivetrain::SwerveDrive *_swerveDrive, Shooter *_shooter, Intake *_intake, AlphaArm *_arm);
 
 wom::utils::SwerveAutoBuilder* InitCommands(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter,
                                             Intake* _intake, AlphaArm* _alphaArm);

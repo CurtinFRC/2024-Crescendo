@@ -64,17 +64,17 @@ AutoShooter::AutoShooter(Shooter* shooter, Intake* intake, units::radians_per_se
 
 void AutoShooter::OnTick(units::second_t dt) {
   _goal = 300_rad_per_s;
-  _shooter->SetState(ShooterState::kSpinUp);
   _shooter->SetPidGoal(_goal);
+  _shooter->SetState(ShooterState::kSpinUp);
 
-  if (_timer.Get() > 3_s) {
-    _intake->SetState(IntakeState::kPass);
+  // if (_timer.Get() > 3_s) {
+  //   // _intake->SetState(IntakeState::kPass);
 
-    if (_timer.Get() > 5_s) {
-      _intake->SetState(IntakeState::kIdle);
-      _shooter->SetState(ShooterState::kIdle);
+  //   if (_timer.Get() > 5_s) {
+  //     _intake->SetState(IntakeState::kIdle);
+  //     _shooter->SetState(ShooterState::kIdle);
 
-      SetDone();
-    }
-  }
+  //     SetDone();
+  //   }
+  // }
 }

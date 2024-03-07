@@ -138,14 +138,16 @@ void Robot::AutonomousInit() {
 
   _swerveDrive->GetConfig().gyro->Reset();
 
-  m_autoSelected = m_chooser.GetSelected();
+  // m_autoSelected = m_chooser.GetSelected();
 
-  robotmap._builder = autos::InitCommands(_swerveDrive, shooter, intake, alphaArm);
+  // robotmap._builder = autos::InitCommands(_swerveDrive, shooter, intake, alphaArm);
 
-  if (m_autoSelected == "kTaxi") {
-   sched->Schedule(autos::Taxi(robotmap._builder));
-  }
+  // if (m_autoSelected == "kTaxi") {
+  //  sched->Schedule(autos::Taxi(robotmap._builder));
+  // }
   // sched->Schedule(robotmap._builder->GetAutoRoutine("OneNoteTaxi"));
+
+  sched->Schedule(autos::ManualTaxi(_swerveDrive, shooter, intake, alphaArm));
 
   _swerveDrive->OnStart();
 }

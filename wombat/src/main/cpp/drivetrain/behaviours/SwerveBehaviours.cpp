@@ -275,3 +275,17 @@ void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t
     }
   }
 }
+
+
+wom::drivetrain::behaviours::TurnToAngleBeh::TurnToAngleBeh(SwerveDrive* swerveDrive, units::radian_t angle)
+    : _swerveDrive(swerveDrive) {
+  Controls(swerveDrive);
+}
+
+// used in autonomous for going to set drive poses
+void wom::drivetrain::behaviours::TurnToAngleBeh::OnTick(units::second_t deltaTime) {
+  _swerveDrive->TurnToAngle(0_deg);
+  // if (_swerveDrivebase->GetConfig().gyro->GetRotation2d().Radians().value() <= 0.1 && _swerveDrivebase->GetConfig().gyro->GetRotation2d().Radians().value() >= -0.1) {
+  //   SetDone();
+  // }
+}

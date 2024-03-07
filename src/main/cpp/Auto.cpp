@@ -14,6 +14,9 @@
 #include "units/angle.h"
 #include "utils/Pathplanner.h"
 
+using namespace wom;
+using namespace behaviour;
+
 // Shoots starting note then moves out of starting position.
 wom::SwerveAutoBuilder* autos::InitCommands(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter* _shooter,
                                             Intake* _intake, AlphaArm* _alphaArm) {
@@ -38,6 +41,22 @@ std::shared_ptr<behaviour::Behaviour> autos::Taxi(wom::SwerveAutoBuilder* builde
 
 std::shared_ptr<behaviour::Behaviour> autos::OneNoteTaxi(wom::SwerveAutoBuilder* builder) {
   return builder->GetAutoRoutine("OneNoteTaxi");
+}
+
+std::shared_ptr<behaviour::Behaviour> autos::ManualTaxi(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter *_shooter, Intake *_intake, AlphaArm *_arm) {
+  return 
+    make<AutoShooter>(_shooter, _intake, 300_rad_per_s)->Until(make<WaitTime>(1_s))
+      << make<PassNote>(_intake)->Until(make<WaitTime>(1_s))
+      << make<TurnToAngleBeh>(_swerveDrive, 0_rad)->Until(make<WaitTime>(0.5_s))
+      << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{-0.01_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(0.2_s))
+      << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{-2_m, 0_m, 0_deg}, 6_V, true)->Until(make<WaitTime>(5_s))
+      << make<TurnToAngleBeh>(_swerveDrive, 0_rad)->Until(make<WaitTime>(1_s))
+      << make<IntakeNote>(_intake)->Until(make<WaitTime>(1_s))
+      << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0.01_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(0.2_s))
+      << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{1_m, 0_m, 0_deg}, 6_V, true)->Until(make<WaitTime>(5_s))
+      << make<TurnToAngleBeh>(_swerveDrive, 0_rad)->Until(make<WaitTime>(1_s))
+      << make<AutoShooter>(_shooter, _intake, 300_rad_per_s)->Until(make<WaitTime>(1_s))
+      << make<PassNote>(_intake)->Until(make<WaitTime>(1_s));
 }
 
 // std::shared_ptr<behaviour::Behaviour> autos::QuadrupleClose(wom::drivetrain::SwerveDrive* _swerveDrive,

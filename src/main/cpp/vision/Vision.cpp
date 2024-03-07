@@ -340,6 +340,8 @@ frc::Pose2d Vision::TurnToTarget(VisionTarget target, wom::SwerveDrive* swerveDr
   std::cout << pose.Rotation().Degrees().value() << std::endl;
 
   swerveDrive->SetPose(pose);
+
+  return pose;
 }
 
 std::pair<frc::Pose2d, units::degree_t> Vision::GetAngleToObject(VisionTargetObjects object) {

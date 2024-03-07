@@ -303,7 +303,7 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   //     units::math::max(units::math::min(driveVoltage, voltageMax), voltageMin);
 
   driveVoltage = units::math::min(driveVoltage, 7_V);
-  turnVoltage = units::math::min(turnVoltage, 4_V);
+  turnVoltage = units::math::min(turnVoltage, 6_V);
 
   // driveVoltage = units::math::min(
   //     units::math::max(driveVoltage, -_driveModuleVoltageLimit),
@@ -429,8 +429,8 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
                                                    frc::SwerveModulePosition{0_m, frc::Rotation2d{0_deg}}},
           initialPose, _config.stateStdDevs, _config.visionMeasurementStdDevs),
       _anglePIDController{PIDController(0, 0, 0)},
-      _xPIDController(PIDController(4, 0.1, 0)),
-      _yPIDController(PIDController(4, 0.1, 0)),
+      _xPIDController(PIDController(6, 0.1, 0)),
+      _yPIDController(PIDController(6, 0.1, 0)),
       _turnPIDController(PIDController(1, 0, 0)),
       // _xPIDController(std::string path, config_t initialGains)
       // _xPIDController(config.path + "/pid/x", _config.posePositionPID),
