@@ -29,7 +29,7 @@ void wom::utils::WritePose3NT(std::shared_ptr<nt::NetworkTable> table, frc::Pose
 
 template <typename T>
 T wom::utils::deadzone(T val, T deadzone) {
-  return std::fabs(static_cast<double>(val)) > static_cast<double>(deadzone) ? val : static_cast<T>(0);
+  return std::fabs(static_cast<long>(val)) > static_cast<long>(deadzone) ? val : static_cast<T>(0);
 }
 
 template <typename T>
