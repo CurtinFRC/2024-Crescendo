@@ -5,6 +5,7 @@
 #pragma once
 
 #include <frc/XboxController.h>
+#include <units/angular_velocity.h>
 
 #include <memory>
 
@@ -13,7 +14,6 @@
 #include "Shooter.h"
 #include "Wombat.h"
 #include "frc/Timer.h"
-#include <units/angular_velocity.h>
 
 class ShooterManualControl : public behaviour::Behaviour {
  public:

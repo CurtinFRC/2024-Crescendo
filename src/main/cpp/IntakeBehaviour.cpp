@@ -5,16 +5,17 @@
 #include "IntakeBehaviour.h"
 
 #include <frc/XboxController.h>
+
 #include "Intake.h"
 #include "behaviour/Behaviour.h"
 #include "networktables/NetworkTableInstance.h"
 
-IntakeManualControl::IntakeManualControl(Intake* intake, AlphaArm *arm, frc::XboxController& codriver) : _intake(intake), _arm(arm), _codriver(codriver) {
+IntakeManualControl::IntakeManualControl(Intake* intake, AlphaArm* arm, frc::XboxController& codriver)
+    : _intake(intake), _arm(arm), _codriver(codriver) {
   Controls(intake);
 }
 
 void IntakeManualControl::OnTick(units::second_t dt) {
-
   if (_codriver.GetBackButtonReleased()) {
     if (_rawControl) {
       _rawControl = false;
@@ -35,21 +36,19 @@ void IntakeManualControl::OnTick(units::second_t dt) {
       _intake->SetRaw(0_V);
     }
   } else {
-
-
     if (_codriver.GetXButton()) {
       if (_intake->GetState() == IntakeState::kIdle) {
         _intake->SetState(IntakeState::kIntake);
       }
     } else if (_codriver.GetRightBumper() || _codriver.GetRightTriggerAxis() > 0.1) {
       // if (_intake->GetState() == IntakeState::kHold) {
-        _intake->SetState(IntakeState::kPass);
+      _intake->SetState(IntakeState::kPass);
       // } else {
-        // _intake->SetState(IntakeState::kIdle);
+      // _intake->SetState(IntakeState::kIdle);
       // }
     } else if (_codriver.GetBButton()) {
       // if (_intake->GetState() == IntakeState::kHold) {
-        _intake->SetState(IntakeState::kEject);
+      _intake->SetState(IntakeState::kEject);
       // } else {
       //   _intake->SetState(IntakeState::kIdle);
       // }
@@ -85,16 +84,15 @@ void IntakeNote::OnTick(units::second_t dt) {
 
   // nt::NetworkTableInstance::GetDefault().GetTable("AutoIntake")->GetEntry("running").SetBoolean(true);
 
-  // if (_intake->GetState() == IntakeState::kHold || _intake->GetState() == IntakeState::kIdle || _timer.Get() > 3_s) {
-    // _intake->SetState(IntakeState::kIdle);
-    // std::cerr << "EXITING" << std::endl;
-    SetDone();
+  // if (_intake->GetState() == IntakeState::kHold || _intake->GetState() == IntakeState::kIdle ||
+  // _timer.Get() > 3_s) { _intake->SetState(IntakeState::kIdle); std::cerr << "EXITING" << std::endl;
+  SetDone();
   // }
 }
 
 void IntakeNote::OnStop() {
   // _intake->SetState(IntakeState::kIdle);
-    // nt::NetworkTableInstance::GetDefault().GetTable("AutoIntake")->GetEntry("running").SetBoolean(false);
+  // nt::NetworkTableInstance::GetDefault().GetTable("AutoIntake")->GetEntry("running").SetBoolean(false);
 }
 
 PassNote::PassNote(Intake* intake) : _intake(intake) {

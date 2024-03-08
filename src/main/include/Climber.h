@@ -4,11 +4,12 @@
 
 #pragma once
 
+#include <frc/Servo.h>
+
 #include <memory>
 #include <string>
 
 #include "Wombat.h"
-#include <frc/Servo.h>
 
 struct ClimberConfig {
   wom::Gearbox climberGearbox;

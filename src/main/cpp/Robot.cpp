@@ -3,8 +3,7 @@
 // of the MIT License at the root of this project
 
 #include "Robot.h"
-#include "Auto.h"
-#include "RobotMap.h"
+
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
 #include <frc/controller/RamseteController.h>
@@ -14,6 +13,9 @@
 #include <networktables/NetworkTableInstance.h>
 #include <units/acceleration.h>
 // #include <units/angle.h>
+
+#include "Auto.h"
+#include "RobotMap.h"
 
 // include units
 #include <units/velocity.h>
@@ -38,7 +40,7 @@ static units::second_t lastPeriodic;
 
 void Robot::RobotInit() {
   sched = wom::BehaviourScheduler::GetInstance();
-  
+
   frc::SmartDashboard::PutData("Auto Selector", &m_chooser);
 
   m_chooser.SetDefaultOption(defaultAuto, defaultAuto);
@@ -79,6 +81,7 @@ void Robot::RobotInit() {
   intake->SetDefaultBehaviour(
       [this]() { return wom::make<IntakeManualControl>(intake, alphaArm, robotmap.controllers.codriver); });
 
+
   robotmap.swerveBase.moduleConfigs[0].turnMotor.encoder->SetEncoderOffset(0.45229_rad);
   robotmap.swerveBase.moduleConfigs[1].turnMotor.encoder->SetEncoderOffset(2.6846_rad);
   robotmap.swerveBase.moduleConfigs[2].turnMotor.encoder->SetEncoderOffset(3.01121_rad);
@@ -95,7 +98,10 @@ void Robot::RobotPeriodic() {
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
 
-        nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("state").SetInteger(static_cast<int>(_swerveDrive->GetState()));
+  nt::NetworkTableInstance::GetDefault()
+      .GetTable("drivetrainpose")
+      ->GetEntry("state")
+      .SetInteger(static_cast<int>(_swerveDrive->GetState()));
   // sched->Tick();
 
   // robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder")
@@ -133,7 +139,7 @@ void Robot::RobotPeriodic() {
 void Robot::AutonomousInit() {
   loop.Clear();
   sched->InterruptAll();
-  _swerveDrive->MakeAtSetPoint();
+  // _swerveDrive->MakeAtSetPoint();
   // _swerveDrive->SetPose(frc::Pose2d());
 
   _swerveDrive->GetConfig().gyro->Reset();
@@ -143,11 +149,13 @@ void Robot::AutonomousInit() {
   robotmap._builder = autos::InitCommands(_swerveDrive, shooter, intake, alphaArm);
 
   if (m_autoSelected == "kTaxi") {
-   sched->Schedule(autos::Taxi(robotmap._builder));
+    sched->Schedule(autos::Taxi(robotmap._builder));
   }
   // sched->Schedule(robotmap._builder->GetAutoRoutine("OneNoteTaxi"));
 
   _swerveDrive->OnStart();
+
+  intake->OnStart();
 }
 
 void Robot::AutonomousPeriodic() {

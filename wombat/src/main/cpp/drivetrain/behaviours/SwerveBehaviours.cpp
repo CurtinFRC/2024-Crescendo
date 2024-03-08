@@ -240,7 +240,7 @@ wom::drivetrain::behaviours::DrivebasePoseBehaviour::DrivebasePoseBehaviour(Swer
 }
 
 void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnStart() {
-    if (_voltageLimit >= (frc::RobotController::GetBatteryVoltage() - 0.5_V)) {
+  if (_voltageLimit >= (frc::RobotController::GetBatteryVoltage() - 0.5_V)) {
     _voltageLimit = frc::RobotController::GetBatteryVoltage() - 1_V;
   }
 
@@ -257,12 +257,11 @@ void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnStart() {
   _timer.Start();
 }
 
-
 // used in autonomous for going to set drive poses
 void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t deltaTime) {
-        nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(true);
+  nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(true);
   if (_timer.Get() > 1_s) {
-            nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(false);
+    nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(false);
     SetDone();
   }
   if (_swerveDrivebase->IsAtSetAngle() && _swerveDrivebase->GetState() == SwerveDriveState::kAngle) {
@@ -270,7 +269,7 @@ void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t
   } else {
     if (_swerveDrivebase->IsAtSetPose() && !_hold) {
       std::cout << "Exited..." << std::endl;
-        nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(false);
+      nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(false);
       SetDone();
     }
   }

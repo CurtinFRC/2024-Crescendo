@@ -5,9 +5,9 @@
 #pragma once
 
 #include <frc/Encoder.h>
+#include <frc/Servo.h>
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
-#include "Auto.h"
 #include <frc/event/EventLoop.h>
 #include <frc/simulation/DifferentialDrivetrainSim.h>
 #include <frc/simulation/EncoderSim.h>
@@ -23,9 +23,9 @@
 
 #include "AlphaArm.h"
 #include "AlphaArmBehaviour.h"
+#include "Auto.h"
 #include "Climber.h"
 #include "ClimberBehaviour.h"
-#include <frc/Servo.h>
 #include "Intake.h"
 #include "IntakeBehaviour.h"
 #include "LED.h"
@@ -91,7 +91,6 @@ class Robot : public frc::TimedRobot {
   AlphaArm* alphaArm;
   LED* _led;
 
-
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
   // ctre::phoenix6::hardware::TalonFX *frontRight;
   // ctre::phoenix6::hardware::TalonFX *backLeft;
@@ -99,14 +98,14 @@ class Robot : public frc::TimedRobot {
 
   // wom::SwerveDrive* _swerveDrive;
 
-  frc::Servo *armServo;
+  frc::Servo* armServo;
 
-  //ctre::phoenix6::hardware::TalonFX *frontLeft;
-  // ctre::phoenix6::hardware::TalonFX *frontRight;
-  // ctre::phoenix6::hardware::TalonFX *backLeft;
-  // ctre::phoenix6::hardware::TalonFX *backRight;
   // ctre::phoenix6::hardware::TalonFX *frontLeft;
   //  ctre::phoenix6::hardware::TalonFX *frontRight;
   //  ctre::phoenix6::hardware::TalonFX *backLeft;
   //  ctre::phoenix6::hardware::TalonFX *backRight;
+  //  ctre::phoenix6::hardware::TalonFX *frontLeft;
+  //   ctre::phoenix6::hardware::TalonFX *frontRight;
+  //   ctre::phoenix6::hardware::TalonFX *backLeft;
+  //   ctre::phoenix6::hardware::TalonFX *backRight;
 };

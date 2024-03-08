@@ -235,7 +235,6 @@ frc::Trajectory utils::PathWeaver::getTrajectory(std::string_view path) {
 // FollowPath implementation
 utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path, bool flip)
     : _swerve(swerve), behaviour::Behaviour("<Follow Path: " + path + ">") {
-  
   Controls(swerve);
 
   _path = pathplanner::PathPlannerPath::fromPathFile(path);
@@ -268,7 +267,6 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   std::vector<pathplanner::PathPoint> points =
       pathplanner::PathPlannerPath::fromPathFile(path)->getAllPathPoints();
 
-
   pathplanner::RotationTarget* lastRot = nullptr;
   units::degree_t rot;
 
@@ -294,12 +292,12 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
     lastRot = &t;
 
     frc::Translation2d tr = frc::Translation2d(point.position.X() * -1, point.position.Y() * -1);
-    frc::Pose2d pose2 = frc::Pose2d(tr, rot);//.TransformBy(frc::Transform2d(-1.37_m, -5.56_m, 0_deg));
+    frc::Pose2d pose2 = frc::Pose2d(tr, rot);  //.TransformBy(frc::Transform2d(-1.37_m, -5.56_m, 0_deg));
     //
     if (i == index || i == static_cast<int>(tot - 1) || f) {
       _poses.emplace_back(frc::Pose2d(pose2.X(), pose2.Y(), pose2.Rotation()));
       // _poses.emplace_back(frc::Pose2d(pose2.Y(), pose2.X(), pose2.Rotation()));
-      i = 0;//  - 5.56_m,  - 2.91_m
+      i = 0;  //  - 5.56_m,  - 2.91_m
       f = false;
     }
 
@@ -337,7 +335,7 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   //   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/" + std::to_string(i) +
   //   "/poses/prev"), p2);
   //
-    // i++;
+  // i++;
   // }
 
   // i = 0;
@@ -346,7 +344,6 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
                  pose);
     // i++;
   }
-
 
   _pathName = path;
 
@@ -378,7 +375,6 @@ void utils::FollowPath::OnStart() {
 }
 
 void utils::FollowPath::OnTick(units::second_t dt) {
-  
   nt::NetworkTableInstance::GetDefault()
       .GetTable("pathplanner")
       ->GetEntry("atPose")
@@ -391,19 +387,24 @@ void utils::FollowPath::OnTick(units::second_t dt) {
       .GetTable("pathplanner")
       ->GetEntry("currentTime")
       .SetDouble(_timer.Get().value());
-  
+
   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/targetPose"),
                _poses[_currentPose]);
   WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/currentPose"),
                _swerve->GetPose());
-  nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("currentPoseNumber").SetInteger(_currentPose);
-    nt::NetworkTableInstance::GetDefault().GetTable("pathplanner")->GetEntry("amtPoses").SetInteger(static_cast<int>(_poses.size()));
-
+  nt::NetworkTableInstance::GetDefault()
+      .GetTable("pathplanner")
+      ->GetEntry("currentPoseNumber")
+      .SetInteger(_currentPose);
+  nt::NetworkTableInstance::GetDefault()
+      .GetTable("pathplanner")
+      ->GetEntry("amtPoses")
+      .SetInteger(static_cast<int>(_poses.size()));
 
   std::cout << "Following Path" << std::endl;
-  
+
   // if (_swerve->IsAtSetAngle() && _swerve->GetState() == drivetrain::SwerveDriveState::kAngle) {
-    _swerve->SetPose(_poses[_currentPose]);
+  _swerve->SetPose(_poses[_currentPose]);
   // }
   /*else*/ if (_swerve->IsAtSetPose() || _timer.Get() > _time) {
     if (_currentPose == static_cast<int>(_poses.size())) {
@@ -426,7 +427,6 @@ void utils::FollowPath::OnTick(units::second_t dt) {
       .GetTable("pathplanner")
       ->GetEntry("Current path")
       .SetString(filePath);
-
 }
 
 // AutoBuilder implementation
@@ -455,7 +455,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
     cjson += cdata;
   }
 
-  // cjson.pop_back();
+  cjson.pop_back();
 
   wpi::json j = wpi::json::parse(cjson);
 
@@ -506,19 +506,30 @@ void utils::AutoBuilder::SetAuto(std::string path) {
     if (command["type"] == "path") {
       _pathplan->Add(behaviour::make<FollowPath>(_swerve, command["data"]["pathName"], _flip));
       pathamt++;
-          nt::NetworkTableInstance::GetDefault().GetTable("commands/" + std::to_string(i))->GetEntry("behaviours").SetStringArray(_pathplan->GetQueue());
+      nt::NetworkTableInstance::GetDefault()
+          .GetTable("commands/" + std::to_string(i))
+          ->GetEntry("behaviours")
+          .SetStringArray(_pathplan->GetQueue());
     } else if (command["type"] == "named") {
       _pathplan->Add(_commandsList.Run(command["data"]["name"]));
       commandamt++;
-          nt::NetworkTableInstance::GetDefault().GetTable("commands/" + std::to_string(i))->GetEntry("behaviours").SetStringArray(_pathplan->GetQueue());
+      nt::NetworkTableInstance::GetDefault()
+          .GetTable("commands/" + std::to_string(i))
+          ->GetEntry("behaviours")
+          .SetStringArray(_pathplan->GetQueue());
     } else if (command["type"] == "parallel") {
-      
       auto nb = behaviour::make<behaviour::ConcurrentBehaviour>(behaviour::ConcurrentBehaviourReducer::ANY);
       int j = 0;
-      for (auto c : command["data"]["commands"]) { 
-        nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("type").SetString(static_cast<std::string>(c["type"]));
+      for (auto c : command["data"]["commands"]) {
+        nt::NetworkTableInstance::GetDefault()
+            .GetTable("commands/parallel/" + std::to_string(j))
+            ->GetEntry("type")
+            .SetString(static_cast<std::string>(c["type"]));
 
-        nt::NetworkTableInstance::GetDefault().GetTable("commands/parallel/" + std::to_string(j))->GetEntry("typeisstring").SetBoolean(c["type"].is_string());
+        nt::NetworkTableInstance::GetDefault()
+            .GetTable("commands/parallel/" + std::to_string(j))
+            ->GetEntry("typeisstring")
+            .SetBoolean(c["type"].is_string());
         if (static_cast<std::string>(c["type"]) == "path") {
           nb->Add(behaviour::make<FollowPath>(_swerve, c["data"]["pathName"], _flip));
           pathamt++;
@@ -529,30 +540,40 @@ void utils::AutoBuilder::SetAuto(std::string path) {
         nb->Add(behaviour::make<behaviour::Print>("ok"));
         j++;
       }
-      nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("parallelcommandsamt").SetInteger(j);
-      nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("parallel-" + std::to_string(i)).SetStringArray(nb->GetQueue());
+      nt::NetworkTableInstance::GetDefault()
+          .GetTable("commands")
+          ->GetEntry("parallelcommandsamt")
+          .SetInteger(j);
+      nt::NetworkTableInstance::GetDefault()
+          .GetTable("commands")
+          ->GetEntry("parallel-" + std::to_string(i))
+          .SetStringArray(nb->GetQueue());
       _pathplan->Add(nb);
     }
 
     _pathplan->Add(behaviour::make<behaviour::Print>("idk"));
 
     pathplan = _pathplan;
-    nt::NetworkTableInstance::GetDefault().GetTable("commands/" + std::to_string(i))->GetEntry("currentbehaviours").SetStringArray(pathplan->GetQueue());
+    nt::NetworkTableInstance::GetDefault()
+        .GetTable("commands/" + std::to_string(i))
+        ->GetEntry("currentbehaviours")
+        .SetStringArray(pathplan->GetQueue());
     i++;
   }
 
   // pathplan->Add(behaviour::make<behaviour::Print>("test"));
   //   pathplan->Add(behaviour::make<behaviour::Print>("test"));
 
-    nt::NetworkTableInstance::GetDefault().GetTable("commands/newbehaviours")->GetEntry(std::to_string(i)).SetStringArray(pathplan->GetQueue());
+  nt::NetworkTableInstance::GetDefault()
+      .GetTable("commands/newbehaviours")
+      ->GetEntry(std::to_string(i))
+      .SetStringArray(pathplan->GetQueue());
 
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("PathAmt").SetInteger(pathamt);
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("CommandAmt").SetInteger(commandamt);
 
   _swerve->SetAccelerationLimit(units::meters_per_second_squared_t{2});
   _swerve->SetVoltageLimit(6_V);
-
-
 
   // WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("startPose"),
   //              JSONPoseToPose2d(*_startingPose));

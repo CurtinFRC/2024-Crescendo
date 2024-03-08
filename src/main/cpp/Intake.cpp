@@ -3,11 +3,16 @@
 // of the MIT License at the root of this project
 
 #include "Intake.h"
+
 #include <algorithm>
+
 #include "frc/RobotController.h"
 #include "units/base.h"
 
-Intake::Intake(IntakeConfig config) : _config(config), _pid(frc::PIDController (0.0125, 0, 0, 0.05_s)), _pidPosition(frc::PIDController (1, 0, 0, 0.05_s)) {}
+Intake::Intake(IntakeConfig config)
+    : _config(config),
+      _pid(frc::PIDController(0.02, 0, 0, 0.05_s)),
+      _pidPosition(frc::PIDController(1, 0, 0, 0.05_s)) {}
 
 IntakeConfig Intake::GetConfig() {
   return _config;
@@ -20,10 +25,8 @@ void Intake::OnStart() {
 }
 
 void Intake::OnUpdate(units::second_t dt) {
-
   switch (_state) {
-    case IntakeState::kIdle:
-    {
+    case IntakeState::kIdle: {
       if (_config.intakeSensor->Get() == false) {
         SetState(IntakeState::kHold);
       }
@@ -32,30 +35,24 @@ void Intake::OnUpdate(units::second_t dt) {
       _setVoltage = 0_V;
       _recordNote = false;
       hasValue = false;
-    }
-    break;
+    } break;
 
-    case IntakeState::kRaw:
-    {
+    case IntakeState::kRaw: {
       _stringStateName = "Raw";
       _pid.Reset();
       _setVoltage = _rawVoltage;
-    }
-    break;
+    } break;
 
-    case IntakeState::kEject:
-    {
+    case IntakeState::kEject: {
       if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == true) {
         SetState(IntakeState::kIdle);
       }
       _stringStateName = "Eject";
       _setVoltage = 8_V;
       _pid.Reset();
-    }
-    break;
+    } break;
 
-    case IntakeState::kHold:
-    {
+    case IntakeState::kHold: {
       std::cerr << "HEY FROM kHold" << std::endl;
       units::volt_t pidCalculate = 0_V;
       if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == true) {
@@ -64,48 +61,44 @@ void Intake::OnUpdate(units::second_t dt) {
       // units::volt_t pidCalculate =
       //     units::volt_t{_pid.Calculate(_config.IntakeGearbox.encoder->GetEncoderAngularVelocity().value())};
       if (_config.IntakeGearbox.encoder->GetEncoderPosition().value() < 0) {
-        pidCalculate = units::volt_t{-_pidPosition.Calculate(-_config.IntakeGearbox.encoder->GetEncoderPosition().value())};
+        pidCalculate = units::volt_t{
+            -_pidPosition.Calculate(-_config.IntakeGearbox.encoder->GetEncoderPosition().value())};
       } else {
-        pidCalculate = units::volt_t{_pidPosition.Calculate(_config.IntakeGearbox.encoder->GetEncoderPosition().value())};
+        pidCalculate = units::volt_t{
+            _pidPosition.Calculate(_config.IntakeGearbox.encoder->GetEncoderPosition().value())};
       }
 
       _setVoltage = pidCalculate;
       _stringStateName = "Hold";
-    }
-    break;
+    } break;
 
-    case IntakeState::kIntake:
-    {
+    case IntakeState::kIntake: {
       if (_config.intakeSensor->Get() == false) {
-
         if (_config.IntakeGearbox.encoder->GetEncoderPosition().value() < 0) {
           _pidPosition.SetSetpoint((-_config.IntakeGearbox.encoder->GetEncoderPosition().value()) - 0.5);
         } else {
-          _pidPosition.SetSetpoint(_config.IntakeGearbox.encoder->GetEncoderPosition().value() + 0.5 );
+          _pidPosition.SetSetpoint(_config.IntakeGearbox.encoder->GetEncoderPosition().value() + 0.5);
         }
 
         SetState(IntakeState::kHold);
       }
       _stringStateName = "Intake";
       _setVoltage = -10_V;
-    }
-    break;
+    } break;
 
-    case IntakeState::kPass:
-    {
+    case IntakeState::kPass: {
       if (_config.intakeSensor->Get() == true) {
         SetState(IntakeState::kIdle);
       }
 
       if (!_recordNote) {
-        _noteShot ++;
+        _noteShot++;
         _recordNote = true;
       }
 
       _stringStateName = "Pass";
       _setVoltage = -10_V;
-    }
-    break;
+    } break;
   }
   _table->GetEntry("State").SetString(_stringStateName);
   _table->GetEntry("Motor Voltage").SetDouble(_setVoltage.value());
@@ -130,7 +123,6 @@ void Intake::OnUpdate(units::second_t dt) {
 }
 
 void Intake::SetState(IntakeState state) {
-
   _state = state;
 }
 void Intake::SetRaw(units::volt_t voltage) {

@@ -8,7 +8,8 @@
 
 #include "vision/Vision.h"
 
-AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, Intake *intake, frc::XboxController* codriver)
+AlphaArmManualControl::AlphaArmManualControl(AlphaArm* alphaArm, Intake* intake,
+                                             frc::XboxController* codriver)
     : _alphaArm(alphaArm), _intake(intake), _codriver(codriver) {
   Controls(alphaArm);
 }
@@ -18,10 +19,8 @@ AlphaArmConfig AlphaArm::GetConfig() {
 }
 
 void AlphaArmManualControl::OnTick(units::second_t dt) {
-
   _table->GetEntry("State").SetBoolean(_rawControl);
   _table->GetEntry("Goal Value").SetBoolean(_gotValue);
-
 
   if (_codriver->GetBackButton()) {
     if (_rawControl == true) {
@@ -42,17 +41,18 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
     _table->GetEntry("CLIMBING:").SetBoolean(climbing);
     if (_codriver->GetPOV() == 90 || _codriver->GetPOV() == 180 || _codriver->GetPOV() == 270) {
       climbing = true;
-    } if (_codriver->GetPOV() == 0) {
+    }
+    if (_codriver->GetPOV() == 0) {
       climbing = false;
     } else {
       if (!climbing) {
-        if(_codriver->GetLeftTriggerAxis() > 0.1){
+        if (_codriver->GetLeftTriggerAxis() > 0.1) {
           _alphaArm->SetState(AlphaArmState::kIntakeAngle);
-        } else if (_codriver->GetLeftBumper()){
+        } else if (_codriver->GetLeftBumper()) {
           _alphaArm->SetState(AlphaArmState::kAmpAngle);
-        } else if(_codriver->GetAButton()){
+        } else if (_codriver->GetAButton()) {
           _alphaArm->SetState(AlphaArmState::kStowed);
-        } else if(_codriver->GetPOV() == 90){
+        } else if (_codriver->GetPOV() == 90) {
           _alphaArm->SetState(AlphaArmState::kClimbAngle);
         } else {
           if (_intake->GetState() == IntakeState::kHold) {
@@ -63,9 +63,5 @@ void AlphaArmManualControl::OnTick(units::second_t dt) {
         }
       }
     }
-
   }
-
 }
-
-

@@ -6,19 +6,19 @@
 
 #include <frc/XboxController.h>
 
-#include "Intake.h"
 #include "AlphaArm.h"
+#include "Intake.h"
 #include "Wombat.h"
 
 class IntakeManualControl : public behaviour::Behaviour {
  public:
-  explicit IntakeManualControl(Intake* intake, AlphaArm *arm, frc::XboxController& codriver);
+  explicit IntakeManualControl(Intake* intake, AlphaArm* arm, frc::XboxController& codriver);
 
   void OnTick(units::second_t dt) override;
 
  private:
   Intake* _intake;
-  AlphaArm *_arm;
+  AlphaArm* _arm;
   frc::XboxController& _codriver;
   bool _rawControl = false;
 };
@@ -51,7 +51,6 @@ class PassNote : public behaviour::Behaviour {
 
  private:
   Intake* _intake;
-
 };
 
 class EjectNote : public behaviour::Behaviour {
@@ -61,5 +60,4 @@ class EjectNote : public behaviour::Behaviour {
 
  private:
   Intake* _intake;
-
 };

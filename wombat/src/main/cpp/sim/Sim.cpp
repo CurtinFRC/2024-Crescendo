@@ -16,7 +16,8 @@ wom::sim::SimSwerve::SimSwerve(wom::drivetrain::SwerveDrive* _swerve) : _swerve(
 
 void wom::sim::SimSwerve::OnTick() {
   _field.SetRobotPose(_swerve->GetPose());
-  utils::WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("swerveSetpoint"), _swerve->GetSetpoint());
+  utils::WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("swerveSetpoint"),
+                      _swerve->GetSetpoint());
 }
 
 void wom::sim::SimSwerve::OnTick(frc::Pose2d pose) {

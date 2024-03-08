@@ -4,14 +4,13 @@
 
 #pragma once
 #include <frc/DigitalInput.h>
-
-
-#include "Wombat.h"
-//#include "vision/Vision.h"
-#include "utils/PID.h"
+#include <frc/controller/PIDController.h>
 #include <units/angle.h>
 #include <units/voltage.h>
-#include <frc/controller/PIDController.h>
+
+#include "Wombat.h"
+#include "utils/PID.h"
+// #include "vision/Vision.h"
 
 struct AlphaArmConfig {
   wom::Gearbox alphaArmGearbox;
@@ -20,7 +19,6 @@ struct AlphaArmConfig {
 
   std::string path;
   // Vision *vision;
-
 };
 
 enum class AlphaArmState {
@@ -39,7 +37,7 @@ enum class AlphaArmState {
 
 class AlphaArm : public behaviour::HasBehaviour {
  public:
-  AlphaArm(AlphaArmConfig *config/*, frc::Rotation2d initialAngle, wom::vision::Limelight* vision*/);
+  AlphaArm(AlphaArmConfig* config /*, frc::Rotation2d initialAngle, wom::vision::Limelight* vision*/);
 
   void OnUpdate(units::second_t dt);
   void SetArmRaw(units::volt_t voltage);
@@ -47,17 +45,17 @@ class AlphaArm : public behaviour::HasBehaviour {
   void SetControllerRaw(units::volt_t voltage);
   void SetGoal(double goal);
   void OnStart();
-  AlphaArmConfig GetConfig(); //{ return _config; }
+  AlphaArmConfig GetConfig();  //{ return _config; }
   frc::PIDController GetPID();
 
  private:
   // units::radian_t CalcTargetAngle();
 
-  AlphaArmConfig *_config;
+  AlphaArmConfig* _config;
   // wom::vision::Limelight* _vision;
   AlphaArmState _state = AlphaArmState::kIdle;
-  //wom::utils::PIDController<units::degree, units::volt> _alphaArmPID;
-  //frc::DutyCycleEncoder armEncoder{4};
+  // wom::utils::PIDController<units::degree, units::volt> _alphaArmPID;
+  // frc::DutyCycleEncoder armEncoder{4};
   frc::PIDController _pidArm;
   frc::PIDController _pidArmStates;
   frc::PIDController _pidIntakeState;
@@ -69,5 +67,4 @@ class AlphaArm : public behaviour::HasBehaviour {
   units::volt_t _rawArmVoltage = 0_V;
   units::volt_t _testRawVoltage = 3_V;
   double _goal = 0;
-
 };
