@@ -112,6 +112,9 @@ void Intake::OnUpdate(units::second_t dt) {
   _table->GetEntry("Shot Count").SetDouble(_noteShot);
   // _table->GetEntry("Encoder: ").SetDouble(_config.IntakeGearbox.encoder->GetEncoderPosition().value());
 
+  // if (_setVoltage < 4_V && _setVoltage > 0_V) {
+  //   _setVoltage = 0_V;
+  // }
   _config.IntakeGearbox.motorController->SetVoltage(_setVoltage);
 }
 

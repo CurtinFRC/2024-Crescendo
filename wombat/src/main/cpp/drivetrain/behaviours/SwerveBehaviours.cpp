@@ -261,31 +261,78 @@ void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnStart() {
 // used in autonomous for going to set drive poses
 void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t deltaTime) {
         nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(true);
-  if (_timer.Get() > 1_s) {
-            nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(false);
-    SetDone();
-  }
-  if (_swerveDrivebase->IsAtSetAngle() && _swerveDrivebase->GetState() == SwerveDriveState::kAngle) {
-    _swerveDrivebase->SetPose(frc::Pose2d(_pose.X(), _pose.Y(), 0_deg));
-  } else {
-    if (_swerveDrivebase->IsAtSetPose() && !_hold) {
-      std::cout << "Exited..." << std::endl;
-        nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(false);
-      SetDone();
-    }
-  }
+  // if (_timer.Get() > 1_s) {
+  //           nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(false);
+  //   SetDone();
+  // }
+  // if (_swerveDrivebase->IsAtSetAngle() && _swerveDrivebase->GetState() == SwerveDriveState::kAngle) {
+  // if (_pose.X() > 0_m) {
+    // if (_timer.Get() > 1_s) {
+      // _swerveDrivebase->SetTuning(180_deg, 0_mps);
+      // if (_swerveDrivebase->GetConfig().modules[0].turnMotor.encoder->GetEncoderPosition().value() >= 170 && _swerveDrivebase->GetConfig().modules[0].turnMotor.encoder->GetEncoderPosition().value() <= 190) {
+        _swerveDrivebase->SetPose(frc::Pose2d(_pose.X(), 0_m, 0_deg));
+      // }
+      // std::cout << "ANGLE" << _swerveDrivebase->GetConfig().modules[0].turnMotor.encoder->GetEncoderPosition().value() << std::endl;
+      
+    //   _timer.Stop();
+    //   _timer.Reset();
+    // } else {
+    // }
+  // } else {
+    // if (_timer.Get() > 1_s) {
+    //   _timer.Stop();
+    //   _timer.Reset();
+    // } else {
+      // _swerveDrivebase->SetTuning(0_deg, 0_mps);
+      // if (_swerveDrivebase->GetConfig().modules[0].turnMotor.encoder->GetEncoderPosition().value() >= -10 && _swerveDrivebase->GetConfig().modules[0].turnMotor.encoder->GetEncoderPosition().value() <= 10) {
+      //   _swerveDrivebase->SetPose(frc::Pose2d(_pose.X(), _pose.Y(), 0_deg));
+      // }
+      // _swerveDrivebase->SetPose(frc::Pose2d(_pose.X(), _pose.Y(), 0_deg));
+    // }
+  // }
+  
+  
+  // } else {
+  //   if (_swerveDrivebase->IsAtSetPose() && !_hold) {
+  //     std::cout << "Exited..." << std::endl;
+  //       nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(false);
+  //     SetDone();
+  //   }
+  // }
 }
 
 
 wom::drivetrain::behaviours::TurnToAngleBeh::TurnToAngleBeh(SwerveDrive* swerveDrive, units::radian_t angle)
-    : _swerveDrive(swerveDrive) {
+    : _swerveDrive(swerveDrive), _angle(angle) {
   Controls(swerveDrive);
 }
 
 // used in autonomous for going to set drive poses
 void wom::drivetrain::behaviours::TurnToAngleBeh::OnTick(units::second_t deltaTime) {
-  _swerveDrive->TurnToAngle(0_deg);
-  // if (_swerveDrivebase->GetConfig().gyro->GetRotation2d().Radians().value() <= 0.1 && _swerveDrivebase->GetConfig().gyro->GetRotation2d().Radians().value() >= -0.1) {
-  //   SetDone();
-  // }
+  _swerveDrive->TurnToAngle(_angle);
+  if (_swerveDrive->GetConfig().gyro->GetRotation2d().Degrees().value() <= 0.1 && _swerveDrive->GetConfig().gyro->GetRotation2d().Degrees().value() >= -0.1) {
+    SetDone();
+  }
+}
+
+wom::drivetrain::behaviours::ResetDrivebasePose::ResetDrivebasePose(SwerveDrive *swerveDrive, bool resetAngle) 
+  : _swerveDrive(swerveDrive), _resetAngle(resetAngle) {
+  }
+
+void wom::drivetrain::behaviours::ResetDrivebasePose::OnTick(units::second_t deltaTime) {
+  if (_resetAngle) {
+    // _swerveDrive->ResetPose(frc::Pose2d(-0.22_m, -0.24_m, 0_deg));
+    
+    _swerveDrive->ResetPose(frc::Pose2d(_swerveDrive->GetPose().X() + (-_swerveDrive->GetPose().X()), _swerveDrive->GetPose().Y() + (-_swerveDrive->GetPose().Y()), 0_deg));
+    // _swerveDrive->ResetPose(frc::Pose2d(0_m, 0_m, 0_deg));
+
+
+  } else {
+    units::degree_t currentAngle = _swerveDrive->GetConfig().gyro->GetRotation2d().Degrees();
+    // _swerveDrive->ResetPose(frc::Pose2d(-0.22_m, -0.24_m, currentAngle));
+    _swerveDrive->ResetPose(frc::Pose2d(0_m, 0_m, currentAngle));
+  }
+  if (wom::utils::deadzone(_swerveDrive->GetPose().X().value()) == 0 && wom::utils::deadzone(_swerveDrive->GetPose().Y().value()) == 0) {
+    SetDone();
+  }
 }

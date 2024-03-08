@@ -45,18 +45,67 @@ std::shared_ptr<behaviour::Behaviour> autos::OneNoteTaxi(wom::SwerveAutoBuilder*
 
 std::shared_ptr<behaviour::Behaviour> autos::ManualTaxi(wom::drivetrain::SwerveDrive* _swerveDrive, Shooter *_shooter, Intake *_intake, AlphaArm *_arm) {
   return 
-    make<AutoShooter>(_shooter, _intake, 300_rad_per_s)->Until(make<WaitTime>(1_s))
-      << make<PassNote>(_intake)->Until(make<WaitTime>(1_s))
-      << make<TurnToAngleBeh>(_swerveDrive, 0_rad)->Until(make<WaitTime>(0.5_s))
-      << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{-0.01_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(0.2_s))
-      << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{-2_m, 0_m, 0_deg}, 6_V, true)->Until(make<WaitTime>(5_s))
-      << make<TurnToAngleBeh>(_swerveDrive, 0_rad)->Until(make<WaitTime>(1_s))
-      << make<IntakeNote>(_intake)->Until(make<WaitTime>(1_s))
-      << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0.01_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(0.2_s))
-      << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{1_m, 0_m, 0_deg}, 6_V, true)->Until(make<WaitTime>(5_s))
-      << make<TurnToAngleBeh>(_swerveDrive, 0_rad)->Until(make<WaitTime>(1_s))
-      << make<AutoShooter>(_shooter, _intake, 300_rad_per_s)->Until(make<WaitTime>(1_s))
-      << make<PassNote>(_intake)->Until(make<WaitTime>(1_s));
+  //WORKING PATH
+    make<AutoShooter>(_shooter, _intake, 800_rad_per_s)->Until(make<WaitTime>(4.1_s))
+    << make<PassNote>(_intake)->Until(make<WaitTime>(1_s))
+    << make<ResetDrivebasePose>(_swerveDrive, true)
+    << make<WaitTime>(0.1_s)
+    << make<ResetDrivebasePose>(_swerveDrive, true)
+    << make<IntakeNote>(_intake)->Until(make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{(_swerveDrive->GetPose().X() - 1.7_m), 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(1.5_s)))
+    << make<WaitTime>(0.3_s)
+    << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(1.5_s))
+    << make<AutoShooter>(_shooter, _intake, 800_rad_per_s)->Until(make<WaitTime>(4_s))
+    << make<PassNote>(_intake)->Until(make<WaitTime>(3_s));
+    // << make<WaitTime>(1_s);
+
+  //TESTING
+    // make<ResetDrivebasePose>(_swerveDrive, true)
+    // make<TurnToAngleBeh>(_swerveDrive, 180_deg)->Until(make<WaitTime>(5_s));
+
+    // make<ResetDrivebasePose>(_swerveDrive, true)
+    // << make<WaitTime>(1_s)
+    // << make<ResetDrivebasePose>(_swerveDrive, true)
+    // << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{-0.01_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(1_s))
+    // << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{-1_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(4_s))
+    // << make<WaitTime>(1_s)
+    // // << make<ResetDrivebasePose>(_swerveDrive, true)
+    // << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0.01_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(1_s))
+    // << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{1_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(4_s));
+    // << make<ResetDrivebasePose>(_swerveDrive, true)
+    // << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0.01_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(1_s))
+    // << make<WaitTime>(1_s)
+    // << make<ResetDrivebasePose>(_swerveDrive, true)
+    // << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{1_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(4_s))
+    // << make<WaitTime>(1_s);
+
+    // << make<TurnToAngleBeh>(_swerveDrive, 0_rad)->Until(make<WaitTime>(0.2_s))
+    // << make<ResetDrivebasePose>(_swerveDrive, true)
+    // << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0.01_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(0.2_s))
+    // << make<WaitTime>(1_s)
+    // << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{2_m, 0_m, 0_deg}, 6_V, true)->Until(make<WaitTime>(3_s))
+    // << make<WaitTime>(1_s)
+    // << make<TurnToAngleBeh>(_swerveDrive, 0_rad)->Until(make<WaitTime>(0.2_s));
+
+
+
+    // make<AutoShooter>(_shooter, _intake, 800_rad_per_s)->Until(make<WaitTime>(4.1_s))
+    //   << make<PassNote>(_intake)->Until(make<WaitTime>(1_s))
+    //   << make<ResetDrivebasePose>(_swerveDrive, true)
+    //   << make<TurnToAngleBeh>(_swerveDrive, 0_rad)->Until(make<WaitTime>(0.1_s))
+    //   << make<ResetDrivebasePose>(_swerveDrive, true)
+    //   << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{-0.01_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(0.2_s))
+    //   << make<IntakeNote>(_intake)->Until(make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{-2_m, 0_m, 0_deg}, 6_V, true))
+    //   << make<ResetDrivebasePose>(_swerveDrive, true)
+    //   << make<TurnToAngleBeh>(_swerveDrive, 0_rad)->Until(make<WaitTime>(0.2_s))
+    //   << make<ResetDrivebasePose>(_swerveDrive, true)
+    //   << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{0.01_m, 0_m, 0_deg}, 3_V, true)->Until(make<WaitTime>(0.1_s))
+    //   << make<DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d{1.2_m, 0_m, 0_deg}, 6_V, true)->Until(make<WaitTime>(3_s))
+    //   << make<ResetDrivebasePose>(_swerveDrive, true)
+    //   << make<TurnToAngleBeh>(_swerveDrive, 0_rad)->Until(make<WaitTime>(1_s))
+    //   << make<AutoShooter>(_shooter, _intake, 800_rad_per_s)->Until(make<WaitTime>(1_s))
+    //   << make<PassNote>(_intake)->Until(make<WaitTime>(1_s))
+    //   << make<ResetDrivebasePose>(_swerveDrive, true)
+    //   << make<TurnToAngleBeh>(_swerveDrive, 60_deg)->Until(make<WaitTime>(1_s));
 }
 
 // std::shared_ptr<behaviour::Behaviour> autos::QuadrupleClose(wom::drivetrain::SwerveDrive* _swerveDrive,

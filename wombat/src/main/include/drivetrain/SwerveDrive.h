@@ -340,6 +340,9 @@ class SwerveModule {
   void SetTurnOffsetReverse();
   void TurnOffset();
 
+  void normalSpeed();
+  void reduceSpeed();
+
   // double GetCancoderPosition(); // from liam's
 
   void SetAccelerationLimit(units::meters_per_second_squared_t limit);
@@ -363,6 +366,8 @@ class SwerveModule {
 
   bool _hasZeroedEncoder = false;
   bool _hasZeroed = false;
+
+  bool _slowSpeed = false;
 
   frc::PIDController _velocityPIDController;
 
@@ -496,6 +501,8 @@ class SwerveDrive : public behaviour::HasBehaviour {
 
   double diff = 0;
   double diff2 = 0;
+
+  bool _inPose = false;
 
   double lastdiff = 0;
   double lastdiff2 = 0;

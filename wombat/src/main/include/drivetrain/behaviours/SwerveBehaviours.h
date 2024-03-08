@@ -243,10 +243,24 @@ class TurnToAngleBeh : public behaviour::Behaviour {
 
  private:
   SwerveDrive* _swerveDrive;
+  units::radian_t _angle;
 
   std::shared_ptr<nt::NetworkTable> _swerveDriveBehTable =
       nt::NetworkTableInstance::GetDefault().GetTable("swerve");
 };
+
+class ResetDrivebasePose : public behaviour::Behaviour {
+ public:
+  ResetDrivebasePose(SwerveDrive* swerveDrive, bool resetAngle);
+  void OnTick(units::second_t deltaTime) override;
+
+ private:
+  SwerveDrive* _swerveDrive;
+  bool _resetAngle; 
+  std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("reset swerve pose");
+
+};
+
 }  // namespace behaviours
 }  // namespace drivetrain
 }  // namespace wom

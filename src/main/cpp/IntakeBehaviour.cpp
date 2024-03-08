@@ -73,11 +73,13 @@ IntakeNote::IntakeNote(Intake* intake) : _intake(intake) {
 }
 
 void IntakeNote::OnTick(units::second_t dt) {
-  _intake->SetState(IntakeState::kIntake);
 
   if (_intake->GetState() == IntakeState::kHold) {
     std::cerr << "EXITING" << std::endl;
+    _intake->SetState(IntakeState::kIdle);
     SetDone();
+  } else {
+    _intake->SetState(IntakeState::kIntake);
   }
 }
 

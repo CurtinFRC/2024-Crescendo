@@ -59,22 +59,29 @@ void ShooterManualControl::OnTick(units::second_t dt) {
 AutoShooter::AutoShooter(Shooter* shooter, Intake* intake, units::radians_per_second_t goal) : _shooter(shooter), _intake(intake), _goal(goal) {
   Controls(shooter);
 
-  _timer.Start();
+  // _timer.Start();
 }
 
 void AutoShooter::OnTick(units::second_t dt) {
-  _goal = 300_rad_per_s;
-  _shooter->SetPidGoal(_goal);
-  _shooter->SetState(ShooterState::kSpinUp);
+  _intake->SetState(IntakeState::kIdle);
+  if (!hasShot) {
+    _timer.Start();
+    hasShot = true;
+  }
+  
 
-  // if (_timer.Get() > 3_s) {
-  //   // _intake->SetState(IntakeState::kPass);
+  if (_timer.Get() > 2_s) {
+    _shooter->SetPidGoal(_goal);
+    _shooter->SetState(ShooterState::kSpinUp);
 
-  //   if (_timer.Get() > 5_s) {
-  //     _intake->SetState(IntakeState::kIdle);
-  //     _shooter->SetState(ShooterState::kIdle);
+    if (_timer.Get() > 4_s) {
+      // _intake->SetState(IntakeState::kIdle);
+      _shooter->SetState(ShooterState::kIdle);
 
-  //     SetDone();
-  //   }
-  // }
+      _timer.Stop();
+      _timer.Reset();
+      hasShot = false;
+      SetDone();
+    }
+  }
 }

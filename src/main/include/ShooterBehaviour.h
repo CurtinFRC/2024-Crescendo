@@ -43,5 +43,6 @@ class AutoShooter : public behaviour::Behaviour {
   Intake* _intake;
   units::radians_per_second_t _goal;
 
+  bool hasShot = false;
   frc::Timer _timer;
 };
