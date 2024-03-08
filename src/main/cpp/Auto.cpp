@@ -40,6 +40,15 @@ std::shared_ptr<behaviour::Behaviour> autos::OneNoteTaxi(wom::SwerveAutoBuilder*
   return builder->GetAutoRoutine("OneNoteTaxi");
 }
 
+std::shared_ptr<behaviour::Behaviour> autos::FourNoteTaxi(wom::SwerveAutoBuilder* builder) {
+  return builder->GetAutoRoutine("FourNoteTaxi");
+}
+
+std::shared_ptr<behaviour::Behaviour> autos::ThreeNoteTaxi(wom::SwerveAutoBuilder* builder) {
+  return builder->GetAutoRoutine("ThreeNoteTaxi");
+}
+
+
 // std::shared_ptr<behaviour::Behaviour> autos::QuadrupleClose(wom::drivetrain::SwerveDrive* _swerveDrive,
 //                                                             Shooter* _shooter, Intake* _intake,
 //                                                             AlphaArm* _alphaArm) {

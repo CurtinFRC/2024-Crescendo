@@ -12,6 +12,7 @@
 #include <string>
 
 #include "Wombat.h"
+#include "frc/Timer.h"
 
 struct IntakeConfig {
   std::string path;
@@ -53,4 +54,6 @@ class Intake : public behaviour::HasBehaviour {
   frc::PIDController _pidPosition;
 
   std::shared_ptr<nt::NetworkTable> _table = nt::NetworkTableInstance::GetDefault().GetTable("Intake");
+
+  frc::Timer _timer;
 };

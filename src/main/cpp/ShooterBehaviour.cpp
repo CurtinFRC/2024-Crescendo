@@ -59,7 +59,6 @@ void ShooterManualControl::OnTick(units::second_t dt) {
 
 AutoShooter::AutoShooter(Shooter* shooter, Intake* intake, units::radians_per_second_t goal) : behaviour::Behaviour("<Shoot>"), _shooter(shooter), _intake(intake), _goal(goal) {
   Controls(shooter);
-
 }
 
 void AutoShooter::OnTick(units::second_t dt) {
@@ -76,10 +75,10 @@ void AutoShooter::OnTick(units::second_t dt) {
 
   _shooter->SetPidGoal(_goal);
 
-  if (_timer.Get() > 5_s) {
+  if (_timer.Get() > 1_s) {
     _intake->SetState(IntakeState::kPass);
 
-    if (_timer.Get() > 10_s) {
+    if (_timer.Get() > 1.9_s) {
       _intake->SetState(IntakeState::kIdle);
       _shooter->SetState(ShooterState::kIdle);
 

@@ -3,7 +3,9 @@
 // of the MIT License at the root of this project
 
 #include "Intake.h"
+#include <algorithm>
 #include "frc/RobotController.h"
+#include "units/base.h"
 
 Intake::Intake(IntakeConfig config) : _config(config), _pid(frc::PIDController (0.0125, 0, 0, 0.05_s)), _pidPosition(frc::PIDController (1, 0, 0, 0.05_s)) {}
 
@@ -13,6 +15,8 @@ IntakeConfig Intake::GetConfig() {
 
 void Intake::OnStart() {
   _pid.Reset();
+
+  _timer.Start();
 }
 
 void Intake::OnUpdate(units::second_t dt) {
@@ -112,6 +116,15 @@ void Intake::OnUpdate(units::second_t dt) {
   _table->GetEntry("Encoder").SetDouble(_config.IntakeGearbox.encoder->GetEncoderPosition().value());
   _table->GetEntry("Shot Count").SetDouble(_noteShot);
   // _table->GetEntry("Encoder: ").SetDouble(_config.IntakeGearbox.encoder->GetEncoderPosition().value());
+  //
+  if (_timer.Get() < 4_s) {
+    _setVoltage = units::math::min(0_V, _setVoltage);
+  } else {
+    _timer.Stop();
+    _timer.Reset();
+    // _timer.Restart();
+    // _timer.Start();
+  }
 
   _config.IntakeGearbox.motorController->SetVoltage(_setVoltage);
 }

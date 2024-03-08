@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "FirstNote"
+            "pathName": "FirstNoteGood"
           }
         },
         {
@@ -92,7 +92,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "FirstNote"
+            "pathName": "FirstNoteGood"
           }
         }
       ]

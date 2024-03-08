@@ -717,9 +717,9 @@ SwerveDriveState SwerveDrive::GetState() {
 void SwerveDrive::ResetPose(frc::Pose2d pose) {
   _poseEstimator.ResetPosition(
       _config.gyro->GetRotation2d()/* - 1_rad*/,
-      wpi::array<frc::SwerveModulePosition, 4>{_modules[0].GetPosition(), _modules[1].GetPosition(),
-                                               _modules[2].GetPosition(), _modules[3].GetPosition()},
-      pose);
+      wpi::array<frc::SwerveModulePosition, 4>{_modules[3].GetPosition(), _modules[0].GetPosition(),
+                                               _modules[1].GetPosition(), _modules[2].GetPosition()},
+      frc::Pose2d(0_m, 0_m, 0_deg));
 }
 
 frc::Pose2d SwerveDrive::GetPose() {

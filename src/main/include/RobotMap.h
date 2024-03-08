@@ -66,8 +66,8 @@ struct RobotMap {
   struct IntakeSystem {
     rev::CANSparkMax intakeMotor{35, rev::CANSparkMax::MotorType::kBrushless};
     wom::CANSparkMaxEncoder intakeEncoder{&intakeMotor, 0.1_m};
-    frc::DigitalInput intakeSensor{5};
-    frc::DigitalInput passSensor{7};
+    frc::DigitalInput intakeSensor{7};
+    frc::DigitalInput passSensor{5};
     // frc::DigitalInput magSensor{0};
     // frc::DigitalInput shooterSensor{0};
 
