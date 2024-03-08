@@ -9,10 +9,10 @@
 #include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
 #include <pathplanner/lib/util/PIDConstants.h>
 #include <pathplanner/lib/util/ReplanningConfig.h>
-
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstdlib>
 #include <fstream>
 #include <initializer_list>
 #include <optional>
@@ -36,6 +36,7 @@
 #include "pathplanner/lib/path/PathPoint.h"
 #include "pathplanner/lib/path/RotationTarget.h"
 #include "units/acceleration.h"
+#include "units/base.h"
 #include "units/time.h"
 #include "utils/Util.h"
 #include "wpi/detail/conversions/to_json.h"
@@ -233,8 +234,8 @@ frc::Trajectory utils::PathWeaver::getTrajectory(std::string_view path) {
 }
 
 // FollowPath implementation
-utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path, bool flip)
-    : _swerve(swerve), behaviour::Behaviour("<Follow Path: " + path + ">") {
+utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path, bool flip, frc::Pose2d offset)
+    : _swerve(swerve), behaviour::Behaviour("<Follow Path: " + path + ">"), _offset(offset), _pathName(path) {
   Controls(swerve);
 
   _path = pathplanner::PathPlannerPath::fromPathFile(path);
@@ -267,6 +268,8 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   std::vector<pathplanner::PathPoint> points =
       pathplanner::PathPlannerPath::fromPathFile(path)->getAllPathPoints();
 
+  points = CheckPoints(points);
+
   pathplanner::RotationTarget* lastRot = nullptr;
   units::degree_t rot;
 
@@ -293,9 +296,10 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
 
     frc::Translation2d tr = frc::Translation2d(point.position.X() * -1, point.position.Y() * -1);
     frc::Pose2d pose2 = frc::Pose2d(tr, rot);  //.TransformBy(frc::Transform2d(-1.37_m, -5.56_m, 0_deg));
-    //
+
     if (i == index || i == static_cast<int>(tot - 1) || f) {
-      _poses.emplace_back(frc::Pose2d(pose2.X(), pose2.Y(), pose2.Rotation()));
+      WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("pathplanner/offset"), _offset); // -6 -6
+      _poses.emplace_back(frc::Pose2d(pose2.X() - _offset.X(), pose2.Y() - _offset.Y(), 0_deg));
       // _poses.emplace_back(frc::Pose2d(pose2.Y(), pose2.X(), pose2.Rotation()));
       i = 0;  //  - 5.56_m,  - 2.91_m
       f = false;
@@ -350,6 +354,26 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
   // _swerve->TurnToAngle(_poses[_currentPose].Rotation().Radians());
 }
 
+std::vector<pathplanner::PathPoint> utils::FollowPath::CheckPoints(std::vector<pathplanner::PathPoint> points) {
+  units::meter_t threshhold = 4_m;  
+  bool posesgood = true;
+
+  for (auto point : points) {
+    if (std::abs(point.position.X().value()) > threshhold.value() || std::abs(point.position.Y().value()) > threshhold.value()) {
+      posesgood = false;
+    }
+  }
+
+  if (!posesgood) {
+    std::vector<pathplanner::PathPoint> _points =
+      pathplanner::PathPlannerPath::fromPathFile(_pathName)->getAllPathPoints();
+
+    return CheckPoints(_points);
+  }
+
+  return points; 
+}
+
 void utils::FollowPath::CalcTimer() {
   frc::Pose2d current_pose = _swerve->GetPose();
   frc::Pose2d target_pose = _poses[_currentPose];
@@ -362,6 +386,9 @@ void utils::FollowPath::CalcTimer() {
   _timer.Stop();
   _timer.Reset();
   _time = units::second_t{std::abs(dist.value()) / 1 /*meters per second ?No?*/};
+
+  _time = units::math::min(_time, 4_s);
+
   // _time = 15_s;
   _timer.Start();
 }
@@ -402,6 +429,7 @@ void utils::FollowPath::OnTick(units::second_t dt) {
       .SetInteger(static_cast<int>(_poses.size()));
 
   std::cout << "Following Path" << std::endl;
+  _poses[_currentPose] = frc::Pose2d(_poses[_currentPose].X(), _poses[_currentPose].Y(), _swerve->GetPose().Rotation());    
 
   // if (_swerve->IsAtSetAngle() && _swerve->GetState() == drivetrain::SwerveDriveState::kAngle) {
   _swerve->SetPose(_poses[_currentPose]);
@@ -455,12 +483,14 @@ void utils::AutoBuilder::SetAuto(std::string path) {
     cjson += cdata;
   }
 
-  cjson.pop_back();
+  // cjson.pop_back();
+
+  std::cout << cjson << std::endl;
 
   wpi::json j = wpi::json::parse(cjson);
 
   _currentPath = &j;
-  // _startingPose = &j["startingPose"];
+  _startingPose = &j["startingPose"];
   _commands = &j["command"]["data"]["commands"];
 
   commands = std::vector<std::pair<std::string, std::string>>();
@@ -492,7 +522,16 @@ void utils::AutoBuilder::SetAuto(std::string path) {
   int i = 0;
   int pathamt = 0;
   int commandamt = 0;
+  
+  frc::Pose2d startPose; 
 
+  if (!_startingPose->is_null()) {
+    // startPose = JSONPoseToPose2d(*_startingPose);
+    startPose = frc::Pose2d();
+  } else {
+    startPose = frc::Pose2d();
+  }
+ 
   for (auto command : *_commands) {
     nt::NetworkTableInstance::GetDefault()
         .GetTable("commands/" + std::to_string(i))
@@ -504,7 +543,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
         .SetString(static_cast<std::string>(command["data"].dump()));
 
     if (command["type"] == "path") {
-      _pathplan->Add(behaviour::make<FollowPath>(_swerve, command["data"]["pathName"], _flip));
+      _pathplan->Add(behaviour::make<FollowPath>(_swerve, command["data"]["pathName"], _flip, startPose));
       pathamt++;
       nt::NetworkTableInstance::GetDefault()
           .GetTable("commands/" + std::to_string(i))
@@ -531,7 +570,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
             ->GetEntry("typeisstring")
             .SetBoolean(c["type"].is_string());
         if (static_cast<std::string>(c["type"]) == "path") {
-          nb->Add(behaviour::make<FollowPath>(_swerve, c["data"]["pathName"], _flip));
+          nb->Add(behaviour::make<FollowPath>(_swerve, c["data"]["pathName"], _flip, startPose));
           pathamt++;
         } else if (static_cast<std::string>(c["type"]) == "named") {
           nb->Add(_commandsList.Run(c["data"]["name"]));
@@ -588,6 +627,8 @@ void utils::AutoBuilder::Invert() {
 frc::Pose2d utils::AutoBuilder::JSONPoseToPose2d(wpi::json j) {
   // std::cout << j["position"].is_object() << std::endl;
   // std::cout << j << std::endl;
+
+  std::cout << j.dump() << std::endl;
 
   return frc::Pose2d(units::meter_t{j["position"]["x"]}, units::meter_t{j["position"]["y"]},
                      units::degree_t{j["rotation"]});

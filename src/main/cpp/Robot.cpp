@@ -149,7 +149,7 @@ void Robot::AutonomousInit() {
   robotmap._builder = autos::InitCommands(_swerveDrive, shooter, intake, alphaArm);
 
   if (m_autoSelected == "kTaxi") {
-    sched->Schedule(autos::Taxi(robotmap._builder));
+    sched->Schedule(autos::FourNoteTaxi(robotmap._builder));
   }
   // sched->Schedule(robotmap._builder->GetAutoRoutine("OneNoteTaxi"));
 

@@ -11,6 +11,7 @@
 #include "ShooterBehaviour.h"
 #include "behaviour/Behaviour.h"
 #include "drivetrain/behaviours/SwerveBehaviours.h"
+#include "frc/geometry/Pose2d.h"
 #include "units/angle.h"
 #include "utils/Pathplanner.h"
 
@@ -20,17 +21,22 @@ wom::SwerveAutoBuilder* autos::InitCommands(wom::drivetrain::SwerveDrive* _swerv
   wom::AutoCommands c = *new wom::AutoCommands(
       {// {"ArmToSetPoint", [_alphaArm]() { return wom::make<ArmToSetPoint>(_alphaArm, 20_deg); }},
        // {"Shoot", [_shooter]() { return wom::make<AutoShoot>(_shooter); }},
-       {"IntakeNote",
+        {"IntakeNote",
         [_intake]() {
           return wom::make<IntakeNote>(_intake) /*->Until(wom::make<behaviour::WaitTime>(3_s))*/;
         }},
-       {"PassNote",
+        {"PassNote",
         [_intake]() { return wom::make<PassNote>(_intake)->Until(wom::make<behaviour::WaitTime>(1_s)); }},
-       {"EjectNote", [_intake]() { return wom::make<EjectNote>(_intake)->WithTimeout(1_s); }},
-       {"Shoot", [_shooter, _intake]() {
+        {"EjectNote", [_intake]() { return wom::make<EjectNote>(_intake)->WithTimeout(1_s); }},
+        {"Shoot", [_shooter, _intake]() {
           return wom::make<AutoShooter>(_shooter, _intake, 300_rad_per_s)
               ->Until(wom::make<wom::WaitTime>(2_s));
-        }}});
+        }},
+        {"TurnToThirdNote", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, -50_deg); }},
+        {"TurnToSpeakerFromThird", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, 15_deg); }},
+        {"TurnToSecondNote", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, 30_deg); }},
+        {"TurnToSpeakerFromSecond", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, -10_deg); }}
+      });
 
   return new wom::utils::SwerveAutoBuilder(_swerveDrive, "Taxi", c);
 }
@@ -47,11 +53,11 @@ std::shared_ptr<behaviour::Behaviour> autos::OneNoteTaxi(wom::SwerveAutoBuilder*
 }
 
 std::shared_ptr<behaviour::Behaviour> autos::FourNoteTaxi(wom::SwerveAutoBuilder* builder) {
-  return builder->GetAutoRoutine("FourNoteTaxi");
+  return builder->GetAutoRoutine("FourNoteTaxiBad");
 }
 
 std::shared_ptr<behaviour::Behaviour> autos::ThreeNoteTaxi(wom::SwerveAutoBuilder* builder) {
-  return builder->GetAutoRoutine("ThreeNoteTaxi");
+  return builder->GetAutoRoutine("ThreeNoteTaxiBad");
 }
 
 // std::shared_ptr<behaviour::Behaviour> autos::QuadrupleClose(wom::drivetrain::SwerveDrive* _swerveDrive,

@@ -16,7 +16,10 @@
 #include <string>
 
 #include "behaviour/Behaviour.h"
+#include "behaviour/HasBehaviour.h"
 #include "drivetrain/SwerveDrive.h"
+#include "units/angle.h"
+#include "units/time.h"
 #include "utils/Pathplanner.h"
 
 namespace wom {
@@ -234,6 +237,17 @@ class DrivebasePoseBehaviour : public behaviour::Behaviour {
 
   std::shared_ptr<nt::NetworkTable> _swerveDriveTable =
       nt::NetworkTableInstance::GetDefault().GetTable("swerve");
+};
+
+class TurnToAngleBehaviour : public behaviour::Behaviour {
+public:
+  TurnToAngleBehaviour(SwerveDrive* swerve, units::radian_t angle);
+
+  void OnTick(units::second_t dt) override;
+
+private:
+  units::radian_t _angle;
+  SwerveDrive* _swerve;
 };
 }  // namespace behaviours
 }  // namespace drivetrain

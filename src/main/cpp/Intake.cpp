@@ -12,7 +12,7 @@
 Intake::Intake(IntakeConfig config)
     : _config(config),
       _pid(frc::PIDController(0.02, 0, 0, 0.05_s)),
-      _pidPosition(frc::PIDController(1, 0, 0, 0.05_s)) {}
+      _pidPosition(frc::PIDController(1.2, 0, 0, 0.05_s)) {}
 
 IntakeConfig Intake::GetConfig() {
   return _config;

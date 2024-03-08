@@ -303,7 +303,7 @@ void SwerveModule::OnUpdate(units::second_t dt) {
   //     units::math::max(units::math::min(driveVoltage, voltageMax), voltageMin);
 
   driveVoltage = units::math::min(driveVoltage, 7_V);
-  turnVoltage = units::math::min(turnVoltage, 4_V);
+  turnVoltage = units::math::min(turnVoltage, 6_V);
 
   // driveVoltage = units::math::min(
   //     units::math::max(driveVoltage, -_driveModuleVoltageLimit),
@@ -431,7 +431,7 @@ SwerveDrive::SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose)
       _anglePIDController{PIDController(0, 0, 0)},
       _xPIDController(PIDController(4, 0.1, 0)),
       _yPIDController(PIDController(4, 0.1, 0)),
-      _turnPIDController(PIDController(1, 0, 0)),
+      _turnPIDController(PIDController(7, 0, 0)),
       // _xPIDController(std::string path, config_t initialGains)
       // _xPIDController(config.path + "/pid/x", _config.posePositionPID),
       // _yPIDController(config.path + "/pid/y", _config.posePositionPID),
@@ -675,10 +675,23 @@ void SwerveDrive::SetFieldRelativeVelocity(FieldRelativeSpeeds speeds) {
 
 void SwerveDrive::SetPose(frc::Pose2d pose) {
   _state = SwerveDriveState::kPose;
-  _anglePIDController.SetSetpoint(pose.Rotation().Radians().value() - 3.14159);
+  if (pose.X() > 4_m) {
+      pose = frc::Pose2d(0_m, pose.Y(), pose.Rotation());
+    }
+    if (pose.Y() > 4_m) {
+      pose = frc::Pose2d(pose.X(), 0_m, pose.Rotation());
+    }
+
+    if (pose.X() < -4_m) {
+      pose = frc::Pose2d(0_m, pose.Y(), pose.Rotation());
+    }
+    if (pose.Y() < -4_m) {
+      pose = frc::Pose2d(pose.X(), 0_m, pose.Rotation());
+  }
+  _anglePIDController.SetSetpoint(pose.Rotation().Radians().value()/* - 3.14159*/);
   _xPIDController.SetSetpoint(pose.X().value());
   _yPIDController.SetSetpoint(pose.Y().value());
-
+  // 
   utils::WritePose2NT(nt::NetworkTableInstance::GetDefault().GetTable("swerveSetpoint"), GetSetpoint());
 }
 

@@ -274,3 +274,21 @@ void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t
     }
   }
 }
+
+wom::drivetrain::behaviours::TurnToAngleBehaviour::TurnToAngleBehaviour(wom::drivetrain::SwerveDrive* swerve, units::radian_t angle) : _angle(angle), _swerve(swerve) {
+  Controls(swerve);
+}
+
+void wom::drivetrain::behaviours::TurnToAngleBehaviour::OnTick(units::second_t dt) {
+  _swerve->TurnToAngle(_angle);
+
+  nt::NetworkTableInstance::GetDefault().GetTable("drivetrain")->GetEntry("targetAngle").SetDouble(_angle.value());
+  nt::NetworkTableInstance::GetDefault().GetTable("drivetrain")->GetEntry("runningangle").SetBoolean(true);
+
+  if (units::math::abs(_swerve->GetPose().Rotation().Radians() - _angle) < 0.1_rad) {
+    nt::NetworkTableInstance::GetDefault().GetTable("drivetrain")->GetEntry("runningangle").SetBoolean(false);
+    SetDone();
+  }
+}
+
+

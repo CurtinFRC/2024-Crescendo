@@ -27,10 +27,12 @@
   "NetworkTables": {
     "transitory": {
       "drivetrain": {
-        "open": true,
         "pid": {
           "open": true
         }
+      },
+      "pathplanner": {
+        "open": true
       },
       "vision": {
         "open": true
