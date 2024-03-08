@@ -27,12 +27,14 @@ void wom::utils::WritePose3NT(std::shared_ptr<nt::NetworkTable> table, frc::Pose
   table->GetEntry("angle").SetDouble(pose.Rotation().Z().convert<units::degree>().value());
 }
 
-double wom::utils::deadzone(double val, double deadzone) {
-  return std::fabs(val) > deadzone ? val : 0;
+template <typename T>
+T wom::utils::deadzone(T val, T deadzone) {
+  return std::fabs(static_cast<double>(val)) > static_cast<double>(deadzone) ? val : static_cast<T>(0);
 }
 
-double wom::utils::spow2(double val) {
-  return val * val * (val > 0 ? 1 : -1);
+template <typename T>
+T wom::utils::spow2(T val) {
+  return val * val * (val > static_cast<T>(0) ? 1 : -1);
 }
 
 units::volt_t wom::utils::LimitVoltage(units::volt_t voltage) {

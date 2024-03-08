@@ -86,8 +86,10 @@ void WriteTrajectoryState(std::shared_ptr<nt::NetworkTable> table, frc::Trajecto
 
 frc::Pose2d TrajectoryStateToPose2d(frc::Trajectory::State state);
 
-double deadzone(double val, double deadzone = 0.05);
-double spow2(double val);
+template<typename T>
+T deadzone(T val, T deadzone = 0.05);
+template<typename T>
+T spow2(T val);
 
 units::volt_t LimitVoltage(units::volt_t voltage);
 units::volt_t GetVoltage(frc::MotorController* controller);
