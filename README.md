@@ -44,11 +44,13 @@ Simulation
 **Release**
 <br>
 `./gradlew :simulateNative`
+<br>
 Runs a simulation of your code at highest optimisation.
 
 **Debug**
 <br>
 `./gradlew :simulateNativeDebug`
+<br>
 Runs a debug simulation of your code, including a variety of debugging tools similar to glass but at lower optimisation.
 
 Formatting
