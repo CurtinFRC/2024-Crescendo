@@ -1,8 +1,12 @@
 import edu.wpi.first.toolchain.NativePlatforms
+import org.gradle.api.InvalidUserDataException
 
 apply plugin: 'cpp'
 apply plugin: 'google-test-test-suite'
 apply plugin: 'edu.wpi.first.GradleRIO'
+
+def debug = project.hasProperty("debug");
+def release = project.hasProperty("release");
 
 model {
   components {
@@ -24,27 +28,20 @@ model {
       }
 
       binaries.all {
-        if (!project.hasProperty("opt")) {
-          def opt;
-          if (opt == null) {
-            opt = "release"
-          }
+        if (release && debug) {
+          throw new InvalidUserDataException("Cannot be both release and debug project");
+        }
 
-          if (!opt == "release") {
-            cppCompiler.define "DEBUG"
-          } else {
-            cppCompiler.define "RELEASE"
-          }
-        } else {
-          if (opt == null) {
-            opt = "release"
-          }
+        if(!release && !debug) {
+          cppCompiler.define("RELEASE");
+        }
 
-          if (!opt == "release") {
-            cppCompiler.define "DEBUG"
-          } else {
-            cppCompiler.define "RELEASE"
-          }
+        if(release) {
+          cppCompiler.define("RELEASE");
+        }
+
+        if (debug) {
+          cppCompiler.define("DEBUG");
         }
 
         if (it.targetPlatform.name == "linuxathena")

@@ -1,8 +1,13 @@
+import org.gradle.api.InvalidUserDataException
+
 plugins {
     id "cpp"
     id "google-test-test-suite"
     id "edu.wpi.first.GradleRIO" version "2024.2.1"
 }
+
+def debug = project.hasProperty("debug");
+def release = project.hasProperty("release");
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
@@ -65,27 +70,20 @@ model {
             }
 
 	    binaries.all {
-        if (!project.hasProperty("opt")) {
-          def opt;
-          if (opt == null) {
-            opt = "release"
-          }
+        if (release && debug) {
+          throw new InvalidUserDataException("Cannot be both release and debug project");
+        }
 
-          if (!opt == "release") {
-            cppCompiler.define "DEBUG"
-          } else {
-            cppCompiler.define "RELEASE"
-          }
-        } else {
-          if (opt == null) {
-            opt = "release"
-          }
+        if(!release && !debug) {
+          cppCompiler.define("RELEASE");
+        }
 
-          if (!opt == "release") {
-            cppCompiler.define "DEBUG"
-          } else {
-            cppCompiler.define "RELEASE"
-          }
+        if(release) {
+          cppCompiler.define("RELEASE");
+        }
+
+        if (debug) {
+          cppCompiler.define("DEBUG");
         }
 
 	    	lib project: ':wombat', library: 'Wombat', linkage: 'static'
@@ -116,28 +114,21 @@ model {
             }
 
 	binaries.all {
-      if (!project.hasProperty("opt")) {
-        def opt;
-        if (opt == null) {
-          opt = "release"
+        if (release && debug) {
+          throw new InvalidUserDataException("Cannot be both release and debug project");
         }
 
-        if (!opt == "release") {
-          cppCompiler.define "DEBUG"
-        } else {
-          cppCompiler.define "RELEASE"
-        }
-      } else {
-        if (opt == null) {
-          opt = "release"
+        if(!release && !debug) {
+          cppCompiler.define("RELEASE");
         }
 
-        if (!opt == "release") {
-          cppCompiler.define "DEBUG"
-        } else {
-          cppCompiler.define "RELEASE"
+        if(release) {
+          cppCompiler.define("RELEASE");
         }
-      }
+
+        if (debug) {
+          cppCompiler.define("DEBUG");
+        }
 
 	    lib project: ':wombat', library: 'Wombat', linkage: 'static'
 	}
