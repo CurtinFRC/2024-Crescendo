@@ -4,9 +4,7 @@ import org.gradle.api.InvalidUserDataException
 apply plugin: 'cpp'
 apply plugin: 'google-test-test-suite'
 apply plugin: 'edu.wpi.first.GradleRIO'
-
-def debug = project.hasProperty("debug");
-def release = project.hasProperty("release");
+apply from: '../arguments.gradle'
 
 model {
     components {
@@ -28,21 +26,8 @@ model {
             }
 
             binaries.all {
-                if (release && debug) {
-                    throw new InvalidUserDataException("Cannot be both release and debug project");
-                }
-
-                if(!release && !debug) {
-                    cppCompiler.define("RELEASE");
-                }
-
-                if(release) {
-                    cppCompiler.define("RELEASE");
-                }
-
-                if (debug) {
-                    cppCompiler.define("DEBUG");
-                }
+                cppCompiler.define(arg);
+                cppCompiler.define("-O3");
 
                 if (it.targetPlatform.name == "linuxathena")
                     cppCompiler.define "PLATFORM_ROBORIO"

@@ -1,0 +1,26 @@
+import org.gradle.api.InvalidUserDataException
+
+def debug = project.hasProperty("debug");
+def release = project.hasProperty("release");
+
+if (release && debug) {
+    throw new InvalidUserDataException("Cannot be both release and debug project");
+}
+
+if(!release && !debug) {
+    ext {
+        arg = "RELEASE";
+    }
+}
+
+if(release) {
+    ext {
+        arg = "RELEASE";
+    }
+}
+
+if (debug) {
+    ext {
+        arg = "DEBUG";
+    }
+}

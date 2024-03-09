@@ -1,5 +1,3 @@
-import org.gradle.api.InvalidUserDataException
-
 plugins {
     id "cpp"
     id "google-test-test-suite"
@@ -7,8 +5,10 @@ plugins {
     id 'com.diffplug.spotless' version '6.20.0'
 }
 
-def debug = project.hasProperty("debug");
-def release = project.hasProperty("release");
+apply from: 'arguments.gradle'
+
+//def debug = project.hasProperty("debug");
+//def release = project.hasProperty("release");
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
@@ -71,22 +71,8 @@ model {
             }
 
             binaries.all {
-                if (release && debug) {
-                    throw new InvalidUserDataException("Cannot be both release and debug project");
-                }
-
-                if(!release && !debug) {
-                    cppCompiler.define("RELEASE");
-                }
-
-                if(release) {
-                    cppCompiler.define("RELEASE");
-                }
-
-                if (debug) {
-                    cppCompiler.define("DEBUG");
-                }
-
+                cppCompiler.define(arg);
+                cppCompiler.define("-O3");
                 lib project: ':wombat', library: 'Wombat', linkage: 'static'
             }
 
@@ -115,22 +101,8 @@ model {
             }
 
             binaries.all {
-                if (release && debug) {
-                    throw new InvalidUserDataException("Cannot be both release and debug project");
-                }
-
-                if(!release && !debug) {
-                    cppCompiler.define("RELEASE");
-                }
-
-                if(release) {
-                    cppCompiler.define("RELEASE");
-                }
-
-                if (debug) {
-                    cppCompiler.define("DEBUG");
-                }
-
+                cppCompiler.define(arg);
+                cppCompiler.define("-O3");
                 lib project: ':wombat', library: 'Wombat', linkage: 'static'
             }
 
