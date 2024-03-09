@@ -20,42 +20,52 @@ These commands can be used in a variety of combinations, feel free to experiment
 Build
 ---
 `./gradlew build`
+<br>
 Build will compile your code without deploying it. It will also run all automated tests, which is great for testing code before it runs on a robot.
 
 `./gradlew :wombat:build`
+<br>
 Will compile and build the Wombat library. Also runs all of Wombat's inbuilt tests.
 
 Deploy
 ---
 `./gradlew deploy`
+<br>
 Deploying will build your code (as above), and deploy it to the robot. You have to be connected to the robot for this to work. Just keep in mind that deploying does not run any automated tests
 
 Clean
 ---
 `./gradlew clean`
+<br>
 Cleaning removes caches of your compiled code. If you do not understand an error it can often help to clean before getting help. Clean building is slower so you should not generally use it.
 
 Simulation
 ---
 **Release**
+<br>
 `./gradlew :simulateNative`
 Runs a simulation of your code at highest optimisation.
 
 **Debug**
+<br>
 `./gradlew :simulateNativeDebug`
 Runs a debug simulation of your code, including a variety of debugging tools similar to glass but at lower optimisation.
 
 Formatting
 ---
 **Check**
+<br>
 `./gradlew spotlessCheck`
+<br>
 Checks the formatting of build and miscellaneous files, NOT source files.
 
 **Apply**
+<br>
 `./gradlew spotlessApply`
 Applies formatting to build and miscellaneous files, NOT source files.
 
 `wpiformat`
+<br>
 Relies on you having wpiformat installed. Formats source files.
 
 Documentation
