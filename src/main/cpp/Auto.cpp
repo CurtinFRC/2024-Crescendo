@@ -3,7 +3,6 @@
 // of the MIT License at the root of this project
 
 #include "Auto.h"
-
 #include <utility>
 
 #include "AlphaArmBehaviour.h"
@@ -29,13 +28,19 @@ wom::SwerveAutoBuilder* autos::InitCommands(wom::drivetrain::SwerveDrive* _swerv
         [_intake]() { return wom::make<PassNote>(_intake)->Until(wom::make<behaviour::WaitTime>(1_s)); }},
         {"EjectNote", [_intake]() { return wom::make<EjectNote>(_intake)->WithTimeout(1_s); }},
         {"Shoot", [_shooter, _intake]() {
-          return wom::make<AutoShooter>(_shooter, _intake, 300_rad_per_s)
+          return wom::make<AutoShooter>(_shooter, _intake, 1500_rad_per_s)
               ->Until(wom::make<wom::WaitTime>(2_s));
         }},
         {"TurnToThirdNote", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, -50_deg); }},
         {"TurnToSpeakerFromThird", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, 15_deg); }},
         {"TurnToSecondNote", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, 30_deg); }},
-        {"TurnToSpeakerFromSecond", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, -10_deg); }}
+        {"TurnToSpeakerFromSecond", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, -10_deg); }},
+        {"TurnToSecondNoteFar", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, 10_deg); }},
+        {"TurnToSpeakerFromSecondFar", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, -10_deg); }},
+        {"TurnToSecondNoteFromSide", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, 35_deg); }},
+        {"TurnToSpeakerFromSecondSide", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, -35_deg); }},
+        {"TurnToThirdNoteFromSide", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, -35_deg); }},
+        {"TurnToSpeakerFromThirdSide", [_swerveDrive]() { return wom::make<wom::TurnToAngleBehaviour>(_swerveDrive, 35_deg); }}
       });
 
   return new wom::utils::SwerveAutoBuilder(_swerveDrive, "Taxi", c);
@@ -54,6 +59,10 @@ std::shared_ptr<behaviour::Behaviour> autos::OneNoteTaxi(wom::SwerveAutoBuilder*
 
 std::shared_ptr<behaviour::Behaviour> autos::FourNoteTaxi(wom::SwerveAutoBuilder* builder) {
   return builder->GetAutoRoutine("FourNoteTaxiBad");
+}
+
+std::shared_ptr<behaviour::Behaviour> autos::ThreeNoteTaxiFar(wom::SwerveAutoBuilder* builder) {
+  return builder->GetAutoRoutine("ThreeNoteTaxiBadFar");
 }
 
 std::shared_ptr<behaviour::Behaviour> autos::ThreeNoteTaxi(wom::SwerveAutoBuilder* builder) {
