@@ -24,7 +24,6 @@ model {
       }
 
       binaries.all {
-        //apply from: '../debug.gradle'
         if (!project.hasProperty("opt")) {
           def opt;
           if (opt == null) {
