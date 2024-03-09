@@ -7,13 +7,13 @@ if (release && debug) {
     throw new InvalidUserDataException("Cannot be both release and debug project");
 }
 
-if(!release && !debug) {
+if (!release && !debug) {
     ext {
         arg = "RELEASE";
     }
 }
 
-if(release) {
+if (release) {
     ext {
         arg = "RELEASE";
     }
