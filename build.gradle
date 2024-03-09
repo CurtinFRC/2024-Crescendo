@@ -4,6 +4,7 @@ plugins {
     id "cpp"
     id "google-test-test-suite"
     id "edu.wpi.first.GradleRIO" version "2024.2.1"
+    id 'com.diffplug.spotless' version '6.20.0'
 }
 
 def debug = project.hasProperty("debug");
@@ -69,25 +70,25 @@ model {
                 }
             }
 
-	    binaries.all {
-        if (release && debug) {
-          throw new InvalidUserDataException("Cannot be both release and debug project");
-        }
+            binaries.all {
+                if (release && debug) {
+                    throw new InvalidUserDataException("Cannot be both release and debug project");
+                }
 
-        if(!release && !debug) {
-          cppCompiler.define("RELEASE");
-        }
+                if(!release && !debug) {
+                    cppCompiler.define("RELEASE");
+                }
 
-        if(release) {
-          cppCompiler.define("RELEASE");
-        }
+                if(release) {
+                    cppCompiler.define("RELEASE");
+                }
 
-        if (debug) {
-          cppCompiler.define("DEBUG");
-        }
+                if (debug) {
+                    cppCompiler.define("DEBUG");
+                }
 
-	    	lib project: ':wombat', library: 'Wombat', linkage: 'static'
-	    }
+                lib project: ':wombat', library: 'Wombat', linkage: 'static'
+            }
 
             // Set deploy task to deploy this component
             deployArtifact.component = it
@@ -113,25 +114,25 @@ model {
                 }
             }
 
-	binaries.all {
-        if (release && debug) {
-          throw new InvalidUserDataException("Cannot be both release and debug project");
-        }
+            binaries.all {
+                if (release && debug) {
+                    throw new InvalidUserDataException("Cannot be both release and debug project");
+                }
 
-        if(!release && !debug) {
-          cppCompiler.define("RELEASE");
-        }
+                if(!release && !debug) {
+                    cppCompiler.define("RELEASE");
+                }
 
-        if(release) {
-          cppCompiler.define("RELEASE");
-        }
+                if(release) {
+                    cppCompiler.define("RELEASE");
+                }
 
-        if (debug) {
-          cppCompiler.define("DEBUG");
-        }
+                if (debug) {
+                    cppCompiler.define("DEBUG");
+                }
 
-	    lib project: ':wombat', library: 'Wombat', linkage: 'static'
-	}
+                lib project: ':wombat', library: 'Wombat', linkage: 'static'
+            }
 
             // Enable run tasks for this component
             wpi.cpp.enableExternalTasks(it)
@@ -144,10 +145,32 @@ model {
 }
 
 subprojects {
-  project.buildDir = rootProject.buildDir
+    project.buildDir = rootProject.buildDir
 }
 
 wrapper {
     gradleVersion = '8.6'
     distributionType = Wrapper.DistributionType.BIN
+}
+
+spotless {
+    groovyGradle {
+        target fileTree('.') {
+            include '**/*.gradle'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        greclipse()
+        indentWithSpaces(4)
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    format 'misc', {
+        target fileTree('.') {
+            include '**/*.md', '**/.gitignore'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        trimTrailingWhitespace()
+        indentWithSpaces(2)
+        endWithNewline()
+    }
 }
