@@ -46,7 +46,9 @@ jobs:
       - name: Run wpiformat
         run: wpiformat
       - name: Run Spotless
-        run: ./gradlew spotlessApply
+        run: |
+          ./gradlew installRoboRioToolchain
+          ./gradlew spotlessApply
       - name: Commit
         run: |
           # Set credentials

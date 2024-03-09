@@ -37,4 +37,5 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
+      - run: ./gradlew installRoboRioToolchain
       - run: ./gradlew spotlessCheck
