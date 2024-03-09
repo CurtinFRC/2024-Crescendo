@@ -7,9 +7,6 @@ plugins {
 
 apply from: 'arguments.gradle'
 
-//def debug = project.hasProperty("debug");
-//def release = project.hasProperty("release");
-
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
 deploy {
@@ -73,6 +70,7 @@ model {
             binaries.all {
                 cppCompiler.define(arg);
                 cppCompiler.define("-O3");
+
                 lib project: ':wombat', library: 'Wombat', linkage: 'static'
             }
 
@@ -103,6 +101,7 @@ model {
             binaries.all {
                 cppCompiler.define(arg);
                 cppCompiler.define("-O3");
+
                 lib project: ':wombat', library: 'Wombat', linkage: 'static'
             }
 
