@@ -12,7 +12,9 @@
 #include "vision/Limelight.h"
 
 FMAP::FMAP(std::string path) : _path(path) {
+  #ifdef DEBUG
   std::cout << "Parsing FMAP" << std::endl;
+  #endif
 
   deploy_dir = frc::filesystem::GetDeployDirectory();
 
@@ -24,12 +26,16 @@ FMAP::FMAP(std::string path) : _path(path) {
 
   file >> j;
 
+  #ifdef DEBUG
   std::cout << j["fiducials"] << std::endl;
+  #endif
 
   // iterate through the json object and add each tag to the vector
 
   for (auto& fiducial : j["fiducials"]) {
+    #ifdef DEBUG
     std::cout << "Loading AprilTag " << fiducial["id"] << std::endl;
+    #endif
     AprilTag tag;
     tag.id = fiducial["id"];
     tag.size = fiducial["size"];
@@ -58,14 +64,21 @@ FMAP::FMAP(std::string path) : _path(path) {
 
   file.close();
 
+
+  #ifdef DEBUG
   std::cout << "Loaded " << _tags.size() << " tags" << std::endl;
+  #endif
 
   for (int i = 0; i < _tags.size(); i++) {
+  #ifdef DEBUG
     std::cout << "Tag " << _tags[i].id << " is at: X: " << _tags[i].pos.X().value()
               << " Y: " << _tags[i].pos.Y().value() << " Z: " << _tags[i].pos.Z().value() << std::endl;
+  #endif
   }
 
+  #ifdef DEBUG
   std::cout << "Loaded FMAP" << std::endl;
+  #endif
 }
 
 std::vector<AprilTag> FMAP::GetTags() {
@@ -337,7 +350,9 @@ frc::Pose2d Vision::TurnToTarget(VisionTarget target, wom::SwerveDrive* swerveDr
 
   frc::Pose2d pose = frc::Pose2d(current_pose.X(), current_pose.Y(), angle);
 
+  #ifdef DEBUG
   std::cout << pose.Rotation().Degrees().value() << std::endl;
+  #endif
 
   swerveDrive->TurnToAngle(angle);
 

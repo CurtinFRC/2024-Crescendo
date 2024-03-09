@@ -1,0 +1,22 @@
+if (!project.hasProperty("opt")) {
+  def opt;
+  if (opt == null) {
+    opt = "release"
+  }
+
+  if (!opt == "release") {
+    cppCompiler.define "DEBUG"
+  } else {
+    cppCompiler.define "RELEASE"
+  }
+} else {
+  if (opt == null) {
+    opt = "release"
+  }
+
+  if (!opt == "release") {
+    cppCompiler.define "DEBUG"
+  } else {
+    cppCompiler.define "RELEASE"
+  }
+}

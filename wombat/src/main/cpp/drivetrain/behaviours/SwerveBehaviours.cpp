@@ -259,17 +259,23 @@ void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnStart() {
 
 // used in autonomous for going to set drive poses
 void wom::drivetrain::behaviours::DrivebasePoseBehaviour::OnTick(units::second_t deltaTime) {
+#ifdef DEBUG
   nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(true);
+#endif
   if (_timer.Get() > 1_s) {
+#ifdef DEBUG
     nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(false);
+#endif
     SetDone();
   }
   if (_swerveDrivebase->IsAtSetAngle() && _swerveDrivebase->GetState() == SwerveDriveState::kAngle) {
     _swerveDrivebase->SetPose(frc::Pose2d(_pose.X(), _pose.Y(), 0_deg));
   } else {
     if (_swerveDrivebase->IsAtSetPose() && !_hold) {
+      #ifdef DEBUG
       std::cout << "Exited..." << std::endl;
       nt::NetworkTableInstance::GetDefault().GetTable("drivetrainpose")->GetEntry("going").SetBoolean(false);
+      #endif
       SetDone();
     }
   }
@@ -282,11 +288,15 @@ wom::drivetrain::behaviours::TurnToAngleBehaviour::TurnToAngleBehaviour(wom::dri
 void wom::drivetrain::behaviours::TurnToAngleBehaviour::OnTick(units::second_t dt) {
   _swerve->TurnToAngle(_angle);
 
+#ifdef DEBUG
   nt::NetworkTableInstance::GetDefault().GetTable("drivetrain")->GetEntry("targetAngle").SetDouble(_angle.value());
   nt::NetworkTableInstance::GetDefault().GetTable("drivetrain")->GetEntry("runningangle").SetBoolean(true);
+#endif
 
   if (units::math::abs(_swerve->GetPose().Rotation().Radians() - _angle) < 0.1_rad) {
+#ifdef DEBUG
     nt::NetworkTableInstance::GetDefault().GetTable("drivetrain")->GetEntry("runningangle").SetBoolean(false);
+#endif
     SetDone();
   }
 }

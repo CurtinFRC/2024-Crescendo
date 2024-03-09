@@ -186,7 +186,9 @@ frc::Pose3d wom::vision::Limelight::GetPose() {
 }
 
 void wom::vision::Limelight::OnStart() {
+  #ifdef DEBUG
   std::cout << "starting" << std::endl;
+  #endif
 }
 
 void wom::vision::Limelight::OnUpdate(units::time::second_t dt) {

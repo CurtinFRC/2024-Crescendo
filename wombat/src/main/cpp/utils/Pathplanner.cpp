@@ -246,14 +246,18 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
 
   std::string filePath = frc::filesystem::GetDeployDirectory() + "/pathplanner/paths/" + path + ".path";
 
+  #ifdef DEBUG
   std::cout << filePath << std::endl;
+  #endif
 
   std::ifstream file(filePath);
 
+  #ifdef DEBUG
   nt::NetworkTableInstance::GetDefault()
       .GetTable("pathplanner")
       ->GetEntry("Current path")
       .SetString(filePath);
+  #endif
 
   std::string cdata;
   std::string cjson;
@@ -355,7 +359,7 @@ utils::FollowPath::FollowPath(drivetrain::SwerveDrive* swerve, std::string path,
 }
 
 std::vector<pathplanner::PathPoint> utils::FollowPath::CheckPoints(std::vector<pathplanner::PathPoint> points) {
-  units::meter_t threshhold = 4_m;  
+  units::meter_t threshhold = 4_m;
   bool posesgood = true;
 
   for (auto point : points) {
@@ -371,7 +375,7 @@ std::vector<pathplanner::PathPoint> utils::FollowPath::CheckPoints(std::vector<p
     return CheckPoints(_points);
   }
 
-  return points; 
+  return points;
 }
 
 void utils::FollowPath::CalcTimer() {
@@ -428,8 +432,10 @@ void utils::FollowPath::OnTick(units::second_t dt) {
       ->GetEntry("amtPoses")
       .SetInteger(static_cast<int>(_poses.size()));
 
+  #ifdef DEBUG
   std::cout << "Following Path" << std::endl;
-  _poses[_currentPose] = frc::Pose2d(_poses[_currentPose].X(), _poses[_currentPose].Y(), _swerve->GetPose().Rotation());    
+  #endif
+  _poses[_currentPose] = frc::Pose2d(_poses[_currentPose].X(), _poses[_currentPose].Y(), _swerve->GetPose().Rotation());
 
   // if (_swerve->IsAtSetAngle() && _swerve->GetState() == drivetrain::SwerveDriveState::kAngle) {
   _swerve->SetPose(_poses[_currentPose]);
@@ -449,12 +455,14 @@ void utils::FollowPath::OnTick(units::second_t dt) {
 
   std::string filePath = frc::filesystem::GetDeployDirectory() + "/pathplanner/paths/" + _pathName + ".path";
 
+  #ifdef DEBUG
   std::cout << filePath << std::endl;
 
   nt::NetworkTableInstance::GetDefault()
       .GetTable("pathplanner")
       ->GetEntry("Current path")
       .SetString(filePath);
+  #endif
 }
 
 // AutoBuilder implementation
@@ -471,7 +479,9 @@ void utils::AutoBuilder::SetAuto(std::string path) {
 
   fs::path location = deploy_directory / "pathplanner" / "autos" / path;
 
+  #ifdef DEBUG
   std::cout << location << std::endl;
+  #endif
 
   std::ifstream file(location);
 
@@ -485,7 +495,9 @@ void utils::AutoBuilder::SetAuto(std::string path) {
 
   // cjson.pop_back();
 
+  #ifdef DEBUG
   std::cout << cjson << std::endl;
+  #endif
 
   wpi::json j = wpi::json::parse(cjson);
 
@@ -495,6 +507,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
 
   commands = std::vector<std::pair<std::string, std::string>>();
 
+  #ifdef DEBUG
   nt::NetworkTableInstance::GetDefault().GetTable("json")->GetEntry("data").SetString(_currentPath->dump());
   // nt::NetworkTableInstance::GetDefault().GetTable("json")->GetEntry("start").SetString(_startingPose->dump());
   nt::NetworkTableInstance::GetDefault().GetTable("json")->GetEntry("commands").SetString(_commands->dump());
@@ -502,6 +515,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
       .GetTable("json")
       ->GetEntry("commands_type")
       .SetString(_commands->type_name());
+  #endif
 
   for (auto c : *_commands) {
     if (c["type"] == "path") {
@@ -515,15 +529,17 @@ void utils::AutoBuilder::SetAuto(std::string path) {
     }
   }
 
+  #ifdef DEBUG
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("length").SetInteger(commands.size());
+  #endif
 
   auto _pathplan = behaviour::make<behaviour::SequentialBehaviour>();
 
   int i = 0;
   int pathamt = 0;
   int commandamt = 0;
-  
-  frc::Pose2d startPose; 
+
+  frc::Pose2d startPose;
 
   if (!_startingPose->is_null()) {
     // startPose = JSONPoseToPose2d(*_startingPose);
@@ -531,8 +547,10 @@ void utils::AutoBuilder::SetAuto(std::string path) {
   } else {
     startPose = frc::Pose2d();
   }
- 
+
   for (auto command : *_commands) {
+
+  #ifdef DEBUG
     nt::NetworkTableInstance::GetDefault()
         .GetTable("commands/" + std::to_string(i))
         ->GetEntry("type")
@@ -541,25 +559,31 @@ void utils::AutoBuilder::SetAuto(std::string path) {
         .GetTable("commands/" + std::to_string(i))
         ->GetEntry("data")
         .SetString(static_cast<std::string>(command["data"].dump()));
+  #endif
 
     if (command["type"] == "path") {
       _pathplan->Add(behaviour::make<FollowPath>(_swerve, command["data"]["pathName"], _flip, startPose));
       pathamt++;
+  #ifdef DEBUG
       nt::NetworkTableInstance::GetDefault()
           .GetTable("commands/" + std::to_string(i))
           ->GetEntry("behaviours")
           .SetStringArray(_pathplan->GetQueue());
+  #endif
     } else if (command["type"] == "named") {
       _pathplan->Add(_commandsList.Run(command["data"]["name"]));
       commandamt++;
+  #ifdef DEBUG
       nt::NetworkTableInstance::GetDefault()
           .GetTable("commands/" + std::to_string(i))
           ->GetEntry("behaviours")
           .SetStringArray(_pathplan->GetQueue());
+  #endif
     } else if (command["type"] == "parallel") {
       auto nb = behaviour::make<behaviour::ConcurrentBehaviour>(behaviour::ConcurrentBehaviourReducer::ANY);
       int j = 0;
       for (auto c : command["data"]["commands"]) {
+  #ifdef DEBUG
         nt::NetworkTableInstance::GetDefault()
             .GetTable("commands/parallel/" + std::to_string(j))
             ->GetEntry("type")
@@ -569,6 +593,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
             .GetTable("commands/parallel/" + std::to_string(j))
             ->GetEntry("typeisstring")
             .SetBoolean(c["type"].is_string());
+  #endif
         if (static_cast<std::string>(c["type"]) == "path") {
           nb->Add(behaviour::make<FollowPath>(_swerve, c["data"]["pathName"], _flip, startPose));
           pathamt++;
@@ -579,6 +604,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
         nb->Add(behaviour::make<behaviour::Print>("ok"));
         j++;
       }
+  #ifdef DEBUG
       nt::NetworkTableInstance::GetDefault()
           .GetTable("commands")
           ->GetEntry("parallelcommandsamt")
@@ -587,22 +613,26 @@ void utils::AutoBuilder::SetAuto(std::string path) {
           .GetTable("commands")
           ->GetEntry("parallel-" + std::to_string(i))
           .SetStringArray(nb->GetQueue());
+  #endif
       _pathplan->Add(nb);
     }
 
     _pathplan->Add(behaviour::make<behaviour::Print>("idk"));
 
     pathplan = _pathplan;
+  #ifdef DEBUG
     nt::NetworkTableInstance::GetDefault()
         .GetTable("commands/" + std::to_string(i))
         ->GetEntry("currentbehaviours")
         .SetStringArray(pathplan->GetQueue());
+  #endif
     i++;
   }
 
   // pathplan->Add(behaviour::make<behaviour::Print>("test"));
   //   pathplan->Add(behaviour::make<behaviour::Print>("test"));
 
+  #ifdef DEBUG
   nt::NetworkTableInstance::GetDefault()
       .GetTable("commands/newbehaviours")
       ->GetEntry(std::to_string(i))
@@ -610,6 +640,7 @@ void utils::AutoBuilder::SetAuto(std::string path) {
 
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("PathAmt").SetInteger(pathamt);
   nt::NetworkTableInstance::GetDefault().GetTable("commands")->GetEntry("CommandAmt").SetInteger(commandamt);
+  #endif
 
   _swerve->SetAccelerationLimit(units::meters_per_second_squared_t{2});
   _swerve->SetVoltageLimit(6_V);
@@ -628,7 +659,9 @@ frc::Pose2d utils::AutoBuilder::JSONPoseToPose2d(wpi::json j) {
   // std::cout << j["position"].is_object() << std::endl;
   // std::cout << j << std::endl;
 
+  #ifdef DEBUG
   std::cout << j.dump() << std::endl;
+  #endif
 
   return frc::Pose2d(units::meter_t{j["position"]["x"]}, units::meter_t{j["position"]["y"]},
                      units::degree_t{j["rotation"]});
@@ -636,7 +669,9 @@ frc::Pose2d utils::AutoBuilder::JSONPoseToPose2d(wpi::json j) {
 }
 
 std::shared_ptr<behaviour::Behaviour> utils::AutoBuilder::GetAutoPath() {
+  #ifdef DEBUG
   std::cout << "Getting Path" << std::endl;
+  #endif
 
   return pathplan;
 }

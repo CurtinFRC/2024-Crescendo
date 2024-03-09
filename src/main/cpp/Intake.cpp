@@ -53,7 +53,9 @@ void Intake::OnUpdate(units::second_t dt) {
     } break;
 
     case IntakeState::kHold: {
+      #ifdef DEBUG
       std::cerr << "HEY FROM kHold" << std::endl;
+      #endif
       units::volt_t pidCalculate = 0_V;
       if (_config.intakeSensor->Get() == true && _config.passSensor->Get() == true) {
         SetState(IntakeState::kIdle);
@@ -100,6 +102,7 @@ void Intake::OnUpdate(units::second_t dt) {
       _setVoltage = -10_V;
     } break;
   }
+  #ifdef DEBUG
   _table->GetEntry("State").SetString(_stringStateName);
   _table->GetEntry("Motor Voltage").SetDouble(_setVoltage.value());
   _table->GetEntry("Intake Sensor").SetBoolean(_config.intakeSensor->Get());
@@ -109,7 +112,7 @@ void Intake::OnUpdate(units::second_t dt) {
   _table->GetEntry("Encoder").SetDouble(_config.IntakeGearbox.encoder->GetEncoderPosition().value());
   _table->GetEntry("Shot Count").SetDouble(_noteShot);
   // _table->GetEntry("Encoder: ").SetDouble(_config.IntakeGearbox.encoder->GetEncoderPosition().value());
-  //
+  #endif
   if (_timer.Get() < 4_s) {
     _setVoltage = units::math::min(0_V, _setVoltage);
   } else {

@@ -26,8 +26,10 @@ void Climber::OnUpdate(units::second_t dt) {
       _pid.SetSetpoint(0.035 * 100);
       _setVoltage = -units::volt_t{
           _pid.Calculate((-_config.climberGearbox.encoder->GetEncoderPosition().value()) * 100)};
+  #ifdef DEBUG
       _table->GetEntry("PID OUTPUT")
           .SetDouble(_pid.Calculate((-_config.climberGearbox.encoder->GetEncoderPosition().value()) * 100));
+  #endif
     } break;
 
     case ClimberState::kArmDown: {
@@ -60,10 +62,12 @@ void Climber::OnUpdate(units::second_t dt) {
   }
   _config.climberGearbox.motorController->SetVoltage(_setVoltage);
 
+  #ifdef DEBUG
   _table->GetEntry("State: ").SetString(_stringStateName);
   _table->GetEntry("Motor Voltage: ").SetDouble(_setVoltage.value());
   _table->GetEntry("Encoder Output: ")
       .SetDouble(_config.climberGearbox.encoder->GetEncoderPosition().value() * 100);
+  #endif
 }
 
 void Climber::SetState(ClimberState state) {
