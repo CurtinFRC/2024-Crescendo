@@ -39,7 +39,9 @@ class NTBound {
     _listener =
         table->AddListener(name, nt::EventFlags::kValueAll,
                            ([this](nt::NetworkTable* table, std::string_view key, const nt::Event& event) {
+                             #ifdef DEBUG
                              std::cout << "NT UPDATE" << std::endl;
+                             #endif
                              this->_onUpdate(event.GetValueEventData()->value);
                            }));
   }
@@ -49,7 +51,9 @@ class NTBound {
     _listener =
         _table->AddListener(_name, nt::EventFlags::kValueAll,
                             ([this](nt::NetworkTable* table, std::string_view key, const nt::Event& event) {
+                              #ifdef DEBUG
                               std::cout << "NT UPDATE" << std::endl;
+                              #endif
                               this->_onUpdate(event.GetValueEventData()->value);
                             }));
   }

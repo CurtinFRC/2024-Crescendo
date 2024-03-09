@@ -98,10 +98,12 @@ void Robot::RobotPeriodic() {
   loop.Poll();
   wom::BehaviourScheduler::GetInstance()->Tick();
 
+  #ifdef DEBUG
   nt::NetworkTableInstance::GetDefault()
       .GetTable("drivetrainpose")
       ->GetEntry("state")
       .SetInteger(static_cast<int>(_swerveDrive->GetState()));
+  #endif
   // sched->Tick();
 
   // robotmap.swerveTable.swerveDriveTable->GetEntry("frontLeftEncoder")

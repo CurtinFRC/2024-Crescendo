@@ -19,8 +19,10 @@ AlphaArmConfig AlphaArm::GetConfig() {
 }
 
 void AlphaArmManualControl::OnTick(units::second_t dt) {
+  #ifdef DEBUG
   _table->GetEntry("State").SetBoolean(_rawControl);
   _table->GetEntry("Goal Value").SetBoolean(_gotValue);
+  #endif
 
   if (_codriver->GetBackButton()) {
     if (_rawControl == true) {

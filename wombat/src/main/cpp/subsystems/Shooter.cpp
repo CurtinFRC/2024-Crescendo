@@ -37,10 +37,12 @@ void wom::subsystems::Shooter::OnUpdate(units::second_t dt) {
 
   // _params.gearbox.motorController->SetVoltage(voltage);
 
+  #ifdef DEBUG
   _table->GetEntry("output_volts").SetDouble(voltage.value());
   _table->GetEntry("speed_rpm").SetDouble(currentSpeed.value());
   _table->GetEntry("setpoint_rpm").SetDouble(units::revolutions_per_minute_t{_pid.GetSetpoint()}.value());
   _table->GetEntry("stable").SetBoolean(_pid.IsStable());
+  #endif
 }
 
 void wom::subsystems::Shooter::SetManual(units::volt_t voltage) {

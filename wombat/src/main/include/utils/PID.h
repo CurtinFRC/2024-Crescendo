@@ -134,7 +134,9 @@ class PIDController {
       out *= -1;
     }
 
+#ifdef DEBUG
     _table->GetEntry("error").SetDouble(out.value());
+#endif
 
     return out;
   }
