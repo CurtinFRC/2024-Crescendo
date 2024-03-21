@@ -152,19 +152,7 @@ void Robot::TeleopInit() {
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
   sched->InterruptAll();
 
-  // frontLeft->SetVoltage(4_V);
-  // frontRight->SetVoltage(4_V);
-  // backLeft->SetVoltage(4_V);
-  // backRight->SetVoltage(4_V);
-
-  //  FMAP("fmap.fmap");
-
-  // _swerveDrive->OnStart();
-  // sched->InterruptAll();
-
-  // reimplement when vision is reimplemented
-
-  // _swerveDrive->SetPose(_vision->GetAngleToObject(VisionTargetObjects::kNote).first);
+  robotmap.controllers.triggerDriver->XButton()->SetTrueBehaviour(wom::make<wom::XDrivebase>(_swerveDrive));
 }
 
 void Robot::TeleopPeriodic() {}
