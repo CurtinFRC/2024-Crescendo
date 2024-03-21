@@ -50,7 +50,7 @@ class Trigger {
    * @param name The name of the trigger, useful in debugging.
    * @param true_behaviour The behaviour to run when the condition is true.
    */
-  Trigger(std::function<bool()> condition, std::string name, Behaviour* true_behaviour);
+  Trigger(std::function<bool()> condition, std::string name, Behaviour::ptr&& true_behaviour);
 
   /**
    * Creates a new Trigger that returns a boolean based off the provided condition.
@@ -60,8 +60,8 @@ class Trigger {
    * @param true_behaviour The behaviour to run when the condition is true.
    * @param false_behaviour The behaviour to run when the condition is false.
    */
-  Trigger(std::function<bool()> condition, std::string name, Behaviour* true_behaviour,
-          Behaviour* false_behaviour);
+  Trigger(std::function<bool()> condition, std::string name, Behaviour::ptr&& true_behaviour,
+          Behaviour::ptr&& false_behaviour);
 
   ~Trigger() = default;
   Trigger(Trigger&&) = default;
@@ -83,14 +83,14 @@ class Trigger {
    *
    * @param behaviour The behaviour to run on true.
    */
-  void SetTrueBehaviour(Behaviour::ptr behaviour);
+  void SetTrueBehaviour(Behaviour::ptr&& behaviour);
 
   /**
    * Sets the false behaviour to the provided behaviour.
    *
    * @param behaviour The behaviour to run on false.
    */
-  void SetFalseBehaviour(Behaviour::ptr behaviour);
+  void SetFalseBehaviour(Behaviour::ptr&& behaviour);
 
   /**
    * Returns a Trigger* which will be true when m_condition is not.

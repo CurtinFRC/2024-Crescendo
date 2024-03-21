@@ -18,13 +18,13 @@ Trigger::Trigger(std::function<bool()> condition, std::string name) : k_name{nam
   behaviour::BehaviourScheduler::GetInstance()->AddTrigger(this);
 }
 
-Trigger::Trigger(std::function<bool()> condition, std::string name, Behaviour* true_behaviour)
+Trigger::Trigger(std::function<bool()> condition, std::string name, Behaviour::ptr&& true_behaviour)
     : k_name{name}, m_condition(condition), m_true_behaviour{true_behaviour} {
   behaviour::BehaviourScheduler::GetInstance()->AddTrigger(this);
 }
 
-Trigger::Trigger(std::function<bool()> condition, std::string name, Behaviour* true_behaviour,
-                 Behaviour* false_behaviour)
+Trigger::Trigger(std::function<bool()> condition, std::string name, Behaviour::ptr&& true_behaviour,
+                 Behaviour::ptr&& false_behaviour)
     : k_name{name},
       m_condition(condition),
       m_true_behaviour{true_behaviour},
@@ -55,11 +55,11 @@ void Trigger::OnTick() {
   std::cerr << "WARNING: No OnFalse behaviour specified for Trigger " << k_name << std::endl;
 }
 
-void Trigger::SetTrueBehaviour(Behaviour::ptr behaviour) {
+void Trigger::SetTrueBehaviour(Behaviour::ptr&& behaviour) {
   m_true_behaviour = behaviour;
 }
 
-void Trigger::SetFalseBehaviour(Behaviour::ptr behaviour) {
+void Trigger::SetFalseBehaviour(Behaviour::ptr&& behaviour) {
   m_false_behaviour = behaviour;
 }
 

@@ -22,7 +22,6 @@ void AlphaArm::OnUpdate(units::second_t dt) {
       _setAlphaArmVoltage = 0_V;
       break;
     case AlphaArmState::kRaw:
-      std::cout << "RawControl" << std::endl;
       _setAlphaArmVoltage = _rawArmVoltage;
 
       break;
@@ -73,8 +72,6 @@ void AlphaArm::OnUpdate(units::second_t dt) {
   }
   _config->alphaArmGearbox.motorController->SetVoltage(_setAlphaArmVoltage);
   _config->alphaArmGearbox2.motorController->SetVoltage(_setAlphaArmVoltage);
-  std::cout << "Encoder Value: " << (_config->alphaArmEncoder.GetEncoderPosition().value() * (2 * 3.1415))
-            << std::endl;
   _table->GetEntry("PID Error").SetDouble(_pidArm.GetPositionError());
   _table->GetEntry("SetPoint").SetDouble(_pidArm.GetSetpoint());
   _table->GetEntry("Input").SetDouble((_config->alphaArmEncoder.GetEncoderPosition().value() * (2 * 3.1415)));
@@ -84,8 +81,6 @@ void AlphaArm::OnUpdate(units::second_t dt) {
 
   _table->GetEntry("Intake SetPoint State").SetDouble(_pidIntakeState.GetSetpoint());
   _table->GetEntry("Intake PID Error State").SetDouble(_pidIntakeState.GetPositionError());
-
-  std::cout << "Voltage:" << _setAlphaArmVoltage.value() << std::endl;
 }
 
 void AlphaArm::SetState(AlphaArmState state) {

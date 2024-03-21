@@ -152,8 +152,7 @@ void Robot::TeleopInit() {
   wom::BehaviourScheduler* sched = wom::BehaviourScheduler::GetInstance();
   sched->InterruptAll();
 
-  robotmap.controllers.triggerDriver->XButton()->SetTrueBehaviour(
-      wom::make<wom::DrivebasePoseBehaviour>(_swerveDrive, frc::Pose2d(1_m, 0_m, frc::Rotation2d(0_rad))));
+  robotmap.controllers.triggerDriver->XButton()->SetTrueBehaviour(wom::make<wom::XDrivebase>(_swerveDrive));
 }
 
 void Robot::TeleopPeriodic() {}
